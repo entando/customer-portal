@@ -1,0 +1,54 @@
+{
+  "error": {
+    "dataLoading": "Errore durante la connessione al server"
+  },
+  "common": {
+    "couldNotFetchData": "Non è stato possibile caricare i dati dell'entità",
+    "notAuthenticated": "L'utente non è autenticato.",
+    "loadingMore": "Caricamento in corso...",
+    "download": "Scarica file",
+    "dataDeleted": "Ticket eliminato/a con successo",
+    "yes": "Si",
+    "no": "No"
+  },
+  "pagination": {
+    "ariaLabels": {
+      "firstPage": "prima pagina",
+      "previousPage": "pagina precedente",
+      "nextPage": "pagina successiva",
+      "lastPage": "ultima pagina"
+    }
+  },
+  "filters": {
+    "field": "Campo",
+    "value": "Valore",
+    "addFilter": "Aggiungi filtro",
+    "clearFilters": "Rimuovi filtri",
+    "filter": "Filtro",
+    "operator": "Operatore",
+    "operators": {
+      "equals": "è uguale a",
+      "in": "in",
+      "specified": "specificato",
+      "unspecified": "non specificato",
+      "contains": "contiene"
+    }
+  },
+  "entities": {
+    "ticket": {
+      "deleteDialog": {
+        "title": "Elimina ticket",
+        "description": "Sei sicuro/a?"
+      },
+      "noItems": "Nessun tickets disponibile",
+      "id": "ID",
+      "systemId": "entità.ticket.systemId",
+      "type": "entità.ticket.type",
+      "description": "entità.ticket.description",
+      "priority": "entità.ticket.priority",
+      "status": "entità.ticket.status",
+      "createDate": "entità.ticket.createDate",
+      "updateDate": "entità.ticket.updateDate"
+    }
+  }
+}

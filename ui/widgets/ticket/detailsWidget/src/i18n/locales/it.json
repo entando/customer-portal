@@ -1,0 +1,22 @@
+{
+  "common": {
+    "couldNotFetchData": "Non è stato possibile caricare i dati dell'entità",
+    "widgetName": "Dettagli a proposito di '{{widgetNamePlaceholder}}'",
+    "name": "Nome",
+    "value": "Valore",
+    "loading": "Caricamento in corso...",
+    "notAuthenticated": "L'utente non è autenticato."
+  },
+  "entities": {
+    "ticket": {
+      "id": "ID",
+      "systemId": "entità.ticket.systemId",
+      "type": "entità.ticket.type",
+      "description": "entità.ticket.description",
+      "priority": "entità.ticket.priority",
+      "status": "entità.ticket.status",
+      "createDate": "entità.ticket.createDate",
+      "updateDate": "entità.ticket.updateDate"
+    }
+  }
+}

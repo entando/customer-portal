@@ -1,0 +1,36 @@
+{
+  "error": {
+    "dataLoading": "Errore durante la connessione al server"
+  },
+  "common": {
+    "save": "Salva",
+    "dataSaved": "TicketingSystem salvato/a con successo",
+    "dataDeleted": "TicketingSystem eliminato/a con successo",
+    "notAuthenticated": "L'utente non è autenticato.",
+    "selectFile": "Carica nuovo file",
+    "selectImageFile": "Carica nuova immagine",
+    "download": "Scarica",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "yes": "Si",
+    "no": "No"
+  },
+  "validation": {
+    "required": "{{field}} è obbligatorio"
+  },
+  "entities": {
+    "ticketingSystem": {
+      "deleteDialog": {
+        "title": "Elimina ticketingSystem",
+        "description": "Sei sicuro/a?"
+      },
+      "notFound": "TicketingSystem non trovato/a",
+      "deleted": "TicketingSystem eliminato/a",
+      "id": "ID",
+      "url": "entità.ticketingSystem.url",
+      "serviceAccount": "entità.ticketingSystem.serviceAccount",
+      "serviceAccountSecret": "entità.ticketingSystem.serviceAccountSecret",
+      "systemId": "entità.ticketingSystem.systemId"
+    }
+  }
+}

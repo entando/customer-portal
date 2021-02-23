@@ -1,0 +1,60 @@
+{
+  "name": "ProjectSubscription",
+  "fields": [
+    {
+      "fieldName": "level",
+      "fieldType": "SubscriptionLevel",
+      "fieldValues": "GOLD,PLATINUM",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "Status",
+      "fieldValues": "NEW,ACTIVE,EXPIRED",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "lengthInMonths",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "startDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "notes",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1024"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "entandoVersion",
+      "otherEntityRelationshipName": "projectSubscription",
+      "relationshipName": "entandoVersion",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "project",
+      "otherEntityRelationshipName": "projectSubscription",
+      "relationshipName": "project",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210223144608",
+  "entityTableName": "project_subscription",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "custportApp",
+  "applications": "*",
+  "microserviceName": "custportApp"
+}

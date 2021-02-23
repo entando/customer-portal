@@ -1,0 +1,39 @@
+{
+  "error": {
+    "dataLoading": "Errore durante la connessione al server"
+  },
+  "common": {
+    "save": "Salva",
+    "dataSaved": "Project salvato/a con successo",
+    "dataDeleted": "Project eliminato/a con successo",
+    "notAuthenticated": "L'utente non è autenticato.",
+    "selectFile": "Carica nuovo file",
+    "selectImageFile": "Carica nuova immagine",
+    "download": "Scarica",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "yes": "Si",
+    "no": "No"
+  },
+  "validation": {
+    "required": "{{field}} è obbligatorio"
+  },
+  "entities": {
+    "project": {
+      "deleteDialog": {
+        "title": "Elimina project",
+        "description": "Sei sicuro/a?"
+      },
+      "notFound": "Project non trovato/a",
+      "deleted": "Project eliminato/a",
+      "id": "ID",
+      "name": "entità.project.name",
+      "description": "entità.project.description",
+      "systemId": "entità.project.systemId",
+      "contactName": "entità.project.contactName",
+      "contactPhone": "entità.project.contactPhone",
+      "contactEmail": "entità.project.contactEmail",
+      "notes": "entità.project.notes"
+    }
+  }
+}

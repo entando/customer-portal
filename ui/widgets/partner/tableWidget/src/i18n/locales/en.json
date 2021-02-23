@@ -1,0 +1,51 @@
+{
+  "error": {
+    "dataLoading": "Error during server connection"
+  },
+  "common": {
+    "couldNotFetchData": "Unfortunately we could not fetch entity data",
+    "notAuthenticated": "User is not authenticated.",
+    "loadingMore": "Loading more...",
+    "download": "Download file",
+    "dataDeleted": "Partner successfully deleted",
+    "yes": "Yes",
+    "no": "No",
+    "delete": ""
+  },
+  "pagination": {
+    "ariaLabels": {
+      "firstPage": "first page",
+      "previousPage": "previous page",
+      "nextPage": "next page",
+      "lastPage": "last page"
+    }
+  },
+  "filters": {
+    "field": "Field",
+    "value": "Value",
+    "addFilter": "Add filter",
+    "clearFilters": "Clear filters",
+    "filter": "Filter",
+    "operator": "Operator",
+    "operators": {
+      "equals": "equals",
+      "in": "in",
+      "specified": "specified",
+      "unspecified": "unspecified",
+      "contains": "contains"
+    }
+  },
+  "entities": {
+    "partner": {
+      "deleteDialog": {
+        "title": "Delete partner",
+        "description": "Are you sure?"
+      },
+      "noItems": "No partners available",
+      "id": "ID",
+      "name": "entities.partner.name",
+      "partnerNumber": "entities.partner.partnerNumber",
+      "notes": "entities.partner.notes"
+    }
+  }
+}

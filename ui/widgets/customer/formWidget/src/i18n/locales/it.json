@@ -1,0 +1,38 @@
+{
+  "error": {
+    "dataLoading": "Errore durante la connessione al server"
+  },
+  "common": {
+    "save": "Salva",
+    "dataSaved": "Customer salvato/a con successo",
+    "dataDeleted": "Customer eliminato/a con successo",
+    "notAuthenticated": "L'utente non è autenticato.",
+    "selectFile": "Carica nuovo file",
+    "selectImageFile": "Carica nuova immagine",
+    "download": "Scarica",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "yes": "Si",
+    "no": "No"
+  },
+  "validation": {
+    "required": "{{field}} è obbligatorio"
+  },
+  "entities": {
+    "customer": {
+      "deleteDialog": {
+        "title": "Elimina customer",
+        "description": "Sei sicuro/a?"
+      },
+      "notFound": "Customer non trovato/a",
+      "deleted": "Customer eliminato/a",
+      "id": "ID",
+      "name": "entità.customer.name",
+      "customerNumber": "entità.customer.customerNumber",
+      "contactName": "entità.customer.contactName",
+      "contactPhone": "entità.customer.contactPhone",
+      "contactEmail": "entità.customer.contactEmail",
+      "notes": "entità.customer.notes"
+    }
+  }
+}

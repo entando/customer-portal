@@ -1,0 +1,16 @@
+{
+  "common": {
+    "couldNotFetchData": "Unfortunately we could not fetch entity data",
+    "widgetName": "Details about '{{widgetNamePlaceholder}}'",
+    "name": "Name",
+    "value": "Value",
+    "loading": "Loading...",
+    "notAuthenticated": "User is not authenticated."
+  },
+  "entities": {
+    "entandoVersion": {
+      "id": "ID",
+      "name": "entities.entandoVersion.name"
+    }
+  }
+}

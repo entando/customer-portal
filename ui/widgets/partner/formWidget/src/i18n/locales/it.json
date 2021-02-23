@@ -1,0 +1,35 @@
+{
+  "error": {
+    "dataLoading": "Errore durante la connessione al server"
+  },
+  "common": {
+    "save": "Salva",
+    "dataSaved": "Partner salvato/a con successo",
+    "dataDeleted": "Partner eliminato/a con successo",
+    "notAuthenticated": "L'utente non è autenticato.",
+    "selectFile": "Carica nuovo file",
+    "selectImageFile": "Carica nuova immagine",
+    "download": "Scarica",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "yes": "Si",
+    "no": "No"
+  },
+  "validation": {
+    "required": "{{field}} è obbligatorio"
+  },
+  "entities": {
+    "partner": {
+      "deleteDialog": {
+        "title": "Elimina partner",
+        "description": "Sei sicuro/a?"
+      },
+      "notFound": "Partner non trovato/a",
+      "deleted": "Partner eliminato/a",
+      "id": "ID",
+      "name": "entità.partner.name",
+      "partnerNumber": "entità.partner.partnerNumber",
+      "notes": "entità.partner.notes"
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "name": "Project",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "systemId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "contactName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "contactPhone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "contactEmail",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "notes",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1024"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "projectSubscription",
+      "otherEntityRelationshipName": "project",
+      "relationshipName": "projectSubscription"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "ticket",
+      "otherEntityRelationshipName": "project",
+      "relationshipName": "ticket"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "partner",
+      "otherEntityRelationshipName": "project",
+      "relationshipName": "partner"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "portalUser",
+      "otherEntityRelationshipName": "project",
+      "relationshipName": "portalUser"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "customer",
+      "otherEntityRelationshipName": "project",
+      "relationshipName": "customer",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210223144408",
+  "entityTableName": "project",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "custportApp",
+  "applications": "*",
+  "microserviceName": "custportApp"
+}

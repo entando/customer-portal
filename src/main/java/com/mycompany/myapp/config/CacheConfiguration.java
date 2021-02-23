@@ -37,6 +37,19 @@ public class CacheConfiguration {
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
             createCache(cm, "oAuth2Authentication");
+            createCache(cm, com.mycompany.myapp.domain.Customer.class.getName());
+            createCache(cm, com.mycompany.myapp.domain.Customer.class.getName() + ".projects");
+            createCache(cm, com.mycompany.myapp.domain.Project.class.getName());
+            createCache(cm, com.mycompany.myapp.domain.Project.class.getName() + ".projectSubscriptions");
+            createCache(cm, com.mycompany.myapp.domain.Project.class.getName() + ".tickets");
+            createCache(cm, com.mycompany.myapp.domain.Project.class.getName() + ".partners");
+            createCache(cm, com.mycompany.myapp.domain.Project.class.getName() + ".portalUsers");
+            createCache(cm, com.mycompany.myapp.domain.EntandoVersion.class.getName());
+            createCache(cm, com.mycompany.myapp.domain.ProjectSubscription.class.getName());
+            createCache(cm, com.mycompany.myapp.domain.Partner.class.getName());
+            createCache(cm, com.mycompany.myapp.domain.Ticket.class.getName());
+            createCache(cm, com.mycompany.myapp.domain.TicketingSystem.class.getName());
+            createCache(cm, com.mycompany.myapp.domain.PortalUser.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }

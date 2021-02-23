@@ -1,0 +1,39 @@
+{
+  "error": {
+    "dataLoading": "Error during server connection"
+  },
+  "common": {
+    "save": "Save",
+    "dataSaved": "Ticket successfully saved",
+    "dataDeleted": "Ticket successfully deleted",
+    "notAuthenticated": "User is not authenticated.",
+    "selectFile": "Upload new file",
+    "selectImageFile": "Upload new image",
+    "download": "Download",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "validation": {
+    "required": "{{field}} is required"
+  },
+  "entities": {
+    "ticket": {
+      "deleteDialog": {
+        "title": "Delete ticket",
+        "description": "Are you sure?"
+      },
+      "notFound": "Ticket not found",
+      "deleted": "Ticket deleted",
+      "id": "ID",
+      "systemId": "entities.ticket.systemId",
+      "type": "entities.ticket.type",
+      "description": "entities.ticket.description",
+      "priority": "entities.ticket.priority",
+      "status": "entities.ticket.status",
+      "createDate": "entities.ticket.createDate",
+      "updateDate": "entities.ticket.updateDate"
+    }
+  }
+}

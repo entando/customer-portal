@@ -1,0 +1,1 @@
+import 'custom-elements/PartnerFormElement';

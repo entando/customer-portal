@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity ProjectSubscription.
+    -->
+    <changeSet id="20210223144608-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="entando_version_id"
+                                 baseTableName="project_subscription"
+                                 constraintName="fk_project_subscription_entando_version_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="entando_version"/>
+
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="project_subscription"
+                                 constraintName="fk_project_subscription_project_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="project"/>
+
+    </changeSet>
+</databaseChangeLog>

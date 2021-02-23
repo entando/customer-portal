@@ -1,0 +1,19 @@
+{
+  "common": {
+    "couldNotFetchData": "Unfortunately we could not fetch entity data",
+    "widgetName": "Details about '{{widgetNamePlaceholder}}'",
+    "name": "Name",
+    "value": "Value",
+    "loading": "Loading...",
+    "notAuthenticated": "User is not authenticated."
+  },
+  "entities": {
+    "ticketingSystem": {
+      "id": "ID",
+      "url": "entities.ticketingSystem.url",
+      "serviceAccount": "entities.ticketingSystem.serviceAccount",
+      "serviceAccountSecret": "entities.ticketingSystem.serviceAccountSecret",
+      "systemId": "entities.ticketingSystem.systemId"
+    }
+  }
+}

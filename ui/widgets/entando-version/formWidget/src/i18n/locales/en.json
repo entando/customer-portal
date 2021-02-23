@@ -1,0 +1,33 @@
+{
+  "error": {
+    "dataLoading": "Error during server connection"
+  },
+  "common": {
+    "save": "Save",
+    "dataSaved": "EntandoVersion successfully saved",
+    "dataDeleted": "EntandoVersion successfully deleted",
+    "notAuthenticated": "User is not authenticated.",
+    "selectFile": "Upload new file",
+    "selectImageFile": "Upload new image",
+    "download": "Download",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "validation": {
+    "required": "{{field}} is required"
+  },
+  "entities": {
+    "entandoVersion": {
+      "deleteDialog": {
+        "title": "Delete entandoVersion",
+        "description": "Are you sure?"
+      },
+      "notFound": "EntandoVersion not found",
+      "deleted": "EntandoVersion deleted",
+      "id": "ID",
+      "name": "entities.entandoVersion.name"
+    }
+  }
+}
