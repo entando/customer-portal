@@ -1,6 +1,7 @@
 package com.mycompany.myapp.repository;
 
 import com.mycompany.myapp.domain.Project;
+import com.mycompany.myapp.domain.Customer;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
@@ -11,4 +12,6 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
+
+    Iterable<Project> findByCustomer(Customer customer);
 }

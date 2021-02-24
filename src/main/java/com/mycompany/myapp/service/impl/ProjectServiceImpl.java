@@ -2,6 +2,7 @@ package com.mycompany.myapp.service.impl;
 
 import com.mycompany.myapp.service.ProjectService;
 import com.mycompany.myapp.domain.Project;
+import com.mycompany.myapp.domain.Customer;
 import com.mycompany.myapp.repository.ProjectRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -51,6 +53,16 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findAll();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Project> findByCustomer(Customer customer) {
+        log.debug("Request to get all Projects for customer");
+        
+        List<Project> res = new ArrayList<Project>();
+        projectRepository.findByCustomer(customer).forEach(res::add);
+
+        return res;
+    }
 
     /**
      * Get one project by id.
