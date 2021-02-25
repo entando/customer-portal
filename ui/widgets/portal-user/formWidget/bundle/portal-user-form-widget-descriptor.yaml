@@ -1,0 +1,6 @@
+code: portal-user-form-widget
+titles:
+  en: Portal User Form Widget
+  it: Portal User Form Widget
+group: free
+customUiPath: portal-user-form-widget.ftl

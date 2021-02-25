@@ -1,0 +1,6 @@
+code: portal-user-details-widget
+titles:
+  en: Portal User Details Widget
+  it: Portal User Details Widget
+group: free
+customUiPath: portal-user-details-widget.ftl

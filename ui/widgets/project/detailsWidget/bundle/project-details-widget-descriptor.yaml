@@ -1,0 +1,6 @@
+code: project-details-widget
+titles:
+  en: Project Details Widget
+  it: Project Details Widget
+group: free
+customUiPath: project-details-widget.ftl

@@ -1,0 +1,6 @@
+code: entando-version-table-widget
+titles:
+  en: Entando Version Table Widget
+  it: Entando Version Table Widget
+group: free
+customUiPath: entando-version-table-widget.ftl

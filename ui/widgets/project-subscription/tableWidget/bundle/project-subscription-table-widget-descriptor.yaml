@@ -1,0 +1,6 @@
+code: project-subscription-table-widget
+titles:
+  en: Project Subscription Table Widget
+  it: Project Subscription Table Widget
+group: free
+customUiPath: project-subscription-table-widget.ftl
