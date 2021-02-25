@@ -2,6 +2,7 @@ package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Ticket;
 import com.mycompany.myapp.service.TicketService;
+import com.mycompany.myapp.service.TicketingSystemService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -33,9 +34,11 @@ public class TicketResource {
     private String applicationName;
 
     private final TicketService ticketService;
+    private final TicketingSystemService ticketingSystemService;
 
-    public TicketResource(TicketService ticketService) {
+    public TicketResource(TicketService ticketService, TicketingSystemService ticketingSystemService) {
         this.ticketService = ticketService;
+        this.ticketingSystemService = ticketingSystemService;
     }
 
     /**
@@ -86,8 +89,23 @@ public class TicketResource {
     @GetMapping("/tickets")
     public List<Ticket> getAllTickets() {
         log.debug("REST request to get all Tickets");
+        ticketingSystemService.fetchTicketsByProject("TEST");
         return ticketService.findAll();
     }
+
+    /**
+     * {@code GET  /tickets/byproject/:projectCode} : get all the tickets in project.
+     *
+     * @param projectCode the code of the ticket to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
+     */
+    @GetMapping("/tickets/byproject/{projectCode}")
+    public List<Ticket> getTicketsByProject(String projectCode) {
+        log.debug("REST request to get all Tickets by projectCode: {}");
+        ticketingSystemService.fetchTicketsByProject("JAT");
+        return ticketService.findAll();
+    }
+
 
     /**
      * {@code GET  /tickets/:id} : get the "id" ticket.

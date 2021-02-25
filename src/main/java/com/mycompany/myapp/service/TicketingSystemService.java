@@ -1,6 +1,8 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.TicketingSystem;
+import com.mycompany.myapp.domain.Ticket;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,4 +42,12 @@ public interface TicketingSystemService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Get all the tickets corresponding to the projectCode.
+     *
+     * @param projectCode the project code of the Jira project.
+     * @return the list of Tickets.
+     */
+    JSONObject fetchTicketsByProject(String projectCode);
 }
