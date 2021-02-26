@@ -48,6 +48,7 @@ public class TicketServiceImpl implements TicketService {
     @Transactional(readOnly = true)
     public List<Ticket> findAll() {
         log.debug("Request to get all Tickets");
+        //return ticketRepository.findTicketsBySystemId("invoice Norwegian Krone");
         return ticketRepository.findAll();
     }
 
@@ -76,4 +77,6 @@ public class TicketServiceImpl implements TicketService {
 
         ticketRepository.deleteById(id);
     }
+
+
 }

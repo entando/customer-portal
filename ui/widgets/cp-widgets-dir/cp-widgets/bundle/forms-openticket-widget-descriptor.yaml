@@ -1,0 +1,6 @@
+code: forms-openticket-widget
+titles:
+  en: Forms Open Ticket Widget
+  it: Forms Open Ticket Widget
+group: free
+customUiPath: forms-openticket-widget.ftl

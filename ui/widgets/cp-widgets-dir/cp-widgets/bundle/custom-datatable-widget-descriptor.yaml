@@ -1,0 +1,6 @@
+code: custom-datatable-widget
+titles:
+  en: Custom Data Table Widget
+  it: Custom Data Table Widget
+group: free
+customUiPath: custom-datatable-widget.ftl

@@ -1,0 +1,6 @@
+code: project-table-widget
+titles:
+  en: Project Table Widget
+  it: Project Table Widget
+group: free
+customUiPath: project-table-widget.ftl

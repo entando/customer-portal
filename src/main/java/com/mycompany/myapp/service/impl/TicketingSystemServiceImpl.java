@@ -2,6 +2,7 @@ package com.mycompany.myapp.service.impl;
 
 import com.mycompany.myapp.service.TicketingSystemService;
 import com.mycompany.myapp.domain.TicketingSystem;
+import com.mycompany.myapp.domain.Ticket;
 import com.mycompany.myapp.repository.TicketingSystemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -76,4 +85,5 @@ public class TicketingSystemServiceImpl implements TicketingSystemService {
 
         ticketingSystemRepository.deleteById(id);
     }
+
 }

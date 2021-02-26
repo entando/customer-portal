@@ -1,0 +1,6 @@
+code: customer-table-widget
+titles:
+  en: Customer Table Widget
+  it: Customer Table Widget
+group: free
+customUiPath: customer-table-widget.ftl
