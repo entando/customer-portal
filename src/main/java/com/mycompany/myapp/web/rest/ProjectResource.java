@@ -1,29 +1,44 @@
 package com.mycompany.myapp.web.rest;
 
-import com.mycompany.myapp.domain.Project;
-import com.mycompany.myapp.service.ProjectService;
-import com.mycompany.myapp.domain.Customer;
-import com.mycompany.myapp.service.CustomerService;
-import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Map;
-import java.util.HashMap;
+import com.mycompany.myapp.domain.Customer;
+import com.mycompany.myapp.domain.Project;
+import com.mycompany.myapp.domain.ProjectSubscription;
+import com.mycompany.myapp.response.model.SubscriptionDetailResponse;
+import com.mycompany.myapp.response.model.SubscriptionRowResponse;
+import com.mycompany.myapp.service.CustomerService;
+import com.mycompany.myapp.service.ProjectService;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.Project}.
@@ -43,7 +58,7 @@ public class ProjectResource {
 
     @Autowired
     private CustomerService customerService;
-
+    
     public ProjectResource(ProjectService projectService) {
         this.projectService = projectService;
     }
@@ -93,23 +108,23 @@ public class ProjectResource {
                 .body(result);
     }
 
-    /*
+    
     @GetMapping("/projects")
     public List<Project> getAllProjects() {
         log.debug("REST request to get all Projects");
         return projectService.findAll();
     }
-    */
+    
 
-    @GetMapping("/projects")
-    public ResponseEntity<Map<String, List<Project>>> getProjectsForCustomer(
+    @GetMapping("/projects/subscriptions")
+    public ResponseEntity<Map<String, List<SubscriptionRowResponse>>> getSubscriptionRowsForCustomers(
             @RequestParam(value = "custId") Long custId) {
-        log.debug("REST request to get all Projects");
+        
+        Map<String, List<SubscriptionRowResponse>> subscriptionRowsForCustomers = new HashMap<String, List<SubscriptionRowResponse>>();
+        List<Customer> customerList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy"); 
 
-        Map<String, List<Project>> projectsForCustomer = new HashMap<String, List<Project>>();
-        List<Customer> customerList = new ArrayList<Customer>();
-
-        // Assumption : If custId is empty, user is an admin
+        // Assumption : If custId is 0, user is an admin
         if (custId == 0) {
             customerList = customerService.findAll();
         } else {
@@ -120,12 +135,54 @@ public class ProjectResource {
         }
 
         for (Customer customer : customerList) {
-            projectsForCustomer.put(customer.getName(), projectService.findByCustomer(customer));
+        	Set<Project> projectsForCustomer = customer.getProjects();
+        	List<SubscriptionRowResponse> subscriptionRowList = new ArrayList<>();
+        	
+        	for (Project project: projectsForCustomer) {
+        		SubscriptionRowResponse subscriptionRow = new SubscriptionRowResponse();
+        		
+        		subscriptionRow.setProjectName(project.getName());
+        		subscriptionRow.setPartnerName(project.getPartners().stream().findFirst().get().getName()); // assume there is only one partner per project
+        		ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get(); // assume there is only one subscription per project
+        		subscriptionRow.setStartDate(sdf.format(projectSubscription.getStartDate()));
+        		//response.setEndDate(); // there is no endDate field in the entity yet.
+        		subscriptionRow.setEntandoVersion(projectSubscription.getEntandoVersion().getName());
+        		subscriptionRow.setTickets(project.getTickets().size());
+
+        		subscriptionRowList.add(subscriptionRow);
+        	}
+        	
+        	subscriptionRowsForCustomers.put(customer.getName(), subscriptionRowList);
         }
 
-        return new ResponseEntity<Map<String, List<Project>>>(projectsForCustomer, HttpStatus.OK);
+        return new ResponseEntity<Map<String, List<SubscriptionRowResponse>>>(subscriptionRowsForCustomers, HttpStatus.OK);
     }
 
+    @GetMapping("/projects/subscriptions/detail")
+    public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(
+            @RequestParam(value = "projectId") Long projectId) {
+    	
+    	SubscriptionDetailResponse subscriptionDetail = new SubscriptionDetailResponse();
+    	SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy"); 
+    	
+    	Optional<Project> returnedProject = projectService.findOne(projectId);
+    	
+    	if (returnedProject.isPresent()) {
+    		Project project = returnedProject.get();
+    		
+    		subscriptionDetail.setProjectName(project.getName());
+    		subscriptionDetail.setDescription(project.getDescription());
+    		ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get(); // assume there is only one subscription per project
+    		subscriptionDetail.setLevel(projectSubscription.getLevel().name());
+    		subscriptionDetail.setStartDate(sdf.format(projectSubscription.getStartDate()));
+    		//response.setEndDate(); // there is no endDate field in the entity yet.
+    		subscriptionDetail.setPartner(project.getPartners().stream().findFirst().get().getName()); // assume there is only one partner per project
+    	}
+    	
+    	return new ResponseEntity<SubscriptionDetailResponse>(subscriptionDetail, HttpStatus.OK);
+    }
+    
+    
     /**
      * {@code GET  /projects/:id} : get the "id" project.
      *

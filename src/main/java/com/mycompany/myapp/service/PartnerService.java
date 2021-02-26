@@ -1,9 +1,9 @@
 package com.mycompany.myapp.service;
 
-import com.mycompany.myapp.domain.Partner;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.mycompany.myapp.domain.Partner;
 
 /**
  * Service Interface for managing {@link Partner}.
@@ -24,7 +24,6 @@ public interface PartnerService {
      * @return the list of entities.
      */
     List<Partner> findAll();
-
 
     /**
      * Get the "id" partner.
