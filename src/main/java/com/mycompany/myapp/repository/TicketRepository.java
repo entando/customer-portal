@@ -15,5 +15,5 @@ import java.util.List;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("select ticket from Ticket ticket where ticket.systemId = ?1")
-    List<Ticket> findTicketsBySystemId(String name);
+    Ticket findTicketBySystemId(String systemId);
 }

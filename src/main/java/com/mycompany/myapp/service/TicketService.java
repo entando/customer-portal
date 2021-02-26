@@ -1,6 +1,7 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.Ticket;
+import com.mycompany.myapp.domain.TicketingSystem;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,5 +41,13 @@ public interface TicketService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Get the "systemId" ticket.
+     *
+     * @param systemId the systemId of the entity.
+     * @return the entity.
+     */
+    Ticket findTicketBySystemId(String systemId);
 
 }

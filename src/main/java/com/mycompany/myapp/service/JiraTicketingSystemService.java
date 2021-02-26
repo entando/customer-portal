@@ -44,25 +44,41 @@ public interface JiraTicketingSystemService {
     void delete(Long id);
 
     /**
-     * Get all the tickets corresponding to the projectCode.
+     * Get the "systemId" ticketingSystem.
      *
-     * @param projectCode the project code of the Jira project.
+     * @param systemId the systemId of the entity.
+     * @return the entity.
+     */
+    TicketingSystem findTicketingSystemBySystemId(String systemId);
+
+    /**
+     * Get all the tickets corresponding to the systemId.
+     *
+     * @param systemId the systemId of the Jira project.
      * @return the JSON list of Tickets.
      */
-    String fetchJiraTicketsByProject(String projectCode);
+    String fetchJiraTicketsBySystemId(String systemId, String url, String serviceAccount, String serviceAccountSecret);
+
+    /**
+     * Get all the tickets corresponding to the systemId.
+     *
+     * @param systemId the systemId of the Jira project.
+     * @return the JSON list of Tickets.
+     */
+    String fetchSingleJiraTicketBySystemId(String systemId, String url, String serviceAccount, String serviceAccountSecret);
 
     /**
      * Creating a new Jira ticket.
      *
-     * @param projectCode the project code of the Jira project.
+     * @param systemId the systemId of the Jira ticket.
      * @return the JSON response
      */
-    String createJiraTicket(String projectCode);
+    String createJiraTicket(String systemId, String url, String serviceAccount, String serviceAccountSecret);
 
     /**
      * Deleting a Jira ticket.
      *
-     * @param id the id of the ticket
+     * @param systemId the systemId of the ticket
      */
-    void deleteJiraTicket(Long id);
+    String deleteJiraTicket(String systemId, String url, String serviceAccount, String serviceAccountSecret);
 }
