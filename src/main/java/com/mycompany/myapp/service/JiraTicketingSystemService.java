@@ -73,7 +73,17 @@ public interface JiraTicketingSystemService {
      * @param systemId the systemId of the Jira ticket.
      * @return the JSON response
      */
-    String createJiraTicket(String systemId, String url, String serviceAccount, String serviceAccountSecret);
+    String createJiraTicket(String systemId, String url, String serviceAccount, String serviceAccountSecret,
+                            Ticket ticket);
+
+    /**
+     * Updating a Jira ticket.
+     *
+     * @param systemId the systemId of the Jira ticket.
+     * @return the JSON response
+     */
+    String updateJiraTicket(String systemId, String url, String serviceAccount, String serviceAccountSecret,
+                            Ticket ticket);
 
     /**
      * Deleting a Jira ticket.

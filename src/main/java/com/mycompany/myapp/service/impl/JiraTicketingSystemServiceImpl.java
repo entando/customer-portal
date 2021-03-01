@@ -158,7 +158,8 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
      * @return the list of Tickets.
      */
     @Override
-    public String fetchSingleJiraTicketBySystemId(String systemId, String baseUrl, String serviceAccount, String serviceAccountSecret) {
+    public String fetchSingleJiraTicketBySystemId(String systemId, String baseUrl, String serviceAccount,
+                                                  String serviceAccountSecret) {
         String user = serviceAccount;
         String password = serviceAccountSecret;
 
@@ -201,7 +202,8 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
      * @return the JSON response
      */
     @Override
-    public String createJiraTicket(String systemId, String baseUrl, String serviceAccount, String serviceAccountSecret) {
+    public String createJiraTicket(String systemId, String baseUrl, String serviceAccount,
+                                   String serviceAccountSecret, Ticket ticket) {
         String user = serviceAccount;
         String password = serviceAccountSecret;
 
@@ -220,12 +222,16 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                 "    \"fields\": {\n" +
                 "       \"project\":\n" +
                 "       {\n" +
-                "          \"key\": \""+ systemId + "\"\n" +
+                "          \"key\": \"" + systemId + "\"\n" +
                 "       },\n" +
-                "       \"summary\": \"Testing from spring app.\",\n" +
+                "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
                 "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
                 "       \"issuetype\": {\n" +
-                "          \"name\": \"Bug\"\n" +
+                "          \"name\": \"" + ticket.getType() + "\"\n" +
+                "       },\n" +
+                "       \"priority\":\n" +
+                "       {\n" +
+                "          \"name\": \"" + ticket.getPriority() + "\"\n" +
                 "       }\n" +
                 "   }\n" +
                 "}";
@@ -246,6 +252,69 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             JSONObject responseObject = new JSONObject(content.toString());
 
             return responseObject.toString();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Updating a Jira ticket.
+     *
+     * @param systemId the systemId of the ticket
+     * @param baseUrl the baseUrl of the project
+     *
+     * @return the JSON response
+     */
+    @Override
+    public String updateJiraTicket(String systemId, String baseUrl, String serviceAccount,
+                                   String serviceAccountSecret, Ticket ticket) {
+        String user = serviceAccount;
+        String password = serviceAccountSecret;
+
+        try {
+            URL url = new URL(baseUrl + "issue/" + systemId);
+            System.out.println(url.toString());
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("PUT");
+
+            String auth = user + ":" + password;
+            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
+            String authHeaderValue = "Basic " + new String(encodedAuth);
+            con.setRequestProperty("Authorization", authHeaderValue);
+            con.setRequestProperty("Content-Type", "application/json; charset=utf8");
+            con.setDoOutput(true);
+            String jsonInputString = "{\n" +
+                "    \"fields\": {\n" +
+                "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
+                "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
+                "       \"issuetype\": {\n" +
+                "          \"name\": \"" + ticket.getType() + "\"\n" +
+                "       },\n" +
+                "       \"priority\":\n" +
+                "       {\n" +
+                "          \"name\": \"" + ticket.getPriority() + "\"\n" +
+                "       }\n" +
+                "   }\n" +
+                "}";
+            try(OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            int status = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            con.disconnect();
+            //JSONObject responseObject = new JSONObject(content.toString());
+
+            return String.valueOf(status);
         }
         catch(Exception e) {
             e.printStackTrace();
