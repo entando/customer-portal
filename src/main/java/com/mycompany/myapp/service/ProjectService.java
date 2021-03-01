@@ -34,6 +34,14 @@ public interface ProjectService {
     Optional<Project> findOne(Long id);
 
     /**
+     * Find a project by name.
+     * 
+     * @param name the name of the project.
+     * @return the entity.
+     */
+    Optional<Project> findByName(String name);
+
+    /**
      * Delete the "id" project.
      *
      * @param id the id of the entity.

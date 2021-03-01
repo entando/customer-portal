@@ -1,5 +1,6 @@
 package com.mycompany.myapp.repository;
 
+import com.mycompany.myapp.domain.Customer;
 import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.domain.Customer;
 
@@ -16,4 +17,5 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Iterable<Project> findByCustomer(Customer customer);
+    List<Project> findByName(String name);
 }

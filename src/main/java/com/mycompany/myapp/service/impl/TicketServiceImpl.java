@@ -1,5 +1,6 @@
 package com.mycompany.myapp.service.impl;
 
+import com.mycompany.myapp.domain.TicketingSystem;
 import com.mycompany.myapp.service.TicketService;
 import com.mycompany.myapp.domain.Ticket;
 import com.mycompany.myapp.repository.TicketRepository;
@@ -76,6 +77,16 @@ public class TicketServiceImpl implements TicketService {
         log.debug("Request to delete Ticket : {}", id);
 
         ticketRepository.deleteById(id);
+    }
+
+    /**
+     * Get the "systemId" ticketingSystem.
+     *
+     * @param systemId the systemId of the entity.
+     * @return the entity.
+     */
+    public Ticket findTicketBySystemId(String systemId) {
+        return ticketRepository.findTicketBySystemId(systemId);
     }
 
 

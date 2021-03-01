@@ -75,4 +75,12 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Project> findByName(String name) {
+        log.debug("Request to get Project by name : {}", name);
+        List<Project> foundProjects = projectRepository.findByName(name);
+
+        return foundProjects.isEmpty() ? Optional.ofNullable(null) : Optional.ofNullable(foundProjects.get(0));
+    }
 }

@@ -1,6 +1,7 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Ticket;
+import com.mycompany.myapp.domain.TicketingSystem;
 import com.mycompany.myapp.service.JiraTicketingSystemService;
 import com.mycompany.myapp.service.TicketService;
 import com.mycompany.myapp.service.TicketingSystemService;
@@ -8,6 +9,7 @@ import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,30 +100,6 @@ public class TicketResource {
     }
 
     /**
-     * {@code GET  /tickets/byproject/:projectCode} : get all the tickets in project.
-     *
-     * @param projectCode the code of the ticket to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
-     */
-    @GetMapping("/tickets/jira/{projectCode}")
-    public String getJiraTicketsByProject(@PathVariable String projectCode) {
-        log.debug("REST request to get all Tickets by projectCode: {}");
-        return ticketingSystemService.fetchJiraTicketsByProject(projectCode);
-    }
-
-    /**
-     * Creating a new Jira ticket.
-     *
-     * @return the list of Tickets.
-     * @return the JSON response
-     */
-    @PostMapping("/ticket/jira/{projectCode}")
-    public String createJiraTicket(@PathVariable String projectCode) {
-        return ticketingSystemService.createJiraTicket(projectCode);
-    }
-
-
-    /**
      * {@code GET  /tickets/:id} : get the "id" ticket.
      *
      * @param id the id of the ticket to retrieve.
@@ -144,5 +124,132 @@ public class TicketResource {
 
         ticketService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+    }
+
+    /**
+     * {@code GET  /tickets/ticketingsystem/:systemId} : get all the tickets in project.
+     *
+     * @param systemId the systemId of the ticket to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
+     */
+    @GetMapping("/tickets/ticketingsystem/{systemId}")
+    public String fetchJiraTicketsByProject(@PathVariable String systemId) throws URISyntaxException {
+        log.debug("REST request to get all Tickets by systemId: {}");
+
+        // fetch tickets from Jira and store in a JSONArray
+        TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(systemId);
+        JSONObject response = new JSONObject(ticketingSystemService.fetchJiraTicketsBySystemId(systemId, ts.getUrl(),
+            ts.getServiceAccount(), ts.getServiceAccountSecret()));
+        JSONArray issues = new JSONArray(response.getJSONArray("issues"));
+
+        // loop through tickets and check if they exist as Tickets in the db
+        for (Object issue : issues) {
+            JSONObject jsonIssue = (JSONObject) issue;
+            String jiraKey = jsonIssue.getString("key");
+            Ticket t = ticketService.findTicketBySystemId(jiraKey);
+            // if Ticket exists in the db don't do anything
+            if (t != null) {
+                System.out.println("Ticket already exists.");
+            }
+            // else create a Ticket
+            else {
+                System.out.println("Creating ticket...");
+                Ticket prepareTicketToCreate = prepareTicketToCreate(jiraKey, ts.getUrl(), ts.getServiceAccount(), ts.getServiceAccountSecret());
+                createTicket(prepareTicketToCreate);
+            }
+        }
+
+        // return JSON response from Jira
+        return response.toString();
+    }
+
+    /**
+     * {@code GET  /tickets/ticketingsystem/:systemId} : Creating a new jira ticket in project.
+     *
+     * @param systemId the systemId of the project to create the ticket in.
+     * @return the JSON response
+     */
+    @PostMapping("/tickets/ticketingsystem/{systemId}")
+    public ResponseEntity<Ticket> createJiraTicket(@PathVariable String systemId, @Valid @RequestBody Ticket ticket)
+        throws URISyntaxException {
+        // find ticketing system for this systemId
+        TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(systemId);
+
+        // create ticket in Jira
+        JSONObject response = new JSONObject(ticketingSystemService.createJiraTicket(systemId, ts.getUrl(),
+            ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket));
+        String key = response.getString("key");
+
+        // prepare Ticket from JSON response
+        Ticket ticketToCreate = prepareTicketToCreate(key, ts.getUrl(), ts.getServiceAccount(),
+            ts.getServiceAccountSecret());
+
+        // return created Ticket
+        return createTicket(ticketToCreate);
+    }
+
+    /**
+     * {@code GET  /tickets/ticketingsystem/:systemId} : Creating a new jira ticket in project.
+     *
+     * @param systemId the systemId of the project to create the ticket in.
+     * @return the JSON response
+     */
+    @PutMapping("/tickets/ticketingsystem/{systemId}")
+    public ResponseEntity<Ticket> updateJiraTicket(@PathVariable String systemId, @Valid @RequestBody Ticket ticket)
+        throws URISyntaxException {
+        // find ticketing system for this systemId
+        TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(systemId);
+
+        ticketingSystemService.updateJiraTicket(ticket.getSystemId(), ts.getUrl(),
+            ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket);
+
+        // create ticket in Jira
+        /*
+
+        JSONObject response = new JSONObject(ticketingSystemService.updateJiraTicket(ticket.getSystemId(), ts.getUrl(),
+            ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket));
+        String key = response.getString("key");
+
+
+        // prepare Ticket from JSON response
+        Ticket ticketToCreate = prepareTicketToCreate(ticket.getSystemId(), ts.getUrl(), ts.getServiceAccount(),
+            ts.getServiceAccountSecret());
+
+         */
+
+        // return created Ticket
+        return updateTicket(ticket);
+    }
+
+    /**
+     * {@code GET  /tickets/ticketingsystem/:systemId} : Deleting a ticket in project.
+     *
+     * @param systemId the systemId of the ticket
+     */
+    @DeleteMapping("/tickets/ticketingsystem/{systemId}")
+    public String deleteJiraTicket(@PathVariable String systemId) {
+        // find ticket by systemId in db
+        String[] splitSystemId = systemId.split("-");
+        TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(splitSystemId[0]);
+
+        // delete Ticket in db
+        Ticket ticketToDelete = ticketService.findTicketBySystemId(systemId);
+        ticketService.delete(ticketToDelete.getId());
+
+        // delete ticket in Jira and return status code
+        return ticketingSystemService.deleteJiraTicket(systemId, ts.getUrl(), ts.getServiceAccount(), ts.getServiceAccountSecret());
+
+    }
+
+    public Ticket prepareTicketToCreate(String key, String url, String serviceAccount, String serviceAccountSecret) {
+        Ticket ticketToCreate = new Ticket();
+        JSONObject response = new JSONObject(ticketingSystemService.fetchSingleJiraTicketBySystemId(key, url,
+            serviceAccount, serviceAccountSecret));
+        ticketToCreate.setDescription((String) response.getJSONObject("fields").get("summary"));
+        ticketToCreate.setSystemId(key);
+        ticketToCreate.setType((String) response.getJSONObject("fields").getJSONObject("issuetype").get("name"));
+        ticketToCreate.setCreateDate(ZonedDateTime.now());
+        ticketToCreate.setUpdateDate(ZonedDateTime.now());
+        return ticketToCreate;
     }
 }
