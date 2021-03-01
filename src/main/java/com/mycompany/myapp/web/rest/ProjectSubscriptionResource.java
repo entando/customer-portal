@@ -1,6 +1,10 @@
 package com.mycompany.myapp.web.rest;
 
+import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.domain.ProjectSubscription;
+import com.mycompany.myapp.request.SubscriptionCreationRequest;
+import com.mycompany.myapp.service.EntandoVersionService;
+import com.mycompany.myapp.service.ProjectService;
 import com.mycompany.myapp.service.ProjectSubscriptionService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
@@ -33,9 +37,11 @@ public class ProjectSubscriptionResource {
     private String applicationName;
 
     private final ProjectSubscriptionService projectSubscriptionService;
+    private final ProjectService projectService;
 
-    public ProjectSubscriptionResource(ProjectSubscriptionService projectSubscriptionService) {
+    public ProjectSubscriptionResource(ProjectSubscriptionService projectSubscriptionService, ProjectService projectService) {
         this.projectSubscriptionService = projectSubscriptionService;
+        this.projectService = projectService;
     }
 
     /**
@@ -46,12 +52,22 @@ public class ProjectSubscriptionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/project-subscriptions")
-    public ResponseEntity<ProjectSubscription> createProjectSubscription(@Valid @RequestBody ProjectSubscription projectSubscription) throws URISyntaxException {
-        log.debug("REST request to save ProjectSubscription : {}", projectSubscription);
+    public ResponseEntity<ProjectSubscription> createProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException {
+        log.debug("REST request to save ProjectSubscription : {}", subscriptionCreationRequest);
+        ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
+        
         if (projectSubscription.getId() != null) {
             throw new BadRequestAlertException("A new projectSubscription cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
+
+        Optional<Project> associatedProjectOpt = projectService.findByName(subscriptionCreationRequest.getProjectName());
+        if (!associatedProjectOpt.isPresent()) {
+            throw new BadRequestAlertException("There was no project found with that name", ENTITY_NAME, "projectNotFound");
+        }
+
+        associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));
+
+        ProjectSubscription result = projectSubscriptionService.save(subscriptionCreationRequest.getProjectSubscription());
         return ResponseEntity.created(new URI("/api/project-subscriptions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
