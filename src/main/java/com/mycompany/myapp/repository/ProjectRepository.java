@@ -2,6 +2,7 @@ package com.mycompany.myapp.repository;
 
 import com.mycompany.myapp.domain.Customer;
 import com.mycompany.myapp.domain.Project;
+import com.mycompany.myapp.domain.Customer;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;

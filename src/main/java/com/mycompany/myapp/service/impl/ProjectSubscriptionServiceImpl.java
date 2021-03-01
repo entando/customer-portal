@@ -1,16 +1,16 @@
 package com.mycompany.myapp.service.impl;
 
-import com.mycompany.myapp.service.ProjectSubscriptionService;
-import com.mycompany.myapp.domain.ProjectSubscription;
-import com.mycompany.myapp.repository.ProjectSubscriptionRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import com.mycompany.myapp.domain.ProjectSubscription;
+import com.mycompany.myapp.repository.ProjectSubscriptionRepository;
+import com.mycompany.myapp.service.ProjectSubscriptionService;
 
 /**
  * Service Implementation for managing {@link ProjectSubscription}.

@@ -1,16 +1,16 @@
 package com.mycompany.myapp.service.impl;
 
-import com.mycompany.myapp.service.ProjectService;
-import com.mycompany.myapp.domain.Project;
-import com.mycompany.myapp.repository.ProjectRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import com.mycompany.myapp.domain.Project;
+import com.mycompany.myapp.repository.ProjectRepository;
+import com.mycompany.myapp.service.ProjectService;
 
 /**
  * Service Implementation for managing {@link Project}.
@@ -50,7 +50,6 @@ public class ProjectServiceImpl implements ProjectService {
         log.debug("Request to get all Projects");
         return projectRepository.findAll();
     }
-
 
     /**
      * Get one project by id.

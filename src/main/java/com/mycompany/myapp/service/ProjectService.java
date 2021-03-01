@@ -1,9 +1,9 @@
 package com.mycompany.myapp.service;
 
-import com.mycompany.myapp.domain.Project;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.mycompany.myapp.domain.Project;
 
 /**
  * Service Interface for managing {@link Project}.
@@ -24,7 +24,6 @@ public interface ProjectService {
      * @return the list of entities.
      */
     List<Project> findAll();
-
 
     /**
      * Get the "id" project.

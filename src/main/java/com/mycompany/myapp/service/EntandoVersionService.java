@@ -25,7 +25,6 @@ public interface EntandoVersionService {
      */
     List<EntandoVersion> findAll();
 
-
     /**
      * Get the "id" entandoVersion.
      *
