@@ -1,6 +1,0 @@
-code: ticketing-system-details-widget
-titles:
-  en: Ticketing System Details Widget
-  it: Ticketing System Details Widget
-group: free
-customUiPath: ticketing-system-details-widget.ftl

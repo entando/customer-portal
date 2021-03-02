@@ -3,11 +3,24 @@ import { Select, SelectItem} from 'carbon-components-react';
 import CustomerDetails from '../Customer/customerDetails';
 import CustomTable from '../Customer/customDataTable';
 import AdminDashboard from './AdminDashboard';
+import { apiCustomersGet } from '../../api/tickets';
+import withKeycloak from '../../auth/withKeycloak';
 
-export default class RoleCheck extends Component {
+class RoleCheck extends Component {
     state = {
         roleType: 'customer'
     };
+
+    componentDidUpdate(prevProps) {
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+    
+        if (authenticated && changedAuth) {
+          this.fetchData();
+        }
+      }
 
     handleChanges = (e) => {
         const input = e.target;
@@ -38,7 +51,7 @@ export default class RoleCheck extends Component {
             <div>
                 <h3>Welcome to Entando Customer Portal</h3>
                 <CustomerDetails />
-                <CustomTable/>
+                <CustomTable />
             </div>
         )
         if (this.state.roleType === 'admin') return (
@@ -49,3 +62,5 @@ export default class RoleCheck extends Component {
         );
     }
 }
+
+export default withKeycloak(RoleCheck)
