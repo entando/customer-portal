@@ -13,5 +13,4 @@ import './custom-elements/FormsSubscriptionElement';
 import './custom-elements/FormsOpenTicketElement';
 import './custom-elements/NavigationElement';
 import './custom-elements/FormsEnhancementRequestElement';
-
-ReactDOM.render(<App/>, document.getElementById('root'));
+import './custom-elements/AppElement';

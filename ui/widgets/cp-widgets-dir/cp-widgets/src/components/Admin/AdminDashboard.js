@@ -2,6 +2,8 @@ import React from 'react';
 import { Accordion, AccordionItem, Search, Tile} from 'carbon-components-react';
 import CustomTable from '../Customer/customDataTable';
 import AddCustomerModal from './AddCustomerModal';
+import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
+import withKeycloak from '../../auth/withKeycloak';
 
 const customer = [
     {
@@ -18,7 +20,12 @@ const customer = [
     }
 ]
 
-const AdminDashboard = () => (
+//const { keycloak } = props;
+//const authenticated = keycloak.initialized && keycloak.authenticated;
+
+const AdminDashboard = (props) => (
+    <>
+    <AuthenticatedView keycloak={props.keycloak}>
     <div className="admin-dashboard">
         <Tile>
             <h4>All Customers</h4><br/>
@@ -44,6 +51,11 @@ const AdminDashboard = () => (
             </Accordion>
         </div>
     </div>
+    </AuthenticatedView>
+    <UnauthenticatedView keycloak={props.keycloak}>
+        <p>Unauthenticated</p>
+    </UnauthenticatedView>
+    </>
 );
 
-export default AdminDashboard;
+export default withKeycloak(AdminDashboard);

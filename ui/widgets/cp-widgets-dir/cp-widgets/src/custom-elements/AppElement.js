@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CustomDataTable from '../components/Customer/customDataTable';
+import retargetEvents from 'react-shadow-dom-retarget-events';
+
 import KeycloakContext from '../auth/KeycloakContext';
+import App from '../components/App';
 
 import {
   subscribeToWidgetEvent
@@ -17,7 +19,8 @@ const getKeycloakInstance = () =>
     initialized: false,
   };
 
-class CustomDataTableElement extends HTMLElement {
+
+class AppElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -30,7 +33,6 @@ class CustomDataTableElement extends HTMLElement {
 
   connectedCallback() {
     this.mountPoint = document.createElement('div');
-
     this.keycloak = { ...getKeycloakInstance(), initialized: true };
 
     
@@ -41,19 +43,18 @@ class CustomDataTableElement extends HTMLElement {
 
     this.render();
 
+    //retargetEvents(shadowRoot);
     this.appendChild(this.mountPoint);
   }
 
   render() {
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <CustomDataTable />
+        <App />
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('custom-datatable-widget', CustomDataTableElement);
-
-export default CustomDataTableElement;
+customElements.define('app-element', AppElement);
