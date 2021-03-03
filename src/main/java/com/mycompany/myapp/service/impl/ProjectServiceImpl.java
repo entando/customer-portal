@@ -82,5 +82,6 @@ public class ProjectServiceImpl implements ProjectService {
         List<Project> foundProjects = projectRepository.findByName(name);
 
         return foundProjects.isEmpty() ? Optional.ofNullable(null) : Optional.ofNullable(foundProjects.get(0));
+        
     }
 }

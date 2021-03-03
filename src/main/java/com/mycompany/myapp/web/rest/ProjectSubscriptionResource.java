@@ -1,5 +1,6 @@
 package com.mycompany.myapp.web.rest;
 
+import com.mycompany.myapp.domain.EntandoVersion;
 import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.domain.ProjectSubscription;
 import com.mycompany.myapp.request.SubscriptionCreationRequest;
@@ -38,10 +39,12 @@ public class ProjectSubscriptionResource {
 
     private final ProjectSubscriptionService projectSubscriptionService;
     private final ProjectService projectService;
+    private final EntandoVersionService entandoVersionService;
 
-    public ProjectSubscriptionResource(ProjectSubscriptionService projectSubscriptionService, ProjectService projectService) {
+    public ProjectSubscriptionResource(ProjectSubscriptionService projectSubscriptionService, ProjectService projectService, EntandoVersionService entandoVersionService) {
         this.projectSubscriptionService = projectSubscriptionService;
         this.projectService = projectService;
+        this.entandoVersionService = entandoVersionService;
     }
 
     /**
@@ -58,14 +61,26 @@ public class ProjectSubscriptionResource {
         
         if (projectSubscription.getId() != null) {
             throw new BadRequestAlertException("A new projectSubscription cannot already have an ID", ENTITY_NAME, "idexists");
+        } else if (subscriptionCreationRequest.getEntandoVersion() == null) {
+            throw new BadRequestAlertException("Missing entando version", ENTITY_NAME, "missingentandoversion");
+        } else if (subscriptionCreationRequest.getProjectName() == null) {
+            throw new BadRequestAlertException("Missing project name", ENTITY_NAME, "missingprojectname");
         }
 
+        // TODO: This may change to ID or even the whole object
         Optional<Project> associatedProjectOpt = projectService.findByName(subscriptionCreationRequest.getProjectName());
         if (!associatedProjectOpt.isPresent()) {
             throw new BadRequestAlertException("There was no project found with that name", ENTITY_NAME, "projectNotFound");
         }
 
+        // TODO: This may change to ID or even the whole object
+        Optional<EntandoVersion> entandoVersionOpt = entandoVersionService.findByName(subscriptionCreationRequest.getEntandoVersion());
+        if (!entandoVersionOpt.isPresent()) {
+            throw new BadRequestAlertException("There was no entando version found with that name", ENTITY_NAME, "");
+        }
+
         associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));
+        entandoVersionOpt.ifPresent(entandoVersion -> projectSubscription.setEntandoVersion(entandoVersion));
 
         ProjectSubscription result = projectSubscriptionService.save(subscriptionCreationRequest.getProjectSubscription());
         return ResponseEntity.created(new URI("/api/project-subscriptions/" + result.getId()))
