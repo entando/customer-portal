@@ -3,24 +3,12 @@ import { Select, SelectItem} from 'carbon-components-react';
 import CustomerDetails from '../Customer/customerDetails';
 import CustomTable from '../Customer/customDataTable';
 import AdminDashboard from './AdminDashboard';
-import { apiCustomersGet } from '../../api/tickets';
-import withKeycloak from '../../auth/withKeycloak';
+import '../../index.scss';
 
-class RoleCheck extends Component {
+export default class RoleCheck extends Component {
     state = {
         roleType: 'customer'
     };
-
-    componentDidUpdate(prevProps) {
-        const { keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-    
-        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-    
-        if (authenticated && changedAuth) {
-          this.fetchData();
-        }
-      }
 
     handleChanges = (e) => {
         const input = e.target;
@@ -32,16 +20,18 @@ class RoleCheck extends Component {
     render() {
         const roleType = ['Admin', 'Customer'];
         return (
-            <div className='role-check'>  
-            <Select defaultValue="role-type" name="roleType" labelText="Select Role(Testing)" value={this.state.roleType} onChange={this.handleChanges}>
-                    <SelectItem
-                            text="Select Role"
-                            value="role-type"
-                    />
-                    {roleType.map((roleType, i) => <SelectItem key={i} text={roleType} value={roleType.toLowerCase()}>{roleType}</SelectItem>)}
-                    </Select>
-                { this.renderForm()}
-            </div>    
+            
+                <div className='role-check'>  
+                <Select defaultValue="role-type" name="roleType" labelText="Select Role(Testing)" value={this.state.roleType} onChange={this.handleChanges}>
+                        <SelectItem
+                                text="Select Role"
+                                value="role-type"
+                        />
+                        {roleType.map((roleType, i) => <SelectItem key={i} text={roleType} value={roleType.toLowerCase()}>{roleType}</SelectItem>)}
+                        </Select>
+                    { this.renderForm()}
+                </div>
+            
             );
     }
 
@@ -62,5 +52,3 @@ class RoleCheck extends Component {
         );
     }
 }
-
-export default withKeycloak(RoleCheck)

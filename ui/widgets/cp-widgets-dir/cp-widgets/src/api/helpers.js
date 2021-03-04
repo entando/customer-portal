@@ -13,7 +13,7 @@ export const getKeycloakToken = () => {
 export const getDefaultOptions = () => ({
   headers: new Headers({
     Authorization: `Bearer ${getKeycloakToken()}`,
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   }),
 });
 
@@ -31,10 +31,10 @@ export const request = async (url, options) => {
   };
 
   if (response.status === 204) {
-    return { tickets: '' };
+    return { data: '' };
   }
 
   return response.status >= 200 && response.status < 300
-    ? { tickets: await response.json(), headers }
+    ? { data: await response.json(), headers }
     : Promise.reject(new Error(response.statusText || response.status));
 };

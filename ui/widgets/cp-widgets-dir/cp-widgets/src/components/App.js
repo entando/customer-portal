@@ -5,13 +5,16 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import OpenTicket from './Forms/openTicket';
 import EnhancementRequest from './Forms/enhancementRequest';
 import SubscriptionForm from './Forms/SubscriptionForm';
+import Subscription from './SubscriptionDetails/subscription';
+import ManageUser from './Admin/ManageUser/ManageUser';
+import AdminConfiguration from './Admin/Configuration/AdminConfiguration';
 import RoleCheck from './Admin/RoleCheck';
 import Navigation from './Navigation/Navigation';
 import { AuthenticatedView, UnauthenticatedView } from '../auth/KeycloakViews';
 import withKeycloak from '../auth/withKeycloak';
 
 import keycloakType from '../components/__types__/keycloak';
-import { apiCustomersGet } from '../api/tickets';
+import { apiProjectsGet } from '../api/projects';
 
 
 class App extends Component {
@@ -26,14 +29,14 @@ class App extends Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            console.log('Authenticated')
-            const tickets = await apiCustomersGet("http://localhost:8081/services/custportApp");
+            //console.log('Authenticated')
+            const projects = await apiProjectsGet("http://localhost:8081/services/custportApp");
             this.setState({
-                data: tickets
+                data: projects
             });
         }
         else {
-            console.log('Not authenticated')
+            //console.log('Not authenticated')
         }
         this.render();
     }
@@ -55,6 +58,7 @@ class App extends Component {
 
     render() {
         const { t, keycloak } = this.props;
+        //console.log(keycloak)
         return (
             <div>  
                 <UnauthenticatedView keycloak={keycloak}>
@@ -64,16 +68,19 @@ class App extends Component {
                     <BrowserRouter>
                         <div id="dashboard-widget">
                             <Navigation/>
-                            <Switch>
-                                <Route path="/" component={RoleCheck} exact/>
-                                <Route path="/subscription" component={SubscriptionForm}/>
-                                <Route path="/service-ticket" component={OpenTicket} />
-                                <Route path="/enhancement" component={EnhancementRequest}/>
-                            </Switch>
+                            <div style={{marginTop: '100px'}}>
+                                <Switch>
+                                    <Route path="/" component={RoleCheck} exact />
+                                    <Route path="/subscription-details" component={Subscription}/>
+                                    <Route path="/subscription" component={SubscriptionForm}/>
+                                    <Route path="/service-ticket" component={OpenTicket} />
+                                    <Route path="/enhancement" component={EnhancementRequest} />
+                                    <Route path="/manage-users" component={ManageUser} />
+                                    <Route path="/configuration-settings" component={AdminConfiguration} />
+                                </Switch>
+                            </div>
                         </div>
                     </BrowserRouter>
-                    <p>Tickets:</p>
-                    <p>{JSON.stringify(this.state.data)}</p>
                 </AuthenticatedView>
                 
             </div>
