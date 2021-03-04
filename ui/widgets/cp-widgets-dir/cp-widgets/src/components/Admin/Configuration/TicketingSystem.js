@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form, TextInput, Select, SelectItem, Button} from 'carbon-components-react';
+import { apiTicketingSystemPost } from '../../../api/ticketingsystem';
 
 class TicketingSystem extends Component {
     constructor(props) {
@@ -20,9 +21,26 @@ class TicketingSystem extends Component {
         this.setState({ [name]: value });
     }
 
+    async createTicketingSystem() {
+        const ticketingSystem = {
+            url: this.state.url,
+            serviceAccount: this.state.userName,
+            serviceAccountSecret: this.state.password,
+            systemId: this.state.projectName
+        }
+        await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem);
+    }
+
     handleFormSubmit = (event) => {
-        console.log(this.state.projectName)
         event.preventDefault();
+        this.createTicketingSystem();
+        this.setState({
+            ticketingSystem:'',
+            url: '',
+            userName: '',
+            password: '',
+            projectName: ''
+        })
     };
 
     render() { 
@@ -48,7 +66,7 @@ class TicketingSystem extends Component {
                                 <TextInput name="password" labelText="Password" value={this.state.password} onChange={this.handleChanges}/>
                             </div>
                         </div>
-                        <Button kind="primary" tabIndex={0} type="submit" > Submit  </Button>
+                        <Button kind="primary" tabIndex={0} type="submit"> Submit  </Button>
                     </div>
                 </Form>
             </div>
