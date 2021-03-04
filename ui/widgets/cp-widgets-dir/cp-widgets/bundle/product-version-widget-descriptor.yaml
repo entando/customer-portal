@@ -1,0 +1,6 @@
+code: product-version-widget
+titles:
+  en: Product Version Widget
+  it: Product Version Widget
+group: free
+customUiPath: product-version-widget.ftl

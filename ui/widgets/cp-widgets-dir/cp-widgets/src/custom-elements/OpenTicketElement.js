@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TicketList from '../components/SubscriptionDetails/TicketList';
+import OpenTicket from '../components/Forms/openTicket';
 import '../index.scss'
 import './dashboard.css'
 
@@ -28,7 +28,7 @@ const ATTRIBUTES = {
   serviceUrl: 'service-url',
 };
 
-class TicketListCustomerElement extends HTMLElement {
+class OpenTicketElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -60,12 +60,12 @@ class TicketListCustomerElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <TicketList serviceUrl={serviceUrl}/>
+        <OpenTicket serviceUrl={serviceUrl}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('ticket-list-widget', TicketListCustomerElement);
+customElements.define('open-ticket-widget', OpenTicketElement);
 

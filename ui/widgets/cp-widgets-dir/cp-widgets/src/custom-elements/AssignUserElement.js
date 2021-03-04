@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TicketList from '../components/SubscriptionDetails/TicketList';
+import AssignUser from '../components/Admin/ManageUser/AssignUser';
 import '../index.scss'
 import './dashboard.css'
 
@@ -28,7 +28,7 @@ const ATTRIBUTES = {
   serviceUrl: 'service-url',
 };
 
-class TicketListCustomerElement extends HTMLElement {
+class AssignUserElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -60,12 +60,12 @@ class TicketListCustomerElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <TicketList serviceUrl={serviceUrl}/>
+        <AssignUser serviceUrl={serviceUrl}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('ticket-list-widget', TicketListCustomerElement);
+customElements.define('assign-user-widget', AssignUserElement);
 

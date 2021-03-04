@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import CustomDataTable from '../components/Customer/customDataTable';
 import KeycloakContext from '../auth/KeycloakContext';
 import '../index.scss'
+import './dashboard.css'
 
 import {
   subscribeToWidgetEvent

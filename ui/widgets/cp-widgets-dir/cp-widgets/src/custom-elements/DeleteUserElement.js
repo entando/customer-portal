@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SubscriptionForm from '../components/Forms/SubscriptionForm';
+import DeleteUser from '../components/Admin/ManageUser/DeleteUser';
+import '../index.scss'
+import './dashboard.css'
+
 import KeycloakContext from '../auth/KeycloakContext';
 
 import {
@@ -25,8 +28,7 @@ const ATTRIBUTES = {
   serviceUrl: 'service-url',
 };
 
-
-class FormsSubscriptionElement extends HTMLElement {
+class DeleteUserElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -58,12 +60,12 @@ class FormsSubscriptionElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <SubscriptionForm serviceUrl={serviceUrl}/>
+        <DeleteUser serviceUrl={serviceUrl}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('subscription-form-widget', FormsSubscriptionElement);
+customElements.define('delete-user-widget', DeleteUserElement);
 

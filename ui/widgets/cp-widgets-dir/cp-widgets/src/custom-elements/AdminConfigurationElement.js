@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TicketList from '../components/SubscriptionDetails/TicketList';
+import AdminConfiguration from '../components/Admin/Configuration/AdminConfiguration';
 import '../index.scss'
 import './dashboard.css'
 
@@ -11,7 +11,7 @@ import {
 } from '../helpers/widgetEvents';
 import {
   KEYCLOAK_EVENT_TYPE,
-} from '../custom-elements/widgetEventTypes';
+} from './widgetEventTypes';
 
 const getKeycloakInstance = () =>
   (window &&
@@ -28,7 +28,7 @@ const ATTRIBUTES = {
   serviceUrl: 'service-url',
 };
 
-class TicketListCustomerElement extends HTMLElement {
+class AdminConfigurationElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -60,12 +60,12 @@ class TicketListCustomerElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <TicketList serviceUrl={serviceUrl}/>
+        <AdminConfiguration serviceUrl={serviceUrl}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('ticket-list-widget', TicketListCustomerElement);
+customElements.define('admin-configuration-widget', AdminConfigurationElement);
 
