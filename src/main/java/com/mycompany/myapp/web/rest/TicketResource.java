@@ -133,7 +133,7 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
      */
     @GetMapping("/tickets/ticketingsystem/{systemId}")
-    public String fetchJiraTicketsByProject(@PathVariable String systemId) throws URISyntaxException {
+    public List<Ticket> fetchJiraTicketsByProject(@PathVariable String systemId) throws URISyntaxException {
         log.debug("REST request to get all Tickets by systemId: {}");
 
         // fetch tickets from Jira and store in a JSONArray
@@ -161,7 +161,7 @@ public class TicketResource {
         }
 
         // return JSON response from Jira
-        return response.toString();
+        return getAllTickets();
     }
 
     /**

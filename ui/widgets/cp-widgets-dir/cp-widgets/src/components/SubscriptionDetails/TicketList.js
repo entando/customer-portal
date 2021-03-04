@@ -64,14 +64,15 @@ componentDidUpdate(prevProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {Object.keys(this.state.data).length !== 0 ? this.state.data.data.issues.map((ticket) => {
+                {Object.keys(this.state.data).length !== 0 ? this.state.data.data.map((ticket) => {
                   return (
                     <TableRow key={ticket.id}>
-                      <TableCell key={ticket.id}>{ticket.key}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.key.split("-")[0]}</TableCell>
-                      <TableCell key={ticket.id}>6.2</TableCell>
-                      <TableCell key={ticket.id}>March, 2020</TableCell>
-                      <TableCell key={ticket.id}><a href="https://jorden-test-partner-portal.atlassian.net/jira/software/projects/JAT/boards/1">Open Ticket</a></TableCell>
+                      <TableCell key={ticket.id}>{ticket.systemId}</TableCell>
+                      <TableCell key={ticket.id}>{ticket.systemId.split("-")[0]}</TableCell>
+                      <TableCell key={ticket.id}>{ticket.description}</TableCell>
+                      <TableCell key={ticket.id}>{ticket.type}</TableCell>
+                      <TableCell key={ticket.id}>{ticket.createDate}</TableCell>
+                      <TableCell key={ticket.id}><a href={"https://jira.entando.org/browse/" + ticket.systemId} target="_blank">View Ticket</a></TableCell>
                     </TableRow>
                   )
                 }) : null}
@@ -94,8 +95,12 @@ const headerData = [
     key: 'project',
   },
   {
-    header: 'Entando Version',
-    key: 'entandoVersion',
+    header: 'Description',
+    key: 'description',
+  },
+  {
+    header: 'Type',
+    key: 'type',
   },
   {
     header: 'Creation Date',
