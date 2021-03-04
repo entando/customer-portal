@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomTable from '../Customer/customDataTable';
+import TicketList from './TicketList';
 import { Tile } from 'carbon-components-react';
 
 const subscriptionData = {
@@ -11,8 +11,9 @@ const subscriptionData = {
     level: 'Gold',
     startDate: 'May 2019',
     endDate: 'May 2020',
-    license: 'Free Commercial Open Source'
-}
+    license: 'Free Commercial Open Source',
+};
+
 const Subscription = () => {
     const { description, commitment, type, quantityRequest, components, level, startDate, endDate, license } = subscriptionData
     return (
@@ -21,7 +22,7 @@ const Subscription = () => {
                 <div className="bx--grid">
                     <div className="bx--row">
                         <div className="bx--col">
-                            <p><strong>Description:</strong> {description}</p>
+                             <p><strong>Description:</strong> {description}</p>
                             <p><strong>Commitment:</strong> {commitment}</p>
                             <p><strong>Type:</strong> {type}</p>
                             <p><strong>Quantity Request:</strong> {quantityRequest}</p>
@@ -37,9 +38,9 @@ const Subscription = () => {
                 </div>
             </Tile>
             <br/>
-            <CustomTable/>
+            <TicketList/>
         </div>
     )
-}
+};
 
 export default Subscription;

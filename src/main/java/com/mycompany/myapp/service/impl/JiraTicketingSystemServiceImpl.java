@@ -115,7 +115,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
      */
     @Override
     public String fetchJiraTicketsBySystemId(String systemId, String baseUrl, String serviceAccount, String serviceAccountSecret) {
-        String searchQuery = "/search?jql=project=";
+        String searchQuery = "search?jql=project=";
         String user = serviceAccount;
         String password = serviceAccountSecret;
 

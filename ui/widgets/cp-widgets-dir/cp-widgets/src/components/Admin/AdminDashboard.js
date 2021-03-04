@@ -1,61 +1,103 @@
 import React from 'react';
-import { Accordion, AccordionItem, Search, Tile} from 'carbon-components-react';
+import { Accordion, AccordionItem, PaginationNav, Search, Tile} from 'carbon-components-react';
 import CustomTable from '../Customer/customDataTable';
 import AddCustomerModal from './AddCustomerModal';
-import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
+import AddPartnerModal from './AddPartnerModal';
 import withKeycloak from '../../auth/withKeycloak';
+import { apiCustomerPost, apiCustomerPut, apiCustomersGet } from '../../api/customers';
+import { apiProjectPost, apiProjectPut } from '../../api/projects';
 
 const customer = [
     {
-        label: <h4>Blue Cross Subscription</h4>,
+        label: <div><h4>Blue Cross Subscription</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
         content: <CustomTable />
     },
     {
-        label: <h4>Ford</h4>,
+        label: <div><h4>Ford</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
         content: <CustomTable />
     },
     {
-        label: <h4>Veriday</h4>,
+        label: <div><h4>Veriday</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
         content: <CustomTable />
     }
 ]
 
-//const { keycloak } = props;
-//const authenticated = keycloak.initialized && keycloak.authenticated;
+class AdminDashboard extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            customers: "",
+            projects: ""
+        }
+    }
 
-const AdminDashboard = (props) => (
-    <>
-    <AuthenticatedView keycloak={props.keycloak}>
-    <div className="admin-dashboard">
-        <Tile>
-            <h4>All Customers</h4><br/>
-            <div className="bx--grid">
-                <div className="bx--row">
-                    <div className="bx--col">
-                        <Search id="search" placeHolderText="Which customer are you looking for?" />
+    componentDidMount(){
+        this.getCustomer();
+    }
+
+    componentDidUpdate(prevProps) {
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+    
+        if (authenticated && changedAuth) {
+          this.getCustomer();
+        }
+      }
+
+    async getCustomer() {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const customers = await apiCustomersGet(this.props.serviceUrl);
+            this.setState({
+                customers: customers
+            })
+        }
+    }
+
+    render(){
+        //console.log(this.state.customers)
+        return(
+            <div className="admin-dashboard">
+                <Tile>
+                    <h4>All Customers</h4><br/>
+                    <div className="bx--grid">
+                        <div className="bx--row">
+                            <div className="bx--col">
+                                <Search id="search" placeHolderText="Which customer are you looking for?" />
+                            </div>
+                            <div className="bx--col">
+                                <AddPartnerModal />
+                                <AddCustomerModal serviceUrl={this.props.serviceUrl}/>
+                            </div>
+                        </div>
                     </div>
-                    <div className="bx--col">
-                        <AddCustomerModal/> 
-                    </div>
+                </Tile>  
+                
+                <div className="form-container">
+                    <Accordion>
+                        {customer.map((item, index) => (
+                            <AccordionItem index={index} title={item.label}>
+                                <p>{item.content}</p>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                    <Accordion>
+                        {this.state.customers.data ? this.state.customers.data.map((customer, index) => {
+                            return(
+                            <AccordionItem index={index} title={customer.name}>
+                                <CustomTable />
+                            </AccordionItem>
+                            )
+                        }) : null}
+                    </Accordion>
+                    <PaginationNav cssClass='pagination-right'/>
                 </div>
             </div>
-        </Tile>  
-        
-        <div className="form-container">
-            <Accordion>
-                {customer.map((item, index) => (
-                    <AccordionItem index={index} title={item.label}>
-                        <p>{item.content}</p>
-                    </AccordionItem>
-                ))}
-            </Accordion>
-        </div>
-    </div>
-    </AuthenticatedView>
-    <UnauthenticatedView keycloak={props.keycloak}>
-        <p>Unauthenticated</p>
-    </UnauthenticatedView>
-    </>
-);
+        )
+    }
+}
 
 export default withKeycloak(AdminDashboard);

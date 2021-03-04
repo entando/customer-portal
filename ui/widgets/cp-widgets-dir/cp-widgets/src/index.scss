@@ -29,6 +29,9 @@ body{
    }
   .bx--tile{
     background: #FFF;
+    h4,p{
+      padding: 0 0 0 1rem;
+    }  
   }
   .bx--data-table td, .bx--data-table tbody th{
     background: #FFF;
@@ -49,6 +52,9 @@ body{
    size: 32px;
    font-weight: 700;
   }
+  li.bx--accordion__item{
+    padding: 1rem;
+  }
   .admin-dashboard{
     .bx--accordion__item{
       padding: 1rem;
@@ -68,8 +74,9 @@ body{
     .bx--tile{
       margin: 15px;
       min-height:150px;
+      padding: 1rem;
     }
-    .add-customer{
+    .add-customer, .add-partner{
       float: right;
     }
   } 
@@ -127,11 +134,14 @@ body{
 .form-container{
   background: #FFF;
   margin: 15px;
+  margin-top: 1rem;
     .form-desc{
       margin: 2rem 0;
       padding: 0 2rem;
     }
  }
+
+ .pagination-right{float:right;}
 
  //This block will be removed
 
@@ -142,8 +152,12 @@ body{
 
 ul#navigation {
   float: right;
-  display: block;
-  margin-top: 3rem;
+    display: block;
+    margin-top: 3rem;
+    position: fixed;
+    top: 0;
+    right: 13rem;
+
   li {
     display: inline;
     padding: 10px;

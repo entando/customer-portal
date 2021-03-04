@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import retargetEvents from 'react-shadow-dom-retarget-events';
+import '../index.scss'
 
 import KeycloakContext from '../auth/KeycloakContext';
 import App from '../components/App';
@@ -18,6 +19,14 @@ const getKeycloakInstance = () =>
     window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
     initialized: false,
   };
+
+const ATTRIBUTES = {
+  hidden: 'hidden',
+  locale: 'locale',
+  paginationMode: 'pagination-mode',
+  disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
+  serviceUrl: 'service-url',
+};
 
 
 class AppElement extends HTMLElement {
@@ -48,9 +57,11 @@ class AppElement extends HTMLElement {
   }
 
   render() {
+    const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
+
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <App />
+        <App serviceUrl={serviceUrl}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
