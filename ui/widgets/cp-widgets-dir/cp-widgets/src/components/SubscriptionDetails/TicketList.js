@@ -64,13 +64,6 @@ componentDidUpdate(prevProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.id} >
-                    {row.cells.map((cell) => (
-                      <TableCell key={cell.id}>{cell.value}</TableCell>
-                    ))}
-                  </TableRow>
-                ))}
                 {Object.keys(this.state.data).length !== 0 ? this.state.data.data.issues.map((ticket) => {
                   return (
                     <TableRow key={ticket.id}>

@@ -78,17 +78,10 @@ class AdminDashboard extends React.Component {
                 
                 <div className="form-container">
                     <Accordion>
-                        {customer.map((item, index) => (
-                            <AccordionItem index={index} title={item.label}>
-                                <p>{item.content}</p>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
-                    <Accordion>
                         {this.state.customers.data ? this.state.customers.data.map((customer, index) => {
                             return(
                             <AccordionItem index={index} title={customer.name}>
-                                <CustomTable />
+                                <CustomTable serviceUrl={this.props.serviceUrl} customerId={customer.id} />
                             </AccordionItem>
                             )
                         }) : null}

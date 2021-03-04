@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import CustomerDetails from '../components/Customer/customerDetails';
 import KeycloakContext from '../auth/KeycloakContext';
+import './dashboard.css'
 
 import {
   subscribeToWidgetEvent

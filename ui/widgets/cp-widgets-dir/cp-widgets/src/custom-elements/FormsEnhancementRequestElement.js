@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import EnhancementRequest from '../components/Forms/enhancementRequest';
 import KeycloakContext from '../auth/KeycloakContext';
+import './dashboard.css'
 
 import {
   subscribeToWidgetEvent

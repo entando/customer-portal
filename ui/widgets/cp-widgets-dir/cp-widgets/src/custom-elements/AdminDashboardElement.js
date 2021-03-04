@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AdminDashboard from '../components/Admin/AdminDashboard';
 import '../index.scss'
+import './dashboard.css'
 
 import KeycloakContext from '../auth/KeycloakContext';
 

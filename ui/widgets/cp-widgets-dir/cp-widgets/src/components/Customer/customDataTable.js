@@ -42,6 +42,11 @@ componentDidUpdate(prevProps) {
   }
 
   render() { 
+    /*
+    if (Object.keys(this.state.data).length !== 0 && this.props.customerId) {
+      var filteredProjects = this.state.data.data.filter(project => project.customer != null)
+    }
+    */
     return ( 
       <div>
         <DataTable rows={rowData} headers={headerData} data={this.state.data}>
@@ -58,15 +63,6 @@ componentDidUpdate(prevProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/*
-                {rows.map((row) => (
-                  <TableRow key={row.id} >
-                    {row.cells.map((cell) => (
-                      <TableCell key={cell.id}>{cell.value}</TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-                */}
                 {Object.keys(this.state.data).length !== 0 ? 
                   this.state.data.data.map((project) => (
                     <TableRow key={project.id} >
