@@ -3,6 +3,7 @@ import { Select, SelectItem} from 'carbon-components-react';
 import CustomerDetails from '../Customer/customerDetails';
 import CustomTable from '../Customer/customDataTable';
 import AdminDashboard from './AdminDashboard';
+import '../../index.scss';
 
 export default class RoleCheck extends Component {
     state = {
@@ -19,16 +20,18 @@ export default class RoleCheck extends Component {
     render() {
         const roleType = ['Admin', 'Customer'];
         return (
-            <div className='role-check'>  
-            <Select defaultValue="role-type" name="roleType" labelText="Select Role(Testing)" value={this.state.roleType} onChange={this.handleChanges}>
-                    <SelectItem
-                            text="Select Role"
-                            value="role-type"
-                    />
-                    {roleType.map((roleType, i) => <SelectItem key={i} text={roleType} value={roleType.toLowerCase()}>{roleType}</SelectItem>)}
-                    </Select>
-                { this.renderForm()}
-            </div>    
+            
+                <div className='role-check'>  
+                <Select defaultValue="role-type" name="roleType" labelText="Select Role(Testing)" value={this.state.roleType} onChange={this.handleChanges}>
+                        <SelectItem
+                                text="Select Role"
+                                value="role-type"
+                        />
+                        {roleType.map((roleType, i) => <SelectItem key={i} text={roleType} value={roleType.toLowerCase()}>{roleType}</SelectItem>)}
+                        </Select>
+                    { this.renderForm()}
+                </div>
+            
             );
     }
 
@@ -38,7 +41,7 @@ export default class RoleCheck extends Component {
             <div>
                 <h3>Welcome to Entando Customer Portal</h3>
                 <CustomerDetails />
-                <CustomTable/>
+                <CustomTable />
             </div>
         )
         if (this.state.roleType === 'admin') return (

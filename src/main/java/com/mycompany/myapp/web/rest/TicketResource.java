@@ -140,6 +140,7 @@ public class TicketResource {
         TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(systemId);
         JSONObject response = new JSONObject(ticketingSystemService.fetchJiraTicketsBySystemId(systemId, ts.getUrl(),
             ts.getServiceAccount(), ts.getServiceAccountSecret()));
+
         JSONArray issues = new JSONArray(response.getJSONArray("issues"));
 
         // loop through tickets and check if they exist as Tickets in the db

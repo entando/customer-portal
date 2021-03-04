@@ -1,7 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+
 import './index.scss';
-import App from './components/App';
 
 import './custom-elements/AdminDashboardElement';
 import './custom-elements/AdminAddCustomerElement';
@@ -13,5 +11,5 @@ import './custom-elements/FormsSubscriptionElement';
 import './custom-elements/FormsOpenTicketElement';
 import './custom-elements/NavigationElement';
 import './custom-elements/FormsEnhancementRequestElement';
-
-ReactDOM.render(<App/>, document.getElementById('root'));
+import './custom-elements/AppElement';
+import './custom-elements/TicketListElement';

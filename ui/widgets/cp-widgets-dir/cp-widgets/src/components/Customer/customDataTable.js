@@ -1,9 +1,50 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
-    
-const CustomTable = () => {
-    return (
-        <DataTable rows={rowData} headers={headerData}>
+import '../../index.scss';
+import { apiProjectsGet } from '../../api/projects';
+import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
+import withKeycloak from '../../auth/withKeycloak';
+import keycloakType from '../../components/__types__/keycloak';
+
+class CustomTable extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      data: {}
+     }
+  }
+
+  async fetchData() {
+    const { t, keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
+    if (authenticated) {
+        var projects = await apiProjectsGet(this.props.serviceUrl);
+        this.setState({
+            data: projects
+        });
+    }
+    this.render();
+}
+
+componentDidMount(){
+    this.fetchData();
+}
+
+componentDidUpdate(prevProps) {
+    const { keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
+
+    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+
+    if (authenticated && changedAuth) {
+      this.fetchData();
+    }
+  }
+
+  render() { 
+    return ( 
+      <div>
+        <DataTable rows={rowData} headers={headerData} data={this.state.data}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
           <TableContainer title="Subscriptions" description="In this table there are open subscriptions">
             <Table {...getTableProps()}>
@@ -17,6 +58,7 @@ const CustomTable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
+                {/*
                 {rows.map((row) => (
                   <TableRow key={row.id} >
                     {row.cells.map((cell) => (
@@ -24,14 +66,27 @@ const CustomTable = () => {
                     ))}
                   </TableRow>
                 ))}
+                */}
+                {Object.keys(this.state.data).length !== 0 ? 
+                  this.state.data.data.map((project) => (
+                    <TableRow key={project.id} >
+                        <TableCell key={project.id}>{project.name}</TableCell>
+                        <TableCell key={project.id}>{project.contactName}</TableCell>
+                        <TableCell key={project.id}>{project.customer ? project.customer.id : "0"}</TableCell>
+                        <TableCell key={project.id}>{project.createDate}</TableCell>
+                        <TableCell key={project.id}>{project.createDate}</TableCell>
+                        <TableCell key={project.id}>{project.tickets ? project.tickets.length : "0"}</TableCell>
+                    </TableRow>
+                  )) : null
+              }
               </TableBody>
             </Table>
           </TableContainer>
         )}
       </DataTable>
-    )
+    </div>
+  )}
 }
-
 
 const headerData = [
   {
@@ -99,4 +154,4 @@ const rowData = [
     }  
 ];
  
-export default CustomTable;
+export default withKeycloak(CustomTable);

@@ -3,13 +3,9 @@ import { Form, TextInput, TextArea, Button } from 'carbon-components-react';
 
 export default class OpenTicket extends Component {
     state = {
-        ticketNo: '',
-        customerName: '',
         projectName: '',
-        openedBy: '',
-        priority: '',
-        partnerName: '',
-        ticketDescription: ''
+        assignUser: '',
+        selectRole: ''
     };
 
     handleChanges = (e) => {

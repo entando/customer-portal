@@ -72,6 +72,7 @@ class CustomerTableContainer extends Component {
     if (authenticated && (changedAuth || changedPagination)) {
       this.fetchData();
     }
+    this.render();
   }
 
   dispatch(action, afterSetState = () => {}) {

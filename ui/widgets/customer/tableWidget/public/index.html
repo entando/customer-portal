@@ -48,9 +48,9 @@
                     };
 
                     /*
-            If you are locally running the widget in isolation and you are not logged in,
-            you are automatically redirected to keycloak login page to speed up development.
-          */
+                        If you are locally running the widget in isolation and you are not logged in,
+                        you are automatically redirected to keycloak login page to speed up development.
+                    */
                     const onLoad =
                         window.location.hostname === 'localhost' ? 'login-required' : 'check-sso';
 
