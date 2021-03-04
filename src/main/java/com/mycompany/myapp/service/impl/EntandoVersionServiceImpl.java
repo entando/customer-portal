@@ -76,4 +76,12 @@ public class EntandoVersionServiceImpl implements EntandoVersionService {
 
         entandoVersionRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<EntandoVersion> findByName(String name) {
+        log.debug("Request to get Project by name : {}", name);
+        List<EntandoVersion> foundEntandoVersion = entandoVersionRepository.findByName(name);
+
+        return foundEntandoVersion.isEmpty() ? Optional.ofNullable(null) : Optional.ofNullable(foundEntandoVersion.get(0));
+    }
 }

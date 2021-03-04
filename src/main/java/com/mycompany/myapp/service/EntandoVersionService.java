@@ -39,4 +39,11 @@ public interface EntandoVersionService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Get the entando version by it's name
+     * @param name the entando version
+     * @return the entity
+     */
+    Optional<EntandoVersion> findByName(String name);
 }
