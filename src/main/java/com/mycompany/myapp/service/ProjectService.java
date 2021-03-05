@@ -2,8 +2,9 @@ package com.mycompany.myapp.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import com.mycompany.myapp.domain.Project;
+import com.mycompany.myapp.domain.*;
 
 /**
  * Service Interface for managing {@link Project}.
@@ -35,7 +36,7 @@ public interface ProjectService {
 
     /**
      * Find a project by name.
-     * 
+     *
      * @param name the name of the project.
      * @return the entity.
      */
@@ -47,4 +48,72 @@ public interface ProjectService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Add a ticket to a project.
+     *
+     * @param projectId the project id.
+     * @param ticketId the ticket id.
+     * @return the persisted entity.
+     */
+    Project addTicketToProject(Long projectId, Long ticketId);
+
+    /**
+     * Get project tickets by id.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Set<Ticket> getProjectTickets(Long id);
+
+    /**
+     * Add a subscription to a project.
+     *
+     * @param projectId the project id.
+     * @param subscriptionId the subscription id.
+     * @return the persisted entity.
+     */
+    Project addSubscriptionToProject(Long projectId, Long subscriptionId);
+
+    /**
+     * Get project subscriptions by id.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Set<ProjectSubscription> getProjectSubscriptions(Long id);
+
+    /**
+     * Add a partner to a project.
+     *
+     * @param projectId the project id.
+     * @param partnerId the partner id.
+     * @return the persisted entity.
+     */
+    Project addPartnerToProject(Long projectId, Long partnerId);
+
+    /**
+     * Get project partners by id.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Set<Partner> getProjectPartners(Long id);
+
+    /**
+     * Add a portal user to a project.
+     *
+     * @param projectId the project id.
+     * @param userId the partner id.
+     * @return the persisted entity.
+     */
+    Project addUserToProject(Long projectId, Long userId);
+
+    /**
+     * Get project users by id.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Set<PortalUser> getProjectUsers(Long id);
 }
