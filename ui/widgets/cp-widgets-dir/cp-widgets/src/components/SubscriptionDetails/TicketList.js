@@ -47,7 +47,6 @@ componentDidUpdate(prevProps) {
   };  
 
   render() { 
-    console.log(this.state.data)
     return ( 
       <div>
         <DataTable rows={rowData} headers={headerData}>

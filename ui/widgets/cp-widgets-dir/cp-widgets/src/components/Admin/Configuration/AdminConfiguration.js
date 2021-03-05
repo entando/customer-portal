@@ -6,7 +6,7 @@ import ProductVersion from './ProductVersion';
 const adminConfig = [
     {
         label: <div><h4>Integration with Ticketing System</h4><p>This allows you to manage the ticketing system</p></div>,
-        content: <TicketingSystem/>
+        content: <TicketingSystem />
     },
     {
         label: <div><h4>Manage Product Version</h4><p>This let’s you manage the entando product versions</p></div>,
