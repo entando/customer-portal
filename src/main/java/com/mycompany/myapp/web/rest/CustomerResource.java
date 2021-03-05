@@ -1,6 +1,8 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Customer;
+import com.mycompany.myapp.domain.PortalUser;
+import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.service.CustomerService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
@@ -17,6 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.Customer}.
@@ -114,5 +117,41 @@ public class CustomerResource {
 
         customerService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+    }
+
+    /**
+     * {@code POST  /customers/:customerId/projects/:projectId} : Add a project to a customer.
+     *
+     * @param customerId the customer id.
+     * @param projectId the project id.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new project, or with status {@code 400 (Bad Request)} if the
+     *         project has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/customers/{customerId}/projects/{projectId}")
+    public ResponseEntity<Customer> addProjectToCustomer(@PathVariable Long customerId, @PathVariable Long projectId) throws URISyntaxException {
+        log.debug("REST request to add Project to Customer : {}", customerId);
+        Customer result = customerService.addProjectToCustomer(customerId, projectId);
+
+        return ResponseEntity
+            .created(new URI("/api/customers/" + result.getId())).headers(HeaderUtil
+                .createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code GET  /customers/:customerId/projects} : get the projects of "customerId" customer.
+     *
+     * @param customerId the id of the project.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the project, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/customers/{customerId}/projects")
+    public ResponseEntity<Set<Project>> getCustomerProjects(@PathVariable Long customerId) {
+        Set<Project> projects = customerService.getCustomerProjects(customerId);
+        return ResponseEntity.ok().headers(
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, customerId.toString()))
+            .body(projects);
     }
 }
