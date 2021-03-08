@@ -5,29 +5,13 @@ import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomerPost, apiCustomerPut, apiCustomersGet } from '../../api/customers';
-import { apiProjectPost, apiProjectPut } from '../../api/projects';
-
-const customer = [
-    {
-        label: <div><h4>Blue Cross Subscription</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
-        content: <CustomTable />
-    },
-    {
-        label: <div><h4>Ford</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
-        content: <CustomTable />
-    },
-    {
-        label: <div><h4>Veriday</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
-        content: <CustomTable />
-    }
-]
+import { apiProjectPost, apiProjectPut, apiProjectsGetForAdmin } from '../../api/projects';
 
 class AdminDashboard extends React.Component {
     constructor() {
         super();
         this.state = {
             customers: "",
-            projects: ""
         }
     }
 
@@ -50,7 +34,8 @@ class AdminDashboard extends React.Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const customers = await apiCustomersGet(this.props.serviceUrl);
+            const customers = await apiProjectsGetForAdmin(this.props.serviceUrl);
+
             this.setState({
                 customers: customers
             })
@@ -78,10 +63,10 @@ class AdminDashboard extends React.Component {
                 
                 <div className="form-container">
                     <Accordion>
-                        {this.state.customers.data ? this.state.customers.data.map((customer, index) => {
+                        {this.state.customers.data ? Object.entries(this.state.customers.data).map(([key, value], index) => {
                             return(
-                            <AccordionItem index={index} title={customer.name}>
-                                <CustomTable serviceUrl={this.props.serviceUrl} customerId={customer.id} />
+                            <AccordionItem key={index} index={index} title={key}>
+                                <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={value} />
                             </AccordionItem>
                             )
                         }) : null}

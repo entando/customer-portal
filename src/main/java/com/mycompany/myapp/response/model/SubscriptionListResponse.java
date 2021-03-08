@@ -1,11 +1,13 @@
 package com.mycompany.myapp.response.model;
 
-public class SubscriptionRowResponse {
+import java.util.List;
 
-	public SubscriptionRowResponse() {}
+public class SubscriptionListResponse {
+
+	public SubscriptionListResponse() {}
 	
 	private String projectName;
-	private String partnerName;
+	private List<String> partners;
 	private String entandoVersion;
 	private String startDate;
 	private String endDate;
@@ -19,14 +21,14 @@ public class SubscriptionRowResponse {
 		this.projectName = projectName;
 	}
 	
-	public String getPartnerName() {
-		return partnerName;
+	public List<String> getPartners() {
+		return partners;
 	}
-	
-	public void setPartnerName(String partnerName) {
-		this.partnerName = partnerName;
+
+	public void setPartners(List<String> partners) {
+		this.partners = partners;
 	}
-	
+
 	public String getEntandoVersion() {
 		return entandoVersion;
 	}

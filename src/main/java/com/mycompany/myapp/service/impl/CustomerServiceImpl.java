@@ -1,20 +1,19 @@
 package com.mycompany.myapp.service.impl;
 
-import com.mycompany.myapp.domain.Partner;
-import com.mycompany.myapp.domain.Project;
-import com.mycompany.myapp.repository.ProjectRepository;
-import com.mycompany.myapp.service.CustomerService;
-import com.mycompany.myapp.domain.Customer;
-import com.mycompany.myapp.repository.CustomerRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.mycompany.myapp.domain.Customer;
+import com.mycompany.myapp.domain.Project;
+import com.mycompany.myapp.repository.CustomerRepository;
+import com.mycompany.myapp.repository.ProjectRepository;
+import com.mycompany.myapp.service.CustomerService;
 
 /**
  * Service Implementation for managing {@link Customer}.
@@ -108,4 +107,9 @@ public class CustomerServiceImpl implements CustomerService {
     public Set<Project> getCustomerProjects(Long id) {
         return customerRepository.findById(id).get().getProjects();
     }
+    
+    @Override
+	public Optional<Customer> findByCustomerNumber(String customerNumber) {
+		return customerRepository.findByCustomerNumber(customerNumber);
+	}
 }
