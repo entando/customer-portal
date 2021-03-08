@@ -2,8 +2,10 @@ package com.mycompany.myapp.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.mycompany.myapp.domain.Customer;
+import com.mycompany.myapp.domain.Project;
 
 /**
  * Service Interface for managing {@link Customer}.
@@ -25,7 +27,6 @@ public interface CustomerService {
      */
     List<Customer> findAll();
 
-
     /**
      * Get the "id" customer.
      *
@@ -40,6 +41,23 @@ public interface CustomerService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+    
+    /**
+     * Add a project to a customer.
+     *
+     * @param projectId the project id.
+     * @param customerId the partner id.
+     * @return the persisted entity.
+     */
+    Customer addProjectToCustomer(Long customerId, Long projectId);
+
+    /**
+     * Get customer projects by id.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Set<Project> getCustomerProjects(Long id);
     
     Optional<Customer> findByCustomerNumber(String customerNumber);
 }

@@ -31,12 +31,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mycompany.myapp.constant.CustportAppConstant;
 import com.mycompany.myapp.domain.Customer;
+import com.mycompany.myapp.domain.Partner;
+import com.mycompany.myapp.domain.PortalUser;
 import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.domain.ProjectSubscription;
+import com.mycompany.myapp.domain.Ticket;
 import com.mycompany.myapp.response.model.SubscriptionDetailResponse;
 import com.mycompany.myapp.response.model.SubscriptionListResponse;
 import com.mycompany.myapp.service.CustomerService;
 import com.mycompany.myapp.service.ProjectService;
+import com.mycompany.myapp.service.TicketService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -57,12 +61,14 @@ public class ProjectResource {
     private String applicationName;
 
     private final ProjectService projectService;
+    private final TicketService ticketService;
 
     @Autowired
     private CustomerService customerService;
-    
-    public ProjectResource(ProjectService projectService) {
+
+    public ProjectResource(ProjectService projectService, TicketService ticketService) {
         this.projectService = projectService;
+        this.ticketService = ticketService;
     }
 
     /**
@@ -179,15 +185,15 @@ public class ProjectResource {
     @GetMapping("/projects/subscriptions/detail")
     public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(		
             @RequestParam(value = "projectId") Long projectId) {
-    	
+
     	SubscriptionDetailResponse subscriptionDetail = new SubscriptionDetailResponse();
-    	SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy"); 
-    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
+
     	Optional<Project> returnedProject = projectService.findOne(projectId);
-    	
+
     	if (returnedProject.isPresent()) {
     		Project project = returnedProject.get();
-    		
+
     		subscriptionDetail.setProjectName(project.getName());
     		subscriptionDetail.setDescription(project.getDescription());
     		ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get(); // assume there is only one subscription per project
@@ -196,11 +202,11 @@ public class ProjectResource {
     		//response.setEndDate(); // there is no endDate field in the entity yet.
     		subscriptionDetail.setPartner(project.getPartners().stream().findFirst().get().getName()); // assume there is only one partner per project
     	}
-    	
+
     	return new ResponseEntity<SubscriptionDetailResponse>(subscriptionDetail, HttpStatus.OK);
     }
-    
-    
+
+
     /**
      * {@code GET  /projects/:id} : get the "id" project.
      *
@@ -229,5 +235,149 @@ public class ProjectResource {
         return ResponseEntity.noContent()
                 .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
                 .build();
+    }
+
+    /**
+     * {@code POST  /projects/:projectId/tickets/:ticketId} : Add a ticket to a project.
+     *
+     * @param projectId the project id.
+     * @param ticketId the ticket id.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new project, or with status {@code 400 (Bad Request)} if the
+     *         project has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/projects/{projectId}/tickets/{ticketId}")
+    public ResponseEntity<Project> addTicketToProject(@PathVariable Long projectId, @PathVariable Long ticketId) throws URISyntaxException {
+        log.debug("REST request to add Ticket to Project : {}", projectId);
+        Project result = projectService.addTicketToProject(projectId, ticketId);
+
+        return ResponseEntity
+            .created(new URI("/api/projects/" + result.getId())).headers(HeaderUtil
+                .createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code GET  /projects/:projectId/tickets} : get the tickets of "projctId" project.
+     *
+     * @param projectId the id of the project.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the project, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/projects/{projectId}/tickets")
+    public ResponseEntity<Set<Ticket>> getProjectTickets(@PathVariable Long projectId) {
+        Set<Ticket> tickets = projectService.getProjectTickets(projectId);
+        return ResponseEntity.ok().headers(
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, projectId.toString()))
+            .body(tickets);
+    }
+
+    /**
+     * {@code POST  /projects/:projectId/subscriptions/:subscriptionId} : Add a subscription to a project.
+     *
+     * @param projectId the project id.
+     * @param subscriptionId the subscription id.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new project, or with status {@code 400 (Bad Request)} if the
+     *         project has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/projects/{projectId}/subscriptions/{subscriptionId}")
+    public ResponseEntity<Project> addSubscriptionToProject(@PathVariable Long projectId, @PathVariable Long subscriptionId) throws URISyntaxException {
+        log.debug("REST request to add Ticket to Project : {}", projectId);
+        Project result = projectService.addSubscriptionToProject(projectId, subscriptionId);
+
+        return ResponseEntity
+            .created(new URI("/api/projects/" + result.getId())).headers(HeaderUtil
+                .createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code GET  /projects/:projectId/subscriptions} : get the subscriptions of "projectId" project.
+     *
+     * @param projectId the id of the project.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the project, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/projects/{projectId}/subscriptions")
+    public ResponseEntity<Set<ProjectSubscription>> getProjectSubscriptions(@PathVariable Long projectId) {
+        Set<ProjectSubscription> subscriptions = projectService.getProjectSubscriptions(projectId);
+        return ResponseEntity.ok().headers(
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, projectId.toString()))
+            .body(subscriptions);
+    }
+
+    /**
+     * {@code POST  /projects/:projectId/partners/:partnerId} : Add a partner to a project.
+     *
+     * @param projectId the project id.
+     * @param partnerId the partner id.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new project, or with status {@code 400 (Bad Request)} if the
+     *         project has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/projects/{projectId}/partners/{partnerId}")
+    public ResponseEntity<Project> addPartnerToProject(@PathVariable Long projectId, @PathVariable Long partnerId) throws URISyntaxException {
+        log.debug("REST request to add Ticket to Project : {}", projectId);
+        Project result = projectService.addPartnerToProject(projectId, partnerId);
+
+        return ResponseEntity
+            .created(new URI("/api/projects/" + result.getId())).headers(HeaderUtil
+                .createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code GET  /projects/:projectId/partners} : get the partners of "projectId" project.
+     *
+     * @param projectId the id of the project.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the project, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/projects/{projectId}/partners")
+    public ResponseEntity<Set<Partner>> getProjectPartners(@PathVariable Long projectId) {
+        Set<Partner> partners = projectService.getProjectPartners(projectId);
+        return ResponseEntity.ok().headers(
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, projectId.toString()))
+            .body(partners);
+    }
+
+    /**
+     * {@code POST  /projects/:projectId/users/:userId} : Add a user to a project.
+     *
+     * @param projectId the project id.
+     * @param userId the user id.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new project, or with status {@code 400 (Bad Request)} if the
+     *         project has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/projects/{projectId}/users/{userId}")
+    public ResponseEntity<Project> addUserToProject(@PathVariable Long projectId, @PathVariable Long userId) throws URISyntaxException {
+        log.debug("REST request to add Ticket to Project : {}", projectId);
+        Project result = projectService.addUserToProject(projectId, userId);
+
+        return ResponseEntity
+            .created(new URI("/api/projects/" + result.getId())).headers(HeaderUtil
+                .createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code GET  /projects/:projectId/users} : get the users of "projectId" project.
+     *
+     * @param projectId the id of the project.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the project, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/projects/{projectId}/users")
+    public ResponseEntity<Set<PortalUser>> getProjectUsers(@PathVariable Long projectId) {
+        Set<PortalUser> users = projectService.getProjectUsers(projectId);
+        return ResponseEntity.ok().headers(
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, projectId.toString()))
+            .body(users);
     }
 }
