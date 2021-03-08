@@ -1,9 +1,9 @@
 package com.mycompany.myapp.service;
 
-import com.mycompany.myapp.domain.Customer;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.mycompany.myapp.domain.Customer;
 
 /**
  * Service Interface for managing {@link Customer}.
@@ -40,4 +40,6 @@ public interface CustomerService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+    
+    Optional<Customer> findByCustomerNumber(String customerNumber);
 }

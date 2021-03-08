@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
 import '../../index.scss';
-import { apiProjectsGet } from '../../api/projects';
+import { apiProjectsGetForCustomer } from '../../api/projects';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import keycloakType from '../../components/__types__/keycloak';
@@ -18,7 +18,7 @@ class CustomTable extends Component {
     const { t, keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
-        var projects = await apiProjectsGet(this.props.serviceUrl);
+        var projects = await apiProjectsGetForCustomer(this.props.serviceUrl, this.props.customerNumber);
         this.setState({
             data: projects
         });
@@ -64,14 +64,14 @@ componentDidUpdate(prevProps) {
               </TableHead>
               <TableBody>
                 {Object.keys(this.state.data).length !== 0 ? 
-                  this.state.data.data.map((project) => (
-                    <TableRow key={project.id} >
-                        <TableCell key={project.id}>{project.name}</TableCell>
-                        <TableCell key={project.id}>{project.contactName}</TableCell>
-                        <TableCell key={project.id}>{project.customer ? project.customer.id : "0"}</TableCell>
-                        <TableCell key={project.id}>{project.createDate}</TableCell>
-                        <TableCell key={project.id}>{project.createDate}</TableCell>
-                        <TableCell key={project.id}>{project.tickets ? project.tickets.length : "0"}</TableCell>
+                  this.state.data.data.map((project, index) => (
+                    <TableRow key={index} >
+                        <TableCell>{project.projectName}</TableCell>
+                        <TableCell>{project.partners}</TableCell>
+                        <TableCell>{project.entandoVersion}</TableCell>
+                        <TableCell>{project.startDate}</TableCell>
+                        <TableCell>{project.endDate}</TableCell>
+                        <TableCell>{project.tickets}</TableCell>
                     </TableRow>
                   )) : null
               }
@@ -90,8 +90,8 @@ const headerData = [
     key: 'projectName',
   },
   {
-    header: 'Partner Name',
-    key: 'partnerName',
+    header: 'Partners',
+    key: 'partners',
   },
   {
     header: 'Entando Version',

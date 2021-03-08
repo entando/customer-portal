@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +29,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mycompany.myapp.constant.CustportAppConstant;
 import com.mycompany.myapp.domain.Customer;
 import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.domain.ProjectSubscription;
 import com.mycompany.myapp.response.model.SubscriptionDetailResponse;
-import com.mycompany.myapp.response.model.SubscriptionRowResponse;
+import com.mycompany.myapp.response.model.SubscriptionListResponse;
 import com.mycompany.myapp.service.CustomerService;
 import com.mycompany.myapp.service.ProjectService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
@@ -107,59 +109,75 @@ public class ProjectResource {
                 HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, project.getId().toString()))
                 .body(result);
     }
-
     
-    @GetMapping("/projects")
-    public List<Project> getAllProjects() {
-        log.debug("REST request to get all Projects");
-        return projectService.findAll();
+	@GetMapping("/projects") 
+	public List<Project> getAllProjects() {
+		log.debug("REST request to get all Projects"); 
+		return projectService.findAll(); 
+	}
+    
+	@GetMapping("/projects/subscriptions/customer/{customerNumber}")
+    public ResponseEntity<List<SubscriptionListResponse>> getSubscriptionsForCustomer(@PathVariable String customerNumber) {
+		List<SubscriptionListResponse> subscriptionList = new ArrayList<>();
+		
+		try {
+	    	Optional<Customer> customer = customerService.findByCustomerNumber(customerNumber);
+    	
+	        if (customer.isPresent()) {
+	        	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT); 
+	        	Set<Project> projects = customer.get().getProjects();
+
+	        	for (Project project: projects) {
+	        		SubscriptionListResponse subscription = new SubscriptionListResponse();
+	        		
+	        		subscription.setProjectName(project.getName());
+	        		if (!project.getPartners().isEmpty()) {
+	        			List<String> partners = new ArrayList<>();
+	        			project.getPartners().stream().forEachOrdered(partner -> partners.add(partner.getName()));
+	        			subscription.setPartners(partners);
+	        		}
+	        		// need to review
+	        		if (project.getProjectSubscriptions().stream().findFirst().isPresent()) {
+	        			ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get();
+	        			subscription.setStartDate(sdf.format(Date.from(projectSubscription.getStartDate().toInstant())));
+        				subscription.setEndDate(sdf.format(Date.from(projectSubscription.getStartDate().plusMonths(projectSubscription.getLengthInMonths()).toInstant())));
+	        			
+	        			if(projectSubscription.getEntandoVersion() != null) {
+	        				subscription.setEntandoVersion(projectSubscription.getEntandoVersion().getName());
+	        			}
+	        		}
+	        		subscription.setTickets(project.getTickets().size());
+	        		
+	        		subscriptionList.add(subscription);
+	        	}
+	        }
+    	} catch(Exception e) {
+    		log.error("Error occurred while fetching subscriptions for customer number : " + customerNumber, e);
+    	}
+    	
+        return new ResponseEntity<List<SubscriptionListResponse>>(subscriptionList, HttpStatus.OK);
     }
     
-
-    @GetMapping("/projects/subscriptions")
-    public ResponseEntity<Map<String, List<SubscriptionRowResponse>>> getSubscriptionRowsForCustomers(
-            @RequestParam(value = "custId") Long custId) {
+    @GetMapping("/projects/subscriptions/admin")
+    //@Secured(AuthoritiesConstants.ADMIN) // required?
+    public ResponseEntity<Map<String, String>> getSubscriptionsForAdmin() {
+        Map<String, String> customers = new HashMap<String, String>();
         
-        Map<String, List<SubscriptionRowResponse>> subscriptionRowsForCustomers = new HashMap<String, List<SubscriptionRowResponse>>();
-        List<Customer> customerList = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy"); 
+        try {
+	        List<Customer> customerList = customerService.findAll();
+	
+	        for (Customer customer : customerList) {
+	        	customers.put(customer.getName(), customer.getCustomerNumber());
+	        }
+        } catch(Exception e) {
+    		log.error("Error occurred while fetching subscriptions for all customer", e);
+    	}
 
-        // Assumption : If custId is 0, user is an admin
-        if (custId == 0) {
-            customerList = customerService.findAll();
-        } else {
-            Optional<Customer> customer = customerService.findOne(custId);
-            if (customer.isPresent()) {
-                customerList.add(customer.get());
-            }
-        }
-
-        for (Customer customer : customerList) {
-        	Set<Project> projectsForCustomer = customer.getProjects();
-        	List<SubscriptionRowResponse> subscriptionRowList = new ArrayList<>();
-        	
-        	for (Project project: projectsForCustomer) {
-        		SubscriptionRowResponse subscriptionRow = new SubscriptionRowResponse();
-        		
-        		subscriptionRow.setProjectName(project.getName());
-        		subscriptionRow.setPartnerName(project.getPartners().stream().findFirst().get().getName()); // assume there is only one partner per project
-        		ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get(); // assume there is only one subscription per project
-        		subscriptionRow.setStartDate(sdf.format(projectSubscription.getStartDate()));
-        		//response.setEndDate(); // there is no endDate field in the entity yet.
-        		subscriptionRow.setEntandoVersion(projectSubscription.getEntandoVersion().getName());
-        		subscriptionRow.setTickets(project.getTickets().size());
-
-        		subscriptionRowList.add(subscriptionRow);
-        	}
-        	
-        	subscriptionRowsForCustomers.put(customer.getName(), subscriptionRowList);
-        }
-
-        return new ResponseEntity<Map<String, List<SubscriptionRowResponse>>>(subscriptionRowsForCustomers, HttpStatus.OK);
+        return new ResponseEntity<Map<String, String>>(customers, HttpStatus.OK);
     }
 
     @GetMapping("/projects/subscriptions/detail")
-    public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(
+    public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(		
             @RequestParam(value = "projectId") Long projectId) {
     	
     	SubscriptionDetailResponse subscriptionDetail = new SubscriptionDetailResponse();
