@@ -1,5 +1,5 @@
 import React from 'react';
-import Subscription from '../SubscriptionDetails/Subscription';
+import Subscription from '../SubscriptionDetails/subscription';
 import { Route, Switch } from "react-router-dom";
 
 const Routes = (props) => {
