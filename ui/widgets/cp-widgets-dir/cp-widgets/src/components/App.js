@@ -10,7 +10,7 @@ import Navigation from './Navigation/Navigation';
 import AdminConfiguration from './Admin/Configuration/AdminConfiguration';
 import Routes from './Customer/Routes';
 import AdminDashboard from './Admin/AdminDashboard';
-import Subscription from './SubscriptionDetails/Subscription';
+import Subscription from './SubscriptionDetails/subscription';
 
 class App extends Component {
     render() {

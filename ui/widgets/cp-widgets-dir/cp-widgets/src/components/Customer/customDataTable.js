@@ -8,7 +8,7 @@ import keycloakType from '../../components/__types__/keycloak';
 import { Link } from 'react-router-dom';
 import RoleCheck from '../Admin/RoleCheck';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Subscription from '../SubscriptionDetails/Subscription';
+import Subscription from '../SubscriptionDetails/subscription';
 
 class CustomTable extends Component {
   constructor(props) {

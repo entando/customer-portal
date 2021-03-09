@@ -8,7 +8,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomerPost, apiCustomerPut, apiCustomersGet } from '../../api/customers';
 import { apiProjectPost, apiProjectPut, apiProjectsGetForAdmin } from '../../api/projects';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Subscription from '../SubscriptionDetails/Subscription';
+import Subscription from '../SubscriptionDetails/subscription';
 
 class AdminDashboard extends React.Component {
     constructor() {
