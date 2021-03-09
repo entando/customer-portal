@@ -46,7 +46,7 @@ public class Customer implements Serializable {
     @Column(name = "notes", length = 1024)
     private String notes;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Project> projects = new HashSet<>();
 

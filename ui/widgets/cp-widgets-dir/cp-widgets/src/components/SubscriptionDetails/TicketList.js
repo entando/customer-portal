@@ -15,11 +15,24 @@ class TicketList extends Component {
 
   async fetchData() {
     const { t, keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
+    var authenticated = keycloak.initialized && keycloak.authenticated;
+
+    /*
+    if (keycloak.realmAccess) {
+      for (var i = 0; i < keycloak.tokenParsed.roles.length; i++) {
+        console.log(keycloak.tokenParsed.roles[i])
+        console.log(keycloak.tokenParsed.preferred_username)
+        if (keycloak.tokenParsed.roles[i] == "ROLE_ADMIN") {
+          authenticated = true;
+        }
+      }
+    }
+    */
+   console.log(this.props.serviceUrl)
+
     if (authenticated) {
-        
         var tickets = await apiJiraTicketsGet(this.props.serviceUrl);
-        
+        console.log("Tickets:", tickets)
         this.setState({
             data: tickets
         });

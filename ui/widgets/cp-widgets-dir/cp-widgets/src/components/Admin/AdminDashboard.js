@@ -3,31 +3,18 @@ import { Accordion, AccordionItem, PaginationNav, Search, Tile} from 'carbon-com
 import CustomTable from '../Customer/customDataTable';
 import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
+import AddProjectModal from './AddProjectModal'
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomerPost, apiCustomerPut, apiCustomersGet } from '../../api/customers';
-import { apiProjectPost, apiProjectPut } from '../../api/projects';
-
-const customer = [
-    {
-        label: <div><h4>Blue Cross Subscription</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
-        content: <CustomTable />
-    },
-    {
-        label: <div><h4>Ford</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
-        content: <CustomTable />
-    },
-    {
-        label: <div><h4>Veriday</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
-        content: <CustomTable />
-    }
-]
+import { apiProjectPost, apiProjectPut, apiProjectsGetForAdmin } from '../../api/projects';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Subscription from '../SubscriptionDetails/Subscription';
 
 class AdminDashboard extends React.Component {
     constructor() {
         super();
         this.state = {
             customers: "",
-            projects: ""
         }
     }
 
@@ -50,7 +37,8 @@ class AdminDashboard extends React.Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const customers = await apiCustomersGet(this.props.serviceUrl);
+            const customers = await apiProjectsGetForAdmin(this.props.serviceUrl);
+
             this.setState({
                 customers: customers
             })
@@ -60,6 +48,7 @@ class AdminDashboard extends React.Component {
     render(){
         //console.log(this.state.customers)
         return(
+            
             <div className="admin-dashboard">
                 <Tile>
                     <h4>All Customers</h4><br/>
@@ -71,6 +60,7 @@ class AdminDashboard extends React.Component {
                             <div className="bx--col">
                                 <AddPartnerModal />
                                 <AddCustomerModal serviceUrl={this.props.serviceUrl}/>
+                                <AddProjectModal />
                             </div>
                         </div>
                     </div>
@@ -78,10 +68,10 @@ class AdminDashboard extends React.Component {
                 
                 <div className="form-container">
                     <Accordion>
-                        {this.state.customers.data ? this.state.customers.data.map((customer, index) => {
+                        {this.state.customers.data ? Object.entries(this.state.customers.data).map(([key, value], index) => {
                             return(
-                            <AccordionItem index={index} title={customer.name}>
-                                <CustomTable serviceUrl={this.props.serviceUrl} customerId={customer.id} />
+                            <AccordionItem key={index} index={index} title={key}>
+                                <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={value} />
                             </AccordionItem>
                             )
                         }) : null}

@@ -37,7 +37,7 @@ public class Partner implements Serializable {
     private String notes;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "partners", allowSetters = true)
+    @JsonIgnoreProperties(value = {"tickets", "partners", "portalUsers", "projectSubscriptions", "customer"}, allowSetters = true)
     private Project project;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
