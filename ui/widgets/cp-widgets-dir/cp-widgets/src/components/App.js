@@ -20,7 +20,7 @@ class App extends Component {
                     <Route exact path="/" render={(props) => (
                         <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} />
                     )}/>
-                    <Route path="/project-details/:id" render={(props) => (
+                    <Route path="/subscription-details/:id" render={(props) => (
                         <Subscription {...props} serviceUrl={this.props.serviceUrl} />
                     )}/>
                 </Switch>

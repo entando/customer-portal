@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Subscription from '../components/SubscriptionDetails/subscription';
+import Subscription from '../components/SubscriptionDetails/Subscription';
 import KeycloakContext from '../auth/KeycloakContext';
 import './dashboard.css'
 
