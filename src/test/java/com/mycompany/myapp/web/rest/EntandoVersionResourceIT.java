@@ -16,8 +16,13 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.List;
 
+import static com.mycompany.myapp.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -34,6 +39,15 @@ public class EntandoVersionResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final Boolean DEFAULT_STATUS = false;
+    private static final Boolean UPDATED_STATUS = true;
+
+    private static final ZonedDateTime DEFAULT_START_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_START_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    private static final ZonedDateTime DEFAULT_END_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_END_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
     private EntandoVersionRepository entandoVersionRepository;
@@ -57,7 +71,10 @@ public class EntandoVersionResourceIT {
      */
     public static EntandoVersion createEntity(EntityManager em) {
         EntandoVersion entandoVersion = new EntandoVersion()
-            .name(DEFAULT_NAME);
+            .name(DEFAULT_NAME)
+            .status(DEFAULT_STATUS)
+            .startDate(DEFAULT_START_DATE)
+            .endDate(DEFAULT_END_DATE);
         return entandoVersion;
     }
     /**
@@ -68,7 +85,10 @@ public class EntandoVersionResourceIT {
      */
     public static EntandoVersion createUpdatedEntity(EntityManager em) {
         EntandoVersion entandoVersion = new EntandoVersion()
-            .name(UPDATED_NAME);
+            .name(UPDATED_NAME)
+            .status(UPDATED_STATUS)
+            .startDate(UPDATED_START_DATE)
+            .endDate(UPDATED_END_DATE);
         return entandoVersion;
     }
 
@@ -92,6 +112,9 @@ public class EntandoVersionResourceIT {
         assertThat(entandoVersionList).hasSize(databaseSizeBeforeCreate + 1);
         EntandoVersion testEntandoVersion = entandoVersionList.get(entandoVersionList.size() - 1);
         assertThat(testEntandoVersion.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testEntandoVersion.isStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(testEntandoVersion.getStartDate()).isEqualTo(DEFAULT_START_DATE);
+        assertThat(testEntandoVersion.getEndDate()).isEqualTo(DEFAULT_END_DATE);
     }
 
     @Test
@@ -144,7 +167,10 @@ public class EntandoVersionResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(entandoVersion.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.booleanValue())))
+            .andExpect(jsonPath("$.[*].startDate").value(hasItem(sameInstant(DEFAULT_START_DATE))))
+            .andExpect(jsonPath("$.[*].endDate").value(hasItem(sameInstant(DEFAULT_END_DATE))));
     }
     
     @Test
@@ -158,7 +184,10 @@ public class EntandoVersionResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(entandoVersion.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.booleanValue()))
+            .andExpect(jsonPath("$.startDate").value(sameInstant(DEFAULT_START_DATE)))
+            .andExpect(jsonPath("$.endDate").value(sameInstant(DEFAULT_END_DATE)));
     }
     @Test
     @Transactional
@@ -181,7 +210,10 @@ public class EntandoVersionResourceIT {
         // Disconnect from session so that the updates on updatedEntandoVersion are not directly saved in db
         em.detach(updatedEntandoVersion);
         updatedEntandoVersion
-            .name(UPDATED_NAME);
+            .name(UPDATED_NAME)
+            .status(UPDATED_STATUS)
+            .startDate(UPDATED_START_DATE)
+            .endDate(UPDATED_END_DATE);
 
         restEntandoVersionMockMvc.perform(put("/api/entando-versions").with(csrf())
             .contentType(MediaType.APPLICATION_JSON)
@@ -193,6 +225,9 @@ public class EntandoVersionResourceIT {
         assertThat(entandoVersionList).hasSize(databaseSizeBeforeUpdate);
         EntandoVersion testEntandoVersion = entandoVersionList.get(entandoVersionList.size() - 1);
         assertThat(testEntandoVersion.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testEntandoVersion.isStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testEntandoVersion.getStartDate()).isEqualTo(UPDATED_START_DATE);
+        assertThat(testEntandoVersion.getEndDate()).isEqualTo(UPDATED_END_DATE);
     }
 
     @Test
