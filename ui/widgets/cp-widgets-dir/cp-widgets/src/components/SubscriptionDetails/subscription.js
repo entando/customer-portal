@@ -14,15 +14,16 @@ const subscriptionData = {
     license: 'Free Commercial Open Source',
 };
 
-const Subscription = () => {
+const Subscription = (props) => {
     const { description, commitment, type, quantityRequest, components, level, startDate, endDate, license } = subscriptionData
     return (
         <div className="subscription-details">
+            {props.match.params.id ? <p>Project Id: {props.match.params.id }</p> : ''}
             <Tile>
                 <div className="bx--grid">
                     <div className="bx--row">
                         <div className="bx--col">
-                             <p><strong>Description:</strong> {description}</p>
+                            <p><strong>Description:</strong> {description}</p>
                             <p><strong>Commitment:</strong> {commitment}</p>
                             <p><strong>Type:</strong> {type}</p>
                             <p><strong>Quantity Request:</strong> {quantityRequest}</p>
@@ -38,7 +39,7 @@ const Subscription = () => {
                 </div>
             </Tile>
             <br/>
-            <TicketList/>
+            <TicketList projectId={props.match.params.id} serviceUrl={props.serviceUrl}/>
         </div>
     )
 };

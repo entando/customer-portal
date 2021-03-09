@@ -52,7 +52,7 @@ public class Ticket implements Serializable {
     private ZonedDateTime updateDate;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "tickets", allowSetters = true)
+    @JsonIgnoreProperties(value = {"tickets", "partners", "portalUsers", "projectSubscriptions", "customer"}, allowSetters = true)
     private Project project;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
