@@ -1,5 +1,3 @@
-
-
 package com.mycompany.myapp.web.rest.schema;
 
 import com.fasterxml.jackson.databind.JsonNode;
