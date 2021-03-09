@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
 import '../../index.scss';
 import { apiProjectsGetForCustomer } from '../../api/projects';
+import { apiGetCustomersProjects } from '../../api/customers';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import keycloakType from '../../components/__types__/keycloak';
@@ -22,7 +23,8 @@ class CustomTable extends Component {
     const { t, keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
-        var projects = await apiProjectsGetForCustomer(this.props.serviceUrl, this.props.customerNumber);
+        const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
+
         this.setState({
             data: projects
         });
@@ -46,12 +48,8 @@ componentDidUpdate(prevProps) {
   }
 
   render() { 
-    /*
-    if (Object.keys(this.state.data).length !== 0 && this.props.customerId) {
-      var filteredProjects = this.state.data.data.filter(project => project.customer != null)
-    }
-    */
-    return ( 
+    console.log(this.state.data)
+    return (
       <div>
         <DataTable rows={rowData} headers={headerData} data={this.state.data}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
@@ -69,15 +67,16 @@ componentDidUpdate(prevProps) {
               <TableBody>
                 {Object.keys(this.state.data).length !== 0 ? 
                   this.state.data.data.map((project, index) => (
-                    <TableRow key={index} >
-                        <TableCell><Link to={`/project-details/${project.projectName}`}>{project.projectName}</Link></TableCell>
-                        <TableCell>{project.partners}</TableCell>
-                        <TableCell>{project.entandoVersion}</TableCell>
-                        <TableCell>{project.startDate}</TableCell>
-                        <TableCell>{project.endDate}</TableCell>
-                        <TableCell>{project.tickets}</TableCell>
-                    </TableRow>
-                  )) : null
+                    project.projectSubscriptions.map((sub) => (
+                      <TableRow key={index} >
+                          <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
+                          <TableCell>{JSON.stringify(project.partners)}</TableCell>
+                          <TableCell>{project.entandoVersion}</TableCell>
+                          <TableCell>{sub.startDate}</TableCell>
+                          <TableCell>{sub.startDate - sub.lengthInMonths}</TableCell>
+                          <TableCell>{project.tickets.length}</TableCell>
+                      </TableRow>
+                  )))) : null
               }
               </TableBody>
             </Table>
@@ -87,6 +86,34 @@ componentDidUpdate(prevProps) {
     </div>
   )}
 }
+/*
+const headerData = [
+  {
+    header: 'Project Name',
+    key: 'projectName',
+  },
+  {
+    header: 'Description',
+    key: 'description',
+  },
+  {
+    header: 'System Id',
+    key: 'systemId',
+  },
+  {
+    header: 'Notes',
+    key: 'notes',
+  },
+  {
+      header: 'Contact Name',
+      key: 'contactName',
+  },
+  {
+      header: 'Open Tickets',
+      key: 'openTickets',
+  },
+];
+*/
 
 const headerData = [
   {
@@ -114,6 +141,7 @@ const headerData = [
       key: 'openTickets',
   },
 ];
+
 
 const rowData = [
   {

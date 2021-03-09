@@ -1,11 +1,9 @@
-import { getDefaultOptions, request, getUrl } from './helpers';
+import { getDefaultOptions, request } from './helpers';
 
 const resource = 'api/project-subscriptions'
 
-export const apiProjectSubscriptionsGet = async (serviceUrl, id) => {
-    const url = getUrl(
-        `${serviceUrl}/${resource}/${id}`
-    );
+export const apiSubscriptionGet = async (serviceUrl, id) => {
+    const url = `${serviceUrl}/${resource}/${id}`;
     const options = {
         ...getDefaultOptions(),
         method: 'GET',
@@ -13,7 +11,7 @@ export const apiProjectSubscriptionsGet = async (serviceUrl, id) => {
     return request(url, options);
 };
 
-// TODO: Project Subscription creation consists of an object containing a projectSubscription, an entandoVersionId, and a
+// Project Subscription creation consists of an object containing a projectSubscription, an entandoVersionId, and a
 // project id, see SubscriptionCreationRequest.
 /**
  * Called to create a new project subscription

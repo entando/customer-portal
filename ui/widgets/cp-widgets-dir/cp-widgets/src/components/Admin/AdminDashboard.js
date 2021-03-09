@@ -37,7 +37,7 @@ class AdminDashboard extends React.Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const customers = await apiProjectsGetForAdmin(this.props.serviceUrl);
+            const customers = await apiCustomersGet(this.props.serviceUrl);
 
             this.setState({
                 customers: customers
@@ -46,7 +46,6 @@ class AdminDashboard extends React.Component {
     }
 
     render(){
-        //console.log(this.state.customers)
         return(
             
             <div className="admin-dashboard">
@@ -58,9 +57,9 @@ class AdminDashboard extends React.Component {
                                 <Search id="search" placeHolderText="Which customer are you looking for?" />
                             </div>
                             <div className="bx--col">
-                                <AddPartnerModal />
-                                <AddCustomerModal serviceUrl={this.props.serviceUrl}/>
-                                <AddProjectModal />
+                                <AddPartnerModal serviceUrl={this.props.serviceUrl} />
+                                <AddCustomerModal serviceUrl={this.props.serviceUrl} />
+                                <AddProjectModal serviceUrl={this.props.serviceUrl} />
                             </div>
                         </div>
                     </div>
@@ -68,10 +67,10 @@ class AdminDashboard extends React.Component {
                 
                 <div className="form-container">
                     <Accordion>
-                        {this.state.customers.data ? Object.entries(this.state.customers.data).map(([key, value], index) => {
+                        {Object.keys(this.state.customers).length !== 0 ? this.state.customers.data.map((customer, index) => {
                             return(
-                            <AccordionItem key={index} index={index} title={key}>
-                                <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={value} />
+                            <AccordionItem key={index} index={index} title={customer.name}>
+                                <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={customer.id} />
                             </AccordionItem>
                             )
                         }) : null}
