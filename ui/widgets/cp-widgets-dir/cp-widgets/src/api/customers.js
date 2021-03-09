@@ -11,7 +11,7 @@ export const apiCustomersDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-export const apiCustomersGet = async (serviceUrl ) => {
+export const apiCustomersGet = async (serviceUrl) => {
   const url = getUrl(
     `${serviceUrl}/${resource}`
   );
@@ -29,6 +29,27 @@ export const apiCustomerPost = async (serviceUrl, customer) => {
     ...getDefaultOptions(),
     method: 'POST',
     body: customer ? JSON.stringify(customer) : null,
+  };
+  return request(url, options);
+};
+
+export const apiGetCustomersProjects = async (serviceUrl, customerId) => {
+  const url = getUrl(
+    `${serviceUrl}/${resource}/${customerId}/projects`
+  );
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+
+  return request(url, options);
+};
+
+export const apiAddProjectToCustomer = async (serviceUrl, customerId, projectId) => {
+  const url = `${serviceUrl}/${resource}/${customerId}/projects/${projectId}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'POST',
   };
   return request(url, options);
 };

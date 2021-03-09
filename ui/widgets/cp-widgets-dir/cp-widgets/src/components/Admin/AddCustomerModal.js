@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import { ModalWrapper, Form, TextInput } from 'carbon-components-react';
+import withKeycloak from '../../auth/withKeycloak';
+import { apiCustomerPost } from '../../api/customers';
 
-export default class AddCustomerModal extends Component {
+class AddCustomerModal extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
-            customerName: '',
+            name: '',
             customerNumber: '',
             contactName: '',
             contactPhone: '',
@@ -23,13 +25,17 @@ export default class AddCustomerModal extends Component {
     };
 
     handleFormSubmit = e => {
-        e.preventDefault();
-        console.log('Customer Name:', this.state.customerName);
+        //e.preventDefault();
+        console.log('Customer Name:', this.state.name);
         console.log('Customer Number:', this.state.customerNumber);
         console.log('Contact Name:', this.state.contactName);
         console.log('Contact Phone:', this.state.contactPhone);
         console.log('Contact email:', this.state.contactEmail);
         console.log('Notes:', this.state.notes);
+        console.log(this.state);
+        console.log(this.props.serviceUrl)
+        const customer = apiCustomerPost(this.props.serviceUrl, this.state);
+        this.render();
     };
 
     isValid() {
@@ -46,22 +52,26 @@ export default class AddCustomerModal extends Component {
                 modalHeading="Add a new customer"
                 buttonTriggerClassName="add-customer bx--btn bx--btn--tertiary"
                 className="modal-form"
+                handleSubmit={this.handleFormSubmit}
             >
                 <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                 <div className="form-container">
                     <Form onSubmit={this.handleFormSubmit}>
-                        <TextInput name="customerName" labelText="Customer Name" value={this.state.customerName} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
+                        <TextInput name="name" labelText="Customer Name" value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
                         <TextInput name="customerNumber" labelText="Customer Number" value={this.state.customerNumber} onChange={this.handleChanges} />
                         <TextInput name="contactName" labelText="Contact Name" value='' onChange=''value={this.state.contactName} onChange={this.handleChanges} />
                         <TextInput name="contactPhone" labelText="Contact Phone" value={this.state.contactPhone} onChange={this.handleChanges} />
                         <TextInput name="contactEmail" labelText="Contact Email" value={this.state.contactEmail} onChange={this.handleChanges} />
                         <TextInput name="notes" labelText="Notes" value={this.state.notes} onChange={this.handleChanges} />
-                        <button disabled={!this.isValid()} type="submit">Submit</button>
+                        {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
                     </Form>
                 </div> 
             </ModalWrapper>
         )
     }
 }
+
+
+export default withKeycloak(AddCustomerModal);
 
 
