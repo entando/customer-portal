@@ -5,6 +5,10 @@ import { apiProjectsGetForCustomer } from '../../api/projects';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import keycloakType from '../../components/__types__/keycloak';
+import { Link } from 'react-router-dom';
+import RoleCheck from '../Admin/RoleCheck';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Subscription from '../SubscriptionDetails/Subscription';
 
 class CustomTable extends Component {
   constructor(props) {
@@ -66,7 +70,7 @@ componentDidUpdate(prevProps) {
                 {Object.keys(this.state.data).length !== 0 ? 
                   this.state.data.data.map((project, index) => (
                     <TableRow key={index} >
-                        <TableCell>{project.projectName}</TableCell>
+                        <TableCell><Link to={`/project-details/${project.projectName}`}>{project.projectName}</Link></TableCell>
                         <TableCell>{project.partners}</TableCell>
                         <TableCell>{project.entandoVersion}</TableCell>
                         <TableCell>{project.startDate}</TableCell>

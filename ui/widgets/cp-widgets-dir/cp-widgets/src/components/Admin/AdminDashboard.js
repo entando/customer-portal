@@ -3,9 +3,12 @@ import { Accordion, AccordionItem, PaginationNav, Search, Tile} from 'carbon-com
 import CustomTable from '../Customer/customDataTable';
 import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
+import AddProjectModal from './AddProjectModal'
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomerPost, apiCustomerPut, apiCustomersGet } from '../../api/customers';
 import { apiProjectPost, apiProjectPut, apiProjectsGetForAdmin } from '../../api/projects';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Subscription from '../SubscriptionDetails/Subscription';
 
 class AdminDashboard extends React.Component {
     constructor() {
@@ -45,6 +48,7 @@ class AdminDashboard extends React.Component {
     render(){
         //console.log(this.state.customers)
         return(
+            
             <div className="admin-dashboard">
                 <Tile>
                     <h4>All Customers</h4><br/>
@@ -56,6 +60,7 @@ class AdminDashboard extends React.Component {
                             <div className="bx--col">
                                 <AddPartnerModal />
                                 <AddCustomerModal serviceUrl={this.props.serviceUrl}/>
+                                <AddProjectModal />
                             </div>
                         </div>
                     </div>
