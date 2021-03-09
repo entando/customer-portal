@@ -61,22 +61,20 @@ public class ProjectSubscriptionResource {
         
         if (projectSubscription == null || projectSubscription.getId() != null) {
             throw new BadRequestAlertException("A new projectSubscription cannot already have an ID", ENTITY_NAME, "idexists");
-        } else if (subscriptionCreationRequest.getEntandoVersion() == null) {
-            throw new BadRequestAlertException("Missing entando version", ENTITY_NAME, "missingentandoversion");
-        } else if (subscriptionCreationRequest.getProjectName() == null) {
-            throw new BadRequestAlertException("Missing project name", ENTITY_NAME, "missingprojectname");
+        } else if (subscriptionCreationRequest.getEntandoVersionId() == null) {
+            throw new BadRequestAlertException("Missing entando version id", ENTITY_NAME, "missingEntandoVersionId");
+        } else if (subscriptionCreationRequest.getProjectId() == null) {
+            throw new BadRequestAlertException("Missing project id ", ENTITY_NAME, "missingProjectId");
         }
 
-        // TODO: This may change to ID or even the whole object
-        Optional<Project> associatedProjectOpt = projectService.findByName(subscriptionCreationRequest.getProjectName());
+        Optional<Project> associatedProjectOpt = projectService.findOne(subscriptionCreationRequest.getProjectId());
         if (!associatedProjectOpt.isPresent()) {
-            throw new BadRequestAlertException("There was no project found with that name", ENTITY_NAME, "projectNotFound");
+            throw new BadRequestAlertException("There was no project found with that id", ENTITY_NAME, "projectNotFound");
         }
 
-        // TODO: This may change to ID or even the whole object
-        Optional<EntandoVersion> entandoVersionOpt = entandoVersionService.findByName(subscriptionCreationRequest.getEntandoVersion());
+        Optional<EntandoVersion> entandoVersionOpt = entandoVersionService.findOne(subscriptionCreationRequest.getEntandoVersionId());
         if (!entandoVersionOpt.isPresent()) {
-            throw new BadRequestAlertException("There was no entando version found with that name", ENTITY_NAME, "");
+            throw new BadRequestAlertException("There was no entando version found with that id", ENTITY_NAME, "entandoVersionNotFound");
         }
 
         associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));
@@ -103,23 +101,21 @@ public class ProjectSubscriptionResource {
         log.debug("REST request to update ProjectSubscription : {}", projectSubscription);
 
         if (projectSubscription == null || projectSubscription.getId() == null || !projectService.findOne(projectSubscription.getId()).isPresent()) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        } else if (subscriptionCreationRequest.getEntandoVersion() == null) {
-            throw new BadRequestAlertException("Missing entando version", ENTITY_NAME, "missingentandoversion");
-        } else if (subscriptionCreationRequest.getProjectName() == null) {
-            throw new BadRequestAlertException("Missing project name", ENTITY_NAME, "missingprojectname");
+            throw new BadRequestAlertException("Invalid Project Subscription id", ENTITY_NAME, "projectSubscriptionIdNull");
+        } else if (subscriptionCreationRequest.getEntandoVersionId() == null) {
+            throw new BadRequestAlertException("Missing entando version id", ENTITY_NAME, "missingEntandoVersionId");
+        } else if (subscriptionCreationRequest.getProjectId() == null) {
+            throw new BadRequestAlertException("Missing project id ", ENTITY_NAME, "missingProjectId");
         }
 
-        // TODO: This may change to ID or even the whole object
-        Optional<Project> associatedProjectOpt = projectService.findByName(subscriptionCreationRequest.getProjectName());
+        Optional<Project> associatedProjectOpt = projectService.findOne(subscriptionCreationRequest.getProjectId());
         if (!associatedProjectOpt.isPresent()) {
-            throw new BadRequestAlertException("There was no project found with that name", ENTITY_NAME, "projectNotFound");
+            throw new BadRequestAlertException("There was no project found with that id", ENTITY_NAME, "projectNotFound");
         }
 
-        // TODO: This may change to ID or even the whole object
-        Optional<EntandoVersion> entandoVersionOpt = entandoVersionService.findByName(subscriptionCreationRequest.getEntandoVersion());
+        Optional<EntandoVersion> entandoVersionOpt = entandoVersionService.findOne(subscriptionCreationRequest.getEntandoVersionId());
         if (!entandoVersionOpt.isPresent()) {
-            throw new BadRequestAlertException("There was no entando version found with that name", ENTITY_NAME, "");
+            throw new BadRequestAlertException("There was no entando version found with that id", ENTITY_NAME, "entandoVersionNotFound");
         }
 
         associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));

@@ -8,10 +8,8 @@ public class SubscriptionCreationRequest {
     private ProjectSubscription projectSubscription;
 
     // Would it be better to send in a full entandoVersion object or harder for the front end?
-    private String entandoVersion;
-    private String projectName;
-
-    //TODO Missing some fields that are sent in front end due to unknown entity (contact name, number, email belong to both Customer and Project)
+    private Long entandoVersionId;
+    private Long projectId;
 
     public ProjectSubscription getProjectSubscription() {
         return projectSubscription;
@@ -21,19 +19,19 @@ public class SubscriptionCreationRequest {
         this.projectSubscription = projectSubscription;
     }
 
-    public String getEntandoVersion() {
-        return entandoVersion;
+    public Long getEntandoVersionId() {
+        return entandoVersionId;
     }
 
-    public void setEntandoVersion(String entandoVersion) {
-        this.entandoVersion = entandoVersion;
+    public void setEntandoVersionId(Long entandoVersionId) {
+        this.entandoVersionId = entandoVersionId;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }
