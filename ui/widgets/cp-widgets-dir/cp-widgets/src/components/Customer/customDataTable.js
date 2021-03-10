@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
 import '../../index.scss';
-import { apiProjectsGetForCustomer } from '../../api/projects';
 import { apiGetCustomersProjects } from '../../api/customers';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
-import keycloakType from '../../components/__types__/keycloak';
 import { Link } from 'react-router-dom';
-import RoleCheck from '../Admin/RoleCheck';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Subscription from '../SubscriptionDetails/subscription';
 
 class CustomTable extends Component {
   constructor(props) {
@@ -22,10 +17,10 @@ class CustomTable extends Component {
   async fetchData() {
     const { t, keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
-    //console.log(this.props.customerNumber)
+    
     if (authenticated) {
         const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
-        console.log(projects)
+        
         this.setState({
             data: projects
         });
@@ -49,7 +44,6 @@ componentDidUpdate(prevProps) {
   }
 
   render() { 
-    //console.log(this.state.data)
     return (
       <div>
         <DataTable rows={rowData} headers={headerData} data={this.state.data}>

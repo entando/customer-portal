@@ -1,20 +1,19 @@
 import React from 'react';
 import { Accordion, AccordionItem, PaginationNav, Search, Tile} from 'carbon-components-react';
-import CustomTable from '../Customer/customDataTable';
 import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import AddProjectModal from './AddProjectModal'
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomersGetForAdminDashboard, apiCustomersGet } from '../../api/customers';
-import { apiProjectPost, apiProjectPut } from '../../api/projects';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Subscription from '../SubscriptionDetails/subscription';
+import { apiCustomersGet } from '../../api/customers';
+import CustomerAccordian from '../Customer/CustomerAccordian';
 
 class AdminDashboard extends React.Component {
     constructor() {
         super();
         this.state = {
-            customers: "",
+            customers: {},
+            customersProjects: {},
+            role: ''
         }
     }
 
@@ -32,6 +31,7 @@ class AdminDashboard extends React.Component {
           this.getCustomer();
         }
       }
+
 
     async getCustomer() {
         const { t, keycloak } = this.props;
@@ -65,11 +65,9 @@ class AdminDashboard extends React.Component {
                 <div className="form-container">
                     <Accordion>
                         {Object.keys(this.state.customers).length !== 0 ? this.state.customers.data.map((customer, index) => {
-                            return(
-                            <AccordionItem key={index} index={index} title={customer.name}>
-                                <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={customer.id} />
-                            </AccordionItem>
-                            )
+                                return(
+                                    <CustomerAccordian role={this.props.role} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name}/>
+                                )
                         }) : null}
                     </Accordion>
                     <PaginationNav cssClass='pagination-right'/>
