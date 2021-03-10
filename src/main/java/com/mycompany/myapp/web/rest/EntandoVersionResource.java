@@ -1,22 +1,37 @@
 package com.mycompany.myapp.web.rest;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.mycompany.myapp.constant.CustportAppConstant;
 import com.mycompany.myapp.domain.EntandoVersion;
+import com.mycompany.myapp.response.model.EntandoVersionResponse;
 import com.mycompany.myapp.service.EntandoVersionService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.EntandoVersion}.
@@ -51,7 +66,7 @@ public class EntandoVersionResource {
         if (entandoVersion.getId() != null) {
             throw new BadRequestAlertException("A new entandoVersion cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        EntandoVersion result = entandoVersionService.save(entandoVersion);
+        EntandoVersion result = entandoVersion; // entandoVersionService.save(entandoVersion);
         return ResponseEntity.created(new URI("/api/entando-versions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -77,6 +92,24 @@ public class EntandoVersionResource {
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, entandoVersion.getId().toString()))
             .body(result);
     }
+    
+    @PutMapping("/entando-versions/{id}")
+    public ResponseEntity<EntandoVersion> updateEntandoVersionStatus(@PathVariable Long id) throws URISyntaxException {
+    	 
+    	try {
+    		Optional<EntandoVersion> entandoVersion = entandoVersionService.findOne(id);
+    	 
+    		if (entandoVersion.isPresent()) {
+    			EntandoVersion objToUpdate = entandoVersion.get();
+    			objToUpdate.setStatus(!objToUpdate.isStatus());
+    			entandoVersionService.save(objToUpdate);
+    		}
+    	} catch(Exception e) {
+    		log.error("Error occurred while updating entando version for id : " + id, e);
+    	}
+    	 
+    	 return ResponseEntity.noContent().headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+    }
 
     /**
      * {@code GET  /entando-versions} : get all the entandoVersions.
@@ -84,9 +117,34 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of entandoVersions in body.
      */
     @GetMapping("/entando-versions")
-    public List<EntandoVersion> getAllEntandoVersions() {
-        log.debug("REST request to get all EntandoVersions");
-        return entandoVersionService.findAll();
+    public ResponseEntity<List<EntandoVersionResponse>> getAllEntandoVersions() {
+        
+    	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT); 
+        List<EntandoVersionResponse> entandoVersions = new ArrayList<>();
+        
+        try {
+	        List<EntandoVersion> entandoVersionList = entandoVersionService.findAll();
+	
+	        for (EntandoVersion entandoVersion : entandoVersionList) {
+	        	EntandoVersionResponse res = new EntandoVersionResponse();
+	        	
+	        	res.setId(entandoVersion.getId());
+	        	res.setName(entandoVersion.getName());
+	        	res.setStatus(entandoVersion.isStatus());
+	        	if(entandoVersion.getStartDate() != null) {
+	        		res.setStartDate(sdf.format(Date.from(entandoVersion.getStartDate().toInstant())));
+	        	}
+	        	if(entandoVersion.getEndDate() != null) {
+	        		res.setEndDate(sdf.format(Date.from(entandoVersion.getEndDate().toInstant())));
+	        	}
+	        	
+	        	entandoVersions.add(res);
+	        }
+        } catch(Exception e) {
+    		log.error("Error occurred while fetching all customer", e);
+    	}
+
+        return new ResponseEntity<List<EntandoVersionResponse>>(entandoVersions, HttpStatus.OK);
     }
 
     /**
