@@ -48,7 +48,6 @@ componentDidUpdate(prevProps) {
   }
 
   render() { 
-    console.log(this.state.data)
     return (
       <div>
         <DataTable rows={rowData} headers={headerData} data={this.state.data}>
@@ -67,19 +66,22 @@ componentDidUpdate(prevProps) {
               <TableBody>
                 {Object.keys(this.state.data).length !== 0 ? 
                   this.state.data.data.map((project, index) => (
-                    <TableRow key={index} >
-                        <TableCell><Link to={`/subscription-details/${project.subscriptionId}`}>{project.projectName}</Link></TableCell>
-                        <TableCell>
-                        {project.partners.map((partner, i) =>
-                          <div>{partner}</div>
-                        )}
-                        </TableCell>
-                        <TableCell>{project.entandoVersion}</TableCell>
-                        <TableCell>{project.startDate}</TableCell>
-                        <TableCell>{project.endDate}</TableCell>
-                        <TableCell>{project.tickets}</TableCell>
-                    </TableRow>
-                  )) : null
+                    project.projectSubscriptions.map((sub) => (
+                      <TableRow key={index} >
+                          <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
+                          {project.partners ? 
+                            <TableCell>
+                              {project.partners.map(partner => (
+                                <p>{partner.name}</p>
+                              ))}
+                            </TableCell> 
+                            : <TableCell>None</TableCell>}
+                          {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
+                          <TableCell>{String(new Date(sub.startDate))}</TableCell>
+                          <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)))}</TableCell>
+                          <TableCell>{project.tickets.length}</TableCell>
+                      </TableRow>
+                  )))) : null
               }
               </TableBody>
             </Table>

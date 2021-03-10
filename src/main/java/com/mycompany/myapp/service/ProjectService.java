@@ -116,4 +116,12 @@ public interface ProjectService {
      * @return the entity.
      */
     Set<PortalUser> getProjectUsers(Long id);
+
+    /**
+     * Get project by systemId.
+     *
+     * @param systemId the systemId of the entity.
+     * @return the entity.
+     */
+    Project getProjectBySystemId(String systemId);
 }

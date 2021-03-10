@@ -11,8 +11,7 @@ export const apiProjectsDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-export const apiProjectsGet = async (serviceUrl ) => {
-
+export const apiProjectsGet = async (serviceUrl) => {
   const url = getUrl(
     `${serviceUrl}/${resource}`
   );
@@ -23,6 +22,20 @@ export const apiProjectsGet = async (serviceUrl ) => {
 
   return request(url, options);
 };
+
+export const apiProjectGet = async (serviceUrl, id) => {
+  const url = getUrl(
+    `${serviceUrl}/${resource}/${id}`
+  );
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+
+  return request(url, options);
+};
+
+
 
 export const apiProjectsGetForCustomer = async (serviceUrl, customerNumber) => {
   const url = `${serviceUrl}/${resource}/subscriptions/customer/${customerNumber}`;
@@ -50,6 +63,33 @@ export const apiProjectPut = async (serviceUrl, project) => {
     ...getDefaultOptions(),
     method: 'PUT',
     body: project ? JSON.stringify(project) : null,
+  };
+  return request(url, options);
+};
+
+export const apiAddTicketToProject = async (serviceUrl, projectId, ticketId) => {
+  const url = `${serviceUrl}/${resource}/${projectId}/tickets/${ticketId}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'POST',
+  };
+  return request(url, options);
+};
+
+export const apiAddUserToProject = async (serviceUrl, projectId, userId) => {
+  const url = `${serviceUrl}/${resource}/${projectId}/users/${userId}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'POST',
+  };
+  return request(url, options);
+};
+
+export const apiAddPartnerToProject = async (serviceUrl, projectId, partnerId) => {
+  const url = `${serviceUrl}/${resource}/${projectId}/partners/${partnerId}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'POST',
   };
   return request(url, options);
 };
