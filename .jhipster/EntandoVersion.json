@@ -4,7 +4,21 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "startDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "endDate",
+      "fieldType": "ZonedDateTime"
     }
   ],
   "relationships": [],

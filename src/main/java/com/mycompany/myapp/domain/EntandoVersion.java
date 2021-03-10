@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 /**
  * A EntandoVersion.
@@ -26,6 +27,15 @@ public class EntandoVersion implements Serializable {
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "status")
+    private Boolean status;
+
+    @Column(name = "start_date")
+    private ZonedDateTime startDate;
+
+    @Column(name = "end_date")
+    private ZonedDateTime endDate;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -47,6 +57,45 @@ public class EntandoVersion implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean isStatus() {
+        return status;
+    }
+
+    public EntandoVersion status(Boolean status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public ZonedDateTime getStartDate() {
+        return startDate;
+    }
+
+    public EntandoVersion startDate(ZonedDateTime startDate) {
+        this.startDate = startDate;
+        return this;
+    }
+
+    public void setStartDate(ZonedDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public ZonedDateTime getEndDate() {
+        return endDate;
+    }
+
+    public EntandoVersion endDate(ZonedDateTime endDate) {
+        this.endDate = endDate;
+        return this;
+    }
+
+    public void setEndDate(ZonedDateTime endDate) {
+        this.endDate = endDate;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -72,6 +121,9 @@ public class EntandoVersion implements Serializable {
         return "EntandoVersion{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", status='" + isStatus() + "'" +
+            ", startDate='" + getStartDate() + "'" +
+            ", endDate='" + getEndDate() + "'" +
             "}";
     }
 }

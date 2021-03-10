@@ -6,6 +6,7 @@ public class SubscriptionListResponse {
 
 	public SubscriptionListResponse() {}
 	
+	private Long subscriptionId;
 	private String projectName;
 	private List<String> partners;
 	private String entandoVersion;
@@ -13,6 +14,14 @@ public class SubscriptionListResponse {
 	private String endDate;
 	private int tickets;
 	
+	public Long getSubscriptionId() {
+		return subscriptionId;
+	}
+
+	public void setSubscriptionId(Long subscriptionId) {
+		this.subscriptionId = subscriptionId;
+	}
+
 	public String getProjectName() {
 		return projectName;
 	}

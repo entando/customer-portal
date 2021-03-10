@@ -9,7 +9,7 @@ import keycloakType from '../../components/__types__/keycloak';
 import { Link } from 'react-router-dom';
 import RoleCheck from '../Admin/RoleCheck';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Subscription from '../SubscriptionDetails/subscription';
+import Subscription from '../SubscriptionDetails/Subscription';
 
 class CustomTable extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class CustomTable extends Component {
     const { t, keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
-        const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
+        const projects = await apiProjectsGetForCustomer(this.props.serviceUrl, this.props.customerNumber);
 
         this.setState({
             data: projects
