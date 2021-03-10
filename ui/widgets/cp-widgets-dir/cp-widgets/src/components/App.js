@@ -58,7 +58,7 @@ class App extends Component {
         
         if (role === 'admin' || role === 'support' || role === 'partner') {
             return (
-                <div>
+                <div id="entando-customer-portal">
                     <AuthenticatedView keycloak={keycloak}>
                         <BrowserRouter>
                             <Switch>
@@ -79,13 +79,15 @@ class App extends Component {
         }
         else {
             return (
-                <BrowserRouter>
-                    <Switch>
-                        <Route path="/subscription-details/:id" render={(props) => (
-                            <Subscription {...props} serviceUrl={this.props.serviceUrl} />
-                        )}/>
-                    </Switch>
-                </BrowserRouter>
+                <div id="entando-customer-portal">
+                    <BrowserRouter>
+                        <Switch>
+                            <Route path="/subscription-details/:id" render={(props) => (
+                                <Subscription {...props} serviceUrl={this.props.serviceUrl} />
+                            )}/>
+                        </Switch>
+                    </BrowserRouter>
+                </div>    
             )
         }
      }
