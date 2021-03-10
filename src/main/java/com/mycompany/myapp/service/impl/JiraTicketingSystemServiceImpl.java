@@ -149,6 +149,42 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
         return null;
     }
 
+    @Override
+    public String fetchJiraTicketsBySystemIdAndOrganization(String project, String organization, String baseUrl, String serviceAccount, String serviceAccountSecret) {
+        String searchQuery = "search?jql=Organizations=" + organization + "%20AND%20project=" + project;
+        String user = serviceAccount;
+        String password = serviceAccountSecret;
+
+        try {
+            URL url = new URL(baseUrl + searchQuery);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+
+            String auth = user + ":" + password;
+            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
+            String authHeaderValue = "Basic " + new String(encodedAuth);
+            con.setRequestProperty("Authorization", authHeaderValue);
+            con.setRequestProperty("Content-Type", "application/json; charset=utf8");
+
+            int status = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            con.disconnect();
+            JSONObject responseObject = new JSONObject(content.toString());
+
+            return responseObject.toString();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Get all the tickets corresponding to the projectCode.
      *
@@ -226,6 +262,67 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                 "       },\n" +
                 "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
                 "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
+                "       \"issuetype\": {\n" +
+                "          \"name\": \"" + ticket.getType() + "\"\n" +
+                "       },\n" +
+                "       \"priority\":\n" +
+                "       {\n" +
+                "          \"name\": \"" + ticket.getPriority() + "\"\n" +
+                "       }\n" +
+                "   }\n" +
+                "}";
+            try(OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            int status = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            con.disconnect();
+            JSONObject responseObject = new JSONObject(content.toString());
+
+            return responseObject.toString();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String createJiraTicketInOrg(String systemId, String organization, String baseUrl, String serviceAccount, String serviceAccountSecret, Ticket ticket) {
+        String user = serviceAccount;
+        String password = serviceAccountSecret;
+        List<Integer> orgList = new ArrayList<Integer>();
+        orgList.add(Integer.parseInt(organization));
+        System.out.println(orgList);
+
+        try {
+            URL url = new URL(baseUrl + "issue");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+
+            String auth = user + ":" + password;
+            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
+            String authHeaderValue = "Basic " + new String(encodedAuth);
+            con.setRequestProperty("Authorization", authHeaderValue);
+            con.setRequestProperty("Content-Type", "application/json; charset=utf8");
+            con.setDoOutput(true);
+            String jsonInputString = "{\n" +
+                "    \"fields\": {\n" +
+                "       \"project\":\n" +
+                "       {\n" +
+                "          \"key\": \"" + systemId + "\"\n" +
+                "       },\n" +
+                "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
+                "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
+                "       \"customfield_10303\": " + orgList + ",\n" +
                 "       \"issuetype\": {\n" +
                 "          \"name\": \"" + ticket.getType() + "\"\n" +
                 "       },\n" +

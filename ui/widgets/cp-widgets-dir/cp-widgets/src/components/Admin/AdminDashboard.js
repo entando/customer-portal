@@ -46,40 +46,40 @@ class AdminDashboard extends React.Component {
     }
 
     render(){
-        return(
-            
-            <div className="admin-dashboard">
-                <Tile>
-                    <h4>All Customers</h4><br/>
-                    <div className="bx--grid">
-                        <div className="bx--row">
-                            <div className="bx--col">
-                                <Search id="search" placeHolderText="Which customer are you looking for?" />
-                            </div>
-                            <div className="bx--col">
-                                <AddPartnerModal serviceUrl={this.props.serviceUrl} />
-                                <AddCustomerModal serviceUrl={this.props.serviceUrl} />
-                                <AddProjectModal serviceUrl={this.props.serviceUrl} />
+            return(
+                <div className="admin-dashboard">
+                    <Tile>
+                        <h4>All Customers</h4><br/>
+                        <div className="bx--grid">
+                            <div className="bx--row">
+                                <div className="bx--col">
+                                    <Search id="search" placeHolderText="Which customer are you looking for?" />
+                                </div>
+                                <div className="bx--col">
+                                    <AddPartnerModal serviceUrl={this.props.serviceUrl} />
+                                    <AddCustomerModal serviceUrl={this.props.serviceUrl} />
+                                    <AddProjectModal serviceUrl={this.props.serviceUrl} />
+                                </div>
                             </div>
                         </div>
+                    </Tile>  
+                    
+                    <div className="form-container">
+                        <Accordion>
+                            {Object.keys(this.state.customers).length !== 0 ? this.state.customers.data.map((customer, index) => {
+                                return(
+                                <AccordionItem key={index} index={index} title={customer.name}>
+                                    <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={customer.id} />
+                                </AccordionItem>
+                                )
+                            }) : null}
+                        </Accordion>
+                        <PaginationNav cssClass='pagination-right'/>
                     </div>
-                </Tile>  
-                
-                <div className="form-container">
-                    <Accordion>
-                        {Object.keys(this.state.customers).length !== 0 ? this.state.customers.data.map((customer, index) => {
-                            return(
-                            <AccordionItem key={index} index={index} title={customer.name}>
-                                <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={customer.id} />
-                            </AccordionItem>
-                            )
-                        }) : null}
-                    </Accordion>
-                    <PaginationNav cssClass='pagination-right'/>
                 </div>
-            </div>
-        )
+            )
     }
+    
 }
 
 export default withKeycloak(AdminDashboard);

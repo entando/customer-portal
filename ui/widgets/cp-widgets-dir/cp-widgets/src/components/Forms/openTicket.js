@@ -1,22 +1,21 @@
 import React, {Component} from 'react';
 import { Form, TextInput, Select, SelectItem, Button, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiProjectsGet } from '../../api/projects';
+import { apiProjectsGet, apiAddTicketToProject } from '../../api/projects';
+import { apiJiraTicketPost } from '../../api/tickets';
 
 class OpenTicket extends Component {
     constructor() {
         super();
         this.state = {
-            projectId: '',
+            systemId: '',
             projects: {},
-            ticketData: {
-                type: '',
-                description: '',
-                priority: '',
-                status: 'To Do',
-                createDate: '',
-                updateDate: ''
-            }
+            type: '',
+            description: '',
+            priority: '',
+            status: 'To Do',
+            createDate: '',
+            updateDate: ''
         };
     }
 
@@ -25,11 +24,12 @@ class OpenTicket extends Component {
         const name = input.name;
         const value = input.value;
         this.setState({ [name]: value });
+        console.log(this.state)
     }
 
     handleFormSubmit = (event) => {
-        console.log(this.state.ticketNo)
         event.preventDefault();
+        this.createTicket();
     };
 
     async fetchProjects() {
@@ -44,6 +44,25 @@ class OpenTicket extends Component {
             })
         }
         this.render();
+    }
+
+    async createTicket() {
+        const { t, keycloak } = this.props;
+        var authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        if (authenticated) {
+            const ticket = {
+                systemId: this.state.systemId,
+                type: this.state.type,
+                description: this.state.description,
+                priority: this.state.priority,
+                status: 'To Do',
+                createDate: '2021-02-22T14:14:09-05:00',
+                updateDate: '2021-02-22T14:14:09-05:00'
+            }
+            const result = await apiJiraTicketPost(this.props.serviceUrl, this.state.systemId, ticket);
+            //const addedTicket = await apiAddTicketToProject(this.props.serviceUrl, this.state.project.id, result.data.id);
+        }
     }
 
     componentDidMount() {
@@ -65,7 +84,7 @@ class OpenTicket extends Component {
         const textareaProps = {
             labelText: 'Ticket Description',
             placeholder: 'Add ticket description',
-            name: 'ticketDescription',
+            name: 'description',
         }
 
         return (
@@ -79,18 +98,17 @@ class OpenTicket extends Component {
                     <div className="bx--grid">
                         <div className="bx--row">
                             <div className="bx--col">
-                                <Select defaultValue="ticketing-system" name="ticketingSystem" labelText="Select Backend Ticketing System" value={this.state.projects} onChange={this.handleChanges}>
+                                <Select defaultValue="ticketing-system" name="systemId" labelText="Select Project" value={this.state.systemId} onChange={this.handleChanges}>
                                     <SelectItem
                                         text="Select"
                                         value="ticketing-system"
                                     />
                                     {Object.keys(this.state.projects).length !== 0 ? this.state.projects.data.map((project, i) => {
                                     return (
-                                        <SelectItem key={i} text={project.name} value={project.id}>{project.name}</SelectItem>
+                                        <SelectItem key={i} text={project.name} value={project.systemId}>{project.name}</SelectItem>
                                     )}) : null}
                                 </Select>
-                                <TextInput name="projectName" labelText="Project Id" value={this.state.projectId} onChange={this.handleChanges}/>
-                                <TextInput name="ticketNo" labelText="Type" value={this.state.type} onChange={this.handleChanges}/>
+                                <TextInput name="type" labelText="Type" value={this.state.type} onChange={this.handleChanges}/>
                                 <TextInput name="priority" labelText="Priority" value={this.state.priority} onChange={this.handleChanges}/>
                             </div>
                         </div>
