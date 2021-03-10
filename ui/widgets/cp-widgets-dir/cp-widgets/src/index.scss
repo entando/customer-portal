@@ -24,7 +24,6 @@ h4{
 
 p {
   font-size: 14px;
-  color: #101820;
   line-height: 24px;
 }
 
@@ -116,10 +115,6 @@ a:link, a:visited {
 // Admin Dashboard
 
   .admin-dashboard{
-    .title{
-      font-size: 18px;
-      margin: 0 0 15px 15px;
-    }
     .bx--accordion__item {
       padding: 1rem;
     }
@@ -175,5 +170,15 @@ a:link, a:visited {
   .subscription-details {
     width: auto;
     margin: 2rem 0;
+  }
+  .title{
+    font-size: 18px;
+    margin: 0 0 15px 15px;
+  }
+  .desc{
+    padding-left:15px;
+  }
+  .form-container{
+    background: #FFF;
   }
 }
