@@ -62,6 +62,14 @@ public interface JiraTicketingSystemService {
     /**
      * Get all the tickets corresponding to the systemId.
      *
+     * @param project the systemId of the Jira project.
+     * @return the JSON list of Tickets.
+     */
+    String fetchJiraTicketsBySystemIdAndOrganization(String project, String organization, String url, String serviceAccount, String serviceAccountSecret);
+
+    /**
+     * Get all the tickets corresponding to the systemId.
+     *
      * @param systemId the systemId of the Jira project.
      * @return the JSON list of Tickets.
      */
@@ -74,6 +82,15 @@ public interface JiraTicketingSystemService {
      * @return the JSON response
      */
     String createJiraTicket(String systemId, String url, String serviceAccount, String serviceAccountSecret,
+                            Ticket ticket);
+
+    /**
+     * Creating a new Jira ticket.
+     *
+     * @param systemId the systemId of the Jira ticket.
+     * @return the JSON response
+     */
+    String createJiraTicketInOrg(String systemId, String organization, String url, String serviceAccount, String serviceAccountSecret,
                             Ticket ticket);
 
     /**

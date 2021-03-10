@@ -22,9 +22,10 @@ class CustomTable extends Component {
   async fetchData() {
     const { t, keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
+    //console.log(this.props.customerNumber)
     if (authenticated) {
         const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
-
+        console.log(projects)
         this.setState({
             data: projects
         });
@@ -48,7 +49,7 @@ componentDidUpdate(prevProps) {
   }
 
   render() { 
-    console.log(this.state.data)
+    //console.log(this.state.data)
     return (
       <div>
         <DataTable rows={rowData} headers={headerData} data={this.state.data}>
@@ -70,10 +71,16 @@ componentDidUpdate(prevProps) {
                     project.projectSubscriptions.map((sub) => (
                       <TableRow key={index} >
                           <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
-                          <TableCell>{JSON.stringify(project.partners)}</TableCell>
-                          <TableCell>{project.entandoVersion}</TableCell>
-                          <TableCell>{sub.startDate}</TableCell>
-                          <TableCell>{sub.startDate - sub.lengthInMonths}</TableCell>
+                          {project.partners ? 
+                            <TableCell>
+                              {project.partners.map(partner => (
+                                <p>{partner.name}</p>
+                              ))}
+                            </TableCell> 
+                            : <TableCell>None</TableCell>}
+                          {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
+                          <TableCell>{String(new Date(sub.startDate))}</TableCell>
+                          <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)))}</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
                       </TableRow>
                   )))) : null

@@ -5,8 +5,8 @@ import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import AddProjectModal from './AddProjectModal'
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomerPost, apiCustomerPut, apiCustomersGet } from '../../api/customers';
-import { apiProjectPost, apiProjectPut, apiProjectsGetForAdmin } from '../../api/projects';
+import { apiCustomersGetForAdminDashboard, apiCustomersGet } from '../../api/customers';
+import { apiProjectPost, apiProjectPut } from '../../api/projects';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Subscription from '../SubscriptionDetails/subscription';
 
@@ -61,7 +61,7 @@ class AdminDashboard extends React.Component {
                         </div>
                     </div>
                 </Tile>  
-                
+                    
                 <div className="form-container">
                     <Accordion>
                         {Object.keys(this.state.customers).length !== 0 ? this.state.customers.data.map((customer, index) => {
@@ -77,6 +77,7 @@ class AdminDashboard extends React.Component {
             </div>
         )
     }
+    
 }
 
 export default withKeycloak(AdminDashboard);

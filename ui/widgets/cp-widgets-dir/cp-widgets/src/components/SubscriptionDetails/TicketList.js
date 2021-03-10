@@ -4,6 +4,7 @@ import { apiJiraTicketsGet } from '../../api/tickets';
 import { apiTicketingSystemsGet, apiTicketingSystemPost } from '../../api/ticketingsystem';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
+import { apiProjectGet } from '../../api/projects';
 
 class TicketList extends Component {
   constructor(props) {
@@ -28,11 +29,11 @@ class TicketList extends Component {
       }
     }
     */
-   console.log(this.props.serviceUrl)
 
     if (authenticated) {
-        var tickets = await apiJiraTicketsGet(this.props.serviceUrl);
-        console.log("Tickets:", tickets)
+        const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
+        var tickets = await apiJiraTicketsGet(this.props.serviceUrl, project.data.systemId);
+
         this.setState({
             data: tickets
         });
@@ -87,7 +88,7 @@ componentDidUpdate(prevProps) {
                       <TableCell key={ticket.id}><a href={"https://jira.entando.org/browse/" + ticket.systemId} target="_blank">View Ticket</a></TableCell>
                     </TableRow>
                   )
-                }) : null}
+                }) : <p>Loading...</p>}
               </TableBody>
             </Table>
           </TableContainer>
