@@ -15,7 +15,8 @@ import Subscription from './SubscriptionDetails/subscription';
 class App extends Component {
     render() {
         return (
-            <BrowserRouter>
+            <div id="entando-customer-portal">
+               <BrowserRouter>
                 <Switch>
                     <Route exact path="/" render={(props) => (
                         <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} />
@@ -24,7 +25,8 @@ class App extends Component {
                         <Subscription {...props} serviceUrl={this.props.serviceUrl} />
                     )}/>
                 </Switch>
-            </BrowserRouter>
+                </BrowserRouter>
+            </div>    
         )
      }
   }

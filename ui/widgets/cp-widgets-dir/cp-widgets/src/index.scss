@@ -1,17 +1,74 @@
 @import 'carbon-components/scss/globals/scss/styles.scss';
 
-// This section will be removed
-body{
-  width: 100%;
-  background-color: #F4F4F4 !important;
+// Global Styles
+
+body {
+  font-size: 14px;
+  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+  line-height: 14pt;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  background: #F7F9FB;
 }
 
-#dashboard-widget{
-  width: 75%;
-  margin: 0 auto;
-  a{
-    color: #00A0DF;
+h3 {
+  font-size: 32px;
+  line-height: 37px;
+}
+
+h4{
+  font-size: 24px;
+  line-height: 34px;
+}
+
+p {
+  font-size: 14px;
+  color: #101820;
+  line-height: 24px;
+}
+
+a {
+  color: #00a0df
+}
+
+a:link, a:visited {
+  color: #8094d6;
+}
+
+#title {
+  text-align: center;
+}
+
+// Header and Footer
+
+.bx--header{
+  background: #002F87;
+}
+
+.Homepage__footer {
+  text-align: center;
+}
+
+// Navigation Menu
+.bx--grid{
+  .navigationMenu {
+    margin: 2rem;
+    float: right !important;
+    left: 100% !important;
   }
+  .bx--header__nav:before{
+    background-color: transparent;
+  }
+
+  a.bx--header__menu-item span {
+    color: #002F87;
+  }
+} 
+
+
+// Bx--Form Fields
+#entando-customer-portal{
   form.bx--form {
     background: #FFF;
     margin: 2rem 0;
@@ -22,144 +79,101 @@ body{
     font-weight: 400;
   }
   .bx--data-table-header {
-     background: #FFF;
-   }
+    background: #FFF;
+  }
   .bx--data-table th {
-    background-color: #EAF0F5;
-   }
-  .bx--tile{
-    background: #FFF;
-    h4,p{
-      padding: 0 0 0 1rem;
-    }  
+    background-color: #eaf0f5;
   }
-  .bx--data-table td, .bx--data-table tbody th{
+  .bx--tile {
     background: #FFF;
   }
-  p{
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 24px;
-    letter-spacing: 0em;
+  .bx--data-table td,  .bx--data-table tbody th {
+    background: #FFF;
   }
-  #title {
-    text-align: center;
-    font-family: arial, sans-serif;
+  nav.bx--pagination-nav {
+    float: right;
   }
-  h3{
-   margin: 1em 0;
-   size: 32px;
-   font-weight: 700;
+  .modal-form form.bx--form {
+    background: transparent;
   }
-  li.bx--accordion__item{
-    padding: 1rem;
+  .bx--form-item {
+    margin-bottom: 1.5rem;
   }
+  .form-container {
+    margin: 15px;
+  }
+  .form-container .form-desc {
+    margin: 2rem 0;
+    padding: 0 2rem;
+  }
+  .bx--accordion__title{
+    font-size: 18px;
+  }
+  .bx--data-table .bx--table-header-label {
+    font-weight: normal;
+  }
+
+// Admin Dashboard
+
   .admin-dashboard{
-    .bx--accordion__item{
+    .title{
+      font-size: 18px;
+      margin: 0 0 15px 15px;
+    }
+    .bx--accordion__item {
       padding: 1rem;
-      .bx--data-table-header{
-        display:none;
-      }
     }
-    .bx--accordion__content{
-      padding-right:2rem;
+    .bx--accordion__item .bx--data-table-header {
+      display: none;
     }
-    .bx--accordion__heading:focus::before{
-      border:0;
+    .bx--accordion__content {
+      padding-right: 2rem;
     }
-    .bx--accordion__heading:hover::before{
-      background-color: transparent ;
+    .bx--accordion__heading:focus::before {
+      border: 0;
     }
-    .bx--tile{
+    .bx--accordion__heading:hover::before {
+      background-color: transparent;
+    }
+    .bx--tile {
       margin: 15px;
-      min-height:150px;
-      padding: 1rem;
+      min-height: 150px;
+      background: #FFF;
     }
-    .add-customer, .add-partner{
+    .add-customer, .add-partner, .add-project {
       float: right;
     }
-  } 
-  .modal-form{
-    form.bx--form{
-      background: transparent;
+    .bx--search-input{
+      border-bottom:0;
     }
-  } 
-}
+  }  
 
-#customer-table {
-  text-align: center;
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  border: 3px solid #ddd;
-  width: 100%;
-}
+// Customer Table
 
-#customer-table td, #customer-table th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-#customer-table tr:nth-child(even){
-  background-color: #f2f2f2;
-}
-
-#customer-table tr:hover{
-  background-color: #ddd;
-}
-
-#customer-table th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: center;
-  background-color: grey;
-  color: white;
-}
-
-.customer-details{
-  background: #FFF;
-  width: 368px;
-  margin: 2rem 0;
-}
-
-.subscription-details{
-  width: auto;
-  margin: 2rem 0;
-}
-
-.bx--form-item{
-   margin-bottom: 1.5rem;
-}
-
-.form-container{
-  background: #FFF;
-  margin: 15px;
-  margin-top: 1rem;
-    .form-desc{
-      margin: 2rem 0;
-      padding: 0 2rem;
+  #customer-table {
+    text-align: center;
+    border-collapse: collapse;
+    border: 3px solid #DDD;
+    width: 100%;
+    
+    td, th {
+      border: 1px solid #DDD;
+      padding: 8px;
     }
- }
-
- .pagination-right{float:right;}
-
- //This block will be removed
-
-.role-check{
-  .bx--select{width: 25%;}
-  .bx--select-input, .bx--select-input:hover{background-color: #fff;}
-} 
-
-ul#navigation {
-  float: right;
-    display: block;
-    margin-top: 3rem;
-    position: fixed;
-    top: 0;
-    right: 13rem;
-
-  li {
-    display: inline;
-    padding: 10px;
+    th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: center;
+      color: #FFF;
+    }
+  }  
+  .customer-details {
+    background: #FFF;
+    width: 368px;
+    margin: 2rem 0;
+  }
+  .subscription-details {
+    width: auto;
+    margin: 2rem 0;
   }
 }
