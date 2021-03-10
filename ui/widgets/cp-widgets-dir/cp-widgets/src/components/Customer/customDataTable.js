@@ -9,7 +9,7 @@ import keycloakType from '../../components/__types__/keycloak';
 import { Link } from 'react-router-dom';
 import RoleCheck from '../Admin/RoleCheck';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Subscription from '../SubscriptionDetails/subscription';
+import Subscription from '../SubscriptionDetails/Subscription';
 
 class CustomTable extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class CustomTable extends Component {
     const { t, keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
-        const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
+        const projects = await apiProjectsGetForCustomer(this.props.serviceUrl, this.props.customerNumber);
 
         this.setState({
             data: projects
@@ -67,16 +67,19 @@ componentDidUpdate(prevProps) {
               <TableBody>
                 {Object.keys(this.state.data).length !== 0 ? 
                   this.state.data.data.map((project, index) => (
-                    project.projectSubscriptions.map((sub) => (
-                      <TableRow key={index} >
-                          <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
-                          <TableCell>{JSON.stringify(project.partners)}</TableCell>
-                          <TableCell>{project.entandoVersion}</TableCell>
-                          <TableCell>{sub.startDate}</TableCell>
-                          <TableCell>{sub.startDate - sub.lengthInMonths}</TableCell>
-                          <TableCell>{project.tickets.length}</TableCell>
-                      </TableRow>
-                  )))) : null
+                    <TableRow key={index} >
+                        <TableCell><Link to={`/subscription-details/${project.subscriptionId}`}>{project.projectName}</Link></TableCell>
+                        <TableCell>
+                        {project.partners.map((partner, i) =>
+                          <div>{partner}</div>
+                        )}
+                        </TableCell>
+                        <TableCell>{project.entandoVersion}</TableCell>
+                        <TableCell>{project.startDate}</TableCell>
+                        <TableCell>{project.endDate}</TableCell>
+                        <TableCell>{project.tickets}</TableCell>
+                    </TableRow>
+                  )) : null
               }
               </TableBody>
             </Table>
