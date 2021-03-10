@@ -93,7 +93,7 @@ public class ProjectServiceImpl implements ProjectService {
         List<Project> foundProjects = projectRepository.findByName(name);
 
         return foundProjects.isEmpty() ? Optional.ofNullable(null) : Optional.ofNullable(foundProjects.get(0));
-        
+
     }
 
     /**
@@ -199,5 +199,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Set<PortalUser> getProjectUsers(Long id) {
         return projectRepository.findById(id).get().getPortalUsers();
+    }
+
+    /**
+     * Get project by systemId.
+     *
+     * @param systemId the systemId of the entity.
+     * @return the entity.
+     */
+    public Project getProjectBySystemId(String systemId) {
+        return projectRepository.findProjectBySystemId(systemId);
     }
 }

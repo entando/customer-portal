@@ -5,10 +5,10 @@ import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import AddProjectModal from './AddProjectModal'
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomerPost, apiCustomerPut, apiCustomersGet } from '../../api/customers';
-import { apiProjectPost, apiProjectPut, apiProjectsGetForAdmin } from '../../api/projects';
+import { apiCustomersGetForAdminDashboard } from '../../api/customers';
+import { apiProjectPost, apiProjectPut } from '../../api/projects';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Subscription from '../SubscriptionDetails/subscription';
+import Subscription from '../SubscriptionDetails/Subscription';
 
 class AdminDashboard extends React.Component {
     constructor() {
@@ -37,7 +37,7 @@ class AdminDashboard extends React.Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const customers = await apiCustomersGet(this.props.serviceUrl);
+            const customers = await apiCustomersGetForAdminDashboard(this.props.serviceUrl);
 
             this.setState({
                 customers: customers
@@ -58,25 +58,26 @@ class AdminDashboard extends React.Component {
                             <AddPartnerModal serviceUrl={this.props.serviceUrl} />
                             <AddCustomerModal serviceUrl={this.props.serviceUrl} />
                             <AddProjectModal serviceUrl={this.props.serviceUrl} />
+
                         </div>
+                    </Tile>  
+                    
+                    <div className="form-container">
+                        <Accordion>
+                            {Object.keys(this.state.customers).length !== 0 ? this.state.customers.data.map((customer, index) => {
+                                return(
+                                <AccordionItem key={index} index={index} title={customer.name}>
+                                    <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={customer.id} />
+                                </AccordionItem>
+                                )
+                            }) : null}
+                        </Accordion>
+                        <PaginationNav cssClass='pagination-right'/>
                     </div>
-                </Tile>  
-                
-                <div className="form-container">
-                    <Accordion>
-                        {Object.keys(this.state.customers).length !== 0 ? this.state.customers.data.map((customer, index) => {
-                            return(
-                            <AccordionItem key={index} index={index} title={customer.name}>
-                                <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={customer.id} />
-                            </AccordionItem>
-                            )
-                        }) : null}
-                    </Accordion>
-                    <PaginationNav cssClass='pagination-right'/>
                 </div>
-            </div>
-        )
+            )
     }
+    
 }
 
 export default withKeycloak(AdminDashboard);

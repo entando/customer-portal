@@ -5,9 +5,7 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -145,6 +143,7 @@ public class ProjectResource {
 	        		// need to review
 	        		if (project.getProjectSubscriptions().stream().findFirst().isPresent()) {
 	        			ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get();
+	        			subscription.setSubscriptionId(projectSubscription.getId());
 	        			subscription.setStartDate(sdf.format(Date.from(projectSubscription.getStartDate().toInstant())));
         				subscription.setEndDate(sdf.format(Date.from(projectSubscription.getStartDate().plusMonths(projectSubscription.getLengthInMonths()).toInstant())));
 	        			
@@ -164,24 +163,6 @@ public class ProjectResource {
         return new ResponseEntity<List<SubscriptionListResponse>>(subscriptionList, HttpStatus.OK);
     }
     
-    @GetMapping("/projects/subscriptions/admin")
-    //@Secured(AuthoritiesConstants.ADMIN) // required?
-    public ResponseEntity<Map<String, String>> getSubscriptionsForAdmin() {
-        Map<String, String> customers = new HashMap<String, String>();
-        
-        try {
-	        List<Customer> customerList = customerService.findAll();
-	
-	        for (Customer customer : customerList) {
-	        	customers.put(customer.getName(), customer.getCustomerNumber());
-	        }
-        } catch(Exception e) {
-    		log.error("Error occurred while fetching subscriptions for all customer", e);
-    	}
-
-        return new ResponseEntity<Map<String, String>>(customers, HttpStatus.OK);
-    }
-
     @GetMapping("/projects/subscriptions/detail")
     public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(		
             @RequestParam(value = "projectId") Long projectId) {
