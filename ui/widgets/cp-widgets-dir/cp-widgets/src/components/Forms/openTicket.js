@@ -91,7 +91,7 @@ class OpenTicket extends Component {
             <div className="form-container">
                 <Form onSubmit={this.handleFormSubmit}>
                     <div className="form-desc">
-                        <h3>Open Service Ticket</h3>
+                        <h4>Open Service Ticket</h4>
                         <p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. </p>
                     </div>
 

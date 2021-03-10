@@ -34,7 +34,7 @@ export default class EnhancementRequest extends Component {
             <div className="form-container">
                 <Form onSubmit={this.handleFormSubmit}>
                     <div className="form-desc">
-                        <h3>Request for Enhancements</h3>
+                        <h4>Request for Enhancements</h4>
                         <p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. </p>
                     </div>
                     <div className="bx--grid">

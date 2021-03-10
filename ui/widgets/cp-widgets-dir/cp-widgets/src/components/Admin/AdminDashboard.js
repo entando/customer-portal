@@ -46,21 +46,19 @@ class AdminDashboard extends React.Component {
     }
 
     render(){
-            return(
-                <div className="admin-dashboard">
-                    <Tile>
-                        <h4>All Customers</h4><br/>
-                        <div className="bx--grid">
-                            <div className="bx--row">
-                                <div className="bx--col">
-                                    <Search id="search" placeHolderText="Which customer are you looking for?" />
-                                </div>
-                                <div className="bx--col">
-                                    <AddPartnerModal serviceUrl={this.props.serviceUrl} />
-                                    <AddCustomerModal serviceUrl={this.props.serviceUrl} />
-                                    <AddProjectModal serviceUrl={this.props.serviceUrl} />
-                                </div>
-                            </div>
+        return(
+            <div className="admin-dashboard">
+                <Tile>
+                    <p className="title">All Customers</p>
+                    <div className="bx--row">
+                        <div className="bx--col">
+                            <Search id="search" placeHolderText="Which customer are you looking for?" />
+                        </div>
+                        <div className="bx--col">
+                            <AddPartnerModal serviceUrl={this.props.serviceUrl} />
+                            <AddCustomerModal serviceUrl={this.props.serviceUrl} />
+                            <AddProjectModal serviceUrl={this.props.serviceUrl} />
+
                         </div>
                     </Tile>  
                     
