@@ -4,12 +4,13 @@ import { Tile } from 'carbon-components-react';
 import { apiSubscriptionGet } from '../../api/subscriptions'
 import withKeycloak from '../../auth/withKeycloak';
 import { apiUsersGet } from '../../api/portalusers';
+import { apiProjectGet } from '../../api/projects'; 
 
 const subscriptionData = {
     description: 'Entando Product Support Subscription Suplier Portal',
     commitment: 'Leonardo',
     type: 'Product Support Subscription Entando Platform',
-    quantityRequest: '1(8 Crore)',
+    quantityRequest: '1(8 Core)',
     components: '',
     level: 'Gold',
     startDate: 'May 2019',
@@ -23,7 +24,8 @@ class Subscription extends React.Component {
         this.state = {
             subscription: '',
             users: {},
-            role: 'admin'
+            role: 'admin',
+            project: ''
         }
     }
 
@@ -32,9 +34,13 @@ class Subscription extends React.Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
             const subscription = await apiSubscriptionGet(this.props.serviceUrl, this.props.match.params.id);
-
+            var project = '';
+            if (subscription.data.project) {
+                project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id)
+            }
             this.setState({
-                subscription: subscription
+                subscription: subscription,
+                project: project
             })
         }
     }
@@ -47,6 +53,18 @@ class Subscription extends React.Component {
 
             this.setState({
                 users: users
+            })
+        }
+    }
+
+    async getProject(id) {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const project =  await apiProjectGet(this.props.serviceUrl, id)
+
+            this.setState({
+                project: project
             })
         }
     }
@@ -83,6 +101,9 @@ class Subscription extends React.Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
 
         this.getSubscription();
+        if (this.state.subscription !== '') {
+            this.getProject(this.state.subscription.project.id);
+        }
         this.checkRole();
         this.getPortalUsers();
     }
@@ -95,6 +116,9 @@ class Subscription extends React.Component {
     
         if (authenticated && changedAuth) {
           this.getSubscription();
+          if (this.state.subscription !== '') {
+            this.getProject(this.state.subscription.project.id);
+          }
           this.checkRole();
           this.getPortalUsers();
         }
@@ -106,33 +130,57 @@ class Subscription extends React.Component {
         var authenticated = keycloak.initialized && keycloak.authenticated;
 
         if (this.state.role === 'admin' || this.state.role === 'support' || this.state.role === 'partner' || this.state.role === 'customer') {
+
+            // wait for data from api
+            if (Object.keys(this.state.users).length !== 0 && Object.keys(this.state.subscription).length !== 0) {
+                // Looping through users and checking if this user is mapped to this project or if user is admin/support
+                for (var i = 0; i < this.state.users.data.length; i++) {
+                    if ((keycloak.tokenParsed.preferred_username === this.state.users.data[i].username 
+                        && this.state.users.data[i].project.id === this.state.subscription.data.project.id) 
+                        || (this.state.role === 'admin' || this.state.role === 'support')) {
+                            return (
+                                <div className="subscription-details">
+                                    {Object.keys(this.state.subscription).length !== 0 ? <div><p>Project Id: {this.state.subscription.data.project.id}</p>
+                                    <Tile>
+                                        <div className="bx--grid">
+                                            <div className="bx--row">
+                                                <div className="bx--col">
+                                                    <p><strong>Description:</strong> {this.state.subscription.data.project.description}</p>
+                                                    <p><strong>Commitment:</strong>
+                                                    {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? 
+                                                    
+                                                    <>
+                                                        {this.state.project.data.partners.map(partner => (
+                                                            <> {partner.name} </>
+                                                        ))}
+                                                    </>
+                                                    : <> None </>}
+                                                    </p>
+                                                    <p><strong>Type:</strong> {type}</p>
+                                                    <p><strong>Quantity Request:</strong> {quantityRequest}</p>
+                                                    <p><strong>Components:</strong> {components}</p>
+                                                </div>
+                                                <div className="bx--col">
+                                                    <p><strong>Level:</strong> {this.state.subscription.data.level}</p>
+                                                    <p><strong>Start Date:</strong> {String(new Date(this.state.subscription.data.startDate))}</p>
+                                                    <p><strong>End Date:</strong> {String(new Date(new Date(this.state.subscription.data.startDate).setMonth(new Date(this.state.subscription.data.startDate).getMonth() + this.state.subscription.data.lengthInMonths)))}</p>
+                                                    <p><strong>License:</strong> {license}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Tile>
+                                    <br/>
+                                    <TicketList projectId={this.state.subscription.data.project.id} serviceUrl={this.props.serviceUrl}/>
+                                    </div>
+                                    : null }
+                                </div>
+                            )
+                    }
+                    
+                }
+            }
             return (
-                <div className="subscription-details">
-                    {Object.keys(this.state.subscription).length !== 0 ? <div><p>Project Id: {this.state.subscription.data.project.id}</p>
-                    <Tile>
-                        <div className="bx--grid">
-                            <div className="bx--row">
-                                <div className="bx--col">
-                                    <p><strong>Description:</strong> {this.state.subscription.data.project.description}</p>
-                                    <p><strong>Commitment:</strong> {commitment}</p>
-                                    <p><strong>Type:</strong> {type}</p>
-                                    <p><strong>Quantity Request:</strong> {quantityRequest}</p>
-                                    <p><strong>Components:</strong> {components}</p>
-                                </div>
-                                <div className="bx--col">
-                                    <p><strong>Level:</strong> {this.state.subscription.data.level}</p>
-                                    <p><strong>Start Date:</strong> {String(new Date(this.state.subscription.data.startDate))}</p>
-                                    <p><strong>End Date:</strong> {String(new Date(new Date(this.state.subscription.data.startDate).setMonth(new Date(this.state.subscription.data.startDate).getMonth() + this.state.subscription.data.lengthInMonths)))}</p>
-                                    <p><strong>License:</strong> {license}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </Tile>
-                    <br/>
-                    <TicketList projectId={this.state.subscription.data.project.id} serviceUrl={this.props.serviceUrl}/>
-                    </div>
-                    : null }
-                </div>
+                <p>No data</p>
             )
         }
         else {
