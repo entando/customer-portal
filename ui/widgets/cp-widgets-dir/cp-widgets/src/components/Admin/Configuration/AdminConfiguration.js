@@ -5,11 +5,11 @@ import ProductVersion from './ProductVersion';
 
 const adminConfig = [
     {
-        label: <div><h4>Integration with Ticketing System</h4><p>This allows you to manage the ticketing system</p></div>,
+        label: <div><p className="title">Integration with Ticketing System</p><p className="desc">This allows you to manage the ticketing system</p></div>,
         content: <TicketingSystem />
     },
     {
-        label: <div><h4>Manage Product Version</h4><p>This let’s you manage the entando product versions</p></div>,
+        label: <div><p className="title">Manage Product Version</p><p className="desc">This let’s you manage the entando product versions</p></div>,
         content: <ProductVersion/>
     }
 ]
@@ -17,8 +17,8 @@ const adminConfig = [
 const AdminConfiguration = () => (
     <div className="form-container">
         <Tile>
-            <h4>Configuration Settings</h4>
-            <p>Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+            <p className="title">All Customers</p>
+            <p class="desc">Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
         </Tile>
         <Accordion>
             {adminConfig.map((item, index) => (
