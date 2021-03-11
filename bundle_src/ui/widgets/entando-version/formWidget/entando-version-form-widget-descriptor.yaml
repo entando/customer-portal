@@ -1,0 +1,6 @@
+code: entando-version-form-widget
+titles:
+  en: Entando Version Form Widget
+  it: Entando Version Form Widget
+group: free
+customUiPath: entando-version-form-widget.ftl

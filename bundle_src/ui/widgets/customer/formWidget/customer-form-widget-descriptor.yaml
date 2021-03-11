@@ -1,0 +1,6 @@
+code: customer-form-widget
+titles:
+  en: Customer Form Widget
+  it: Customer Form Widget
+group: free
+customUiPath: customer-form-widget.ftl

@@ -4,7 +4,7 @@ import { apiJiraTicketsGet } from '../../api/tickets';
 import { apiTicketingSystemsGet, apiTicketingSystemPost } from '../../api/ticketingsystem';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiProjectGet } from '../../api/projects';
+import { apiGetProjectsUsers, apiProjectGet, apiGetProjectsTickets } from '../../api/projects';
 
 class TicketList extends Component {
   constructor(props) {
@@ -33,6 +33,7 @@ class TicketList extends Component {
     if (authenticated) {
         const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
         var tickets = await apiJiraTicketsGet(this.props.serviceUrl, project.data.systemId);
+        //var tickets = await apiGetProjectsTickets(this.props.serviceUrl, this.props.projectId);
 
         this.setState({
             data: tickets

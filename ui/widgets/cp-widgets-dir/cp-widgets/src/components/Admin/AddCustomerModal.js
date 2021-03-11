@@ -36,6 +36,7 @@ class AddCustomerModal extends Component {
         console.log(this.props.serviceUrl)
         const customer = apiCustomerPost(this.props.serviceUrl, this.state);
         this.render();
+        window.location.reload(false);
     };
 
     isValid() {
