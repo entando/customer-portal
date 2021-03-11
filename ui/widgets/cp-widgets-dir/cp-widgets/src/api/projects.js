@@ -53,3 +53,12 @@ export const apiProjectPut = async (serviceUrl, project) => {
   };
   return request(url, options);
 };
+
+export const apiAddUserToProject = async (serviceUrl, projectId, userId) => {
+  const url = `${serviceUrl}/projects/${projectId}/users/${userId}`
+  const options = {
+    ...getDefaultOptions(),
+    method: 'POST'
+  };
+  return request(url, options);
+};
