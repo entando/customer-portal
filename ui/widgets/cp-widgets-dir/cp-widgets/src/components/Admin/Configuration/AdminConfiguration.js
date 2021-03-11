@@ -15,19 +15,22 @@ const adminConfig = [
 ]
 
 const AdminConfiguration = () => (
-    <div className="form-container">
-        <Tile>
-            <p className="title">All Customers</p>
-            <p class="desc">Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
-        </Tile>
-        <Accordion>
-            {adminConfig.map((item, index) => (
-                <AccordionItem key={index.toString()} index={index} title={item.label} description={ item.description}>
-                    <p>{item.content}</p>
-                </AccordionItem>
-            ))}
-        </Accordion>
-    </div>
+    <div>
+        <h3 className="pageTitle">Entando Admin View</h3>
+        <div className="form-container">
+            <Tile>
+                <p className="title">All Customers</p>
+                <p class="desc">Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+            </Tile>
+            <Accordion>
+                {adminConfig.map((item, index) => (
+                    <AccordionItem key={index.toString()} index={index} title={item.label} description={ item.description}>
+                        <p>{item.content}</p>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+        </div>
+    </div>  
 )
 
 export default AdminConfiguration;
