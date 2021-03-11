@@ -29,7 +29,7 @@ public class EntandoVersion implements Serializable {
     private String name;
 
     @Column(name = "status")
-    private Boolean status;
+    private Boolean status = false;
 
     @Column(name = "start_date")
     private ZonedDateTime startDate;

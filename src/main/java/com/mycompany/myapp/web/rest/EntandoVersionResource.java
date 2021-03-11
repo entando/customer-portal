@@ -3,6 +3,10 @@ package com.mycompany.myapp.web.rest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mycompany.myapp.constant.CustportAppConstant;
 import com.mycompany.myapp.domain.EntandoVersion;
+import com.mycompany.myapp.request.EntandoVersionRequest;
 import com.mycompany.myapp.response.model.EntandoVersionResponse;
 import com.mycompany.myapp.service.EntandoVersionService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
@@ -61,17 +66,35 @@ public class EntandoVersionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/entando-versions")
-    public ResponseEntity<EntandoVersion> createEntandoVersion(@Valid @RequestBody EntandoVersion entandoVersion) throws URISyntaxException {
-        log.debug("REST request to save EntandoVersion : {}", entandoVersion);
-        if (entandoVersion.getId() != null) {
-            throw new BadRequestAlertException("A new entandoVersion cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        EntandoVersion result = entandoVersion; // entandoVersionService.save(entandoVersion);
-        return ResponseEntity.created(new URI("/api/entando-versions/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
+    public ResponseEntity<EntandoVersion> createEntandoVersion(@Valid @RequestBody EntandoVersionRequest entandoVersionRequest) throws URISyntaxException {
+    	
+    	try {
+	    	if (entandoVersionRequest != null) {
+	    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CustportAppConstant.INPUT_DATE_FORMAT);
+	    		LocalDate startDate = LocalDate.parse(entandoVersionRequest.getStartDate(), formatter);
+	    		LocalDate endDate = LocalDate.parse(entandoVersionRequest.getEndDate(), formatter);
+	    		
+	    		EntandoVersion objToAdd = new EntandoVersion();
+	    		objToAdd.setStartDate(startDate.atStartOfDay(ZoneId.systemDefault()));
+	    		objToAdd.setEndDate(endDate.atStartOfDay(ZoneId.systemDefault()));
+	    		objToAdd.setName(entandoVersionRequest.getName());
 
+	    		EntandoVersion result = entandoVersionService.save(objToAdd);
+	    		
+	    		return ResponseEntity.created(new URI("/api/entando-versions/" + result.getId()))
+	                    .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+	                    .body(result);
+	    	}
+    	} catch (DateTimeParseException e) {
+    		log.error("Error occurred while parsing date", e);
+    	} catch (Exception exception) {
+    		log.error("Error occurred while creating a entando version : " + entandoVersionRequest.getName(), exception);
+    	}
+    	
+    	// will be updated once the way to handle response error in front end is determined.
+        return null;
+    }
+    
     /**
      * {@code PUT  /entando-versions} : Updates an existing entandoVersion.
      *
