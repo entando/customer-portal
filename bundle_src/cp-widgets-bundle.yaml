@@ -1,0 +1,23 @@
+---
+apiVersion: entando.org/v1
+kind: EntandoDeBundle
+metadata:
+  name: custport-bundle
+  namespace: partner-portal-dev
+  labels:
+    plugin: 'true'
+    widget: 'true'
+spec:
+  details:
+    name: custportapp-bundle
+    description: This is the custportApp bundle
+    dist-tags:
+      latest: v0.0.1
+    versions:
+      - v0.0.1
+  tags:
+    - version: v0.0.1
+      shasum: 8cee9dc43b25bbe288e5bd04ec4afa17e4ce556f
+      integrity: 8cee9dc43b25bbe288e5bd04ec4afa17e4ce556f
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+

@@ -1,0 +1,6 @@
+code: ticket-form-widget
+titles:
+  en: Ticket Form Widget
+  it: Ticket Form Widget
+group: free
+customUiPath: ticket-form-widget.ftl

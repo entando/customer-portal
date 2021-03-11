@@ -1,0 +1,6 @@
+code: project-subscription-details-widget
+titles:
+  en: Project Subscription Details Widget
+  it: Project Subscription Details Widget
+group: free
+customUiPath: project-subscription-details-widget.ftl

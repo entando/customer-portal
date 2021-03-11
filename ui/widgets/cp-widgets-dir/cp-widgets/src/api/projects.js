@@ -94,7 +94,16 @@ export const apiAddPartnerToProject = async (serviceUrl, projectId, partnerId) =
   return request(url, options);
 };
 
-export const apiGetProjectsUsers = async (serviceUrl, projectId, userId) => {
+export const apiGetProjectsUsers = async (serviceUrl, projectId) => {
+  const url = `${serviceUrl}/${resource}/${projectId}/users/`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+  return request(url, options);
+};
+
+export const apiGetProjectsTickets = async (serviceUrl, projectId) => {
   const url = `${serviceUrl}/${resource}/${projectId}/users/`;
   const options = {
     ...getDefaultOptions(),

@@ -77,6 +77,7 @@ class AddProjectModal extends Component {
             notes: this.state.notes
         }
         this.projectPost(project);
+        window.location.reload(false);
     };
 
     componentDidMount() {

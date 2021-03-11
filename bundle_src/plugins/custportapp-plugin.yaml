@@ -1,0 +1,14 @@
+image: jordengerovac/custport-app:0.0.1-SNAPSHOT
+dbms: postgresql
+healthCheckPath: "/management/health"
+roles:
+  - "custportApp-admin"
+  - "customer-admin"
+  - "project-admin"
+  - "entando-version-admin"
+  - "project-subscription-admin"
+  - "partner-admin"
+  - "ticket-admin"
+  - "ticketing-system-admin"
+  - "portal-user-admin"
+# entando-needle-descriptor-add-roles - Entando blueprint will add roles here

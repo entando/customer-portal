@@ -19,7 +19,7 @@ class CustomerAccordian extends React.Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
 
         if (authenticated) {
-            if (this.props.role === 'admin' || this.props.role === 'support') {
+            if (this.props.role === 'Admin' || this.props.role === 'Support') {
                 this.setState({
                     authenticated: true
                 })
@@ -37,7 +37,7 @@ class CustomerAccordian extends React.Component {
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
     
         if (authenticated && changedAuth) {
-            if (this.props.role === 'admin' || this.props.role === 'support') {
+            if (this.props.role === 'Admin' || this.props.role === 'Support') {
                 this.setState({
                     authenticated: true
                 })

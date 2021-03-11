@@ -1,0 +1,6 @@
+code: open-ticket-widget
+titles:
+  en: Open Ticket Widget
+  it: Open Ticket Widget
+group: free
+customUiPath: open-ticket-widget.ftl

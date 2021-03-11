@@ -32,22 +32,22 @@ class App extends Component {
         if (keycloak.realmAccess) {
             for (var i = 0; i < keycloak.tokenParsed.roles.length; i++) {
               if (keycloak.tokenParsed.roles[i] == "ROLE_ADMIN") {
-                role = 'admin'
+                role = 'Admin'
                 break;
               }
               else if (keycloak.tokenParsed.roles[i] == "ROLE_SUPPORT") {
-                role = 'support'
+                role = 'Support'
               }
               else if (keycloak.tokenParsed.roles[i] == "ROLE_PARTNER") {
-                role = 'partner'
+                role = 'Partner'
               }
               else if (keycloak.tokenParsed.roles[i] == "ROLE_CUSTOMER") {
-                role = 'customer'
+                role = 'Customer'
               }
             }
         }
         
-        if (role === 'admin' || role === 'support' || role === 'partner') {
+        if (role === 'Admin' || role === 'Support' || role === 'Partner' || role === 'Customer') {
             return (
                 <div id="entando-customer-portal">
                     <AuthenticatedView keycloak={keycloak}>

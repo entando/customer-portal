@@ -35,7 +35,7 @@ export const apiTicketPost = async (serviceUrl, ticket) => {
 };
 
 
-const jiraResource = 'api/tickets/ticketingsystem/TESTSUP';
+const jiraResource = 'api/tickets/ticketingsystem/GSP';
 export const apiJiraTicketDelete = async (serviceUrl, id) => {
   const url = `${serviceUrl}/${jiraResource}/${id}`;
   const options = {

@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -139,6 +140,7 @@ public class TicketResource {
     @GetMapping("/tickets/ticketingsystem/{systemId}")
     public List<Ticket> fetchJiraTicketsByProject(@PathVariable String systemId) throws URISyntaxException {
         log.debug("REST request to get all Tickets by systemId: {}");
+        List<Ticket> resultTickets = new ArrayList<Ticket>();
 
         // fetch tickets from Jira and store in a JSONArray
         TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(systemId);
@@ -162,32 +164,34 @@ public class TicketResource {
                 Ticket prepareTicketToCreate = prepareTicketToCreate(jiraKey, ts.getUrl(), ts.getServiceAccount(), ts.getServiceAccountSecret());
                 createTicket(prepareTicketToCreate);
             }
+            resultTickets.add(t);
         }
 
         // return JSON response from Jira
-        return getAllTickets();
+        return resultTickets;
     }
 
     /**
-     * {@code GET  /tickets/ticketingsystem/:project/:organization} : get all the tickets in project.
+     * {@code GET  /tickets/ticketingsystem/:jiraProjectCode/:organizationNumber} : get all the tickets in project.
      *
-     * @param project the systemId of the tickets to retrieve.
-     * @param organization the organization name of the tickets to retrieve.
+     * @param jiraProjectCode the systemId of the tickets to retrieve.
+     * @param organizationNumber the organization name of the tickets to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
      */
-    @GetMapping("/tickets/ticketingsystem/{project}/{organization}")
-    public List<Ticket> fetchJiraTicketsByOrganizationAndProject(@PathVariable String project,
-                                                                 @PathVariable String organization) throws URISyntaxException {
+    @GetMapping("/tickets/ticketingsystem/{jiraProjectCode}/{organizationNumber}")
+    public List<Ticket> fetchJiraTicketsByOrganizationAndProject(@PathVariable String jiraProjectCode,
+                                                                 @PathVariable String organizationNumber) throws URISyntaxException {
         log.debug("REST request to get all Tickets by systemId and organization: {}");
+        List<Ticket> resultTickets = new ArrayList<Ticket>();
 
         // fetch tickets from Jira and store in a JSONArray
-        TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(project);
+        TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(jiraProjectCode);
         if (ts == null) {
             return null;
         }
 
-        JSONObject response = new JSONObject(ticketingSystemService.fetchJiraTicketsBySystemIdAndOrganization(project,
-            organization, ts.getUrl(), ts.getServiceAccount(), ts.getServiceAccountSecret()));
+        JSONObject response = new JSONObject(ticketingSystemService.fetchJiraTicketsBySystemIdAndOrganization(jiraProjectCode,
+            organizationNumber, ts.getUrl(), ts.getServiceAccount(), ts.getServiceAccountSecret()));
 
         JSONArray issues = new JSONArray(response.getJSONArray("issues"));
 
@@ -203,14 +207,15 @@ public class TicketResource {
             // else create a Ticket
             else {
                 System.out.println("Creating ticket...");
-                Ticket prepareTicketToCreate = prepareTicketToCreateWithProject(jiraKey, organization, ts.getUrl(),
+                Ticket prepareTicketToCreate = prepareTicketToCreateWithProject(jiraKey, organizationNumber, ts.getUrl(),
                     ts.getServiceAccount(), ts.getServiceAccountSecret());
                 createTicket(prepareTicketToCreate);
             }
+            resultTickets.add(t);
         }
 
         // return JSON response from Jira
-        return getAllTickets();
+        return resultTickets;
     }
 
     /**
@@ -239,24 +244,24 @@ public class TicketResource {
     }
 
     /**
-     * {@code GET  /tickets/ticketingsystem/:systemId/:organization} : Creating a new jira ticket in organization.
+     * {@code GET  /tickets/ticketingsystem/:jiraProjectCode/:organizationNumber} : Creating a new jira ticket in organization.
      *
-     * @param systemId the systemId of the project to create the ticket in.
+     * @param jiraProjectCode the systemId of the project to create the ticket in.
      * @return the JSON response
      */
-    @PostMapping("/tickets/ticketingsystem/{systemId}/{organization}")
-    public ResponseEntity<Ticket> createJiraTicketInOrg(@PathVariable String systemId, @PathVariable String organization,
+    @PostMapping("/tickets/ticketingsystem/{jiraProjectCode}/{organizationNumber}")
+    public ResponseEntity<Ticket> createJiraTicketInOrg(@PathVariable String jiraProjectCode, @PathVariable String organizationNumber,
                                                         @Valid @RequestBody Ticket ticket) throws URISyntaxException {
         // find ticketing system for this systemId
-        TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(systemId);
+        TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(jiraProjectCode);
 
         // create ticket in Jira
-        JSONObject response = new JSONObject(ticketingSystemService.createJiraTicketInOrg(systemId, organization, ts.getUrl(),
+        JSONObject response = new JSONObject(ticketingSystemService.createJiraTicketInOrg(jiraProjectCode, organizationNumber, ts.getUrl(),
             ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket));
         String key = response.getString("key");
 
         // prepare Ticket from JSON response
-        Ticket ticketToCreate = prepareTicketToCreateWithProject(key, organization, ts.getUrl(), ts.getServiceAccount(),
+        Ticket ticketToCreate = prepareTicketToCreateWithProject(key, organizationNumber, ts.getUrl(), ts.getServiceAccount(),
             ts.getServiceAccountSecret());
 
         // return created Ticket

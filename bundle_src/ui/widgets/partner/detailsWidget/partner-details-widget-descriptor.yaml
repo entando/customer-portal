@@ -1,0 +1,6 @@
+code: partner-details-widget
+titles:
+  en: Partner Details Widget
+  it: Partner Details Widget
+group: free
+customUiPath: partner-details-widget.ftl

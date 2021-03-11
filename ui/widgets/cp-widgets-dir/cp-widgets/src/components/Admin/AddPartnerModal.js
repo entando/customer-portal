@@ -65,6 +65,7 @@ class AddPartnerModal extends Component {
             notes: this.state.notes
         }
         this.partnerPost(partner);
+        window.location.reload(false);
     };
 
     componentDidMount() {

@@ -1,0 +1,6 @@
+code: ticket-details-widget
+titles:
+  en: Ticket Details Widget
+  it: Ticket Details Widget
+group: free
+customUiPath: ticket-details-widget.ftl

@@ -1,0 +1,6 @@
+code: project-form-widget
+titles:
+  en: Project Form Widget
+  it: Project Form Widget
+group: free
+customUiPath: project-form-widget.ftl

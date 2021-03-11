@@ -24,7 +24,7 @@ class Subscription extends React.Component {
         this.state = {
             subscription: '',
             users: {},
-            role: 'admin',
+            role: 'Admin',
             project: ''
         }
     }
@@ -77,17 +77,17 @@ class Subscription extends React.Component {
         if (keycloak.realmAccess) {
             for (var i = 0; i < keycloak.tokenParsed.roles.length; i++) {
               if (keycloak.tokenParsed.roles[i] == "ROLE_ADMIN") {
-                role = 'admin'
+                role = 'Admin'
                 break;
               }
               else if (keycloak.tokenParsed.roles[i] == "ROLE_SUPPORT") {
-                role = 'support'
+                role = 'Support'
               }
               else if (keycloak.tokenParsed.roles[i] == "ROLE_PARTNER") {
-                role = 'partner'
+                role = 'Partner'
               }
               else if (keycloak.tokenParsed.roles[i] == "ROLE_CUSTOMER") {
-                role = 'customer'
+                role = 'Customer'
               }
             }
             this.setState({
@@ -129,7 +129,7 @@ class Subscription extends React.Component {
         var { t, keycloak } = this.props;
         var authenticated = keycloak.initialized && keycloak.authenticated;
 
-        if (this.state.role === 'admin' || this.state.role === 'support' || this.state.role === 'partner' || this.state.role === 'customer') {
+        if (this.state.role === 'Admin' || this.state.role === 'Support' || this.state.role === 'Partner' || this.state.role === 'Customer') {
 
             // wait for data from api
             if (Object.keys(this.state.users).length !== 0 && Object.keys(this.state.subscription).length !== 0) {
@@ -137,7 +137,7 @@ class Subscription extends React.Component {
                 for (var i = 0; i < this.state.users.data.length; i++) {
                     if ((keycloak.tokenParsed.preferred_username === this.state.users.data[i].username 
                         && this.state.users.data[i].project.id === this.state.subscription.data.project.id) 
-                        || (this.state.role === 'admin' || this.state.role === 'support')) {
+                        || (this.state.role === 'Admin' || this.state.role === 'Support')) {
                             return (
                                 <div className="subscription-details">
                                     {Object.keys(this.state.subscription).length !== 0 ? <div><p>Project Id: {this.state.subscription.data.project.id}</p>
