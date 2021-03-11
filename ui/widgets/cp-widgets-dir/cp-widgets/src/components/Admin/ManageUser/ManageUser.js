@@ -15,15 +15,18 @@ const user = [
 ]
 
 const ManageUser = () => (
-    <div className="form-container">
-        <Accordion>
-            {user.map((item, index) => (
-                <AccordionItem key={index.toString()} index={index} title={item.label} description={ item.description}>
-                    <p>{item.content}</p>
-                </AccordionItem>
-            ))}
-        </Accordion>
-    </div>
+    <div>
+        <h3 className="pageTitle">Entando Admin View</h3>
+        <div className="form-container">
+            <Accordion>
+                {user.map((item, index) => (
+                    <AccordionItem key={index.toString()} index={index} title={item.label} description={ item.description}>
+                        <p>{item.content}</p>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+        </div>
+    </div>    
 )
 
 export default ManageUser;

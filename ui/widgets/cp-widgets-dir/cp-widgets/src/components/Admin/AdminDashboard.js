@@ -48,6 +48,7 @@ class AdminDashboard extends React.Component {
     render(){
         return(
             <div className="admin-dashboard">
+                <h3 className="pageTitle">Welcome to Entando Admin View</h3>
                 <Tile>
                     <p className="title">All Customers</p>
                     <div className="bx--row">

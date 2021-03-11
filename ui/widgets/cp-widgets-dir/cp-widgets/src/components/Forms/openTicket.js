@@ -88,39 +88,42 @@ class OpenTicket extends Component {
         }
 
         return (
-            <div className="form-container">
-                <Form onSubmit={this.handleFormSubmit}>
-                    <div className="form-desc">
-                        <h4>Open Service Ticket</h4>
-                        <p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. </p>
-                    </div>
+            <div>
+                <h3 className="pageTitle">Welcome to Entando Customer Portal</h3>
+                <div className="form-container">
+                    <Form onSubmit={this.handleFormSubmit}>
+                        <div className="form-desc">
+                            <h4>Open Service Ticket</h4>
+                            <p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. </p>
+                        </div>
 
-                    <div className="bx--grid">
-                        <div className="bx--row">
-                            <div className="bx--col">
-                                <Select defaultValue="ticketing-system" name="systemId" labelText="Select Project" value={this.state.systemId} onChange={this.handleChanges}>
-                                    <SelectItem
-                                        text="Select"
-                                        value="ticketing-system"
-                                    />
-                                    {Object.keys(this.state.projects).length !== 0 ? this.state.projects.data.map((project, i) => {
-                                    return (
-                                        <SelectItem key={i} text={project.name} value={project.systemId}>{project.name}</SelectItem>
-                                    )}) : null}
-                                </Select>
-                                <TextInput name="type" labelText="Type" value={this.state.type} onChange={this.handleChanges}/>
-                                <TextInput name="priority" labelText="Priority" value={this.state.priority} onChange={this.handleChanges}/>
+                        <div className="bx--grid">
+                            <div className="bx--row">
+                                <div className="bx--col">
+                                    <Select defaultValue="ticketing-system" name="systemId" labelText="Select Project" value={this.state.systemId} onChange={this.handleChanges}>
+                                        <SelectItem
+                                            text="Select"
+                                            value="ticketing-system"
+                                        />
+                                        {Object.keys(this.state.projects).length !== 0 ? this.state.projects.data.map((project, i) => {
+                                        return (
+                                            <SelectItem key={i} text={project.name} value={project.systemId}>{project.name}</SelectItem>
+                                        )}) : null}
+                                    </Select>
+                                    <TextInput name="type" labelText="Type" value={this.state.type} onChange={this.handleChanges}/>
+                                    <TextInput name="priority" labelText="Priority" value={this.state.priority} onChange={this.handleChanges}/>
+                                </div>
+                            </div>
+                            <div className="bx--row">
+                                <div className="bx--col">
+                                    <TextArea {...textareaProps} value={this.state.description} onChange={this.handleChanges}  />
+                                    <Button kind="primary" tabIndex={0} type="submit" > Submit  </Button>
+                                </div>
                             </div>
                         </div>
-                        <div className="bx--row">
-                            <div className="bx--col">
-                                <TextArea {...textareaProps} value={this.state.description} onChange={this.handleChanges}  />
-                                <Button kind="primary" tabIndex={0} type="submit" > Submit  </Button>
-                            </div>
-                        </div>
-                    </div>
-                </Form>
-            </div>
+                    </Form>
+                </div>
+            </div>    
         );
     }
 }

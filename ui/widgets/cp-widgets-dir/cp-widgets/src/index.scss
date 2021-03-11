@@ -4,7 +4,6 @@
 
 body {
   font-size: 14px;
-  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
   line-height: 14pt;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -37,6 +36,11 @@ a:link, a:visited {
 
 #title {
   text-align: center;
+}
+
+.pageTitle {
+  padding-left: 1rem;
+  margin: 2rem 0;
 }
 
 // Header and Footer
@@ -111,6 +115,31 @@ a:link, a:visited {
   .bx--data-table .bx--table-header-label {
     font-weight: normal;
   }
+  .bx--modal-container{
+     background: #FFF;
+     .form-container{
+        background: transparent;
+      }
+      .bx--modal-header {
+        padding-left:2rem;
+      }
+  }
+  
+  .bx--modal .bx--text-input, 
+  .bx--modal .bx--text-area, 
+  .bx--modal .bx--search-input, 
+  .bx--modal .bx--select-input, 
+  .bx--modal .bx--dropdown, 
+  .bx--modal .bx--dropdown-list,
+  .bx--date-picker__input
+  {
+    background-color: #f4f4f4;
+  }
+
+  .bx--date-picker.bx--date-picker--simple .bx--date-picker__input, .bx--date-picker.bx--date-picker--simple .bx--label{
+    width: auto;
+  }
+ 
 
 // Admin Dashboard
 
@@ -137,11 +166,16 @@ a:link, a:visited {
     }
     .add-customer, .add-partner, .add-project {
       float: right;
+      width: 14rem;
+      @media screen and (max-width: 600px) {
+        width: 100%;
+      }
     }
     .bx--search-input{
       border-bottom:0;
     }
   }  
+  
 
 // Customer Table
 
