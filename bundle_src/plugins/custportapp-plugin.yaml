@@ -3,6 +3,9 @@ dbms: postgresql
 healthCheckPath: "/management/health"
 roles:
   - "custportApp-admin"
+  - "custportApp-customer"
+  - "custportApp-partner"
+  - "custportApp-support"
   - "customer-admin"
   - "project-admin"
   - "entando-version-admin"
