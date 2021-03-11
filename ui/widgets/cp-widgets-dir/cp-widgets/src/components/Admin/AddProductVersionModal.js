@@ -48,8 +48,8 @@ class AddProductVersionModal extends Component {
                 className="modal-form"
                 handleSubmit={this.handleFormSubmit}
             >
-                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                 <div className="form-container">
+                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                     <Form onSubmit={this.handleFormSubmit}>
                         <TextInput name="name" labelText="Product Version" value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
                         <DatePicker dateFormat="m/d/Y" datePickerType="simple">

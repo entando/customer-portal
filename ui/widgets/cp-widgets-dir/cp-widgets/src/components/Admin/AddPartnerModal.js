@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ModalWrapper, Form, TextInput, Select, SelectItem } from 'carbon-components-react';
+import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiPartnerPost } from '../../api/partners';
 import { apiProjectPost, apiProjectsGet, apiAddPartnerToProject } from '../../api/projects';
@@ -87,8 +87,8 @@ class AddPartnerModal extends Component {
                 className="modal-form"
                 handleSubmit={this.handleFormSubmit}
             >
-                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                 <div className="form-container">
+                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                     <Form onSubmit={this.handleFormSubmit}>
                         <Select defaultValue="project-list" name="projectId" labelText="Project List" value={this.state.projectId} onChange={this.handleChanges}>
                             <SelectItem
@@ -100,7 +100,7 @@ class AddPartnerModal extends Component {
 
                         <TextInput name="name" labelText="Partner Name" value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
                         <TextInput name="partnerNumber" labelText="Partner Number" value='' onChange=''value={this.state.partnerNumber} onChange={this.handleChanges} />
-                        <TextInput name="notes" labelText="Notes" value={this.state.notes} onChange={this.handleChanges} />
+                        <TextArea name="notes" labelText="Notes" value={this.state.notes} onChange={this.handleChanges} />
                         {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
                     </Form>
                 </div> 

@@ -111,6 +111,26 @@ a:link, a:visited {
   .bx--data-table .bx--table-header-label {
     font-weight: normal;
   }
+  .bx--modal-container{
+     background: #FFF;
+     .form-container{
+        background: transparent;
+      }
+      .bx--modal-header {
+        padding-left:2rem;
+      }
+  }
+  
+  .bx--modal .bx--text-input, 
+  .bx--modal .bx--text-area, 
+  .bx--modal .bx--search-input, 
+  .bx--modal .bx--select-input, 
+  .bx--modal .bx--dropdown, 
+  .bx--modal .bx--dropdown-list
+  {
+    background-color: #f4f4f4;
+  }
+ 
 
 // Admin Dashboard
 

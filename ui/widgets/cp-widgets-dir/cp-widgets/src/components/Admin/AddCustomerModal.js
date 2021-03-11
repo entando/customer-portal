@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ModalWrapper, Form, TextInput } from 'carbon-components-react';
+import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomerPost } from '../../api/customers';
 
@@ -54,15 +54,15 @@ class AddCustomerModal extends Component {
                 className="modal-form"
                 handleSubmit={this.handleFormSubmit}
             >
-                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                 <div className="form-container">
+                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                     <Form onSubmit={this.handleFormSubmit}>
                         <TextInput name="name" labelText="Customer Name" value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
                         <TextInput name="customerNumber" labelText="Customer Number" value={this.state.customerNumber} onChange={this.handleChanges} />
                         <TextInput name="contactName" labelText="Contact Name" value='' onChange=''value={this.state.contactName} onChange={this.handleChanges} />
                         <TextInput name="contactPhone" labelText="Contact Phone" value={this.state.contactPhone} onChange={this.handleChanges} />
                         <TextInput name="contactEmail" labelText="Contact Email" value={this.state.contactEmail} onChange={this.handleChanges} />
-                        <TextInput name="notes" labelText="Notes" value={this.state.notes} onChange={this.handleChanges} />
+                        <TextArea name="notes" labelText="Notes" value={this.state.notes} onChange={this.handleChanges} />
                         {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
                     </Form>
                 </div> 
