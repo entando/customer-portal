@@ -1,54 +1,94 @@
 {
-  "error": {
-    "dataLoading": "Error during server connection"
-  },
-  "common": {
-    "couldNotFetchData": "Unfortunately we could not fetch entity data",
-    "notAuthenticated": "User is not authenticated.",
-    "loadingMore": "Loading more...",
-    "download": "Download file",
-    "dataDeleted": "Customer successfully deleted",
-    "yes": "Yes",
-    "no": "No",
-    "delete": ""
-  },
-  "pagination": {
-    "ariaLabels": {
-      "firstPage": "first page",
-      "previousPage": "previous page",
-      "nextPage": "next page",
-      "lastPage": "last page"
-    }
-  },
-  "filters": {
-    "field": "Field",
-    "value": "Value",
-    "addFilter": "Add filter",
-    "clearFilters": "Clear filters",
-    "filter": "Filter",
-    "operator": "Operator",
-    "operators": {
-      "equals": "equals",
-      "in": "in",
-      "specified": "specified",
-      "unspecified": "unspecified",
-      "contains": "contains"
-    }
-  },
-  "entities": {
-    "customer": {
-      "deleteDialog": {
-        "title": "Delete customer",
-        "description": "Are you sure?"
-      },
-      "noItems": "No customers available",
-      "id": "ID",
-      "name": "entities.customer.name",
-      "customerNumber": "entities.customer.customerNumber",
-      "contactName": "entities.customer.contactName",
-      "contactPhone": "entities.customer.contactPhone",
-      "contactEmail": "entities.customer.contactEmail",
-      "notes": "entities.customer.notes"
-    }
+	"buttons":{
+		"submit": "Submit",
+		"addCustomer": "Add a Customer +",
+		"addProject": "Add a Project +",
+		"addPartner": "Add a Partner +"
+	},
+	
+  	"customerDashboard":{
+		"title": "Welcome to Entando Customer Portal",
+		"customerName": "Customer Name",
+		"customerId": "Customer Id",
+		"startDate": "Start Date",
+		"endDate": "End Date",
+		"projectName": "Project Name",
+		"partnerName": "PartnerName",
+		"entandoVersion": "Entando Version",
+		"openTickets": "OpenTickets"
+	},
+	
+	"adminDashboard":{
+		"allCustomers":"All Customers",
+		"searchText": "Which customer are you looking for?"
+	},
+	
+	"projectDetails":{
+		"description": "Description:",
+		"commitment": "Commitment:",
+		"type": "Type:",
+		"quantityRequest": "Quantity Request:",
+		"components": "Components:",
+		"level": "Level:",
+		"startDate": "Start Date:",
+		"endDate": "End Date:",
+		"license": "License:",
+		"listOfTickets": "List of Tickets",
+		"tickets": "Tickets",
+		"project": "Project",
+		"entandoVersion":"Entando Version",
+		"creationDate":"Creation Date",
+		"goToTicket": "Go to Ticket"
+	},
+	
+	"subscriptionForm":{
+		"title": "Welcome to Entando Customer Portal",
+		"formTitle": "New or Renew Subscription",
+		"desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+		"customerName": "Customer Name*",
+		"customerNumber": "Customer Number*",
+		"new": "New",
+		"renew": "Renewal",
+		"projectName": "Project Name*",
+		"desiredStartDate": "Desired Subscription Start Date*",
+		"desiredSubscriptionLevel": "Desired Subscription Level",
+		"subscriptionLength": "Subscription Length",
+		"chooseOption": "Choose an option",
+		"contactName": "Contact Name*",
+		"contactEmail": "Contact Email*",
+		"contactNumber": "Contact Phone Number",
+		"submit": "Submit"
+	},
+	
+	"supportTicketForm":{
+		"title": "Welcome to Entando Customer Portal",
+		"formTitle": "Create new support ticket",
+		"desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+    "select": "Select",
+    "type": "Type",
+    "selectProject": "Select Project",
+		"ticketNumber": "Ticket Number",
+		"customerName": "Customer Name",
+		"projectName": "ProjectName",
+		"ticketOpenedBy": "Ticket Opened By:",
+		"priority": "Priority",
+		"partnerName": "Partner Name",
+		"ticketDescription": "Ticket Description",
+    "addticketDescription": "Add Ticket Description"
+	},
+
+  "enhancementForm":{
+		"title": "Welcome to Entando Customer Portal",
+		"formTitle": "Request for Enhancement",
+		"desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+		"customerName": "Customer Name",
+		"ticketNumber": "Ticket Number",
+    "projectName": "ProjectName",
+		"ticketOpenedBy": "Ticket Opened By:",
+    "partnerName": "Partner Name",
+		"priority": "Priority",
+    "enhancementDescription": "Enhancement Description",
+    "addenhancementDescription": "Add Enhancement Description"
+
   }
 }

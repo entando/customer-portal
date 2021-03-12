@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import i18n from '../../i18n';
 import { Form, TextInput, Select, SelectItem, Button, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProjectsGet, apiAddTicketToProject } from '../../api/projects';
@@ -81,43 +82,37 @@ class OpenTicket extends Component {
     }
         
     render() {
-        const textareaProps = {
-            labelText: 'Ticket Description',
-            placeholder: 'Add ticket description',
-            name: 'description',
-        }
-
         return (
             <div>
-                <h3 className="pageTitle">Welcome to Entando Customer Portal</h3>
+                <h3 className="pageTitle">{i18n.t('supportTicketForm.title')}</h3>
                 <div className="form-container">
                     <Form onSubmit={this.handleFormSubmit}>
                         <div className="form-desc">
-                            <h4>Open Service Ticket</h4>
-                            <p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. </p>
+                            <h4>{i18n.t('supportTicketForm.formTitle')}</h4>
+                            <p>{i18n.t('supportTicketForm.desc')}</p>
                         </div>
 
                         <div className="bx--grid">
                             <div className="bx--row">
                                 <div className="bx--col">
-                                    <Select defaultValue="ticketing-system" name="systemId" labelText="Select Project" value={this.state.systemId} onChange={this.handleChanges}>
+                                    <Select defaultValue="ticketing-system" name="systemId" labelText={i18n.t('supportTicketForm.selectProject')} value={this.state.systemId} onChange={this.handleChanges}>
                                         <SelectItem
-                                            text="Select"
+                                            text={i18n.t('supportTicketForm.select')}
                                             value="ticketing-system"
                                         />
                                         {Object.keys(this.state.projects).length !== 0 ? this.state.projects.data.map((project, i) => {
-                                        return (
+                                        return (          
                                             <SelectItem key={i} text={project.name} value={project.systemId}>{project.name}</SelectItem>
                                         )}) : null}
                                     </Select>
-                                    <TextInput name="type" labelText="Type" value={this.state.type} onChange={this.handleChanges}/>
-                                    <TextInput name="priority" labelText="Priority" value={this.state.priority} onChange={this.handleChanges}/>
+                                    <TextInput name="type" labelText={i18n.t('supportTicketForm.type')} value={this.state.type} onChange={this.handleChanges}/>
+                                    <TextInput name="priority" labelText={i18n.t('supportTicketForm.priority')} value={this.state.priority} onChange={this.handleChanges}/>
                                 </div>
                             </div>
                             <div className="bx--row">
                                 <div className="bx--col">
-                                    <TextArea {...textareaProps} value={this.state.description} onChange={this.handleChanges}  />
-                                    <Button kind="primary" tabIndex={0} type="submit" > Submit  </Button>
+                                    <TextArea labelText={i18n.t('supportTicketForm.ticketDescription')} placeholder={i18n.t('supportTicketForm.addticketDescription')} name="description" value={this.state.description} onChange={this.handleChanges}  />
+                                    <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}  </Button>
                                 </div>
                             </div>
                         </div>
