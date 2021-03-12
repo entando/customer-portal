@@ -1,0 +1,6 @@
+code: customer-details-widget
+titles:
+  en: Customer Details Widget
+  it: Customer Details Widget
+group: free
+customUiPath: customer-details-widget.ftl

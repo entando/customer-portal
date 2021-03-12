@@ -1,14 +1,50 @@
 import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, ToggleSmall, Button} from 'carbon-components-react';
 import { SubtractAlt16 } from '@carbon/icons-react';
+import { apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
+import withKeycloak from '../../../auth/withKeycloak';
+import AddProductVersionModal from '../AddProductVersionModal';
 
 
 class ProductVersion extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-        this.state.filterText = "";
+    constructor() {
+        super();
+        this.state = {
+            data: "",
+        }
     }
+
+    componentDidMount(){
+        this.getProductVersions();
+    }
+
+    componentDidUpdate(prevProps) {
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+    
+        if (authenticated && changedAuth) {
+          this.getProductVersions();
+        }
+    }
+
+    async getProductVersions() {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
+
+            this.setState({
+                data: productVersions
+            })
+        }
+    }
+
+    async handleToggleChange(id) {
+        await apiUpdateProductVersionsStatus(this.props.serviceUrl, id);
+    }
+
     render() {
         return ( 
             <div>
@@ -26,20 +62,27 @@ class ProductVersion extends Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.id}>
-                                        {row.cells.map((cell) => (
-                                            <TableCell key={cell.id}>{cell.value}</TableCell>
-                                        ))}
+                                {Object.keys(this.state.data).length !== 0 ? this.state.data.data.map((productVersion, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{productVersion.name}</TableCell>
+                                        <TableCell>
+                                            <ToggleSmall 
+                                                onClick={() => this.handleToggleChange(productVersion.id)}
+                                                aria-label="toggle button" 
+                                                id={productVersion.id}
+                                                defaultToggled={productVersion.status ? true : false } />
+                                        </TableCell>
+                                        <TableCell>{productVersion.startDate}</TableCell>
+                                        <TableCell>{productVersion.endDate}</TableCell>
                                     </TableRow>
-                                ))}
+                                )) : null}
                             </TableBody>
                         </Table>
                     </TableContainer>
                 )}
                 </DataTable>
                 <br/>
-                <Button size='field' kind='tertiary'>Add Product Version +</Button>
+                <AddProductVersionModal serviceUrl={this.props.serviceUrl} />
             </div>    
         );
     }
@@ -88,4 +131,4 @@ const rowData = [
      },
 ];
    
-export default ProductVersion;
+export default withKeycloak(ProductVersion);

@@ -2,7 +2,26 @@ import { getDefaultOptions, request, getUrl } from './helpers';
 
 const resource = 'api/portal-users';
 
-export const apiPortalUsersGet = async (serviceUrl) => {
+export const apiUserDelete = async (serviceUrl, id) => {
+  const url = `${serviceUrl}/${resource}/${id}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'DELETE',
+  };
+  return request(url, options);
+};
+
+export const apiUsersPut = async (serviceUrl, user) => {
+  const url = `${serviceUrl}/${resource}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'PUT',
+    body: user ? JSON.stringify(user) : null,
+  };
+  return request(url, options);
+};
+
+export const apiUsersGet = async (serviceUrl) => {
   const url = getUrl(
     `${serviceUrl}/${resource}`
   );
@@ -14,31 +33,12 @@ export const apiPortalUsersGet = async (serviceUrl) => {
   return request(url, options);
 };
 
-export const apiPortalUsersDelete = async (serviceUrl, id) => {
-  const url = `${serviceUrl}/${resource}/${id}`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'DELETE',
-  };
-  return request(url, options);
-};
-
-export const apiPortalUsersPost = async (serviceUrl, portalUser) => {
+export const apiUserPost = async (serviceUrl, user) => {
   const url = `${serviceUrl}/${resource}`;
   const options = {
     ...getDefaultOptions(),
     method: 'POST',
-    body: portalUser ? JSON.stringify(portalUser) : null,
-  };
-  return request(url, options);
-};
-
-export const apiPortalUsersPut = async (serviceUrl, portalUser) => {
-  const url = `${serviceUrl}/${resource}`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'PUT',
-    body: portalUser ? JSON.stringify(portalUser) : null,
+    body: user ? JSON.stringify(user) : null,
   };
   return request(url, options);
 };

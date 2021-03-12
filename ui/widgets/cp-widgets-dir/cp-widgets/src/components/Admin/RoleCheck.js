@@ -39,14 +39,14 @@ export default class RoleCheck extends Component {
     renderForm() {
         if (this.state.roleType === 'customer') return (
             <div>
-                <h3>Welcome to Entando Customer Portal</h3>
+                 <h3 className="pageTitle">Welcome to Entando Customer Portal</h3>
                 <CustomerDetails />
                 <CustomTable />
             </div>
         )
         if (this.state.roleType === 'admin') return (
             <div>
-                <h3>Welcome to Entando Admin Portal</h3>
+                 <h3 className="pageTitle">Welcome to Entando Admin View</h3>
                 <AdminDashboard />
             </div>
         );

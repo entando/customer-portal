@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ModalWrapper, Form, TextInput, Select, SelectItem } from 'carbon-components-react';
+import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
 import { apiProjectPost } from '../../api/projects';
@@ -77,6 +77,7 @@ class AddProjectModal extends Component {
             notes: this.state.notes
         }
         this.projectPost(project);
+        window.location.reload(false);
     };
 
     componentDidMount() {
@@ -100,8 +101,8 @@ class AddProjectModal extends Component {
                 className="modal-form"
                 handleSubmit={this.handleFormSubmit}
             >
-                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                 <div className="form-container">
+                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                     <Form onSubmit={this.handleFormSubmit}>
                         <Select defaultValue="customer-list" name="customerId" labelText="Customer List" value={this.state.customerId} onChange={this.handleChanges}>
                             <SelectItem
@@ -117,7 +118,7 @@ class AddProjectModal extends Component {
                         <TextInput name="contactName" labelText="Contact Name" value={this.state.contactName} onChange={this.handleChanges} />
                         <TextInput name="contactPhone" labelText="Contact Phone" value={this.state.contactPhone} onChange={this.handleChanges} />
                         <TextInput name="contactEmail" labelText="Contact Email" value={this.state.contactEmail} onChange={this.handleChanges} />
-                        <TextInput name="notes" labelText="Notes" value={this.state.notes} onChange={this.handleChanges} />
+                        <TextArea name="notes" labelText="Notes" value={this.state.notes} onChange={this.handleChanges} />
                         {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
                     </Form>
                 </div> 

@@ -1,6 +1,6 @@
 
 import './index.scss';
-import './custom-elements/dashboard.css'
+//import './custom-elements/dashboard.css'
 
 import './custom-elements/AdminDashboardElement';
 import './custom-elements/AdminAddCustomerElement';

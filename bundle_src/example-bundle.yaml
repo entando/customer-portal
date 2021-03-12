@@ -1,0 +1,63 @@
+---
+apiVersion: entando.org/v1
+kind: EntandoDeBundle
+metadata:
+  name: custport-bundle
+  namespace: partner-portal-dev
+  labels:
+    plugin: 'true'
+    widget: 'true'
+spec:
+  details:
+    name: custportapp-bundle
+    description: This is the custportApp bundle
+    dist-tags:
+      latest: v0.0.9
+    versions:
+      - v0.0.9
+      - v0.0.8
+      - v0.0.7
+      - v0.0.6
+      - v0.0.5
+      - v0.0.4
+      - v0.0.3
+      - v0.0.2
+      - v0.0.1
+  tags:
+    - version: v0.0.9
+      shasum: 6cac112a6fd99c73f1922db27666418f3e55d8ed
+      integrity: 6cac112a6fd99c73f1922db27666418f3e55d8ed
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+    - version: v0.0.8
+      shasum: f0e70573c45fae73421977cd0a54b8b001f78275
+      integrity: f0e70573c45fae73421977cd0a54b8b001f78275
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+    - version: v0.0.7
+      shasum: 0e757b9d51224798221424076a79ea68b50b44f2
+      integrity: 0e757b9d51224798221424076a79ea68b50b44f2
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+    - version: v0.0.6
+      shasum: 11a74c83776a381a9390b370be74a8661210c2bc
+      integrity: 11a74c83776a381a9390b370be74a8661210c2bc
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+    - version: v0.0.5
+      shasum: ce7495f24edc2f2a90a20e81bbac271cecd09f6a
+      integrity: ce7495f24edc2f2a90a20e81bbac271cecd09f6a
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+    - version: v0.0.4
+      shasum: e48e9ed129e80fce629978bf178863778d5a9c4d
+      integrity: e48e9ed129e80fce629978bf178863778d5a9c4d
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+    - version: v0.0.3
+      shasum: 0ce52dfe254a9149e4f2ed945810ca71a3e2ae38
+      integrity: 0ce52dfe254a9149e4f2ed945810ca71a3e2ae38
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+    - version: v0.0.2
+      shasum: 20302ad4dde99fa34e4878585a5e728634e6a781
+      integrity: 20302ad4dde99fa34e4878585a5e728634e6a781
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+    - version: v0.0.1
+      shasum: 8cee9dc43b25bbe288e5bd04ec4afa17e4ce556f
+      integrity: 8cee9dc43b25bbe288e5bd04ec4afa17e4ce556f
+      tarball: 'https://github.com/jorden-gerovac-veriday/custport-bundle.git'
+

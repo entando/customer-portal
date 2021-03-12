@@ -1,0 +1,6 @@
+code: admin-dashboard-widget
+titles:
+  en: Admin Dashboard Widget
+  it: Admin Dashboard Widget
+group: free
+customUiPath: admin-dashboard-widget.ftl

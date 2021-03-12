@@ -63,7 +63,7 @@ class TicketingSystem extends Component {
                             </div>
                             <div className="bx--col">
                                 <TextInput name="url" labelText="URL" value={this.state.url} onChange={this.handleChanges}/>
-                                <TextInput name="password" labelText="Password" value={this.state.password} onChange={this.handleChanges}/>
+                                <TextInput name="password" type="password" labelText="Password" value={this.state.password} onChange={this.handleChanges}/>
                             </div>
                         </div>
                         <Button kind="primary" tabIndex={0} type="submit"> Submit  </Button>

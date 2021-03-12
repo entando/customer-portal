@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TicketList from '../components/SubscriptionDetails/TicketList';
 import '../index.scss'
-import './dashboard.css'
+//import './dashboard.css'
 
 import KeycloakContext from '../auth/KeycloakContext';
 
