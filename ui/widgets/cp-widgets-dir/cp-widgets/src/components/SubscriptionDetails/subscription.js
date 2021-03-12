@@ -170,7 +170,7 @@ class Subscription extends React.Component {
                                         </div>
                                     </Tile>
                                     <br/>
-                                    <TicketList projectId={this.state.subscription.data.project.id} serviceUrl={this.props.serviceUrl}/>
+                                    <TicketList projectId={this.state.subscription.data.project.id} serviceUrl={this.props.serviceUrl} />
                                     </div>
                                     : null }
                                 </div>

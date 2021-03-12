@@ -4,7 +4,7 @@ import { apiJiraTicketsGet } from '../../api/tickets';
 import { apiTicketingSystemsGet, apiTicketingSystemPost } from '../../api/ticketingsystem';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiGetProjectsUsers, apiProjectGet, apiGetProjectsTickets } from '../../api/projects';
+import { apiGetProjectsUsers, apiProjectGet, apiGetProjectsTickets, apiAddTicketToProject } from '../../api/projects';
 
 class TicketList extends Component {
   constructor(props) {
@@ -33,6 +33,9 @@ class TicketList extends Component {
     if (authenticated) {
         const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
         var tickets = await apiJiraTicketsGet(this.props.serviceUrl, project.data.systemId);
+        for(var i = 0; i < tickets.data.length; i++) {
+          apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id)
+        }
         //var tickets = await apiGetProjectsTickets(this.props.serviceUrl, this.props.projectId);
 
         this.setState({
@@ -86,7 +89,7 @@ componentDidUpdate(prevProps) {
                       <TableCell key={ticket.id}>{ticket.description}</TableCell>
                       <TableCell key={ticket.id}>{ticket.type}</TableCell>
                       <TableCell key={ticket.id}>{ticket.createDate}</TableCell>
-                      <TableCell key={ticket.id}><a href={"https://jira.entando.org/browse/" + ticket.systemId} target="_blank">View Ticket</a></TableCell>
+                      <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">View Ticket</a></TableCell>
                     </TableRow>
                   )
                 }) : <p>Loading...</p>}

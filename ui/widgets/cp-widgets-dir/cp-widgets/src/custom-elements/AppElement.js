@@ -27,6 +27,7 @@ const ATTRIBUTES = {
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
   serviceUrl: 'service-url',
+  keycloakUrl: 'keycloak-url'
 };
 
 
@@ -59,10 +60,11 @@ class AppElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
+    const keycloakUrl = this.getAttribute(ATTRIBUTES.keycloakUrl) || '';
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <App serviceUrl={serviceUrl}/>
+        <App serviceUrl={serviceUrl} keycloakUrl={keycloakUrl}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
