@@ -1,6 +1,0 @@
-code: partner-table-widget
-titles:
-  en: Partner Table Widget
-  it: Partner Table Widget
-group: free
-customUiPath: partner-table-widget.ftl

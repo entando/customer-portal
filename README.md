@@ -1,4 +1,17 @@
-# custportApp
+# Deployment
+With this configuration, you can use the ent cli (https://dev.entando.org/v6.3/docs/reference/entando-cli.html) to perform the full deployment sequence:
+
+1. `cp -r bundle_src bundle` (this is only needed the first time ina local env unless the bundle dir is removed)
+2. `ent prj init`
+3. `ent prj build` (build the frontend and backend) or `ent prj fe-build -a` (to just build the frontend, including changes from bundle_src)
+4. `ent prj pbs-init` (requires the git bundle repo url)
+5. `ent prj pub` or `ent prj fe-push` (publish all or just the frontend)
+6. For a local Entando installation: `ent prj generate-cr | ent kubectl create -n entando -f -`
+
+Install the bundle using the App Builder.
+
+
+# Spring Boot/microservice application - custportApp
 
 This application was generated using JHipster 6.9.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.9.0](https://www.jhipster.tech/documentation-archive/v6.9.0).
 
