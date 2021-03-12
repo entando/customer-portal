@@ -338,7 +338,7 @@ public class ProjectResource {
      */
     @PostMapping("/projects/{projectId}/users/{userId}")
     public ResponseEntity<Project> addUserToProject(@PathVariable Long projectId, @PathVariable Long userId) throws URISyntaxException {
-        log.debug("REST request to add Ticket to Project : {}", projectId);
+        log.debug("REST request to add a user to Project : {}", projectId);
         Project result = projectService.addUserToProject(projectId, userId);
 
         return ResponseEntity

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Form, TextInput, Select, SelectItem, Button } from 'carbon-components-react';
-import { apiPortalUsersGet } from '../../../api/portalusers';
-import { apiAddUserToProject } from '../../../api/projects';
+import { apiUsersGet } from '../../../api/portalusers';
+import { apiAddUserToProject, apiProjectsGet } from '../../../api/projects';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class AssignUser extends Component {
     
+    formSubmittable;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -13,6 +15,7 @@ class AssignUser extends Component {
             assignUser: '',
             selectRole: '',
             users: [],
+            projects: []
         }
     }
 
@@ -21,15 +24,21 @@ class AssignUser extends Component {
     }
 
     async fetchData() {
-        const { t, keycloak } = this.props;
+        const {t, keycloak } = this.props;
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const users = await apiPortalUsersGet(this.props.serviceUrl);
+            const projects = await apiProjectsGet(this.props.serviceUrl);
+            const users = await apiUsersGet(this.props.serviceUrl);
 
             this.setState({
-                users
+                users,
+                projects
             });
+
+            this.formSubmittable = users.length > 0 && projects.length > 0;
+
+            console.log(this.formSubmittable);
         }
     }
 
@@ -41,13 +50,15 @@ class AssignUser extends Component {
     }
 
     handleFormSubmit = (event) => {
-        console.log(this.state.assignUser)
+        console.log(this.state.assignUser);
+        console.log(this.state.selectRole);
+        console.log(this.formSubmittable);
         event.preventDefault();
     };
 
     render() {
         const assignUser = this.state.users;
-        const selectRole = ['Role1', 'Role2'];
+        const selectRole = this.props.roles;
 
         let userList = null;
         if (assignUser !== null && assignUser.length > 0) {
@@ -75,16 +86,12 @@ class AssignUser extends Component {
                                 </Select>
                             </div>
                             <div className="bx--col">
-                                <Select defaultValue="select-role" name="selectRole" labelText="Select Role" value={this.state.selectRole} onChange={this.handleChanges}>
-                                    <SelectItem
-                                        text="Select Role"
-                                        value="select-role"
-                                    />
-                                    {selectRole.map((selectRole, i) => <SelectItem key={i} text={selectRole} value={selectRole.toLowerCase()}>{selectRole}</SelectItem>)}
+                                <Select name="selectRole" labelText="Select Role" value={this.state.selectRole} onChange={this.handleChanges}>
+                                    {selectRole.map((selectRole, i) => <SelectItem key={i} text={selectRole.name} value={selectRole.value}>{selectRole.name}</SelectItem>)}
                                 </Select>
                             </div>
                         </div>
-                        <Button kind="primary" tabIndex={0} type="submit" > Submit  </Button>
+                        <Button kind="primary" tabIndex={0} type="submit">Submit</Button>
                     </div>
                 </Form>
             </div>

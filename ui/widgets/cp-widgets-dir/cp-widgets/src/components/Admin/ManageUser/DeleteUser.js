@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
 import { SubtractAlt16 } from '@carbon/icons-react';
-import { apiPortalUsersGet } from '../../../api/portalusers';
+import { apiUsersGet } from '../../../api/portalusers';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class DeleteUser extends Component {
@@ -18,15 +18,17 @@ class DeleteUser extends Component {
   }
 
   async fetchData() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
 
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
-      const users = await apiPortalUsersGet(this.props.serviceUrl);
+      const users = await apiUsersGet(this.props.serviceUrl);
 
       this.setState({
         users
       });
+
+      console.log(users);
     }
   }
 
