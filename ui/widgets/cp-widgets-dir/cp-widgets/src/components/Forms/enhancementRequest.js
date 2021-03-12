@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Form, TextInput, TextArea, Button } from 'carbon-components-react';
+import i18n from '../../i18n';
 
 export default class EnhancementRequest extends Component {
     state = {
@@ -25,37 +26,32 @@ export default class EnhancementRequest extends Component {
     };
       
     render() {
-        const textareaProps = {
-            labelText: 'Enhancement Description',
-            placeholder: 'Add enhancement description',
-            name: 'enhamcementDescription',
-        }
         return (
             <div>
-                <h3 className="pageTitle">Welcome to Entando Customer Portal</h3>
+                <h3 className="pageTitle">{i18n.t('enhancementForm.title')}</h3>
                 <div className="form-container">
                     <Form onSubmit={this.handleFormSubmit}>
                         <div className="form-desc">
-                            <h4>Request for Enhancements</h4>
-                            <p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. </p>
+                            <h4>{i18n.t('enhancementForm.formTitle')}</h4>
+                            <p>{i18n.t('enhancementForm.desc')}</p>
                         </div>
                         <div className="bx--grid">
                             <div className="bx--row">
                                 <div className="bx--col">
-                                    <TextInput name="ticketNo" labelText="Ticket Number" value={this.state.ticketNo} onChange={this.handleChanges}/>
-                                    <TextInput name="projectName" labelText="Project Name" value={this.state.projectName} onChange={this.handleChanges}/>
-                                    <TextInput name="priority" labelText="Priority" value={this.state.priority} onChange={this.handleChanges}/>
+                                    <TextInput name="ticketNo" labelText={i18n.t('enhancementForm.ticketNumber')} value={this.state.ticketNo} onChange={this.handleChanges}/>
+                                    <TextInput name="projectName" labelText={i18n.t('enhancementForm.projectName')} value={this.state.projectName} onChange={this.handleChanges}/>
+                                    <TextInput name="priority" labelText={i18n.t('enhancementForm.priority')} value={this.state.priority} onChange={this.handleChanges}/>
                                 </div>
                                 <div className="bx--col">
-                                    <TextInput name="customerName" labelText="Customer Name" value={this.state.customerName} onChange={this.handleChanges}/>
-                                    <TextInput name="openedBy" labelText="Ticket Opened By" value={this.state.openedBy} onChange={this.handleChanges}/>
-                                    <TextInput name="partnerName" labelText="Partner Name" value={this.state.partnerName} onChange={this.handleChanges}/>
+                                    <TextInput name="customerName" labelText={i18n.t('enhancementForm.customerName')} value={this.state.customerName} onChange={this.handleChanges}/>
+                                    <TextInput name="openedBy" labelText={i18n.t('enhancementForm.ticketOpenedBy')} value={this.state.openedBy} onChange={this.handleChanges}/>
+                                    <TextInput name="partnerName" labelText={i18n.t('enhancementForm.partnerName')} value={this.state.partnerName} onChange={this.handleChanges}/>
                                 </div>
                             </div>
                             <div className="bx--row">
                                 <div className="bx--col">
-                                    <TextArea {...textareaProps} value={this.state.enhancementDescription} onChange={this.handleChanges}  />
-                                    <Button kind="primary" tabIndex={0} type="submit" > Submit  </Button>
+                                    <TextArea labelText={i18n.t('enhancementForm.enhancementDescription')} placeholder={i18n.t('enhancementForm.addenhancementDescription')} name="enhancementDescription"  value={this.state.enhancementDescription} onChange={this.handleChanges}  />
+                                    <Button kind="primary" tabIndex={0} type="submit"> {i18n.t('buttons.submit')}  </Button>
                                 </div>
                             </div>
                         </div>
