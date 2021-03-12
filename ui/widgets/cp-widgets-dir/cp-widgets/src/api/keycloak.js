@@ -1,34 +1,46 @@
-import { getDefaultOptions, request, getUrl } from './helpers';
+import { getDefaultOptions, getDefaultKeycloakOptions, request, getUrl } from './helpers';
 
-const resource = 'auth/admin/realms/jhipster';
+const usersResource = 'admin/realms/jhipster/users'
+const tokenResource = 'realms/jhipster/protocol/openid-connect/token';
 
-export const apiKeycloakUserDelete = async (serviceUrl, id) => {
-  const url = `${serviceUrl}/${resource}/${id}`;
+export const apiKeycloakUserGet = async (serviceUrl) => {
+  const url = `${serviceUrl}/${usersResource}`;
+  const keycloakBody = {
+    client_id: "admin_cli",
+    username: "admin",
+    password: "admin",
+    grant_type: "password"
+  }
   const options = {
-    ...getDefaultOptions(),
-    method: 'DELETE',
-  };
-  return request(url, options);
-};
-
-export const apiKeycloakUsersGet = async (serviceUrl ) => {
-  const url = getUrl(
-    `${serviceUrl}/${resource}/users`
-  );
-  const options = {
-    ...getDefaultOptions(),
+    ...getDefaultKeycloakOptions(),
     method: 'GET',
   };
-
   return request(url, options);
 };
 
-export const apiKeycloakUserPost = async (serviceUrl, user) => {
-  const url = `${serviceUrl}/${resource}/users`;
+export const apiKeycloakToken = async (serviceUrl) => {
+  const url = getUrl(
+    `${serviceUrl}/${tokenResource}`
+  );
+  const keycloakBody = {
+    client_id: "web_app",
+    username: "admin",
+    password: "admin",
+    grant_type: "password"
+  }
   const options = {
-    ...getDefaultOptions(),
+    ...getDefaultKeycloakOptions(),
     method: 'POST',
-    body: user ? JSON.stringify(user) : null,
+    body: keycloakBody ? serialize(keycloakBody) : null,
   };
   return request(url, options);
 };
+
+function serialize(obj) {
+  var str = [];
+  for (var p in obj)
+    if (obj.hasOwnProperty(p)) {
+      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+    }
+  return str.join("&");
+}

@@ -17,6 +17,13 @@ export const getDefaultOptions = () => ({
   }),
 });
 
+export const getDefaultKeycloakOptions = () => ({
+  headers: new Headers({
+    Authorization: `Bearer ${getKeycloakToken()}`,
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }),
+});
+
 export const getUrl = (url) => {
   return `${url}`;
 };

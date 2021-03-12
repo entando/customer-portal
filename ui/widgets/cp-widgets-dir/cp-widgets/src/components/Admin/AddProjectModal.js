@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
-import { apiProjectPost } from '../../api/projects';
+import { apiProjectPost, apiProjectsGet } from '../../api/projects';
 
 class AddProjectModal extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
+            projects: {},
             customerList: {},
             customerId: '',
             name: '',
@@ -21,6 +22,13 @@ class AddProjectModal extends Component {
         };
     }
 
+    async getAllProjects() {
+        const projects = await apiProjectsGet(this.props.serviceUrl);
+        this.setState({
+            projects: projects.data
+        })
+    }
+
     componentDidUpdate(prevProps) {
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
@@ -29,6 +37,7 @@ class AddProjectModal extends Component {
     
         if (authenticated && changedAuth) {
           this.getCustomers();
+          this.getAllProjects();
         }
       }
 
@@ -58,15 +67,6 @@ class AddProjectModal extends Component {
     }
 
     handleFormSubmit = (e) => {
-        //e.preventDefault();
-        console.log('Customer Id:', this.state.customerId);
-        console.log('Project Name:', this.state.name);
-        console.log('project Description:', this.state.description);
-        console.log('SystemId:', this.state.systemId);
-        console.log('Contact Name:', this.state.contactName);
-        console.log('Contact Phone:', this.state.contactPhone);
-        console.log('Contact email:', this.state.contactEmail);
-        console.log('Notes:', this.state.notes);
         const project = {
             name: this.state.name,
             description: this.state.description,
@@ -76,12 +76,19 @@ class AddProjectModal extends Component {
             contactEmail: this.state.contactEmail,
             notes: this.state.notes
         }
+        for (var i = 0; i < this.state.projects.length; i++) {
+            if(project.systemId === this.state.projects[i].systemId) {
+                window.alert('That system id is already in use in another project');
+                return;
+            }
+        }
         this.projectPost(project);
         window.location.reload(false);
     };
 
     componentDidMount() {
         this.getCustomers();
+        this.getAllProjects();
     }
 
     isValid() {
