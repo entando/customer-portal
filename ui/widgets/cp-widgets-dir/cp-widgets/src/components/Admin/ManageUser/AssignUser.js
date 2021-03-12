@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import { Form, TextInput, Select, SelectItem, Button } from 'carbon-components-react';
 import { apiUsersGet } from '../../../api/portalusers';
-import { apiAddUserToProject, apiProjectsGet } from '../../../api/projects';
+import { apiAddUserToProject, apiGetProjectIdNames } from '../../../api/projects';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class AssignUser extends Component {
-    
-    formSubmittable;
 
     constructor(props) {
         super(props);
         this.state = {
-            projectName: '',
+            projectId: '',
             assignUser: '',
             selectRole: '',
             users: [],
-            projects: []
+            projects: {}
         }
     }
 
@@ -24,22 +22,42 @@ class AssignUser extends Component {
     }
 
     async fetchData() {
-        const {t, keycloak } = this.props;
+        const { t, keycloak } = this.props;
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const projects = await apiProjectsGet(this.props.serviceUrl);
-            const users = await apiUsersGet(this.props.serviceUrl);
+            const users = (await apiUsersGet(this.props.serviceUrl)).data;
+            const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
 
             this.setState({
                 users,
                 projects
             });
-
-            this.formSubmittable = users.length > 0 && projects.length > 0;
-
-            console.log(this.formSubmittable);
         }
+    }
+
+    setupFormComponents() {
+        const users = this.state.users;
+        const roleSelection = this.props.roles;
+        const projectIdsNames = this.state.projects;
+
+        let userList = null;
+        if (users != null && users.length > 0) {
+            userList = users.map((assignUser, i) => <SelectItem key={i} text={assignUser.username} value={assignUser.id}>{assignUser.username}</SelectItem>);
+            userList.unshift(<SelectItem key="-1" text="Assign User" value="" />)
+        } else {
+            userList = <SelectItem text="There are currently no users in the system" value="" />
+        }
+
+        let projectList = null;
+        if (projectIdsNames != null && Object.keys(projectIdsNames).length > 0) {
+            projectList = Object.keys(projectIdsNames).map((projectId, i) => <SelectItem key={i} text={projectIdsNames[projectId]} value={projectId}>test</SelectItem>);
+            projectList.unshift(<SelectItem key="-1" text="Project List" value=""/>)
+        } else {
+            projectList = <SelectItem text="There are currently no projects in the system" value="" />
+        }
+
+        return { userList, roleSelection, projectList };
     }
 
     handleChanges = (e) => {
@@ -50,25 +68,19 @@ class AssignUser extends Component {
     }
 
     handleFormSubmit = (event) => {
+        event.preventDefault();
         console.log(this.state.assignUser);
         console.log(this.state.selectRole);
-        console.log(this.formSubmittable);
-        event.preventDefault();
+        console.log(this.state.projectId);
+        if (this.formSubmittable) {
+            //await apiAddUserToProject(this.props.serviceUrl, this.state.projectName, this.state.)
+        } else {
+            // TODO Handle error situation
+        }
     };
 
     render() {
-        const assignUser = this.state.users;
-        const selectRole = this.props.roles;
-
-        let userList = null;
-        if (assignUser !== null && assignUser.length > 0) {
-            userList = assignUser.map((assignUser, i) => <SelectItem key={i} text={assignUser} value={assignUser.toLowerCase()}>{assignUser}</SelectItem>);
-            userList.unshift(<SelectItem key="5000" text="Assign User"
-                value="assign-user" />)
-        } else {
-            userList = <SelectItem text="There are currently no users in the system"
-            value="none" />
-        }
+        const { userList, roleSelection, projectList } = this.setupFormComponents();
 
         return (
             <div className="">
@@ -76,18 +88,21 @@ class AssignUser extends Component {
                     <div className="bx--grid">
                         <div className="bx--row">
                             <div className="bx--col">
-                                <TextInput name="projectName" labelText="Project Name" value={this.state.projectName} onChange={this.handleChanges} />
+                                <Select name="projectName" labelText="Project Name" value={this.state.projectId} onChange={this.handleChanges}>
+                                    {projectList}
+                                </Select>
                             </div>
                         </div>
                         <div className="bx--row">
                             <div className="bx--col">
-                                <Select defaultValue="assign-user" name="assignUser" labelText="Assign User" value={this.state.assignUser} onChange={this.handleChanges}>
+                                <Select name="assignUser" labelText="Assign User" value={this.state.assignUser} onChange={this.handleChanges}>
                                     {userList}
                                 </Select>
                             </div>
                             <div className="bx--col">
-                                <Select name="selectRole" labelText="Select Role" value={this.state.selectRole} onChange={this.handleChanges}>
-                                    {selectRole.map((selectRole, i) => <SelectItem key={i} text={selectRole.name} value={selectRole.value}>{selectRole.name}</SelectItem>)}
+                                <Select name="selectRole" defaultValue="ROLE_ADMIN" labelText="Select Role" value={this.state.selectRole} onChange={this.handleChanges}>
+                                    <SelectItem text="Please select a role" value="">Please select a role</SelectItem>
+                                    {roleSelection.map((selectRole, i) => <SelectItem key={i} text={selectRole.name} value={selectRole.value}>{selectRole.name}</SelectItem>)}
                                 </Select>
                             </div>
                         </div>

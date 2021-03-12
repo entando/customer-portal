@@ -5,7 +5,9 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -360,5 +362,16 @@ public class ProjectResource {
         return ResponseEntity.ok().headers(
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, projectId.toString()))
             .body(users);
+    }
+
+    @GetMapping("/projects/nameId")
+    public ResponseEntity<Map<Long, String>> getProjectIdsAndNames() {
+        List<Project> projects = projectService.findAll();
+        Map<Long, String> projectIdNameMap = new HashMap<>();
+        projects.forEach(project -> {
+            projectIdNameMap.put(project.getId(), project.getName());
+        });
+
+        return new ResponseEntity<Map<Long, String>>(projectIdNameMap, HttpStatus.OK);
     }
 }

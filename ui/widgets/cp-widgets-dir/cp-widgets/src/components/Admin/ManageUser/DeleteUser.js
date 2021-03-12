@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
 import { SubtractAlt16 } from '@carbon/icons-react';
-import { apiUsersGet } from '../../../api/portalusers';
+import { apiUsersGet, apiUserDelete } from '../../../api/portalusers';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class DeleteUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: []
+      users: [],
+      filterText: ''
     };
-    this.state.filterText = "";
   }
 
   componentDidMount() {
@@ -27,9 +27,11 @@ class DeleteUser extends Component {
       this.setState({
         users
       });
-
-      console.log(users);
     }
+  }
+
+  deleteUser(e) {
+    
   }
 
   render() {

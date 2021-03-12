@@ -109,3 +109,12 @@ export const apiGetProjectsTickets = async (serviceUrl, projectId) => {
   };
   return request(url, options);
 };
+
+export const apiGetProjectIdNames = async (serviceUrl) => {
+  const url = `${serviceUrl}/${resource}/nameId/`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+  return request(url, options);
+};
