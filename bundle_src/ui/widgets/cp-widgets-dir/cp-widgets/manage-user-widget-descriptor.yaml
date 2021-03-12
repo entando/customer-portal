@@ -1,6 +1,0 @@
-code: manage-user-widget
-titles:
-  en: Manage User Widget
-  it: Manage User Widget
-group: free
-customUiPath: manage-user-widget.ftl

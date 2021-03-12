@@ -1,6 +1,0 @@
-code: navigation-widget
-titles:
-  en: Navigation Widget
-  it: Navigation Widget
-group: free
-customUiPath: navigation-widget.ftl
