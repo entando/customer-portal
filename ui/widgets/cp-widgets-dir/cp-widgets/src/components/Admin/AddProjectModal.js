@@ -19,8 +19,40 @@ class AddProjectModal extends Component {
             contactName: '',
             contactPhone: '',
             contactEmail:'',
-            notes:''
+            notes:'',
+            invalid: {}
         };
+    }
+
+    handleValidation() {
+        let invalid = {};
+        let formIsValid = true;
+
+        //name
+        if(this.state.name === ''){
+          formIsValid = false;
+          invalid["name"] = true;
+        }
+
+        //description
+        if(this.state.description === ''){
+            formIsValid = false;
+            invalid["description"] = true;
+        }
+
+        //contactEmail
+        if(typeof this.state.contactEmail !== "undefined"){
+          let lastAtPos = this.state.contactEmail.lastIndexOf('@');
+          let lastDotPos = this.state.contactEmail.lastIndexOf('.');
+    
+          if (!(lastAtPos < lastDotPos && lastAtPos > 0 && this.state.contactEmail.indexOf('@@') == -1 && lastDotPos > 2 && (this.state.contactEmail.length - lastDotPos) > 2)) {
+            formIsValid = false;
+            invalid["contactEmail"] = true;
+          }
+        }
+    
+        this.setState({invalid: invalid});
+        return formIsValid;
     }
 
     async getAllProjects() {
@@ -47,6 +79,7 @@ class AddProjectModal extends Component {
         const name = input.name;
         const value = input.value;
         this.setState({ [name]: value });
+        this.handleValidation();
     };
 
     async getCustomers() {
@@ -68,23 +101,27 @@ class AddProjectModal extends Component {
     }
 
     handleFormSubmit = (e) => {
-        const project = {
-            name: this.state.name,
-            description: this.state.description,
-            systemId: this.state.systemId,
-            contactName: this.state.contactName,
-            contactPhone: this.state.contactPhone,
-            contactEmail: this.state.contactEmail,
-            notes: this.state.notes
-        }
-        for (var i = 0; i < this.state.projects.length; i++) {
-            if(project.systemId === this.state.projects[i].systemId) {
-                window.alert('That system id is already in use in another project');
-                return;
+        const formIsValid = this.handleValidation();
+
+        if (formIsValid) {
+            const project = {
+                name: this.state.name,
+                description: this.state.description,
+                systemId: this.state.systemId,
+                contactName: this.state.contactName,
+                contactPhone: this.state.contactPhone,
+                contactEmail: this.state.contactEmail,
+                notes: this.state.notes
             }
+            for (var i = 0; i < this.state.projects.length; i++) {
+                if(project.systemId === this.state.projects[i].systemId) {
+                    window.alert('That system id is already in use in another project');
+                    return;
+                }
+            }
+            this.projectPost(project);
+            window.location.reload(false);
         }
-        this.projectPost(project);
-        window.location.reload(false);
     };
 
     componentDidMount() {
@@ -92,13 +129,6 @@ class AddProjectModal extends Component {
         this.getAllProjects();
     }
 
-    isValid() {
-        if (this.state.customerName === '') {
-          return false;
-        }
-        return true;
-    }
-   
     render() {
         const customerList = ['Customer1', 'Customer2', 'Customer3'];
         return (
@@ -106,7 +136,7 @@ class AddProjectModal extends Component {
                 buttonTriggerText={i18n.t('buttons.addProject')}
                 modalHeading="Add a project"
                 buttonTriggerClassName="add-project bx--btn bx--btn--tertiary"
-                className="modal-form"
+                className="modal-form modal-form-project"
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">
@@ -120,13 +150,54 @@ class AddProjectModal extends Component {
                             {Object.keys(this.state.customerList).length !== 0 ? this.state.customerList.data.map((customerList, i) => <SelectItem key={i} text={customerList.name} value={customerList.id}>{customerList.name}</SelectItem>) : null}
                         </Select>
 
-                        <TextInput name="name" labelText={i18n.t('adminDashboard.addProject.projectName')} value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
-                        <TextInput name="description" labelText={i18n.t('adminDashboard.addProject.projectDesc')} value={this.state.description} onChange={this.handleChanges} />
-                        <TextInput name="systemId" labelText={i18n.t('adminDashboard.addProject.systemId')} value='' onChange=''value={this.state.systemId} onChange={this.handleChanges} />
-                        <TextInput name="contactName" labelText={i18n.t('adminDashboard.addProject.contactName')} value={this.state.contactName} onChange={this.handleChanges} />
-                        <TextInput name="contactPhone" labelText={i18n.t('adminDashboard.addProject.contactPhone')} value={this.state.contactPhone} onChange={this.handleChanges} />
-                        <TextInput name="contactEmail" labelText={i18n.t('adminDashboard.addProject.contactEmail')} value={this.state.contactEmail} onChange={this.handleChanges} />
-                        <TextArea name="notes" labelText={i18n.t('adminDashboard.addProject.notes')} value={this.state.notes} onChange={this.handleChanges} />
+                        <TextInput 
+                            name="name" 
+                            labelText={i18n.t('adminDashboard.addProject.projectName')} 
+                            value={this.state.name} 
+                            onChange={this.handleChanges} 
+                            invalidText="This field is required" 
+                            invalid={this.state.invalid["name"]} 
+                        />
+                        <TextInput 
+                            name="description" 
+                            labelText={i18n.t('adminDashboard.addProject.projectDesc')} 
+                            value={this.state.description} 
+                            onChange={this.handleChanges} 
+                            invalidText="This field is required" 
+                            invalid={this.state.invalid["description"]} 
+                        />
+                        <TextInput 
+                            name="systemId" 
+                            labelText={i18n.t('adminDashboard.addProject.systemId')} 
+                            value={this.state.systemId}
+                            onChange={this.handleChanges} 
+                        />
+                        <TextInput 
+                            name="contactName" 
+                            labelText={i18n.t('adminDashboard.addProject.contactName')} 
+                            value={this.state.contactName} 
+                            onChange={this.handleChanges} 
+                        />
+                        <TextInput 
+                            name="contactPhone" 
+                            labelText={i18n.t('adminDashboard.addProject.contactPhone')} 
+                            value={this.state.contactPhone} 
+                            onChange={this.handleChanges} 
+                        />
+                        <TextInput 
+                            name="contactEmail" 
+                            labelText={i18n.t('adminDashboard.addProject.contactEmail')} 
+                            value={this.state.contactEmail} 
+                            onChange={this.handleChanges} 
+                            invalidText="Email is not valid" 
+                            invalid={this.state.invalid["contactEmail"]} 
+                        />
+                        <TextArea 
+                            name="notes" 
+                            labelText={i18n.t('adminDashboard.addProject.notes')} 
+                            value={this.state.notes} 
+                            onChange={this.handleChanges} 
+                        />
                         {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
                     </Form>
                 </div> 

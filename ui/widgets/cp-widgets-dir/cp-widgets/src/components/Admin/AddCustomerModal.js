@@ -14,8 +14,40 @@ class AddCustomerModal extends Component {
             contactName: '',
             contactPhone: '',
             contactEmail:'',
-            notes:''
-        };
+            notes:'',
+            invalid: {}
+        }
+    }
+
+    handleValidation() {
+        let invalid = {};
+        let formIsValid = true;
+
+        //name
+        if(this.state.name === ''){
+          formIsValid = false;
+          invalid["name"] = true;
+        }
+
+        //customerNumber
+        if(this.state.customerNumber === ''){
+            formIsValid = false;
+            invalid["customerNumber"] = true;
+        }
+
+        //contactEmail
+        if(typeof this.state.contactEmail !== "undefined"){
+          let lastAtPos = this.state.contactEmail.lastIndexOf('@');
+          let lastDotPos = this.state.contactEmail.lastIndexOf('.');
+    
+          if (!(lastAtPos < lastDotPos && lastAtPos > 0 && this.state.contactEmail.indexOf('@@') == -1 && lastDotPos > 2 && (this.state.contactEmail.length - lastDotPos) > 2)) {
+            formIsValid = false;
+            invalid["contactEmail"] = true;
+          }
+        }
+    
+        this.setState({invalid: invalid});
+        return formIsValid;
     }
 
     handleChanges = e => {
@@ -23,39 +55,72 @@ class AddCustomerModal extends Component {
         const name = input.name;
         const value = input.value;
         this.setState({ [name]: value });
+        this.handleValidation();
     };
 
     handleFormSubmit = e => {
-        const customer = apiCustomerPost(this.props.serviceUrl, this.state);
-        this.render();
-        window.location.reload(false);
+        const formIsValid = this.handleValidation();
+
+        if (formIsValid) {
+            const customer = apiCustomerPost(this.props.serviceUrl, this.state);
+            this.render();
+            window.location.reload(false);
+        }
     };
 
-    isValid() {
-        if (this.state.customerName === '') {
-          return false;
-        }
-        return true;
-    }
-    
     render() {
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.addCustomer')}
                 modalHeading={i18n.t('adminDashboard.addCustomer.title')}
                 buttonTriggerClassName="add-customer bx--btn bx--btn--tertiary"
-                className="modal-form"
+                className="modal-form modal-form-customer"
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">
                     <p> {i18n.t('adminDashboard.addCustomer.desc')} </p>
                     <Form onSubmit={this.handleFormSubmit}>
-                        <TextInput name="name" labelText={i18n.t('adminDashboard.addCustomer.customerName')} value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
-                        <TextInput name="customerNumber" labelText={i18n.t('adminDashboard.addCustomer.customerNumber')} value={this.state.customerNumber} onChange={this.handleChanges} />
-                        <TextInput name="contactName" labelText={i18n.t('adminDashboard.addCustomer.contactName')} value='' onChange=''value={this.state.contactName} onChange={this.handleChanges} />
-                        <TextInput name="contactPhone" labelText={i18n.t('adminDashboard.addCustomer.contactPhone')} value={this.state.contactPhone} onChange={this.handleChanges} />
-                        <TextInput name="contactEmail" labelText={i18n.t('adminDashboard.addCustomer.contactEmail')} value={this.state.contactEmail} onChange={this.handleChanges} />
-                        <TextArea name="notes" labelText={i18n.t('adminDashboard.addCustomer.notes')} value={this.state.notes} onChange={this.handleChanges} />
+                        <TextInput 
+                            name="name" 
+                            labelText={i18n.t('adminDashboard.addCustomer.customerName')} 
+                            value={this.state.name} 
+                            onChange={this.handleChanges} 
+                            invalidText="This field is required" 
+                            invalid={this.state.invalid["name"]} 
+                        />
+                        <TextInput 
+                            name="customerNumber" 
+                            labelText={i18n.t('adminDashboard.addCustomer.customerNumber')} 
+                            value={this.state.customerNumber} 
+                            onChange={this.handleChanges} 
+                            invalidText="This field is required" 
+                            invalid={this.state.invalid["customerNumber"]} 
+                        />
+                        <TextInput 
+                            name="contactName" 
+                            labelText={i18n.t('adminDashboard.addCustomer.contactName')} 
+                            value={this.state.contactName}
+                            onChange={this.handleChanges}  
+                        />
+                        <TextInput 
+                            name="contactPhone" 
+                            labelText={i18n.t('adminDashboard.addCustomer.contactPhone')} 
+                            value={this.state.contactPhone}
+                            onChange={this.handleChanges} 
+                        />
+                        <TextInput 
+                            name="contactEmail" 
+                            labelText={i18n.t('adminDashboard.addCustomer.contactEmail')} 
+                            value={this.state.contactEmail} 
+                            onChange={this.handleChanges} 
+                            invalidText="Email is not valid" 
+                            invalid={this.state.invalid["contactEmail"]} 
+                        />
+                        <TextArea 
+                            name="notes" labelText={i18n.t('adminDashboard.addCustomer.notes')} 
+                            value={this.state.notes} 
+                            onChange={this.handleChanges} 
+                        />
                         {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
                     </Form>
                 </div> 
