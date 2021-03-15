@@ -23,6 +23,18 @@ export const apiCustomersGet = async (serviceUrl) => {
   return request(url, options);
 };
 
+export const apiCustomerGet = async (serviceUrl, id) => {
+  const url = getUrl(
+    `${serviceUrl}/${resource}/${id}`
+  );
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+
+  return request(url, options);
+};
+
 export const apiCustomersGetForAdminDashboard = async (serviceUrl) => {
   const url = `${serviceUrl}/${resource}/all`;
   const options = {

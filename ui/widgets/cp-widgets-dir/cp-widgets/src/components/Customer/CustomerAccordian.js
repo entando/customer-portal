@@ -4,6 +4,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiGetCustomersProjects } from '../../api/customers';
 import { apiGetProjectsUsers } from '../../api/projects';
 import CustomTable from './customDataTable';
+import CustomerDetails from './customerDetails';
 
 class CustomerAccordian extends React.Component {
     constructor(props) {
@@ -85,9 +86,13 @@ class CustomerAccordian extends React.Component {
         return(
             <div>
                 {this.state.authenticated ?
+                <div>
+                    {this.props.role === 'Customer' ? 
+                        <CustomerDetails serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} /> : null 
+                    }
                     <AccordionItem title={this.props.title}>
                         <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} />
-                    </AccordionItem> : null
+                    </AccordionItem></div> : null
                 }
             </div>
         )
