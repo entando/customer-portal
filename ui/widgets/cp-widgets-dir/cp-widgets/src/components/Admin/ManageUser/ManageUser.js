@@ -1,15 +1,16 @@
 import React from 'react';
+import i18n from '../../../i18n';
 import { Accordion, AccordionItem } from 'carbon-components-react';
 import AssignUSer from './AssignUser';
 import DeleteUser from './DeleteUser';
 
 const user = [
     {
-        label: <div><h4>Assign a new User</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
+        label: <div><p className="title">{i18n.t('manageUsers.assign.title')}</p><p className="desc">{i18n.t('manageUsers.assign.desc')}</p></div>,
         content: <AssignUSer />
     },
     {
-        label: <div><h4>Manage all users</h4><p>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p></div>,
+        label: <div><p className="title">{i18n.t('manageUsers.manage.title')}</p><p className="desc">{i18n.t('manageUsers.manage.desc')}</p></div>,
         content: <DeleteUser/>
     }
 ]
