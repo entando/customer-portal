@@ -11,6 +11,7 @@
     "carbon-components-react": "^7.29.0",
     "carbon-icons": "^7.0.7",
     "clsx": "^1.0.4",
+    "i18n-js": "^3.8.0",
     "i18next": "^17.0.16",
     "jss": "^10.0.0",
     "keycloak-js": "^7.0.1",

@@ -25,15 +25,6 @@ class AddCustomerModal extends Component {
     };
 
     handleFormSubmit = e => {
-        //e.preventDefault();
-        console.log('Customer Name:', this.state.name);
-        console.log('Customer Number:', this.state.customerNumber);
-        console.log('Contact Name:', this.state.contactName);
-        console.log('Contact Phone:', this.state.contactPhone);
-        console.log('Contact email:', this.state.contactEmail);
-        console.log('Notes:', this.state.notes);
-        console.log(this.state);
-        console.log(this.props.serviceUrl)
         const customer = apiCustomerPost(this.props.serviceUrl, this.state);
         this.render();
         window.location.reload(false);

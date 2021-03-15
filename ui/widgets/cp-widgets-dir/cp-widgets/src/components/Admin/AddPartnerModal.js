@@ -54,11 +54,6 @@ class AddPartnerModal extends Component {
     }
 
     handleFormSubmit = (e) => {
-        //e.preventDefault();
-        console.log('Project Id:', this.state.projectId);
-        console.log('Partner Name:', this.state.name);
-        console.log('Partner Number:', this.state.partnerNumber);
-        console.log('Notes:', this.state.notes);
         const partner = {
             name: this.state.name,
             partnerNumber: this.state.partnerNumber,

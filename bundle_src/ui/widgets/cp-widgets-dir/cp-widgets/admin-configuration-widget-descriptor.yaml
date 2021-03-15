@@ -1,6 +1,0 @@
-code: admin-configuration-widget
-titles:
-  en: Admin Configuration Widget
-  it: Admin Configuration Widget
-group: free
-customUiPath: admin-configuration-widget.ftl

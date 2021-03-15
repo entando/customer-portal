@@ -1,6 +1,0 @@
-code: ticket-list-widget
-titles:
-  en: Ticket List Widget
-  it: Ticket List Widget
-group: free
-customUiPath: ticket-list-widget.ftl

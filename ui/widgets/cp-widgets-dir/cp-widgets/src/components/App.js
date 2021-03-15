@@ -4,6 +4,7 @@ import AdminDashboard from './Admin/AdminDashboard';
 import Subscription from './SubscriptionDetails/subscription';
 import withKeycloak from '../auth/withKeycloak';
 import { AuthenticatedView, UnauthenticatedView } from '../auth/KeycloakViews';
+import { apiKeycloakToken, apiKeycloakUserGet } from '../api/keycloak';
 
 class App extends Component {
     constructor(props) {
@@ -23,6 +24,7 @@ class App extends Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
       
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+
     }
 
     render() {

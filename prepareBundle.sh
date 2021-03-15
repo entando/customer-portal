@@ -81,8 +81,8 @@ function getServiceUrlFromDockerImage() {
     local dockerImage="$1"
 
     [ -z "$dockerImage" ] && echo ""
-    echo "$dockerImage" | tr : / | sed 's:[^a-zA-Z0-9/]:-:g' | tr "[:upper:]" "[:lower:]" | sed 's:^:/:g' 
-    
+    echo "$dockerImage" | tr : / | sed 's:[^a-zA-Z0-9/]:-:g' | tr "[:upper:]" "[:lower:]" | sed 's:^:/:g'
+
 }
 
 function updateFTLTemplate() {
@@ -90,7 +90,7 @@ function updateFTLTemplate() {
     local dir="$1"
     local bundleCode="$2"
     local dockerImage="$3"
-    
+
 
     widgetName=$(basename "$dir")
     ingressPath=$(getServiceUrlFromDockerImage "$dockerImage")
@@ -152,6 +152,15 @@ export INJECTION_POINT="<#-- entando_resource_injection_point -->"
 BUNDLE_NAME=$(awk -F': ' '/^code/{print $2}' ./bundle/descriptor.yaml)
 DOCKER_IMAGE=$(awk -F': ' '/^image/{print $2}' ./bundle/plugins/*-plugin.yaml | head -1)
 WIDGET_FOLDER="ui/widgets"
+
+#CUSTOM START - start by copying over the bundle_src. This isn't included in the standard blueprint but allows the source to
+# be applied each time the frontend is built
+BUNDLE_SRC="bundle_src"
+echo "---"
+echo "Copying the bundle_source into the bundle dir"
+cp -r ${BUNDLE_SRC}/* bundle/
+#CUSTOM END
+
 
 find "$WIDGET_FOLDER" -maxdepth 2 -mindepth 2 -type d -not -path "*utils*" > /dev/null 2>&1
 HAS_WIDGETS=$?

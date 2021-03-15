@@ -1,6 +1,0 @@
-code: customer-dashboard-widget
-titles:
-  en: Customer Dashboard Widget
-  it: Customer Dashboard Widget
-group: free
-customUiPath: customer-dashboard-widget.ftl

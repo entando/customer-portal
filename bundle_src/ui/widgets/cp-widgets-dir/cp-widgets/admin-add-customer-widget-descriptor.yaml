@@ -1,6 +1,0 @@
-code: admin-add-customer-widget
-titles:
-  en: Admin Add Customer Widget
-  it: Admin Add Customer Widget
-group: free
-customUiPath: admin-add-customer-widget.ftl

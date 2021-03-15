@@ -322,7 +322,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                 "       },\n" +
                 "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
                 "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
-                "       \"customfield_10303\": " + orgList + ",\n" +
+                "       \"customfield_10002\": " + orgList + ",\n" +
                 "       \"issuetype\": {\n" +
                 "          \"name\": \"" + ticket.getType() + "\"\n" +
                 "       },\n" +
