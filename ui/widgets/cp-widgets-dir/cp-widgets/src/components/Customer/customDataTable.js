@@ -165,31 +165,31 @@ const headerData = [
 
 const headerData = [
   {
-    header: 'Project Name',
+    header: i18n.t('customerDashboard.projectName'),
     key: 'projectName',
   },
   {
-    header: 'Partners',
+    header: i18n.t('customerDashboard.partners'),
     key: 'partners',
   },
   {
-    header: 'Entando Version',
+    header: i18n.t('customerDashboard.entandoVersion'),
     key: 'entandoVersion',
   },
   {
-    header: 'Status',
+    header: i18n.t('customerDashboard.status'),
     key: 'status',
   },
   {
-    header: 'Start Date',
+    header: i18n.t('customerDashboard.startDate'),
     key: 'startDate',
   },
   {
-      header: 'End Date',
+      header: i18n.t('customerDashboard.endDate'),
       key: 'endDate',
   },
   {
-      header: 'Open Tickets',
+      header: i18n.t('customerDashboard.openTickets'),
       key: 'openTickets',
   },
 ];

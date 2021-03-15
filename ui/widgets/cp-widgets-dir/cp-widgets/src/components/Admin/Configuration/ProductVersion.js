@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18n from '../../../i18n';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, ToggleSmall, Button} from 'carbon-components-react';
 import { SubtractAlt16 } from '@carbon/icons-react';
 import { apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
@@ -90,19 +91,19 @@ class ProductVersion extends Component {
 
 const headerData = [
     {
-      header: 'Entando Version',
+      header: i18n.t('adminConfig.manageProductVersion.entandoVersion'),
       key: 'entVersion',
     },
     {
-      header: 'Status *',
+      header: i18n.t('adminConfig.manageProductVersion.status'),
       key: 'status',
     },
     {
-      header: 'Start Date',
+      header: i18n.t('adminConfig.manageProductVersion.startDate'),
       key: 'startDate',
     },
     {
-      header: 'Support End Date',
+      header: i18n.t('adminConfig.manageProductVersion.supportEndDate'),
       key: 'endDate',
     }
   ];

@@ -17,7 +17,7 @@ const CustomerDetails = () => {
                 <p><strong>{i18n.t('customerDashboard.customerId')}</strong> {id}</p>
                 <p><strong>{i18n.t('customerDashboard.startDate')}</strong> {startDate}</p>
             </Tile>
-          </div>
+        </div>
     );
 }
 
