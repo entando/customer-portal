@@ -51,19 +51,19 @@ class TicketingSystem extends Component {
                     <div className="bx--grid">
                         <div className="bx--row">
                             <div className="bx--col">
-                                <Select defaultValue="ticketing-system" name="ticketingSystem" labelText="Select Backend Ticketing System" value={this.state.ticketingSystem} onChange={this.handleChanges}>
+                                <Select required defaultValue="ticketing-system" name="ticketingSystem" labelText="Select Backend Ticketing System *" value={this.state.ticketingSystem} onChange={this.handleChanges}>
                                     <SelectItem
                                         text="Select"
                                         value="ticketing-system"
                                     />
                                     {ticketingSystem.map((ticketingSystem, i) => <SelectItem key={i} text={ticketingSystem} value={ticketingSystem.toLowerCase()}>{ticketingSystem}</SelectItem>)}
                                 </Select>
-                                <TextInput name="userName" labelText="User Name" value={this.state.userName} onChange={this.handleChanges}/>
-                                <TextInput name="projectName" labelText="Project Name" value={this.state.projectName} onChange={this.handleChanges}/>
+                                <TextInput required name="userName" labelText="User Name *" value={this.state.userName} onChange={this.handleChanges}/>
+                                <TextInput required name="projectName" labelText="Project Name *" value={this.state.projectName} onChange={this.handleChanges}/>
                             </div>
                             <div className="bx--col">
-                                <TextInput name="url" labelText="URL" value={this.state.url} onChange={this.handleChanges}/>
-                                <TextInput name="password" type="password" labelText="Password" value={this.state.password} onChange={this.handleChanges}/>
+                                <TextInput required name="url" labelText="URL *" value={this.state.url} onChange={this.handleChanges}/>
+                                <TextInput required name="password" type="password" labelText="Password *" value={this.state.password} onChange={this.handleChanges}/>
                             </div>
                         </div>
                         <Button kind="primary" tabIndex={0} type="submit"> Submit  </Button>

@@ -49,24 +49,25 @@ class AdminDashboard extends React.Component {
         return(
             <div className="admin-dashboard">
                 <h3 className="pageTitle">Welcome to Entando {this.props.role} View</h3>
+            {this.props.role === 'Admin' || this.props.role === 'Support' || this.props.role === 'Partner' ?
                 <Tile>
                     <p className="title">All Customers</p>
                     <div className="bx--row">
                         <div className="bx--col">
                             <Search id="search" placeHolderText="Which customer are you looking for?" />
                         </div>
+                        {this.props.role === 'Admin' ?
                         <div className="bx--col">
-                            {this.props.role === 'Admin' ?
                             <div>
                                 <AddPartnerModal serviceUrl={this.props.serviceUrl} />
                                 <AddCustomerModal serviceUrl={this.props.serviceUrl} />
                                 <AddProjectModal serviceUrl={this.props.serviceUrl} />
                             </div>
-                            : null
-                            }
-                        </div>
+                        </div> : null}
                     </div>
                 </Tile>  
+                : null
+            }
                     
                 <div className="form-container">
                     <Accordion>

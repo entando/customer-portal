@@ -31,18 +31,23 @@ class TicketList extends Component {
     */
 
     if (authenticated) {
-        const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
-        var tickets = await apiJiraTicketsGet(this.props.serviceUrl, project.data.systemId);
-        for(var i = 0; i < tickets.data.length; i++) {
-          apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id)
-        }
-        //var tickets = await apiGetProjectsTickets(this.props.serviceUrl, this.props.projectId);
+      try {
+          const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
+          var tickets = await apiJiraTicketsGet(this.props.serviceUrl, project.data.systemId);
+          for(var i = 0; i < tickets.data.length; i++) {
+            apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id)
+          }
+          //var tickets = await apiGetProjectsTickets(this.props.serviceUrl, this.props.projectId);
 
-        this.setState({
-            data: tickets
-        });
+          this.setState({
+              data: tickets
+          });
+      }
+      catch(err) {
+        console.log(err)
+      }
     }
-    this.render();
+      this.render();
 }
 
 componentDidMount(){
@@ -92,7 +97,7 @@ componentDidUpdate(prevProps) {
                       <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">View Ticket</a></TableCell>
                     </TableRow>
                   )
-                }) : <p>Loading...</p>}
+                }) : <p>No tickets</p> }
               </TableBody>
             </Table>
           </TableContainer>
