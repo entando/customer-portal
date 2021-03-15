@@ -5,6 +5,7 @@ import { apiGetCustomersProjects } from '../../api/customers';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import { Link } from 'react-router-dom';
+import i18n from '../../i18n';
 
 class CustomTable extends Component {
   constructor(props) {
@@ -48,7 +49,7 @@ componentDidUpdate(prevProps) {
       <div>
         <DataTable rows={rowData} headers={headerData} data={this.state.data}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
-          <TableContainer title="Subscriptions" description="In this table there are open subscriptions">
+          <TableContainer title={i18n.t('customerDashboard.subscriptions')} description={i18n.t('customerDashboard.tableDesc')}>
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
@@ -164,31 +165,31 @@ const headerData = [
 
 const headerData = [
   {
-    header: 'Project Name',
+    header: i18n.t('customerDashboard.projectName'),
     key: 'projectName',
   },
   {
-    header: 'Partners',
+    header: i18n.t('customerDashboard.partners'),
     key: 'partners',
   },
   {
-    header: 'Entando Version',
+    header: i18n.t('customerDashboard.entandoVersion'),
     key: 'entandoVersion',
   },
   {
-    header: 'Status',
+    header: i18n.t('customerDashboard.status'),
     key: 'status',
   },
   {
-    header: 'Start Date',
+    header: i18n.t('customerDashboard.startDate'),
     key: 'startDate',
   },
   {
-      header: 'End Date',
+      header: i18n.t('customerDashboard.endDate'),
       key: 'endDate',
   },
   {
-      header: 'Open Tickets',
+      header: i18n.t('customerDashboard.openTickets'),
       key: 'openTickets',
   },
 ];

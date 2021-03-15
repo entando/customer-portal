@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from '../../i18n';
 import { Tile } from 'carbon-components-react';
 import { apiCustomerGet } from '../../api/customers'
 import withKeycloak from '../../auth/withKeycloak';
@@ -53,9 +54,9 @@ class CustomerDetails extends React.Component {
         return (
             <div className="customer-details">
                 <Tile>
-                    <p><strong>Customer Name:</strong> {this.state.customer.name}</p>
-                    <p><strong>Customer Id:</strong> {this.state.customer.id}</p>
-                    <p><strong>Customer Number:</strong> {this.state.customer.customerNumber}</p>
+                    <p><strong>{i18n.t('customerDashboard.customerName')}</strong> {this.state.customer.name}</p>
+                    <p><strong>{i18n.t('customerDashboard.customerId')}</strong> {this.state.customer.id}</p>
+                    <p><strong>{i18n.t('customerDashboard.startDate')}</strong> {this.state.customer.customerNumber}</p>
                 </Tile>
             </div>
         );

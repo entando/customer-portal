@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
@@ -97,35 +98,35 @@ class AddProjectModal extends Component {
         }
         return true;
     }
-    
+   
     render() {
         const customerList = ['Customer1', 'Customer2', 'Customer3'];
         return (
             <ModalWrapper
-                buttonTriggerText="Add a project + "
+                buttonTriggerText={i18n.t('buttons.addProject')}
                 modalHeading="Add a project"
                 buttonTriggerClassName="add-project bx--btn bx--btn--tertiary"
                 className="modal-form"
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">
-                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
+                    <p> {i18n.t('adminDashboard.addProject.desc')} </p>
                     <Form onSubmit={this.handleFormSubmit}>
-                        <Select defaultValue="customer-list" name="customerId" labelText="Customer List" value={this.state.customerId} onChange={this.handleChanges}>
+                        <Select defaultValue="customer-list" name="customerId" labelText={i18n.t('adminDashboard.addProject.customerList')} value={this.state.customerId} onChange={this.handleChanges}>
                             <SelectItem
-                                text="Select Customer"
+                                text={i18n.t('adminDashboard.addProject.selectCustomer')}
                                 value="customer-list"
                             />
                             {Object.keys(this.state.customerList).length !== 0 ? this.state.customerList.data.map((customerList, i) => <SelectItem key={i} text={customerList.name} value={customerList.id}>{customerList.name}</SelectItem>) : null}
                         </Select>
 
-                        <TextInput name="name" labelText="Project Name" value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
-                        <TextInput name="description" labelText="Project Description" value={this.state.description} onChange={this.handleChanges} />
-                        <TextInput name="systemId" labelText="System Id" value='' onChange=''value={this.state.systemId} onChange={this.handleChanges} />
-                        <TextInput name="contactName" labelText="Contact Name" value={this.state.contactName} onChange={this.handleChanges} />
-                        <TextInput name="contactPhone" labelText="Contact Phone" value={this.state.contactPhone} onChange={this.handleChanges} />
-                        <TextInput name="contactEmail" labelText="Contact Email" value={this.state.contactEmail} onChange={this.handleChanges} />
-                        <TextArea name="notes" labelText="Notes" value={this.state.notes} onChange={this.handleChanges} />
+                        <TextInput name="name" labelText={i18n.t('adminDashboard.addProject.projectName')} value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
+                        <TextInput name="description" labelText={i18n.t('adminDashboard.addProject.projectDesc')} value={this.state.description} onChange={this.handleChanges} />
+                        <TextInput name="systemId" labelText={i18n.t('adminDashboard.addProject.systemId')} value='' onChange=''value={this.state.systemId} onChange={this.handleChanges} />
+                        <TextInput name="contactName" labelText={i18n.t('adminDashboard.addProject.contactName')} value={this.state.contactName} onChange={this.handleChanges} />
+                        <TextInput name="contactPhone" labelText={i18n.t('adminDashboard.addProject.contactPhone')} value={this.state.contactPhone} onChange={this.handleChanges} />
+                        <TextInput name="contactEmail" labelText={i18n.t('adminDashboard.addProject.contactEmail')} value={this.state.contactEmail} onChange={this.handleChanges} />
+                        <TextArea name="notes" labelText={i18n.t('adminDashboard.addProject.notes')} value={this.state.notes} onChange={this.handleChanges} />
                         {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
                     </Form>
                 </div> 

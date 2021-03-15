@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from '../../i18n';
 import { Accordion, AccordionItem, PaginationNav, Search, Tile} from 'carbon-components-react';
 import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
@@ -48,13 +49,13 @@ class AdminDashboard extends React.Component {
     render(){
         return(
             <div className="admin-dashboard">
-                <h3 className="pageTitle">Welcome to Entando {this.props.role} View</h3>
+                <h3 className="pageTitle">{i18n.t('adminDashboard.title')} {this.props.role} {i18n.t('adminDashboard.view')}</h3>
             {this.props.role === 'Admin' || this.props.role === 'Support' || this.props.role === 'Partner' ?
                 <Tile>
-                    <p className="title">All Customers</p>
+                    <p className="title">{i18n.t('adminDashboard.allCustomers')}</p>
                     <div className="bx--row">
                         <div className="bx--col">
-                            <Search id="search" placeHolderText="Which customer are you looking for?" />
+                            <Search id="search" placeHolderText={i18n.t('adminDashboard.searchText')} />
                         </div>
                         {this.props.role === 'Admin' ?
                         <div className="bx--col">
