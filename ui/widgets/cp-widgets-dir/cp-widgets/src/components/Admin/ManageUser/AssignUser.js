@@ -88,7 +88,7 @@ class AssignUser extends Component {
                     <div className="bx--grid">
                         <div className="bx--row">
                             <div className="bx--col">
-                                <Select name="projectName" labelText="Project Name" value={this.state.projectId} onChange={this.handleChanges}>
+                                <Select name="projectId" labelText="Project Name" value={this.state.projectId} onChange={this.handleChanges}>
                                     {projectList}
                                 </Select>
                             </div>
