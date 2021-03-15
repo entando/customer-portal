@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomerPost } from '../../api/customers';
@@ -40,21 +41,21 @@ class AddCustomerModal extends Component {
     render() {
         return (
             <ModalWrapper
-                buttonTriggerText="Add a customer + "
-                modalHeading="Add a new customer"
+                buttonTriggerText={i18n.t('buttons.addCustomer')}
+                modalHeading={i18n.t('adminDashboard.addCustomer.title')}
                 buttonTriggerClassName="add-customer bx--btn bx--btn--tertiary"
                 className="modal-form"
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">
-                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
+                    <p> {i18n.t('adminDashboard.addCustomer.desc')} </p>
                     <Form onSubmit={this.handleFormSubmit}>
-                        <TextInput name="name" labelText="Customer Name" value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
-                        <TextInput name="customerNumber" labelText="Customer Number" value={this.state.customerNumber} onChange={this.handleChanges} />
-                        <TextInput name="contactName" labelText="Contact Name" value='' onChange=''value={this.state.contactName} onChange={this.handleChanges} />
-                        <TextInput name="contactPhone" labelText="Contact Phone" value={this.state.contactPhone} onChange={this.handleChanges} />
-                        <TextInput name="contactEmail" labelText="Contact Email" value={this.state.contactEmail} onChange={this.handleChanges} />
-                        <TextArea name="notes" labelText="Notes" value={this.state.notes} onChange={this.handleChanges} />
+                        <TextInput name="name" labelText={i18n.t('adminDashboard.addCustomer.customerName')} value={this.state.name} onChange={this.handleChanges}  errorMessage={this.isValid() ? '' : 'This field is required'}/>
+                        <TextInput name="customerNumber" labelText={i18n.t('adminDashboard.addCustomer.customerNumber')} value={this.state.customerNumber} onChange={this.handleChanges} />
+                        <TextInput name="contactName" labelText={i18n.t('adminDashboard.addCustomer.contactName')} value='' onChange=''value={this.state.contactName} onChange={this.handleChanges} />
+                        <TextInput name="contactPhone" labelText={i18n.t('adminDashboard.addCustomer.contactPhone')} value={this.state.contactPhone} onChange={this.handleChanges} />
+                        <TextInput name="contactEmail" labelText={i18n.t('adminDashboard.addCustomer.contactEmail')} value={this.state.contactEmail} onChange={this.handleChanges} />
+                        <TextArea name="notes" labelText={i18n.t('adminDashboard.addCustomer.notes')} value={this.state.notes} onChange={this.handleChanges} />
                         {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
                     </Form>
                 </div> 
@@ -65,5 +66,3 @@ class AddCustomerModal extends Component {
 
 
 export default withKeycloak(AddCustomerModal);
-
-

@@ -5,6 +5,7 @@ import { apiGetCustomersProjects } from '../../api/customers';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import { Link } from 'react-router-dom';
+import i18n from '../../i18n';
 
 class CustomTable extends Component {
   constructor(props) {
@@ -48,7 +49,7 @@ componentDidUpdate(prevProps) {
       <div>
         <DataTable rows={rowData} headers={headerData} data={this.state.data}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
-          <TableContainer title="Subscriptions" description="In this table there are open subscriptions">
+          <TableContainer title={i18n.t('customerDashboard.subscriptions')} description={i18n.t('customerDashboard.tableDesc')}>
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>

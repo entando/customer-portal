@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from '../../i18n';
 import { Tile } from 'carbon-components-react';
 
 const customerData = {
@@ -12,9 +13,9 @@ const CustomerDetails = () => {
     return (
         <div className="customer-details">
             <Tile>
-                <p><strong>Customer Name:</strong> {name}</p>
-                <p><strong>Customer Id:</strong> {id}</p>
-                <p><strong>Start Date:</strong> {startDate}</p>
+                <p><strong>{i18n.t('customerDashboard.customerName')}</strong> {name}</p>
+                <p><strong>{i18n.t('customerDashboard.customerId')}</strong> {id}</p>
+                <p><strong>{i18n.t('customerDashboard.startDate')}</strong> {startDate}</p>
             </Tile>
           </div>
     );
