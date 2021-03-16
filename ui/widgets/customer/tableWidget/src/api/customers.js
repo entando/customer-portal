@@ -15,7 +15,7 @@ export const apiCustomersDelete = async (serviceUrl, id) => {
 export const apiCustomersGet = async (serviceUrl, { filters = [], pagination, mode }) => {
   const filterQuery = getFilterQuery(filters);
   const paginationQuery = pagination
-    ? `page=${pagination.page}&size=${pagination.rowsPerPage}`
+    ? `page=${pagination.page}&size=1`
     : '';
   const url = getUrl(
     `${serviceUrl}/${resource}${mode === 'count' ? '/count' : ''}`,
