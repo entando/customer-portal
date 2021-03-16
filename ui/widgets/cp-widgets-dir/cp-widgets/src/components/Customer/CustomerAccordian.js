@@ -10,7 +10,7 @@ class CustomerAccordian extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            projects: '',
+            projects: {},
             authenticated: false
         }
     }
@@ -83,6 +83,7 @@ class CustomerAccordian extends React.Component {
     render() {
         var { t, keycloak } = this.props;
         var authenticated = keycloak.initialized && keycloak.authenticated;
+
         return(
             <div>
                 {this.state.authenticated ?
@@ -92,7 +93,8 @@ class CustomerAccordian extends React.Component {
                     }
                     <AccordionItem title={this.props.title}>
                         <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} />
-                    </AccordionItem></div> : null
+                    </AccordionItem></div> 
+                : null
                 }
             </div>
         )
