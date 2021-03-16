@@ -5,7 +5,7 @@
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <link type="stylesheet" href="../src/index.scss" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <!--
+    <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -18,56 +18,51 @@
     <script src="%REACT_APP_KEYCLOAK_URL%/js/keycloak.js"></script>
     <script>
       const onLoad = (function() {
-          function createKcDispatcher(payload) {
-              return () =>
-                  window.dispatchEvent(new CustomEvent('keycloak', { detail: payload }));
-          }
+        function createKcDispatcher(payload) {
+          return () => window.dispatchEvent(new CustomEvent('keycloak', { detail: payload }));
+        }
 
-          function initKeycloak() {
-              const keycloak = Keycloak({
-                  url: '%REACT_APP_KEYCLOAK_URL%',
-                  realm: '%REACT_APP_KEYCLOAK_REALM%',
-                  clientId: '%REACT_APP_KEYCLOAK_CLIENT_ID%',
-              });
- 
+        function initKeycloak() {
+          const keycloak = Keycloak({
+            url: '%REACT_APP_KEYCLOAK_URL%',
+            realm: '%REACT_APP_KEYCLOAK_REALM%',
+            clientId: '%REACT_APP_KEYCLOAK_CLIENT_ID%'
+          });
 
-              keycloak.onReady = createKcDispatcher({ eventType: 'onReady' });
-              keycloak.onAuthSuccess = createKcDispatcher({ eventType: 'onAuthSuccess' });
-              keycloak.onAuthError = createKcDispatcher({ eventType: 'onAuthError' });
-              keycloak.onAuthRefreshSuccess = createKcDispatcher({
-                  eventType: 'onAuthRefreshSuccess',
-              });
-              keycloak.onAuthRefreshError = createKcDispatcher({
-                  eventType: 'onAuthRefreshError',
-              });
-              keycloak.onAuthLogout = createKcDispatcher({ eventType: 'onAuthLogout' });
-              keycloak.onTokenExpired = createKcDispatcher({ eventType: 'onTokenExpired' });
-              const onInit = createKcDispatcher({ eventType: 'onInit' });
+          keycloak.onReady = createKcDispatcher({ eventType: 'onReady' });
+          keycloak.onAuthSuccess = createKcDispatcher({ eventType: 'onAuthSuccess' });
+          keycloak.onAuthError = createKcDispatcher({ eventType: 'onAuthError' });
+          keycloak.onAuthRefreshSuccess = createKcDispatcher({
+            eventType: 'onAuthRefreshSuccess'
+          });
+          keycloak.onAuthRefreshError = createKcDispatcher({
+            eventType: 'onAuthRefreshError'
+          });
+          keycloak.onAuthLogout = createKcDispatcher({ eventType: 'onAuthLogout' });
+          keycloak.onTokenExpired = createKcDispatcher({ eventType: 'onTokenExpired' });
+          const onInit = createKcDispatcher({ eventType: 'onInit' });
 
-              
-              window.entando = {
-                  ...(window.entando || {}),
-                  keycloak,
-              };
+          window.entando = {
+            ...(window.entando || {}),
+            keycloak
+          };
 
-              
-                //If you are locally running the widget in isolation and you are not logged in,
-                //you are automatically redirected to keycloak login page to speed up development.
-              
-              const onLoad = window.location.hostname === 'localhost' ? 'login-required' : 'check-sso';
+          //If you are locally running the widget in isolation and you are not logged in,
+          //you are automatically redirected to keycloak login page to speed up development.
 
-              window.entando.keycloak.init({ onLoad }).success(onInit);
+          const onLoad = window.location.hostname === 'localhost' ? 'login-required' : 'check-sso';
 
-          }
-          return initKeycloak;
+          window.entando.keycloak.init({ onLoad }).success(onInit);
+        }
+        return initKeycloak;
       })();
     </script>
   </head>
   <body onload="onLoad();">
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    
-    <!--<app-element service-url="%REACT_APP_SERVICE_URL%" />-->
-    <app-element service-url="%REACT_APP_SERVICE_URL%" keycloak-url="%REACT_APP_KEYCLOAK_URL%"/>
+
+    <app-element service-url="%REACT_APP_SERVICE_URL%" keycloak-url="%REACT_APP_KEYCLOAK_URL%" />
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

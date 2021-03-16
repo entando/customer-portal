@@ -1,134 +1,146 @@
 import React, { Component } from 'react';
-import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, ToggleSmall, Button} from 'carbon-components-react';
+import i18n from '../../../i18n';
+import {
+  DataTable,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableHeader,
+  TableBody,
+  TableCell,
+  ToggleSmall,
+  Button
+} from 'carbon-components-react';
 import { SubtractAlt16 } from '@carbon/icons-react';
 import { apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
 import withKeycloak from '../../../auth/withKeycloak';
 import AddProductVersionModal from '../AddProductVersionModal';
 
-
 class ProductVersion extends Component {
-    constructor() {
-        super();
-        this.state = {
-            data: "",
-        }
-    }
+  constructor() {
+    super();
+    this.state = {
+      data: ''
+    };
+  }
 
-    componentDidMount(){
-        this.getProductVersions();
-    }
+  componentDidMount() {
+    this.getProductVersions();
+  }
 
-    componentDidUpdate(prevProps) {
-        const { keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-    
-        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-    
-        if (authenticated && changedAuth) {
-          this.getProductVersions();
-        }
-    }
+  componentDidUpdate(prevProps) {
+    const { keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
 
-    async getProductVersions() {
-        const { t, keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-        if (authenticated) {
-            const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
+    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
-            this.setState({
-                data: productVersions
-            })
-        }
+    if (authenticated && changedAuth) {
+      this.getProductVersions();
     }
+  }
 
-    async handleToggleChange(id) {
-        await apiUpdateProductVersionsStatus(this.props.serviceUrl, id);
-    }
+  async getProductVersions() {
+    const { t, keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
+    if (authenticated) {
+      const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
 
-    render() {
-        return ( 
-            <div>
-                <DataTable rows={rowData} headers={headerData}>
-                {({ rows, headers, getHeaderProps, getTableProps }) => (
-                    <TableContainer>
-                        <Table {...getTableProps()}>
-                            <TableHead>
-                                <TableRow>
-                                    {headers.map((header) => (
-                                    <TableHeader {...getHeaderProps({ header })}>
-                                        {header.header}
-                                    </TableHeader>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {Object.keys(this.state.data).length !== 0 ? this.state.data.data.map((productVersion, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{productVersion.name}</TableCell>
-                                        <TableCell>
-                                            <ToggleSmall 
-                                                onClick={() => this.handleToggleChange(productVersion.id)}
-                                                aria-label="toggle button" 
-                                                id={productVersion.id}
-                                                defaultToggled={productVersion.status ? true : false } />
-                                        </TableCell>
-                                        <TableCell>{productVersion.startDate}</TableCell>
-                                        <TableCell>{productVersion.endDate}</TableCell>
-                                    </TableRow>
-                                )) : null}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                )}
-                </DataTable>
-                <br/>
-                <AddProductVersionModal serviceUrl={this.props.serviceUrl} />
-            </div>    
-        );
+      this.setState({
+        data: productVersions
+      });
     }
+  }
+
+  async handleToggleChange(id) {
+    await apiUpdateProductVersionsStatus(this.props.serviceUrl, id);
+  }
+
+  render() {
+    return (
+      <div>
+        <DataTable rows={rowData} headers={headerData}>
+          {({ rows, headers, getHeaderProps, getTableProps }) => (
+            <TableContainer>
+              <Table {...getTableProps()}>
+                <TableHead>
+                  <TableRow>
+                    {headers.map(header => (
+                      <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Object.keys(this.state.data).length !== 0
+                    ? this.state.data.data.map((productVersion, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{productVersion.name}</TableCell>
+                          <TableCell>
+                            <ToggleSmall
+                              onClick={() => this.handleToggleChange(productVersion.id)}
+                              aria-label="toggle button"
+                              id={productVersion.id}
+                              defaultToggled={productVersion.status ? true : false}
+                            />
+                          </TableCell>
+                          <TableCell>{productVersion.startDate}</TableCell>
+                          <TableCell>{productVersion.endDate}</TableCell>
+                        </TableRow>
+                      ))
+                    : null}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </DataTable>
+        <br />
+        <AddProductVersionModal serviceUrl={this.props.serviceUrl} />
+      </div>
+    );
+  }
 }
 
 const headerData = [
-    {
-      header: 'Entando Version',
-      key: 'entVersion',
-    },
-    {
-      header: 'Status *',
-      key: 'status',
-    },
-    {
-      header: 'Start Date',
-      key: 'startDate',
-    },
-    {
-      header: 'Support End Date',
-      key: 'endDate',
-    }
-  ];
+  {
+    header: i18n.t('adminConfig.manageProductVersion.entandoVersion'),
+    key: 'entVersion'
+  },
+  {
+    header: i18n.t('adminConfig.manageProductVersion.status'),
+    key: 'status'
+  },
+  {
+    header: i18n.t('adminConfig.manageProductVersion.startDate'),
+    key: 'startDate'
+  },
+  {
+    header: i18n.t('adminConfig.manageProductVersion.supportEndDate'),
+    key: 'endDate'
+  }
+];
 
 const rowData = [
-    {
-         id: 'a',
-         entVersion: '5.2',
-         status:  <ToggleSmall aria-label="toggle button" defaultToggled id="status-1" />,
-         startDate: 'April, 2018',
-         endDate: 'April, 2022',
-    },
-    {
-        id: 'b',
-        entVersion: '6.3',
-        status:  <ToggleSmall aria-label="toggle button"  id="status-2" />,
-        startDate: 'Jile, 2019',
-        endDate: 'April, 2023',
-    },
-    {
-        id: 'c',
-        entVersion: '6.2',
-        status:  <ToggleSmall aria-label="toggle button" defaultToggled id="status-3" />,
-        startDate: 'September, 2020',
-        endDate: 'April, 2024',
-     },
+  {
+    id: 'a',
+    entVersion: '5.2',
+    status: <ToggleSmall aria-label="toggle button" defaultToggled id="status-1" />,
+    startDate: 'April, 2018',
+    endDate: 'April, 2022'
+  },
+  {
+    id: 'b',
+    entVersion: '6.3',
+    status: <ToggleSmall aria-label="toggle button" id="status-2" />,
+    startDate: 'Jile, 2019',
+    endDate: 'April, 2023'
+  },
+  {
+    id: 'c',
+    entVersion: '6.2',
+    status: <ToggleSmall aria-label="toggle button" defaultToggled id="status-3" />,
+    startDate: 'September, 2020',
+    endDate: 'April, 2024'
+  }
 ];
-   
+
 export default withKeycloak(ProductVersion);

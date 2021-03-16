@@ -8,7 +8,7 @@ body {
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 1rem;
-  background: #F7F9FB;
+  background: #f7f9fb;
 }
 
 h3 {
@@ -16,7 +16,7 @@ h3 {
   line-height: 37px;
 }
 
-h4{
+h4 {
   font-size: 24px;
   line-height: 34px;
 }
@@ -27,10 +27,11 @@ p {
 }
 
 a {
-  color: #00a0df
+  color: #00a0df;
 }
 
-a:link, a:visited {
+a:link,
+a:visited {
   color: #8094d6;
 }
 
@@ -45,8 +46,8 @@ a:link, a:visited {
 
 // Header and Footer
 
-.bx--header{
-  background: #002F87;
+.bx--header {
+  background: #002f87;
 }
 
 .Homepage__footer {
@@ -54,26 +55,25 @@ a:link, a:visited {
 }
 
 // Navigation Menu
-.bx--grid{
+.bx--grid {
   .navigationMenu {
     margin: 2rem;
     float: right !important;
     left: 100% !important;
   }
-  .bx--header__nav:before{
+  .bx--header__nav:before {
     background-color: transparent;
   }
 
   a.bx--header__menu-item span {
-    color: #002F87;
+    color: #002f87;
   }
-} 
-
+}
 
 // Bx--Form Fields
-#entando-customer-portal{
+#entando-customer-portal {
   form.bx--form {
-    background: #FFF;
+    background: #fff;
     margin: 2rem 0;
     padding: 1rem;
   }
@@ -82,16 +82,17 @@ a:link, a:visited {
     font-weight: 400;
   }
   .bx--data-table-header {
-    background: #FFF;
+    background: #fff;
   }
   .bx--data-table th {
     background-color: #eaf0f5;
   }
   .bx--tile {
-    background: #FFF;
+    background: #fff;
   }
-  .bx--data-table td,  .bx--data-table tbody th {
-    background: #FFF;
+  .bx--data-table td,
+  .bx--data-table tbody th {
+    background: #fff;
   }
   nav.bx--pagination-nav {
     float: right;
@@ -109,41 +110,40 @@ a:link, a:visited {
     margin: 2rem 0;
     padding: 0 2rem;
   }
-  .bx--accordion__title{
+  .bx--accordion__title {
     font-size: 18px;
   }
   .bx--data-table .bx--table-header-label {
     font-weight: normal;
   }
-  .bx--modal-container{
-     background: #FFF;
-     .form-container{
-        background: transparent;
-      }
-      .bx--modal-header {
-        padding-left:2rem;
-      }
+  .bx--modal-container {
+    background: #fff;
+    .form-container {
+      background: transparent;
+    }
+    .bx--modal-header {
+      padding-left: 2rem;
+    }
   }
-  
-  .bx--modal .bx--text-input, 
-  .bx--modal .bx--text-area, 
-  .bx--modal .bx--search-input, 
-  .bx--modal .bx--select-input, 
-  .bx--modal .bx--dropdown, 
+
+  .bx--modal .bx--text-input,
+  .bx--modal .bx--text-area,
+  .bx--modal .bx--search-input,
+  .bx--modal .bx--select-input,
+  .bx--modal .bx--dropdown,
   .bx--modal .bx--dropdown-list,
-  .bx--date-picker__input
-  {
+  .bx--date-picker__input {
     background-color: #f4f4f4;
   }
 
-  .bx--date-picker.bx--date-picker--simple .bx--date-picker__input, .bx--date-picker.bx--date-picker--simple .bx--label{
+  .bx--date-picker.bx--date-picker--simple .bx--date-picker__input,
+  .bx--date-picker.bx--date-picker--simple .bx--label {
     width: auto;
   }
- 
 
-// Admin Dashboard
+  // Admin Dashboard
 
-  .admin-dashboard{
+  .admin-dashboard {
     .bx--accordion__item {
       padding: 1rem;
     }
@@ -162,42 +162,44 @@ a:link, a:visited {
     .bx--tile {
       margin: 15px;
       min-height: 150px;
-      background: #FFF;
+      background: #fff;
     }
-    .add-customer, .add-partner, .add-project {
+    .add-customer,
+    .add-partner,
+    .add-project {
       float: right;
       width: 14rem;
       @media screen and (max-width: 600px) {
         width: 100%;
       }
     }
-    .bx--search-input{
-      border-bottom:0;
+    .bx--search-input {
+      border-bottom: 0;
     }
-  }  
-  
+  }
 
-// Customer Table
+  // Customer Table
 
   #customer-table {
     text-align: center;
     border-collapse: collapse;
-    border: 3px solid #DDD;
+    border: 3px solid #ddd;
     width: 100%;
-    
-    td, th {
-      border: 1px solid #DDD;
+
+    td,
+    th {
+      border: 1px solid #ddd;
       padding: 8px;
     }
     th {
       padding-top: 12px;
       padding-bottom: 12px;
       text-align: center;
-      color: #FFF;
+      color: #fff;
     }
-  }  
+  }
   .customer-details {
-    background: #FFF;
+    background: #fff;
     width: 368px;
     margin: 2rem 0;
   }
@@ -205,14 +207,18 @@ a:link, a:visited {
     width: auto;
     margin: 2rem 0;
   }
-  .title{
+  .title {
     font-size: 18px;
     margin: 0 0 15px 15px;
   }
-  .desc{
-    padding-left:15px;
+  .desc {
+    padding-left: 15px;
   }
-  .form-container{
-    background: #FFF;
+  .form-container {
+    background: #fff;
+  }
+  .bx--grid {
+    margin: 2rem 0;
+    padding: 0 2rem;
   }
 }

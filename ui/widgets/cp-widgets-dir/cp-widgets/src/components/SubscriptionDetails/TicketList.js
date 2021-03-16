@@ -9,9 +9,9 @@ import { apiGetProjectsUsers, apiProjectGet, apiGetProjectsTickets, apiAddTicket
 class TicketList extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       data: {}
-     }
+    };
   }
 
   async fetchData() {
@@ -31,130 +31,140 @@ class TicketList extends Component {
     */
 
     if (authenticated) {
+      try {
         const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
         var tickets = await apiJiraTicketsGet(this.props.serviceUrl, project.data.systemId);
-        for(var i = 0; i < tickets.data.length; i++) {
-          apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id)
+        for (var i = 0; i < tickets.data.length; i++) {
+          apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id);
         }
         //var tickets = await apiGetProjectsTickets(this.props.serviceUrl, this.props.projectId);
 
         this.setState({
-            data: tickets
+          data: tickets
         });
+      } catch (err) {
+        console.log(err);
+      }
     }
     this.render();
-}
+  }
 
-componentDidMount(){
-    this.fetchData();
-}
-
-componentDidUpdate(prevProps) {
-  const { keycloak } = this.props;
-  const authenticated = keycloak.initialized && keycloak.authenticated;
-
-  const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-  if (authenticated && changedAuth) {
+  componentDidMount() {
     this.fetchData();
   }
-}
 
-  changeState = () => {   
-    this.setState({data:'test data'});  
-  };  
+  componentDidUpdate(prevProps) {
+    const { keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
 
-  render() { 
-    return ( 
+    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+
+    if (authenticated && changedAuth) {
+      this.fetchData();
+    }
+  }
+
+  changeState = () => {
+    this.setState({ data: 'test data' });
+  };
+
+  render() {
+    return (
       <div>
         <DataTable rows={rowData} headers={headerData}>
-        {({ rows, headers, getHeaderProps, getTableProps }) => (
-          <TableContainer title="List of Tickets" description="Tickets">
-            <Table {...getTableProps()}>
-              <TableHead>
-                <TableRow>
-                  {headers.map((header) => (
-                    <TableHeader {...getHeaderProps({ header })}>
-                      {header.header}
-                    </TableHeader>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {Object.keys(this.state.data).length !== 0 ? this.state.data.data.map((ticket) => {
-                  return (
-                    <TableRow key={ticket.id}>
-                      <TableCell key={ticket.id}>{ticket.systemId}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.systemId.split("-")[0]}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.description}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.type}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.createDate}</TableCell>
-                      <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">View Ticket</a></TableCell>
-                    </TableRow>
-                  )
-                }) : <p>Loading...</p>}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-      </DataTable>
-    </div>
-  )}
+          {({ rows, headers, getHeaderProps, getTableProps }) => (
+            <TableContainer title="List of Tickets" description="Tickets">
+              <Table {...getTableProps()}>
+                <TableHead>
+                  <TableRow>
+                    {headers.map(header => (
+                      <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Object.keys(this.state.data).length !== 0 ? (
+                    this.state.data.data.map(ticket => {
+                      return (
+                        <TableRow key={ticket.id}>
+                          <TableCell key={ticket.id}>{ticket.systemId}</TableCell>
+                          <TableCell key={ticket.id}>{ticket.systemId.split('-')[0]}</TableCell>
+                          <TableCell key={ticket.id}>{ticket.description}</TableCell>
+                          <TableCell key={ticket.id}>{ticket.type}</TableCell>
+                          <TableCell key={ticket.id}>{ticket.createDate}</TableCell>
+                          <TableCell key={ticket.id}>
+                            <a href={'https://jorden-test-partner-portal.atlassian.net/browse/' + ticket.systemId} target="_blank">
+                              View Ticket
+                            </a>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <p>No tickets</p>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </DataTable>
+      </div>
+    );
+  }
 }
 
 const headerData = [
   {
     header: 'Issue',
-    key: 'projectName',
+    key: 'projectName'
   },
   {
     header: 'Project',
-    key: 'project',
+    key: 'project'
   },
   {
     header: 'Description',
-    key: 'description',
+    key: 'description'
   },
   {
     header: 'Type',
-    key: 'type',
+    key: 'type'
   },
   {
     header: 'Creation Date',
-    key: 'creationDate',
+    key: 'creationDate'
   },
   {
-      header: 'Link',
-      key: 'openTicket',
-  },
+    header: 'Link',
+    key: 'openTicket'
+  }
 ];
 
 const rowData = [
   {
-       id: 'a',
-       projectName: 'Ticket1',
-       project: 'Leonardo',
-       entandoVersion: 6.2,
-       creationDate: 'October, 2019',
-       openTicket: <a href="">Open Ticket</a>,
-    },
-    {
-        id: 'a',
-        projectName: 'Ticket1',
-        project: 'Leonardo',
-        entandoVersion: 6.2,
-        creationDate: 'October, 2019',
-        openTicket: <a href="">Open Ticket</a>,
-    },
-    {
-        id: 'a',
-        projectName: 'Ticket1',
-        project: 'Leonardo',
-        entandoVersion: 6.2,
-        creationDate: 'October, 2019',
-        openTicket: <a href="">Open Ticket</a>,
-     },
-  
+    id: 'a',
+    projectName: 'Ticket1',
+    project: 'Leonardo',
+    entandoVersion: 6.2,
+    creationDate: 'October, 2019',
+    openTicket: <a href="">Open Ticket</a>
+  },
+  {
+    id: 'a',
+    projectName: 'Ticket1',
+    project: 'Leonardo',
+    entandoVersion: 6.2,
+    creationDate: 'October, 2019',
+    openTicket: <a href="">Open Ticket</a>
+  },
+  {
+    id: 'a',
+    projectName: 'Ticket1',
+    project: 'Leonardo',
+    entandoVersion: 6.2,
+    creationDate: 'October, 2019',
+    openTicket: <a href="">Open Ticket</a>
+  }
 ];
- 
+
 export default withKeycloak(TicketList);
