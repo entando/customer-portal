@@ -12,7 +12,8 @@ class AssignUser extends Component {
             projectId: '',
             assignUser: '',
             users: new Map(),
-            projects: {}
+            projects: {},
+            invalid: {}
         };
     }
 
@@ -50,13 +51,35 @@ class AssignUser extends Component {
     handleFormSubmit = event => {
         event.preventDefault();
         const { projectId, assignUser } = this.state;
+        const formIsValid = this.handleFormValidation();
 
-        if (projectId.length !== 0 && assignUser.length !== 0) {
+        if (formIsValid) {
             this.assignUserToProject(projectId, assignUser);
         }
 
         // TODO: improved validation and rejection
     };
+
+    handleFormValidation() {
+        let invalid = {};
+        let formIsValid = true;
+        const { projectId, assignUser } = this.state;
+
+        //name
+        if (projectId === '') {
+            formIsValid = false;
+            invalid['projectId'] = true;
+        }
+
+        //customerNumber
+        if (assignUser === '') {
+            formIsValid = false;
+            invalid['assignUser'] = true;
+        }
+
+        this.setState({ invalid: invalid });
+        return formIsValid;
+    }
 
     assignUserToProject = async (projectId, username) => {
         const portalUserId = await this.getPortalUserId({ username, email: this.state.users.get(username) });
@@ -129,6 +152,8 @@ class AssignUser extends Component {
                                     labelText={i18n.t('manageUsers.assign.projectName')}
                                     value={this.state.projectId}
                                     onChange={this.handleChanges}
+                                    invalidText={i18n.t('validation.invalid.required')}
+                                    invalid={this.state.invalid['projectId']}
                                 >
                                     {projectList}
                                 </Select>
@@ -141,6 +166,8 @@ class AssignUser extends Component {
                                     labelText={i18n.t('manageUsers.assign.assignUser')}
                                     value={this.state.assignUser}
                                     onChange={this.handleChanges}
+                                    invalidText={i18n.t('validation.invalid.required')}
+                                    invalid={this.state.invalid['assignUser']}
                                 >
                                     {userList}
                                 </Select>
