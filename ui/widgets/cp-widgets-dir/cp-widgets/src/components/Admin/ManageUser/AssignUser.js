@@ -55,6 +55,7 @@ class AssignUser extends Component {
 
         if (formIsValid) {
             this.assignUserToProject(projectId, assignUser);
+            window.location.reload(false);
         }
 
         // TODO: improved validation and rejection
