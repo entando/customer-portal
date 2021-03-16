@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Form, TextInput, Select, SelectItem, Button } from 'carbon-components-react';
-import { apiUsersGet } from '../../../api/portalusers';
+import * as portalUserApi from '../../../api/portalusers';
 import { apiAddUserToProject, apiGetProjectIdNames } from '../../../api/projects';
 import withKeycloak from '../../../auth/withKeycloak';
+import { apiKeycloakUserGet } from '../../../api/keycloak';
 
 class AssignUser extends Component {
 
@@ -26,9 +27,9 @@ class AssignUser extends Component {
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const users = (await apiUsersGet(this.props.serviceUrl)).data;
+            const users = (await portalUserApi.apiUsersGet(this.props.serviceUrl)).data;
             const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
-
+            console.log(await apiKeycloakUserGet(this.props.keycloakUrl));
             this.setState({
                 users,
                 projects
@@ -36,29 +37,6 @@ class AssignUser extends Component {
         }
     }
 
-    setupFormComponents() {
-        const users = this.state.users;
-        const roleSelection = this.props.roles;
-        const projectIdsNames = this.state.projects;
-
-        let userList = null;
-        if (users != null && users.length > 0) {
-            userList = users.map((assignUser, i) => <SelectItem key={i} text={assignUser.username} value={assignUser.id}>{assignUser.username}</SelectItem>);
-            userList.unshift(<SelectItem key="-1" text="Assign User" value="" />)
-        } else {
-            userList = <SelectItem text="There are currently no users in the system" value="" />
-        }
-
-        let projectList = null;
-        if (projectIdsNames != null && Object.keys(projectIdsNames).length > 0) {
-            projectList = Object.keys(projectIdsNames).map((projectId, i) => <SelectItem key={i} text={projectIdsNames[projectId]} value={projectId}>test</SelectItem>);
-            projectList.unshift(<SelectItem key="-1" text="Project List" value=""/>)
-        } else {
-            projectList = <SelectItem text="There are currently no projects in the system" value="" />
-        }
-
-        return { userList, roleSelection, projectList };
-    }
 
     handleChanges = (e) => {
         const input = e.target;
@@ -69,15 +47,57 @@ class AssignUser extends Component {
 
     handleFormSubmit = (event) => {
         event.preventDefault();
-        console.log(this.state.assignUser);
-        console.log(this.state.selectRole);
-        console.log(this.state.projectId);
-        if (this.formSubmittable) {
-            //await apiAddUserToProject(this.props.serviceUrl, this.state.projectName, this.state.)
-        } else {
-            // TODO Handle error situation
-        }
+        this.assignUserToProject(this.state.projectId, this.state.assignUser)
     };
+
+    assignUserToProject = async (projectId, username) => {
+        const portalUserId = await this.getPortalUserId(username);
+        const result = await apiAddUserToProject(this.props.serviceUrl, projectId, portalUserId);
+        console.log(result);
+        this.render();
+        // TODO: Feedback if succeeded or failed.
+    }
+
+    getPortalUserId = async keycloakUser => {
+        let portalUserId = null;
+        try {
+            const portalUser = await portalUserApi.apiUserGetByUsername(this.props.serviceUrl, keycloakUser.username);
+            portalUserId = portalUser.data.id;
+        } catch (e) {
+            if (e.message.toLowerCase().includes('not found')) {
+                const portalUser = await this.createPortalUser(keycloakUser.username, keycloakUser.email);
+                portalUserId = portalUser.data.id;
+            }
+        }
+
+        return portalUserId;
+    }
+
+    createPortalUser = async (username, email) => {
+        await portalUserApi.apiUserPost({ username, email });
+    }
+
+    setupFormComponents() {
+        const users = this.state.users;
+        const projectIdsNames = this.state.projects;
+        let userList, projectList = userList = null;
+
+        if (users != null && users.length > 0) {
+            userList = users.map((assignUser, i) => <SelectItem key={i} text={assignUser.username} value={assignUser.id}>{assignUser.username}</SelectItem>);
+            userList.unshift(<SelectItem key="-1" text="Assign User" value="" />)
+        } else {
+            userList = <SelectItem text="There are currently no users in the system" value="" />
+        }
+
+        if (projectIdsNames != null && Object.keys(projectIdsNames).length > 0) {
+            projectList = Object.keys(projectIdsNames).map((projectId, i) => <SelectItem key={i} text={projectIdsNames[projectId]} value={projectId}>test</SelectItem>);
+            projectList.unshift(<SelectItem key="-1" text="Project List" value="" />)
+        } else {
+            projectList = <SelectItem text="There are currently no projects in the system" value="" />
+        }
+
+        return { userList, projectList, roleSelection: this.props.roles };
+    }
 
     render() {
         const { userList, roleSelection, projectList } = this.setupFormComponents();

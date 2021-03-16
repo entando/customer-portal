@@ -57,10 +57,11 @@ class ManageUserElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
+    const keycloakUrl = this.getAttribute(ATTRIBUTES.keycloakUrl) || '';
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <ManageUser serviceUrl={serviceUrl}/>
+        <ManageUser serviceUrl={serviceUrl} keycloakUrl={keycloakUrl}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );

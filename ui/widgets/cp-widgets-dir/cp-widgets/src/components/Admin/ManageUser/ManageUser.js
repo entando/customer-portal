@@ -43,12 +43,12 @@ class ManageUser extends Component {
         this.userFunctionality = [
             {
                 label: <div><h4>Assign a new User</h4></div>,
-                content: <AssignUser roles={roles} serviceUrl={this.props.serviceUrl} />,
+                content: <AssignUser roles={roles} serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl}/>,
                 open: true
             },
             {
                 label: <div><h4>Manage all users</h4></div>,
-                content: <DeleteUser roles={roles} serviceUrl={this.props.serviceUrl} />,
+                content: <DeleteUser roles={roles} serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl}/>,
                 open: false
             }
         ]

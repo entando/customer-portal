@@ -76,4 +76,9 @@ public class PortalUserServiceImpl implements PortalUserService {
 
         portalUserRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<PortalUser> findByUsername(String username) {
+        return portalUserRepository.findByUsername(username);
+    }
 }

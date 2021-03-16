@@ -56,7 +56,7 @@ class App extends Component {
                         <BrowserRouter>
                             <Switch>
                                 <Route exact path="/" render={(props) => (
-                                    <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} role={role} />
+                                    <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} role={role} keycloakUrl={this.props.keycloakUrl}/>
                                 )}/>
                                 <Route path="/subscription-details/:id" render={(props) => (
                                     <Subscription {...props} serviceUrl={this.props.serviceUrl} />

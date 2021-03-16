@@ -33,6 +33,18 @@ export const apiUsersGet = async (serviceUrl) => {
   return request(url, options);
 };
 
+export const apiUserGet = async (serviceUrl, userId) => {
+  const url = getUrl(
+    `${serviceUrl}/${resource}/${userId}`
+  );
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+
+  return request(url, options);
+};
+
 export const apiUserPost = async (serviceUrl, user) => {
   const url = `${serviceUrl}/${resource}`;
   const options = {
@@ -40,5 +52,17 @@ export const apiUserPost = async (serviceUrl, user) => {
     method: 'POST',
     body: user ? JSON.stringify(user) : null,
   };
+  return request(url, options);
+};
+
+export const apiUserGetByUsername = async (serviceUrl, username) => {
+  const url = getUrl(
+    `${serviceUrl}/${resource}/username/${username}`
+  );
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+
   return request(url, options);
 };

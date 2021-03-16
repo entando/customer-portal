@@ -57,10 +57,11 @@ class AssignUserElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
-
+    const keycloakUrl = this.getAttribute(ATTRIBUTES.keycloakUrl) || '';
+    
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <AssignUser serviceUrl={serviceUrl}/>
+        <AssignUser serviceUrl={serviceUrl} keycloakUrl={keycloakUrl}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
