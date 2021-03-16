@@ -177,5 +177,12 @@
 			"title": "Manage all Users",
 			"desc": "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs."
 		}
+	},
+	"validation":{
+		"invalid":{
+			"required": "This field is required.",
+			"email": "Email is not valid.",
+			"date": "Please enter a date in 'mm/dd/yyyy' format."
+		}
 	}
 }

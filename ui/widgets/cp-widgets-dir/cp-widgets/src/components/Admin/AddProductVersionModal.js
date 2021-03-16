@@ -68,7 +68,8 @@ class AddProductVersionModal extends Component {
                 buttonTriggerText={i18n.t('buttons.addProductVersion')}
                 modalHeading={i18n.t('adminDashboard.addProductVersion.title')}
                 buttonTriggerClassName="add-product-version bx--btn bx--btn--tertiary"
-                className="modal-form modal-form-product-version"
+                className="modal-form"
+                id="modal-form-product-version"
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">
@@ -79,7 +80,7 @@ class AddProductVersionModal extends Component {
                             labelText={i18n.t('adminDashboard.addProductVersion.productVersion')} 
                             value={this.state.name} 
                             onChange={this.handleChanges} 
-                            invalidText="This field is required" 
+                            invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["name"]} 
                         />
                         <DatePicker dateFormat="m/d/Y" datePickerType="simple">
@@ -90,7 +91,7 @@ class AddProductVersionModal extends Component {
                                 value={this.state.startDate}
                                 onChange={this.handleChanges}
                                 type="text"
-                                invalidText="Please enter a date in 'mm/dd/yyyy' format." 
+                                invalidText={i18n.t('validation.invalid.date')} 
                                 invalid={this.state.invalid["startDate"]} 
                             />
                         </DatePicker>       
@@ -102,7 +103,7 @@ class AddProductVersionModal extends Component {
                                 value={this.state.endDate}
                                 onChange={this.handleChanges}
                                 type="text"
-                                invalidText="Please enter a valid date in 'mm/dd/yyyy' format." 
+                                invalidText={i18n.t('validation.invalid.date')} 
                                 invalid={this.state.invalid["endDate"]} 
                             />
                         </DatePicker>                  

@@ -100,7 +100,8 @@ class AddPartnerModal extends Component {
                 buttonTriggerText={i18n.t('buttons.addPartner')}
                 modalHeading={i18n.t('adminDashboard.addPartner.title')}
                 buttonTriggerClassName="add-partner bx--btn bx--btn--tertiary"
-                className="modal-form modal-form-partner"
+                className="modal-form"
+                id="modal-form-partner"
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">
@@ -119,7 +120,7 @@ class AddPartnerModal extends Component {
                             labelText={i18n.t('adminDashboard.addPartner.partnerName')} 
                             value={this.state.name} 
                             onChange={this.handleChanges}  
-                            invalidText="This field is required" 
+                            invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["name"]} 
                         />
                         <TextInput 
@@ -127,7 +128,7 @@ class AddPartnerModal extends Component {
                             labelText={i18n.t('adminDashboard.addPartner.partnerNumber')} 
                             value={this.state.partnerNumber} 
                             onChange={this.handleChanges}
-                            invalidText="This field is required" 
+                            invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["partnerNumber"]} 
                         />
                         <TextArea 
