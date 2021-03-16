@@ -171,7 +171,9 @@
       "desc": "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
       "projectName": "Project Name",
       "assignUser": "Assign User",
-      "selectRole": "Select Role"
+      "selectRole": "Select Role",
+      "projectList": "Projects",
+      "userList": "Users"
     },
     "manage": {
       "title": "Manage all Users",

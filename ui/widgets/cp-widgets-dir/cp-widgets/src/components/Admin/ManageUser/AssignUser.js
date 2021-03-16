@@ -120,7 +120,7 @@ class AssignUser extends Component {
                     {assignUser}
                 </SelectItem>
             ));
-            userList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.assignUser')} value="" />);
+            userList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.userList')} value="" />);
         } else {
             userList = <SelectItem text="There are currently no users in the system" value="" />;
         }
@@ -131,7 +131,7 @@ class AssignUser extends Component {
                     test
                 </SelectItem>
             ));
-            projectList.unshift(<SelectItem key="-1" text="Project List" value="" />);
+            projectList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.projectList')} value="" />);
         } else {
             projectList = <SelectItem text="There are currently no projects in the system" value="" />;
         }

@@ -4,12 +4,14 @@ import { SubtractAlt16 } from '@carbon/icons-react';
 import { apiUsersGet, apiUserDelete } from '../../../api/portalusers';
 import withKeycloak from '../../../auth/withKeycloak';
 import { apiKeycloakUserGet } from '../../../api/keycloak';
+
 class DeleteUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            portalUsers: [],
-            keycloakUsers: [],
+            portalUsers: new Map(),
+            keycloakUsers: new Map(),
+            displayUsers: [],
             filterText: ''
         };
     }
@@ -23,21 +25,55 @@ class DeleteUser extends Component {
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const portalUsers = await apiUsersGet(this.props.serviceUrl);
+            const portalUsers = this.handleMapFormatting((await apiUsersGet(this.props.serviceUrl)).data);
+            const keycloakUsers = this.handleMapFormatting((await apiKeycloakUserGet(this.props.keycloakUrl)).data);
+
+            console.log(portalUsers, keycloakUsers);
 
             this.setState({
-                portalUsers
+                portalUsers,
+                keycloakUsers
             });
+
+            this.handleUserDisplay();
         }
     }
 
-    deleteUser(e) {
+    /**
+     * Turns the list of user objects into a map where the key is the unique username.
+     */
+    handleMapFormatting(users) {
+        return new Map(users.map(user => [user.username, user]));
+    }
 
+    handleUserDisplay() {
+        const { portalUsers, keycloakUsers } = this.state;
+        const portalUsernames = [...portalUsers.keys()];
+        const keycloakUserObjects = [...keycloakUsers.values()];
+
+        const displayUsers = keycloakUserObjects.map(keycloakUser => (
+            {
+                username: keycloakUser.username,
+                email: keycloakUser.email,
+                dateAdded: `${new Date(keycloakUser.createdTimestamp).toLocaleString('default', { month: 'long'})} ${new Date(keycloakUser.createdTimestamp).getFullYear()}`,
+                userAccess: portalUsernames.includes(keycloakUser.username) ? <a onClick={this.deleteUser}><SubtractAlt16 fill="red" />Remove User</a> : ''
+            }
+        ));
+
+        this.setState({
+            displayUsers
+        });
+
+        console.log(this.state.displayUsers);
+    }
+
+    deleteUser(e) {
+        console.log(e);
     }
 
     render() {
         return (
-            <DataTable rows={rowData} headers={headerData}>
+            <DataTable rows={this.state.displayUsers} headers={headerData}>
                 {({ rows, headers, getHeaderProps, getTableProps }) => (
                     <TableContainer>
                         <Table {...getTableProps()}>
@@ -70,11 +106,11 @@ class DeleteUser extends Component {
 const headerData = [
     {
         header: 'User Name',
-        key: 'userName',
+        key: 'username',
     },
     {
-        header: 'User Role',
-        key: 'userRole',
+        header: 'User Email',
+        key: 'email',
     },
     {
         header: 'Date Added',
