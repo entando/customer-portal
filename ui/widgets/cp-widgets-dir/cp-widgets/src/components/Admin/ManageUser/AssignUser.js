@@ -13,7 +13,7 @@ class AssignUser extends Component {
             projectId: '',
             assignUser: '',
             selectRole: '',
-            users: [],
+            users: new Map(),
             projects: {}
         }
     }
@@ -27,14 +27,19 @@ class AssignUser extends Component {
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const users = (await portalUserApi.apiUsersGet(this.props.serviceUrl)).data;
+            const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(this.props.keycloakUrl)).data);
             const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
-            console.log(await apiKeycloakUserGet(this.props.keycloakUrl));
             this.setState({
                 users,
                 projects
             });
         }
+    }
+
+    mapKeycloakUserEmails = keycloakUsers => {
+        const usernameEmailMap = new Map();
+        keycloakUsers.forEach(keycloakUser => usernameEmailMap.set(keycloakUser.username, keycloakUser.email));
+        return usernameEmailMap;
     }
 
 
@@ -47,15 +52,20 @@ class AssignUser extends Component {
 
     handleFormSubmit = (event) => {
         event.preventDefault();
-        this.assignUserToProject(this.state.projectId, this.state.assignUser)
+        const { projectId, assignUser } = this.state;
+
+        if (projectId.length !== 0 && assignUser.length !== 0) {
+            this.assignUserToProject(projectId, assignUser)
+        }
+
+        // TODO: improved validation and rejection
     };
 
     assignUserToProject = async (projectId, username) => {
-        const portalUserId = await this.getPortalUserId(username);
+        const portalUserId = await this.getPortalUserId({ username, email: this.state.users.get(username) });
         const result = await apiAddUserToProject(this.props.serviceUrl, projectId, portalUserId);
-        console.log(result);
-        this.render();
         // TODO: Feedback if succeeded or failed.
+        this.render();
     }
 
     getPortalUserId = async keycloakUser => {
@@ -65,7 +75,7 @@ class AssignUser extends Component {
             portalUserId = portalUser.data.id;
         } catch (e) {
             if (e.message.toLowerCase().includes('not found')) {
-                const portalUser = await this.createPortalUser(keycloakUser.username, keycloakUser.email);
+                const portalUser = await this.createPortalUser(keycloakUser);
                 portalUserId = portalUser.data.id;
             }
         }
@@ -73,8 +83,8 @@ class AssignUser extends Component {
         return portalUserId;
     }
 
-    createPortalUser = async (username, email) => {
-        await portalUserApi.apiUserPost({ username, email });
+    createPortalUser = async keycloakUser => {
+        return await portalUserApi.apiUserPost(this.props.serviceUrl, { username: keycloakUser.username, email: keycloakUser.email });
     }
 
     setupFormComponents() {
@@ -82,8 +92,8 @@ class AssignUser extends Component {
         const projectIdsNames = this.state.projects;
         let userList, projectList = userList = null;
 
-        if (users != null && users.length > 0) {
-            userList = users.map((assignUser, i) => <SelectItem key={i} text={assignUser.username} value={assignUser.id}>{assignUser.username}</SelectItem>);
+        if (users.size > 0) {
+            userList = [...users.keys()].map((assignUser, i) => <SelectItem key={i} text={assignUser} value={assignUser}>{assignUser}</SelectItem>);
             userList.unshift(<SelectItem key="-1" text="Assign User" value="" />)
         } else {
             userList = <SelectItem text="There are currently no users in the system" value="" />
@@ -96,11 +106,11 @@ class AssignUser extends Component {
             projectList = <SelectItem text="There are currently no projects in the system" value="" />
         }
 
-        return { userList, projectList, roleSelection: this.props.roles };
+        return { userList, projectList };
     }
 
     render() {
-        const { userList, roleSelection, projectList } = this.setupFormComponents();
+        const { userList, projectList } = this.setupFormComponents();
 
         return (
             <div className="">
@@ -117,12 +127,6 @@ class AssignUser extends Component {
                             <div className="bx--col">
                                 <Select name="assignUser" labelText="Assign User" value={this.state.assignUser} onChange={this.handleChanges}>
                                     {userList}
-                                </Select>
-                            </div>
-                            <div className="bx--col">
-                                <Select name="selectRole" defaultValue="ROLE_ADMIN" labelText="Select Role" value={this.state.selectRole} onChange={this.handleChanges}>
-                                    <SelectItem text="Please select a role" value="">Please select a role</SelectItem>
-                                    {roleSelection.map((selectRole, i) => <SelectItem key={i} text={selectRole.name} value={selectRole.value}>{selectRole.name}</SelectItem>)}
                                 </Select>
                             </div>
                         </div>
