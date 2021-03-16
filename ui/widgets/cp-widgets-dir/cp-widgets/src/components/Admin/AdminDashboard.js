@@ -54,7 +54,8 @@ class AdminDashboard extends React.Component {
         if (event.key === 'Enter') {
             const newFilteredState = this.state.customers.filter(customer => customer.name.toLowerCase().includes(event.target.value.toLowerCase()))
             this.setState({
-                filteredCustomers: newFilteredState
+                filteredCustomers: newFilteredState,
+                currentPage: 0
             })
         }
         else {
