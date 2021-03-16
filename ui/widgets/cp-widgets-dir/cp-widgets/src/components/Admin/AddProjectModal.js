@@ -136,7 +136,8 @@ class AddProjectModal extends Component {
                 buttonTriggerText={i18n.t('buttons.addProject')}
                 modalHeading="Add a project"
                 buttonTriggerClassName="add-project bx--btn bx--btn--tertiary"
-                className="modal-form modal-form-project"
+                className="modal-form"
+                id="modal-form-project"
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">
@@ -155,7 +156,7 @@ class AddProjectModal extends Component {
                             labelText={i18n.t('adminDashboard.addProject.projectName')} 
                             value={this.state.name} 
                             onChange={this.handleChanges} 
-                            invalidText="This field is required" 
+                            invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["name"]} 
                         />
                         <TextInput 
@@ -163,7 +164,7 @@ class AddProjectModal extends Component {
                             labelText={i18n.t('adminDashboard.addProject.projectDesc')} 
                             value={this.state.description} 
                             onChange={this.handleChanges} 
-                            invalidText="This field is required" 
+                            invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["description"]} 
                         />
                         <TextInput 
@@ -189,7 +190,7 @@ class AddProjectModal extends Component {
                             labelText={i18n.t('adminDashboard.addProject.contactEmail')} 
                             value={this.state.contactEmail} 
                             onChange={this.handleChanges} 
-                            invalidText="Email is not valid" 
+                            invalidText={i18n.t('validation.invalid.email')} 
                             invalid={this.state.invalid["contactEmail"]} 
                         />
                         <TextArea 
