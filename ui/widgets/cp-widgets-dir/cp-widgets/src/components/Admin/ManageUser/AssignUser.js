@@ -12,7 +12,6 @@ class AssignUser extends Component {
         this.state = {
             projectId: '',
             assignUser: '',
-            selectRole: '',
             users: new Map(),
             projects: {}
         }

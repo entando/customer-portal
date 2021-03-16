@@ -3,38 +3,6 @@ import { Accordion, AccordionItem } from 'carbon-components-react';
 import AssignUser from './AssignUser';
 import DeleteUser from './DeleteUser';
 
-const roles = [
-    {
-        name: 'Admin',
-        value: 'ROLE_ADMIN'
-    },
-    {
-        name: 'Support',
-        value: 'ROLE_SUPPORT'
-    },
-    {
-        name: 'Partner',
-        value: 'ROLE_PARTNER'
-    },
-    {
-        name: 'Customer',
-        value: 'ROLE_CUSTOMER'
-    }
-]
-
-const user = [
-    {
-        label: <div><h4>Assign a new User</h4></div>,
-        content: <AssignUser roles={roles} />,
-        open: true
-    },
-    {
-        label: <div><h4>Manage all users</h4></div>,
-        content: <DeleteUser roles={roles} />,
-        open: false
-    }
-];
-
 class ManageUser extends Component {
 
     userFunctionality;
@@ -43,12 +11,12 @@ class ManageUser extends Component {
         this.userFunctionality = [
             {
                 label: <div><h4>Assign a new User</h4></div>,
-                content: <AssignUser roles={roles} serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl}/>,
+                content: <AssignUser serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl} />,
                 open: true
             },
             {
                 label: <div><h4>Manage all users</h4></div>,
-                content: <DeleteUser roles={roles} serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl}/>,
+                content: <DeleteUser serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl} />,
                 open: false
             }
         ]
