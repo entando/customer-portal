@@ -5,6 +5,25 @@ import { apiUsersGet, apiUserDelete } from '../../../api/portalusers';
 import withKeycloak from '../../../auth/withKeycloak';
 import { apiKeycloakUserGet } from '../../../api/keycloak';
 
+const headerData = [
+    {
+        header: 'User Name',
+        key: 'username',
+    },
+    {
+        header: 'User Email',
+        key: 'email',
+    },
+    {
+        header: 'Date Added',
+        key: 'dateAdded',
+    },
+    {
+        header: 'User Access',
+        key: 'userAccess',
+    }
+];
+
 class DeleteUser extends Component {
     constructor(props) {
         super(props);
@@ -27,8 +46,6 @@ class DeleteUser extends Component {
         if (authenticated) {
             const portalUsers = this.handleMapFormatting((await apiUsersGet(this.props.serviceUrl)).data);
             const keycloakUsers = this.handleMapFormatting((await apiKeycloakUserGet(this.props.keycloakUrl)).data);
-
-            console.log(portalUsers, keycloakUsers);
 
             this.setState({
                 portalUsers,
@@ -53,22 +70,34 @@ class DeleteUser extends Component {
 
         const displayUsers = keycloakUserObjects.map(keycloakUser => (
             {
+                id:  keycloakUser.username,
                 username: keycloakUser.username,
                 email: keycloakUser.email,
                 dateAdded: `${new Date(keycloakUser.createdTimestamp).toLocaleString('default', { month: 'long'})} ${new Date(keycloakUser.createdTimestamp).getFullYear()}`,
-                userAccess: portalUsernames.includes(keycloakUser.username) ? <a onClick={this.deleteUser}><SubtractAlt16 fill="red" />Remove User</a> : ''
+                userAccess: portalUsernames.includes(keycloakUser.username) ? <a onClick={event => this.handleRemoveUser(keycloakUser.username, event)} href=""><SubtractAlt16 fill="red" />Remove User</a> : ''
             }
         ));
 
         this.setState({
             displayUsers
         });
-
-        console.log(this.state.displayUsers);
     }
 
-    deleteUser(e) {
-        console.log(e);
+    handleRemoveUser = (username, event) => {
+        event.preventDefault();
+        const userId = this.state.portalUsers.get(username).id;
+        apiUserDelete(this.props.serviceUrl, userId).then(res => {
+            if (res.status === 204) {
+                const updatedPortalUsers = this.state.portalUsers;
+                updatedPortalUsers.delete(username);
+                this.setState({
+                    portalUsers: updatedPortalUsers
+                });
+                this.handleUserDisplay();
+            } else {
+                // TODO: Error message
+            }
+        });
     }
 
     render() {
@@ -102,55 +131,5 @@ class DeleteUser extends Component {
         );
     }
 }
-
-const headerData = [
-    {
-        header: 'User Name',
-        key: 'username',
-    },
-    {
-        header: 'User Email',
-        key: 'email',
-    },
-    {
-        header: 'Date Added',
-        key: 'dateAdded',
-    },
-    {
-        header: 'User Access',
-        key: 'userAccess',
-    }
-];
-
-const rowData = [
-    {
-        id: 'a',
-        userName: 'User1',
-        userRole: 'Role1',
-        dateAdded: 'April, 2019',
-        userAccess: <a onClick=''><SubtractAlt16 fill="red" /> Remove User</a>,
-    },
-    {
-        id: 'b',
-        userName: 'User2',
-        userRole: 'Role2',
-        dateAdded: 'October, 2018',
-        userAccess: <a onClick=""><SubtractAlt16 fill="red" /> Remove User</a>
-    },
-    {
-        id: 'c',
-        userName: 'User3',
-        userRole: 'Role3',
-        dateAdded: 'August, 2017',
-        userAccess: <a onClick=""><SubtractAlt16 fill="red" /> Remove User</a>
-    },
-    {
-        id: 'd',
-        userName: 'User4',
-        userRole: 'Role4',
-        dateAdded: 'October, 2019',
-        userAccess: <a onClick=""><SubtractAlt16 fill="red" /> Remove User</a>
-    }
-];
 
 export default withKeycloak(DeleteUser);

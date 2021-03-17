@@ -54,11 +54,14 @@ class AssignUser extends Component {
         const formIsValid = this.handleFormValidation();
 
         if (formIsValid) {
-            this.assignUserToProject(projectId, assignUser);
-            window.location.reload(false);
+            this.assignUserToProject(projectId, assignUser).then(res => {
+                if (res.status === 201) {
+                    window.location.reload();
+                } else {
+                    // TODO: Show error message
+                }
+            });
         }
-
-        // TODO: improved validation and rejection
     };
 
     handleFormValidation() {
@@ -84,9 +87,7 @@ class AssignUser extends Component {
 
     assignUserToProject = async (projectId, username) => {
         const portalUserId = await this.getPortalUserId({ username, email: this.state.users.get(username) });
-        const result = await apiAddUserToProject(this.props.serviceUrl, projectId, portalUserId);
-        // TODO: Feedback if succeeded or failed.
-        this.render();
+        return await apiAddUserToProject(this.props.serviceUrl, projectId, portalUserId);
     };
 
     getPortalUserId = async keycloakUser => {
