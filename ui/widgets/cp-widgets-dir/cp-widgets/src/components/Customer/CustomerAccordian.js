@@ -6,6 +6,7 @@ import { apiGetProjectsUsers } from '../../api/projects';
 import CustomTable from './customDataTable';
 import CustomerDetails from './customerDetails';
 import { hasKeycloakClientRole } from '../../api/helpers';
+import EditCustomerModal from '../Admin/EditCustomerModal';
 
 class CustomerAccordian extends React.Component {
     constructor(props) {
@@ -93,6 +94,7 @@ class CustomerAccordian extends React.Component {
                         <CustomerDetails serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} /> : null 
                     }
                     <AccordionItem title={this.props.title}>
+                        <EditCustomerModal/>  <br/> 
                         <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} />
                     </AccordionItem></div> 
                 : null
