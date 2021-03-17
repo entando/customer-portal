@@ -79,7 +79,6 @@ class EditProjectForm extends Component {
         const name = input.name;
         const value = input.value;
         this.setState({ [name]: value });
-        this.handleValidation();
     };
 
     async getCustomers() {
