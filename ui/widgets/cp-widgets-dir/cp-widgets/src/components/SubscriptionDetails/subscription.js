@@ -6,6 +6,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiUsersGet } from '../../api/portalusers';
 import { apiProjectGet } from '../../api/projects'; 
 import { hasKeycloakClientRole } from '../../api/helpers';
+import EditSubscriptionModal from '../Admin/EditSubscriptionModal';
 
 const subscriptionData = {
     description: 'Entando Product Support Subscription Suplier Portal',
@@ -139,6 +140,9 @@ class Subscription extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
+                                        {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? 
+                                            <EditSubscriptionModal subscription={this.state.subscription.data} serviceUrl={this.props.serviceUrl}/>
+                                        : null}
                                     </Tile>
                                     <br/>
                                     <TicketList projectId={this.state.subscription.data.project.id} serviceUrl={this.props.serviceUrl} />
