@@ -18,7 +18,8 @@ class OpenTicket extends Component {
             status: 'To Do',
             createDate: '',
             updateDate: '',
-            role: ''
+            role: '',
+            invalid: {}
         };
         this.types = ["Bug", "Task"];
         this.priorities = ['Lowest', 'Low', 'High', 'Highest'];
@@ -51,6 +52,29 @@ class OpenTicket extends Component {
         }
     }
 
+    handleValidation() {
+        let invalid = {};
+        let formIsValid = true;
+
+        if(this.state.systemId === ''){
+          formIsValid = false;
+          invalid['systemId'] = true;
+        }
+
+        if(this.state.type === ''){
+            formIsValid = false;
+            invalid['type'] = true;
+        }
+
+        if(this.state.description === ''){
+            formIsValid = false;
+            invalid['description'] = true;
+        }
+
+        this.setState({invalid: invalid});
+        return formIsValid;
+    }
+
     handleChanges = (e) => {
         const input = e.target;
         const name = input.name;
@@ -60,8 +84,13 @@ class OpenTicket extends Component {
 
     handleFormSubmit = (event) => {
         event.preventDefault();
-        this.createTicket();
-        window.location.reload(false);
+
+        const formIsValid = this.handleValidation();
+
+        if (formIsValid) {
+            this.createTicket();
+            window.location.reload(false);
+        }
     };
 
     async fetchProjects() {
@@ -146,7 +175,15 @@ class OpenTicket extends Component {
                         <div className="bx--grid">
                             <div className="bx--row">
                                 <div className="bx--col">
-                                    <Select defaultValue="ticketing-system" name="systemId" labelText={i18n.t('supportTicketForm.selectProject')} value={this.state.systemId} onChange={this.handleChanges}>
+                                    <Select 
+                                        defaultValue="ticketing-system" 
+                                        name="systemId" 
+                                        labelText={i18n.t('supportTicketForm.selectProject')} 
+                                        value={this.state.systemId} 
+                                        onChange={this.handleChanges}
+                                        invalidText={i18n.t('validation.invalid.required')}
+                                        invalid={this.state.invalid['systemId']} 
+                                    >
                                         <SelectItem
                                             text={i18n.t('supportTicketForm.select')}
                                             value="ticketing-system"
@@ -156,7 +193,15 @@ class OpenTicket extends Component {
                                             <SelectItem key={i} text={project.name} value={project.systemId}>{project.name}</SelectItem>
                                         )}) : null}
                                     </Select>
-                                    <Select defaultValue="Task" name="type" labelText={i18n.t('supportTicketForm.type')} value={this.state.type} onChange={this.handleChanges}>
+                                    <Select 
+                                        defaultValue="Task" 
+                                        name="type" 
+                                        labelText={i18n.t('supportTicketForm.type')} 
+                                        value={this.state.type} 
+                                        onChange={this.handleChanges}
+                                        invalidText={i18n.t('validation.invalid.required')}
+                                        invalid={this.state.invalid['type']} 
+                                    >
                                         <SelectItem
                                             text="Select"
                                             value="Task"
@@ -165,7 +210,13 @@ class OpenTicket extends Component {
                                             <SelectItem key={i} text={type} value={type}>{type}</SelectItem>
                                         ))}
                                     </Select>
-                                    <Select defaultValue="Low" name="priority" labelText={i18n.t('supportTicketForm.priority')} value={this.state.priority} onChange={this.handleChanges}>
+                                    <Select 
+                                        defaultValue="Low" 
+                                        name="priority" 
+                                        labelText={i18n.t('supportTicketForm.priority')} 
+                                        value={this.state.priority} 
+                                        onChange={this.handleChanges}
+                                    >
                                         <SelectItem
                                             text="Select"
                                             value="Low"
@@ -178,7 +229,15 @@ class OpenTicket extends Component {
                             </div>
                             <div className="bx--row">
                                 <div className="bx--col">
-                                    <TextArea labelText={i18n.t('supportTicketForm.ticketDescription')} placeholder={i18n.t('supportTicketForm.addticketDescription')} name="description" value={this.state.description} onChange={this.handleChanges}  />
+                                    <TextArea 
+                                        labelText={i18n.t('supportTicketForm.ticketDescription')} 
+                                        placeholder={i18n.t('supportTicketForm.addticketDescription')} 
+                                        name="description" 
+                                        value={this.state.description} 
+                                        onChange={this.handleChanges}  
+                                        invalidText={i18n.t('validation.invalid.required')}
+                                        invalid={this.state.invalid['description']} 
+                                    />
                                     <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}  </Button>
                                 </div>
                             </div>

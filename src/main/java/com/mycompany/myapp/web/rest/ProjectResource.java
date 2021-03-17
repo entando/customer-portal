@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,7 @@ import com.mycompany.myapp.service.CustomerService;
 import com.mycompany.myapp.service.ProjectService;
 import com.mycompany.myapp.service.TicketService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import org.springframework.security.core.Authentication;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -83,6 +85,7 @@ public class ProjectResource {
     @PostMapping("/projects")
     public ResponseEntity<Project> createProject(@Valid @RequestBody Project project) throws URISyntaxException {
         log.debug("REST request to save Project : {}", project);
+
         if (project.getId() != null) {
             throw new BadRequestAlertException("A new project cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -115,27 +118,27 @@ public class ProjectResource {
                 HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, project.getId().toString()))
                 .body(result);
     }
-    
-	@GetMapping("/projects") 
+
+	@GetMapping("/projects")
 	public List<Project> getAllProjects() {
-		log.debug("REST request to get all Projects"); 
-		return projectService.findAll(); 
+		log.debug("REST request to get all Projects");
+		return projectService.findAll();
 	}
-    
+
 	@GetMapping("/projects/subscriptions/customer/{customerNumber}")
     public ResponseEntity<List<SubscriptionListResponse>> getSubscriptionsForCustomer(@PathVariable String customerNumber) {
 		List<SubscriptionListResponse> subscriptionList = new ArrayList<>();
-		
+
 		try {
 	    	Optional<Customer> customer = customerService.findByCustomerNumber(customerNumber);
-    	
+
 	        if (customer.isPresent()) {
-	        	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT); 
+	        	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT);
 	        	Set<Project> projects = customer.get().getProjects();
 
 	        	for (Project project: projects) {
 	        		SubscriptionListResponse subscription = new SubscriptionListResponse();
-	        		
+
 	        		subscription.setProjectName(project.getName());
 	        		if (!project.getPartners().isEmpty()) {
 	        			List<String> partners = new ArrayList<>();
@@ -148,25 +151,25 @@ public class ProjectResource {
 	        			subscription.setSubscriptionId(projectSubscription.getId());
 	        			subscription.setStartDate(sdf.format(Date.from(projectSubscription.getStartDate().toInstant())));
         				subscription.setEndDate(sdf.format(Date.from(projectSubscription.getStartDate().plusMonths(projectSubscription.getLengthInMonths()).toInstant())));
-	        			
+
 	        			if(projectSubscription.getEntandoVersion() != null) {
 	        				subscription.setEntandoVersion(projectSubscription.getEntandoVersion().getName());
 	        			}
 	        		}
 	        		subscription.setTickets(project.getTickets().size());
-	        		
+
 	        		subscriptionList.add(subscription);
 	        	}
 	        }
     	} catch(Exception e) {
     		log.error("Error occurred while fetching subscriptions for customer number : " + customerNumber, e);
     	}
-    	
+
         return new ResponseEntity<List<SubscriptionListResponse>>(subscriptionList, HttpStatus.OK);
     }
-    
+
     @GetMapping("/projects/subscriptions/detail")
-    public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(		
+    public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(
             @RequestParam(value = "projectId") Long projectId) {
 
     	SubscriptionDetailResponse subscriptionDetail = new SubscriptionDetailResponse();
@@ -211,6 +214,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/projects/{id}")
+    //@Secured(AuthoritiesConstants.ADMIN)
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
 

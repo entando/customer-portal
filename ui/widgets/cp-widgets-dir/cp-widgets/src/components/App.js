@@ -5,6 +5,7 @@ import Subscription from './SubscriptionDetails/subscription';
 import withKeycloak from '../auth/withKeycloak';
 import { AuthenticatedView, UnauthenticatedView } from '../auth/KeycloakViews';
 import { apiKeycloakToken, apiKeycloakUserGet } from '../api/keycloak';
+import { hasKeycloakClientRole } from '../api/helpers';
 
 class App extends Component {
     constructor(props) {
@@ -30,6 +31,8 @@ class App extends Component {
     render() {
         var { t, keycloak } = this.props;
         var authenticated = keycloak.initialized && keycloak.authenticated;
+        
+        /*
         var role = ''
         if (keycloak.realmAccess) {
             for (var i = 0; i < keycloak.tokenParsed.roles.length; i++) {
@@ -48,8 +51,11 @@ class App extends Component {
               }
             }
         }
+        */
+
+        const role = hasKeycloakClientRole('ROLE_ADMIN');
         
-        if (role === 'Admin' || role === 'Support' || role === 'Partner' || role === 'Customer') {
+        if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') || hasKeycloakClientRole("ROLE_CUSTOMER")) {
             return (
                 <div id="entando-customer-portal">
                     <AuthenticatedView keycloak={keycloak}>

@@ -10,30 +10,30 @@ import i18n from '../../i18n';
 class CustomTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = { 
       data: {}
-    };
+     }
   }
 
   async fetchData() {
     const { t, keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
-
+    
     if (authenticated) {
-      const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
-
-      this.setState({
-        data: projects
-      });
+        const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
+        
+        this.setState({
+            data: projects
+        });
     }
     this.render();
-  }
+}
 
-  componentDidMount() {
+componentDidMount(){
     this.fetchData();
-  }
+}
 
-  componentDidUpdate(prevProps) {
+componentDidUpdate(prevProps) {
     const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
@@ -44,101 +44,74 @@ class CustomTable extends Component {
     }
   }
 
-  render() {
+  render() { 
     return (
       <div>
         <DataTable rows={rowData} headers={headerData} data={this.state.data}>
-          {({ rows, headers, getHeaderProps, getTableProps }) => (
-            <TableContainer title={i18n.t('customerDashboard.subscriptions')} description={i18n.t('customerDashboard.tableDesc')}>
-              <Table {...getTableProps()}>
-                <TableHead>
-                  <TableRow>
-                    {headers.map(header => (
-                      <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {/*
-                {Object.keys(this.state.data).length !== 0 ? 
-                  this.state.data.data.map((project, index) => (
-                    project.projectSubscriptions.map((sub) => (
-                      <TableRow key={index} >
-                          <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
-                          {project.partners ? 
+        {({ rows, headers, getHeaderProps, getTableProps }) => (
+          <TableContainer title={i18n.t('customerDashboard.subscriptions')} description={i18n.t('customerDashboard.tableDesc')}>
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  {headers.map((header) => (
+                    <TableHeader {...getHeaderProps({ header })}>
+                      {header.header}
+                    </TableHeader>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+              {Object.keys(this.state.data).length !== 0 ? 
+                  this.state.data.data.map((project, index) => {
+                    if (project.projectSubscriptions.length === 0) {
+                      return(
+                        <TableRow key={index} >
+                          <TableCell>{project.name}</TableCell>
+                          {project.partners.length !== 0 ? 
                             <TableCell>
                               {project.partners.map(partner => (
                                 <p>{partner.name}</p>
                               ))}
                             </TableCell> 
-                            : <TableCell>None</TableCell>}
+                          : <TableCell>None</TableCell>}
                           {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
-                          <TableCell>{sub.status}</TableCell>
-                          <TableCell>{String(new Date(sub.startDate))}</TableCell>
-                          <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)))}</TableCell>
+                          <TableCell>None</TableCell>
+                          <TableCell>None</TableCell>
+                          <TableCell>None</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
                       </TableRow>
-                  )))) : null
-              }*/}
-                  {Object.keys(this.state.data).length !== 0
-                    ? this.state.data.data.map((project, index) => {
-                        if (project.projectSubscriptions.length === 0) {
-                          return (
-                            <TableRow key={index}>
-                              <TableCell>{project.name}</TableCell>
-                              {project.partners.length !== 0 ? (
+                      )
+                    }
+                    else {
+                      var sub = project.projectSubscriptions[project.projectSubscriptions.length - 1];
+                      return(
+                          <TableRow key={index} >
+                              <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
+                              {project.partners.length !== 0 ? 
                                 <TableCell>
                                   {project.partners.map(partner => (
                                     <p>{partner.name}</p>
                                   ))}
-                                </TableCell>
-                              ) : (
-                                <TableCell>None</TableCell>
-                              )}
-                              {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
-                              <TableCell>None</TableCell>
-                              <TableCell>None</TableCell>
-                              <TableCell>None</TableCell>
-                              <TableCell>{project.tickets.length}</TableCell>
-                            </TableRow>
-                          );
-                        } else {
-                          return project.projectSubscriptions.map(sub => (
-                            <TableRow key={index}>
-                              <TableCell>
-                                <Link to={`/subscription-details/${sub.id}`}>{project.name}</Link>
-                              </TableCell>
-                              {project.partners.length !== 0 ? (
-                                <TableCell>
-                                  {project.partners.map(partner => (
-                                    <p>{partner.name}</p>
-                                  ))}
-                                </TableCell>
-                              ) : (
-                                <TableCell>None</TableCell>
-                              )}
+                                </TableCell> 
+                                : <TableCell>None</TableCell>}
                               {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
                               <TableCell>{sub.status}</TableCell>
                               <TableCell>{String(new Date(sub.startDate))}</TableCell>
-                              <TableCell>
-                                {String(
-                                  new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths))
-                                )}
-                              </TableCell>
+                              <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)))}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
-                            </TableRow>
-                          ));
-                        }
-                      })
-                    : null}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </DataTable>
-      </div>
-    );
-  }
+                          </TableRow>
+                        
+                      )
+                    }
+                  }) : null
+              }
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </DataTable>
+    </div>
+  )}
 }
 /*
 const headerData = [
@@ -172,71 +145,72 @@ const headerData = [
 const headerData = [
   {
     header: i18n.t('customerDashboard.projectName'),
-    key: 'projectName'
+    key: 'projectName',
   },
   {
     header: i18n.t('customerDashboard.partners'),
-    key: 'partners'
+    key: 'partners',
   },
   {
     header: i18n.t('customerDashboard.entandoVersion'),
-    key: 'entandoVersion'
+    key: 'entandoVersion',
   },
   {
     header: i18n.t('customerDashboard.status'),
-    key: 'status'
+    key: 'status',
   },
   {
     header: i18n.t('customerDashboard.startDate'),
-    key: 'startDate'
+    key: 'startDate',
   },
   {
-    header: i18n.t('customerDashboard.endDate'),
-    key: 'endDate'
+      header: i18n.t('customerDashboard.endDate'),
+      key: 'endDate',
   },
   {
-    header: i18n.t('customerDashboard.openTickets'),
-    key: 'openTickets'
-  }
+      header: i18n.t('customerDashboard.openTickets'),
+      key: 'openTickets',
+  },
 ];
+
 
 const rowData = [
   {
-    id: 'a',
-    projectName: <a href="">Supplier Portal</a>,
-    partnerName: 'Leonardo',
-    entandoVersion: 5.2,
-    startDate: 'October, 2019',
-    endDate: 'October, 2022',
-    openTickets: '5'
-  },
-  {
-    id: 'b',
-    projectName: <a href="">Task Manager</a>,
-    partnerName: 'Veriday',
-    entandoVersion: 5.2,
-    startDate: 'July, 2019',
-    endDate: 'July, 2022',
-    openTickets: '2'
-  },
-  {
-    id: 'c',
-    projectName: <a href="">Sales Coordination App</a>,
-    partnerName: 'Accenture',
-    entandoVersion: 6.2,
-    startDate: 'September, 2019',
-    endDate: 'September, 2022',
-    openTickets: '2'
-  },
-  {
-    id: 'd',
-    projectName: <a href="">Website</a>,
-    partnerName: 'Veriday',
-    entandoVersion: 5.2,
-    startDate: 'October, 2019',
-    endDate: 'October, 2022',
-    openTickets: '1'
-  }
+       id: 'a',
+       projectName: <a href="">Supplier Portal</a>,
+       partnerName: 'Leonardo',
+       entandoVersion: 5.2,
+       startDate: 'October, 2019',
+       endDate: 'October, 2022',
+       openTickets: '5',
+    },
+    {
+      id: 'b',
+      projectName: <a href="">Task Manager</a>,
+      partnerName: 'Veriday',
+      entandoVersion: 5.2,
+      startDate: 'July, 2019',
+      endDate: 'July, 2022',
+      openTickets: '2',
+    },
+    {
+      id: 'c',
+      projectName: <a href="">Sales Coordination App</a>,
+      partnerName: 'Accenture',
+      entandoVersion: 6.2,
+      startDate: 'September, 2019',
+      endDate: 'September, 2022',
+      openTickets: '2',
+    },
+    {
+      id: 'd',
+      projectName: <a href="">Website</a>,
+      partnerName: 'Veriday',
+      entandoVersion: 5.2,
+      startDate: 'October, 2019',
+      endDate: 'October, 2022',
+      openTickets: '1',
+    }  
 ];
-
+ 
 export default withKeycloak(CustomTable);
