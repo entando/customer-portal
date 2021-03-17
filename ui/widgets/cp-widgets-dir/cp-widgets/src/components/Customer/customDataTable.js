@@ -79,6 +79,7 @@ componentDidUpdate(prevProps) {
                           <TableCell>None</TableCell>
                           <TableCell>None</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
+                          <TableCell></TableCell>
                       </TableRow>
                       )
                     }
@@ -171,6 +172,10 @@ const headerData = [
       header: i18n.t('customerDashboard.openTickets'),
       key: 'openTickets',
   },
+  {
+      header: i18n.t('customerDashboard.action'),
+      key: 'action',
+  }
 ];
 
 
