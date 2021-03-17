@@ -3,7 +3,7 @@ import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
-import { apiProjectPost, apiProjectsGet } from '../../api/projects';
+import { apiProjectPut, apiProjectsGet } from '../../api/projects';
 
 class EditProjectModal extends Component {
     constructor(props) {
@@ -55,13 +55,6 @@ class EditProjectModal extends Component {
         return formIsValid;
     }
 
-    async getAllProjects() {
-        const projects = await apiProjectsGet(this.props.serviceUrl);
-        this.setState({
-            projects: projects.data
-        })
-    }
-
     componentDidUpdate(prevProps) {
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
@@ -91,12 +84,19 @@ class EditProjectModal extends Component {
         }
     }
 
-    async projectPost(project) {
+    async getAllProjects() {
+        const projects = await apiProjectsGet(this.props.serviceUrl);
+        this.setState({
+          projects: projects.data
+        });
+      }
+
+    async projectPut(project) {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const result = await apiProjectPost(this.props.serviceUrl, project);
-            await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id)
+            const result = await apiProjectPut(this.props.serviceUrl, project);
+            //await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id)
         }
     }
 
@@ -105,6 +105,7 @@ class EditProjectModal extends Component {
 
         if (formIsValid) {
             const project = {
+                id: this.props.project.id,
                 name: this.state.name,
                 description: this.state.description,
                 systemId: this.state.systemId,
@@ -114,23 +115,36 @@ class EditProjectModal extends Component {
                 notes: this.state.notes
             }
             for (var i = 0; i < this.state.projects.length; i++) {
-                if(project.systemId === this.state.projects[i].systemId) {
+                if((project.systemId === this.state.projects[i].systemId) && (project.id !== this.state.projects[i].id)) {
                     window.alert('That system id is already in use in another project');
                     return;
                 }
             }
-            this.projectPost(project);
+            this.projectPut(project);
             window.location.reload(false);
         }
     };
 
     componentDidMount() {
-        this.getCustomers();
-        this.getAllProjects();
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        if (authenticated) {
+          this.getCustomers();
+          this.getAllProjects();
+          this.setState({
+            name: this.props.project.name,
+            description: this.props.project.description,
+            systemId: this.props.project.systemId,
+            contactName: this.props.project.contactName,
+            contactPhone: this.props.project.contactPhone,
+            contactEmail:this.props.project.contactEmail,
+            notes:this.props.project.notes
+          })
+        }
     }
 
     render() {
-        const customerList = ['Customer1', 'Customer2', 'Customer3'];
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}
@@ -143,14 +157,6 @@ class EditProjectModal extends Component {
                 <div className="form-container">
                     <p> {i18n.t('adminDashboard.addProject.desc')} </p>
                     <Form onSubmit={this.handleFormSubmit}>
-                        <Select defaultValue="customer-list" name="customerId" labelText={i18n.t('adminDashboard.addProject.customerList')} value={this.state.customerId} onChange={this.handleChanges}>
-                            <SelectItem
-                                text={i18n.t('adminDashboard.addProject.selectCustomer')}
-                                value="customer-list"
-                            />
-                            {Object.keys(this.state.customerList).length !== 0 ? this.state.customerList.data.map((customerList, i) => <SelectItem key={i} text={customerList.name} value={customerList.id}>{customerList.name}</SelectItem>) : null}
-                        </Select>
-
                         <TextInput 
                             name="name" 
                             labelText={i18n.t('adminDashboard.addProject.projectName')} 

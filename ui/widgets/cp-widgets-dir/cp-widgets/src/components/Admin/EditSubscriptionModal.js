@@ -2,23 +2,18 @@ import React, { Component } from 'react';
 import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea, Select, SelectItem, DatePicker, DatePickerInput} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
-import { apiProjectPost, apiProjectsGet } from '../../api/projects';
+import { apiProjectSubscriptionPut } from '../../api/subscriptions';
 
-export default class EditSubscriptionModal extends Component {
+class EditSubscriptionModal extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
-            description: '',
-            commitment: '',
-            type: '',
-            quantityRequest: '',
-            components: '',
             level: '',
-            sartDate: '',
-            endDate: '',
-            License: ''
+            status: '',
+            lengthInMonths: '',
+            startDate: '',
+            notes: '',
         };
     }
 
@@ -29,8 +24,18 @@ export default class EditSubscriptionModal extends Component {
         this.setState({ [name]: value });
     };
 
-    handleFormSubmit = e => {
-        e.preventDefault();
+    handleFormSubmit = (e) => {
+        //e.preventDefault();
+        console.log(this.props.subscription.id)
+        const subscription = {
+            id: this.props.subscription.id,
+            level: this.state.level,
+            status: this.state.status,
+            lengthInMonths: this.state.lengthInMonths,
+            startDate: this.state.startDate,
+            notes: this.state.notes,
+        }
+        this.subscriptionPut(subscription);
     };
 
     isValid() {
@@ -39,8 +44,28 @@ export default class EditSubscriptionModal extends Component {
         }
         return true;
     }
+
+    componentDidMount() {
+        this.setState({
+            level: this.props.subscription.level,
+            status: this.props.subscription.status,
+            lengthInMonths: this.props.subscription.lengthInMonths,
+            startDate: this.props.subscription.startDate,
+            notes: this.props.subscription.notes,
+          })
+    }
+
+    async subscriptionPut(subscription) {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const result = await apiProjectSubscriptionPut(this.props.serviceUrl, subscription);
+        }
+    }
     
     render() {
+        const levelList = ['GOLD', 'PLATINUM'];
+        const statusList = ['NEW', 'ACTIVE', 'EXPIRED'];
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}
@@ -52,13 +77,32 @@ export default class EditSubscriptionModal extends Component {
                 <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
                 <div className="form-container">
                     <Form onSubmit={this.handleFormSubmit}>
-                        <TextArea name="description" labelText="Description" required value={this.state.description} onChange={this.handleChanges}/>
-                        <TextInput name="commitment" labelText="commitment" value={this.state.commitment} onChange={this.handleChanges} />
-                        <TextInput name="type" labelText="Type" value='' onChange=''value={this.state.type} onChange={this.handleChanges} />
-                        <TextInput name="quantityRequest" labelText="quantity Request" value={this.state.quantityRequest} onChange={this.handleChanges} />
-                        <TextInput name="components" labelText="Components" value={this.state.components} onChange={this.handleChanges} />
-                        <TextInput name="level" labelText="Level" value={this.state.level} onChange={this.handleChanges} />
-                        
+                        <Select
+                            name="level"
+                            labelText="Level"
+                            value={this.state.level}
+                            onChange={this.handleChanges}
+                            >
+                            <SelectItem text="Select Level" value="level" />
+                            {levelList.map((level, i) => (
+                                    <SelectItem key={i} text={level} value={level}>
+                                        {level}
+                                    </SelectItem>
+                            ))}
+                        </Select>
+                        <Select
+                            name="status"
+                            labelText="status"
+                            value={this.state.status}
+                            onChange={this.handleChanges}
+                            >
+                            <SelectItem text="Select Status" value="status" />
+                            {statusList.map((status, i) => (
+                                <SelectItem key={i} text={status} value={status}>
+                                    {status}
+                                </SelectItem>
+                            ))}
+                        </Select>
                         <DatePicker dateFormat="m/d/Y" datePickerType="simple">
                             <DatePickerInput
                                 name="startDate"
@@ -70,24 +114,20 @@ export default class EditSubscriptionModal extends Component {
                                 required
                             />
                         </DatePicker>
-
-                        <DatePicker dateFormat="m/d/Y" datePickerType="simple">
-                            <DatePickerInput
-                                name="endDate"
-                                placeholder="mm/dd/yyyy"
-                                labelText="End Date"
-                                value={this.state.endDate}
-                                onChange={ this.handleChanges}
-                                type="text"
-                                required
-                            />
-                        </DatePicker>
-                        <TextInput name="license" labelText="License" value={this.state.license} onChange={this.handleChanges} />
+                        <TextInput name="lengthInMonths" labelText="Length In Months" value={this.state.lengthInMonths} onChange={this.handleChanges} />
+                        <TextArea 
+                            name="notes" 
+                            labelText={i18n.t('adminDashboard.addProject.notes')} 
+                            value={this.state.notes} 
+                            onChange={this.handleChanges} 
+                        />
                     </Form>
                 </div> 
             </ModalWrapper>
         )
     }
 }
+
+export default withKeycloak(EditSubscriptionModal)
 
 
