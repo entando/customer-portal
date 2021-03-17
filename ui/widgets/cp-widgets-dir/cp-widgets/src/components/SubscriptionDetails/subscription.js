@@ -5,6 +5,7 @@ import { apiSubscriptionGet } from '../../api/subscriptions'
 import withKeycloak from '../../auth/withKeycloak';
 import { apiUsersGet } from '../../api/portalusers';
 import { apiProjectGet } from '../../api/projects'; 
+import { hasKeycloakClientRole } from '../../api/helpers';
 
 const subscriptionData = {
     description: 'Entando Product Support Subscription Suplier Portal',
@@ -24,7 +25,6 @@ class Subscription extends React.Component {
         this.state = {
             subscription: '',
             users: {},
-            role: 'Admin',
             project: ''
         }
     }
@@ -69,33 +69,6 @@ class Subscription extends React.Component {
         }
     }
 
-    checkRole() {
-        const { t, keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-
-        var role = ''
-        if (keycloak.realmAccess) {
-            for (var i = 0; i < keycloak.tokenParsed.roles.length; i++) {
-              if (keycloak.tokenParsed.roles[i] == "ROLE_ADMIN") {
-                role = 'Admin'
-                break;
-              }
-              else if (keycloak.tokenParsed.roles[i] == "ROLE_SUPPORT") {
-                role = 'Support'
-              }
-              else if (keycloak.tokenParsed.roles[i] == "ROLE_PARTNER") {
-                role = 'Partner'
-              }
-              else if (keycloak.tokenParsed.roles[i] == "ROLE_CUSTOMER") {
-                role = 'Customer'
-              }
-            }
-            this.setState({
-                role: role
-            })
-        }
-    }
-
     componentDidMount(){
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
@@ -104,7 +77,6 @@ class Subscription extends React.Component {
         if (this.state.subscription !== '') {
             this.getProject(this.state.subscription.project.id);
         }
-        this.checkRole();
         this.getPortalUsers();
     }
 
@@ -119,7 +91,6 @@ class Subscription extends React.Component {
           if (this.state.subscription !== '') {
             this.getProject(this.state.subscription.project.id);
           }
-          this.checkRole();
           this.getPortalUsers();
         }
       }
@@ -129,7 +100,7 @@ class Subscription extends React.Component {
         var { t, keycloak } = this.props;
         var authenticated = keycloak.initialized && keycloak.authenticated;
 
-        if (this.state.role === 'Admin' || this.state.role === 'Support' || this.state.role === 'Partner' || this.state.role === 'Customer') {
+        if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') || hasKeycloakClientRole('ROLE_CUSTOMER')) {
 
             // wait for data from api
             if (Object.keys(this.state.users).length !== 0 && Object.keys(this.state.subscription).length !== 0) {
@@ -137,7 +108,7 @@ class Subscription extends React.Component {
                 for (var i = 0; i < this.state.users.data.length; i++) {
                     if ((keycloak.tokenParsed.preferred_username === this.state.users.data[i].username 
                         && this.state.users.data[i].project.id === this.state.subscription.data.project.id) 
-                        || (this.state.role === 'Admin' || this.state.role === 'Support')) {
+                        || (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT'))) {
                             return (
                                 <div className="subscription-details">
                                     {Object.keys(this.state.subscription).length !== 0 ? <div><p>Project Id: {this.state.subscription.data.project.id}</p>

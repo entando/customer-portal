@@ -18,18 +18,6 @@ class TicketList extends Component {
     const { t, keycloak } = this.props;
     var authenticated = keycloak.initialized && keycloak.authenticated;
 
-    /*
-    if (keycloak.realmAccess) {
-      for (var i = 0; i < keycloak.tokenParsed.roles.length; i++) {
-        console.log(keycloak.tokenParsed.roles[i])
-        console.log(keycloak.tokenParsed.preferred_username)
-        if (keycloak.tokenParsed.roles[i] == "ROLE_ADMIN") {
-          authenticated = true;
-        }
-      }
-    }
-    */
-
     if (authenticated) {
       try {
           const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
@@ -37,7 +25,6 @@ class TicketList extends Component {
           for(var i = 0; i < tickets.data.length; i++) {
             apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id)
           }
-          //var tickets = await apiGetProjectsTickets(this.props.serviceUrl, this.props.projectId);
 
           this.setState({
               data: tickets

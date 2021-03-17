@@ -8,13 +8,22 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.swing.*;
 import javax.validation.Valid;
 
+import com.mycompany.myapp.security.AuthoritiesConstants;
+import com.mycompany.myapp.security.SpringSecurityAuditorAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +46,7 @@ import io.github.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
+@Transactional
 public class CustomerResource {
 
     private final Logger log = LoggerFactory.getLogger(CustomerResource.class);
@@ -98,11 +108,14 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
      */
     @GetMapping("/customers")
+    //@Secured(AuthoritiesConstants.ADMIN)
     public List<Customer> getAllCustomers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Authorities: " + authentication.getAuthorities().toString());
         log.debug("REST request to get all Customers");
         return customerService.findAll();
     }
-    
+
     /**
      * {@code GET  /customers/all} : get map object of all customers' names and numbers.
      *
@@ -112,10 +125,10 @@ public class CustomerResource {
     //@Secured(AuthoritiesConstants.ADMIN) // required?
     public ResponseEntity<Map<String, String>> getCustomersForAdminDashboard() {
         Map<String, String> customers = new HashMap<String, String>();
-        
+
         try {
 	        List<Customer> customerList = customerService.findAll();
-	
+
 	        for (Customer customer : customerList) {
 	        	customers.put(customer.getName(), customer.getCustomerNumber());
 	        }
@@ -146,6 +159,7 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/customers/{id}")
+    //@Secured(AuthoritiesConstants.ADMIN)
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         log.debug("REST request to delete Customer : {}", id);
 

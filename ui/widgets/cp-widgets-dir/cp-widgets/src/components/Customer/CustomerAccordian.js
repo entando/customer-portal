@@ -5,6 +5,7 @@ import { apiGetCustomersProjects } from '../../api/customers';
 import { apiGetProjectsUsers } from '../../api/projects';
 import CustomTable from './customDataTable';
 import CustomerDetails from './customerDetails';
+import { hasKeycloakClientRole } from '../../api/helpers';
 
 class CustomerAccordian extends React.Component {
     constructor(props) {
@@ -20,7 +21,7 @@ class CustomerAccordian extends React.Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
 
         if (authenticated) {
-            if (this.props.role === 'Admin' || this.props.role === 'Support') {
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
                 this.setState({
                     authenticated: true
                 })
@@ -38,7 +39,7 @@ class CustomerAccordian extends React.Component {
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
     
         if (authenticated && changedAuth) {
-            if (this.props.role === 'Admin' || this.props.role === 'Support') {
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
                 this.setState({
                     authenticated: true
                 })
@@ -88,7 +89,7 @@ class CustomerAccordian extends React.Component {
             <div>
                 {this.state.authenticated ?
                 <div>
-                    {this.props.role === 'Customer' ? 
+                    {hasKeycloakClientRole('ROLE_CUSTOMER') ? 
                         <CustomerDetails serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} /> : null 
                     }
                     <AccordionItem title={this.props.title}>
