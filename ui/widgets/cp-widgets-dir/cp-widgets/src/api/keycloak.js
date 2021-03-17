@@ -15,7 +15,7 @@ export const apiKeycloakUserGet = async (serviceUrl) => {
     ...getDefaultKeycloakOptions(),
     method: 'GET',
   };
-  return request(url, options);
+  return await request(url, options);
 };
 
 export const apiKeycloakToken = async (serviceUrl) => {
@@ -33,7 +33,7 @@ export const apiKeycloakToken = async (serviceUrl) => {
     method: 'POST',
     body: keycloakBody ? serialize(keycloakBody) : null,
   };
-  return request(url, options);
+  return await request(url, options);
 };
 
 function serialize(obj) {

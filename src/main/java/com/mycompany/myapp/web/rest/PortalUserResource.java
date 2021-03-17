@@ -115,4 +115,17 @@ public class PortalUserResource {
         portalUserService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
+
+    /**
+     * {@code GET  /portal-users/username/:username} : get the "username" portalUser.
+     * 
+     * @param username the username of the portaluser
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the portalUser, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/portal-users/username/{username}")
+    public ResponseEntity<PortalUser> getPortalUserByUserName(@PathVariable String username) {
+        log.debug("REST request to get PortalUser by username: {}", username);
+        Optional<PortalUser> portalUser = portalUserService.findByUsername(username);
+        return ResponseUtil.wrapOrNotFound(portalUser);
+    }
 }

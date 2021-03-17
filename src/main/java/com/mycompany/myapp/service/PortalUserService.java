@@ -40,4 +40,12 @@ public interface PortalUserService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Finds a portal user by their username.
+     * 
+     * @param username the username of the customer
+     * @return the entity
+     */
+    Optional<PortalUser> findByUsername(String username);
 }

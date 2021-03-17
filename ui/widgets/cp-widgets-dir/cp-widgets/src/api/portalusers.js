@@ -8,10 +8,20 @@ export const apiUserDelete = async (serviceUrl, id) => {
     ...getDefaultOptions(),
     method: 'DELETE',
   };
-  return request(url, options);
+  return await request(url, options);
 };
 
-export const apiUsersGet = async (serviceUrl ) => {
+export const apiUsersPut = async (serviceUrl, user) => {
+  const url = `${serviceUrl}/${resource}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'PUT',
+    body: user ? JSON.stringify(user) : null,
+  };
+  return await request(url, options);
+};
+
+export const apiUsersGet = async (serviceUrl) => {
   const url = getUrl(
     `${serviceUrl}/${resource}`
   );
@@ -20,7 +30,19 @@ export const apiUsersGet = async (serviceUrl ) => {
     method: 'GET',
   };
 
-  return request(url, options);
+  return await request(url, options);
+};
+
+export const apiUserGet = async (serviceUrl, userId) => {
+  const url = getUrl(
+    `${serviceUrl}/${resource}/${userId}`
+  );
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+
+  return await request(url, options);
 };
 
 export const apiUserPost = async (serviceUrl, user) => {
@@ -30,5 +52,17 @@ export const apiUserPost = async (serviceUrl, user) => {
     method: 'POST',
     body: user ? JSON.stringify(user) : null,
   };
-  return request(url, options);
+  return await request(url, options);
+};
+
+export const apiUserGetByUsername = async (serviceUrl, username) => {
+  const url = getUrl(
+    `${serviceUrl}/${resource}/username/${username}`
+  );
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+
+  return await request(url, options);
 };
