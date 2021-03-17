@@ -149,7 +149,7 @@ class EditProjectModal extends Component {
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}
                 modalHeading={i18n.t('adminDashboard.addProject.editTitle')}
-                buttonTriggerClassName="add-project bx--btn bx--btn--tertiary"
+                buttonTriggerClassName="bx--btn bx--btn--ghost"
                 className="modal-form"
                 id="modal-form-project"
                 handleSubmit={this.handleFormSubmit}
