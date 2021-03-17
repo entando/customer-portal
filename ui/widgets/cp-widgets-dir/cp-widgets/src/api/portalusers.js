@@ -8,7 +8,7 @@ export const apiUserDelete = async (serviceUrl, id) => {
     ...getDefaultOptions(),
     method: 'DELETE',
   };
-  return request(url, options);
+  return await request(url, options);
 };
 
 export const apiUsersPut = async (serviceUrl, user) => {
@@ -18,7 +18,7 @@ export const apiUsersPut = async (serviceUrl, user) => {
     method: 'PUT',
     body: user ? JSON.stringify(user) : null,
   };
-  return request(url, options);
+  return await request(url, options);
 };
 
 export const apiUsersGet = async (serviceUrl) => {
@@ -30,7 +30,7 @@ export const apiUsersGet = async (serviceUrl) => {
     method: 'GET',
   };
 
-  return request(url, options);
+  return await request(url, options);
 };
 
 export const apiUserGet = async (serviceUrl, userId) => {
@@ -42,7 +42,7 @@ export const apiUserGet = async (serviceUrl, userId) => {
     method: 'GET',
   };
 
-  return request(url, options);
+  return await request(url, options);
 };
 
 export const apiUserPost = async (serviceUrl, user) => {
@@ -52,7 +52,7 @@ export const apiUserPost = async (serviceUrl, user) => {
     method: 'POST',
     body: user ? JSON.stringify(user) : null,
   };
-  return request(url, options);
+  return await request(url, options);
 };
 
 export const apiUserGetByUsername = async (serviceUrl, username) => {
@@ -64,5 +64,5 @@ export const apiUserGetByUsername = async (serviceUrl, username) => {
     method: 'GET',
   };
 
-  return request(url, options);
+  return await request(url, options);
 };
