@@ -1,7 +1,7 @@
 import React from 'react';
 import { AccordionItem } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiGetCustomersProjects } from '../../api/customers';
+import { apiCustomerGet, apiGetCustomersProjects } from '../../api/customers';
 import { apiGetProjectsUsers } from '../../api/projects';
 import CustomTable from './customDataTable';
 import CustomerDetails from './customerDetails';
@@ -13,6 +13,7 @@ class CustomerAccordian extends React.Component {
         super(props);
         this.state = {
             projects: {},
+            customer: {},
             authenticated: false
         }
     }
@@ -41,10 +42,12 @@ class CustomerAccordian extends React.Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
+            const customer = await apiCustomerGet(this.props.serviceUrl, id);
             const projects = await apiGetCustomersProjects(this.props.serviceUrl, id);
 
             this.setState({
-                projects: projects.data
+                projects: projects.data,
+                customer: customer.data
             })
         }
     }
@@ -60,7 +63,8 @@ class CustomerAccordian extends React.Component {
                         <CustomerDetails serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} /> : null 
                     }
                     <AccordionItem title={this.props.title}>
-                        <EditCustomerModal/>  <br/> 
+                        {hasKeycloakClientRole('ROLE_ADMIN') ?
+                            <div><EditCustomerModal serviceUrl={this.props.serviceUrl} customer={this.state.customer} key={this.state.customer.id}/>  <br/></div> : null}
                         <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} />
                     </AccordionItem></div> 
             </div>
