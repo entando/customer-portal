@@ -88,7 +88,15 @@ class AdminDashboard extends React.Component {
 
         return(
             <div className="admin-dashboard">
-                <h3 className="pageTitle">{i18n.t('adminDashboard.title')} {this.props.role} {i18n.t('adminDashboard.view')}</h3>
+                {hasKeycloakClientRole('ROLE_ADMIN') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.title')} Admin {i18n.t('adminDashboard.view')}</h3> : 
+                hasKeycloakClientRole('ROLE_SUPPORT') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.title')} Support {i18n.t('adminDashboard.view')}</h3> : 
+                hasKeycloakClientRole('ROLE_CUSTOMER') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.title')} Customer {i18n.t('adminDashboard.view')}</h3> : 
+                hasKeycloakClientRole('ROLE_PARTNER') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.title')} Partner {i18n.t('adminDashboard.view')}</h3> : 
+                null}
             {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') ?
                 <Tile>
                     <p className="title">{i18n.t('adminDashboard.allCustomers')}</p>
@@ -116,7 +124,7 @@ class AdminDashboard extends React.Component {
                             var indexOfLastItem = ((this.state.currentPage + 1) * 5) - 1;
                             var firstIndexOfCurrentPage = this.state.currentPage * 5;
                             
-                            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+                            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
                                 if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
                                     return(
                                         <CustomerAccordian key={customer.id} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name}/>
@@ -128,15 +136,11 @@ class AdminDashboard extends React.Component {
                             }
                             // For Partner / Customer roles just show what they have access to
                             else {
-                                
-                                return(
-                                    <CustomerAccordian key={customer.id} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name}/>
-                                )
+                                return(null)
                             }
                         }) : null}
                     </Accordion>
-                    {(hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) ? 
-                    <PaginationNav {...props()} cssClass='pagination-right' /> : <PaginationNav cssClass='pagination-right' />}
+                    <PaginationNav {...props()} cssClass='pagination-right' />
                 </div>
             </div>
         )
