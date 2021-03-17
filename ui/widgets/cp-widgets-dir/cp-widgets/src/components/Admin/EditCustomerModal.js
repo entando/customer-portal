@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomerPost } from '../../api/customers';
+import { apiCustomerPut } from '../../api/customers';
 
 class EditCustomerModal extends Component {
     constructor(props) {
@@ -66,15 +66,65 @@ class EditCustomerModal extends Component {
         this.handleValidation();
     };
 
+    async updateCustomer(customer) {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const result = await apiCustomerPut(this.props.serviceUrl, customer);
+        }
+    }
+
     handleFormSubmit = e => {
         const formIsValid = this.handleValidation();
 
         if (formIsValid) {
-            const customer = apiCustomerPost(this.props.serviceUrl, this.state);
-            this.render();
+            const customer = {
+                id: this.props.customer.id,
+                name: this.state.name,
+                customerNumber: this.state.customerNumber,
+                contactName: this.state.contactName,
+                contactPhone: this.state.contactPhone,
+                contactEmail:this.state.contactEmail,
+                notes:this.state.notes
+            }
+            this.updateCustomer(customer);
             window.location.reload(false);
         }
     };
+
+    componentDidMount() {
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        if (authenticated) {
+          this.setState({
+            name: this.props.customer.name,
+            customerNumber: this.props.customer.customerNumber,
+            contactName: this.props.customer.contactName,
+            contactPhone: this.props.customer.contactPhone,
+            contactEmail:this.props.customer.contactEmail,
+            notes:this.props.customer.notes
+          })
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+    
+        if (authenticated && changedAuth) {
+            this.setState({
+                name: this.props.customer.name,
+                customerNumber: this.props.customer.customerNumber,
+                contactName: this.props.customer.contactName,
+                contactPhone: this.props.customer.contactPhone,
+                contactEmail: this.props.customer.contactEmail,
+                notes: this.props.customer.notes
+              })
+        }
+    }
 
     render() {
         return (
