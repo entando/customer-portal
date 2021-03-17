@@ -3,6 +3,7 @@
 		"submit": "Submit",
 		"cancel": "Cancel",
 		"save": "Save",
+		"edit": "Edit",
 		"addCustomer": "Add a Customer +",
 		"addProject": "Add a Project +",
 		"addPartner": "Add a Partner +",
@@ -22,7 +23,8 @@
 		"subscriptions": "Subscriptions",
 		"tableDesc":"In this table there are open subscriptions",
 		"partners": "Partners",
-		"status": "Status"
+		"status": "Status",
+		"action": "Action"
 	},
 	
 	"adminDashboard":{
@@ -41,7 +43,8 @@
 			"contactName": "Contact Name",
 			"contactPhone": "Contact Phone",
 			"contactEmail": "Contact Email",
-			"notes": "Notes"
+			"notes": "Notes",
+			"editTitle": "Edit Partner"
 		},
 		"addCustomer":{
 			"title": "Add a Customer",
@@ -140,6 +143,17 @@
 		"contactEmail": "Contact Email *",
 		"contactNumber": "Contact Phone Number"
   	},
+
+	"editSubscription":{
+		"title":"Edit Subscription",
+		"desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+		"description": "Description",
+		"commitment": "Commitment",
+		"type": "Type",
+		"quantityRequest": "QuantityRequest",
+		"components": "Components",
+		"level": "Level"
+	},
   
   	"adminConfig":{
 		"title": "Entando Admin View",
