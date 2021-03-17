@@ -14,8 +14,69 @@ export default class SubscriptionForm extends Component {
         subscriptionLength: '',
         contactName: '',
         contactEmail: '',
-        contactNo: ''
+        contactNo: '',
+        invalid: {}
     };
+
+    handleValidation() {
+        let invalid = {};
+        let formIsValid = true;
+
+        if(this.state.customerType === ''){
+          formIsValid = false;
+          invalid['customerType'] = true;
+        }
+
+        if(this.state.customerName === ''){
+            formIsValid = false;
+            invalid['customerName'] = true;
+        }
+
+        if(this.state.customerNo === ''){
+            formIsValid = false;
+            invalid['customerNo'] = true;
+        }
+
+        if(typeof this.state.customerEmail !== "undefined"){
+            let lastAtPos = this.state.customerEmail.lastIndexOf('@');
+            let lastDotPos = this.state.customerEmail.lastIndexOf('.');
+      
+            if (!(lastAtPos < lastDotPos && lastAtPos > 0 && this.state.customerEmail.indexOf('@@') == -1 && lastDotPos > 2 && (this.state.customerEmail.length - lastDotPos) > 2)) {
+              formIsValid = false;
+              invalid['customerEmail'] = true;
+            }
+        }
+
+        if(this.state.projectName === ''){
+            formIsValid = false;
+            invalid['projectName'] = true;
+        }
+
+        if(this.state.contactName === ''){
+            formIsValid = false;
+            invalid['contactName'] = true;
+        }
+
+        if(typeof this.state.contactEmail !== "undefined"){
+            let lastAtPos = this.state.contactEmail.lastIndexOf('@');
+            let lastDotPos = this.state.contactEmail.lastIndexOf('.');
+      
+            if (!(lastAtPos < lastDotPos && lastAtPos > 0 && this.state.contactEmail.indexOf('@@') == -1 && lastDotPos > 2 && (this.state.contactEmail.length - lastDotPos) > 2)) {
+              formIsValid = false;
+              invalid['contactEmail'] = true;
+            }
+        }
+
+        if(typeof this.state.startDate !== "undefined"){
+            if(!this.state.startDate.match(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/)){
+              formIsValid = false;
+              invalid["startDate"] = true;
+            }      	
+        }
+
+        this.setState({invalid: invalid});
+        return formIsValid;
+    }
 
     handleChanges = (e) => {
         const input = e.target;
@@ -27,6 +88,12 @@ export default class SubscriptionForm extends Component {
     handleFormSubmit = (event) => {
         console.log(this.state.customerType)
         event.preventDefault();
+
+        const formIsValid = this.handleValidation();
+
+        if (formIsValid) {
+            // placeholder
+        }
     };
 
     render() {
@@ -43,18 +110,47 @@ export default class SubscriptionForm extends Component {
                         <div className="bx--grid">
                             <div className="bx--row">
                                 <div className="bx--col">
-                                    <Select defaultValue="customer-type" name="customerType" labelText={i18n.t('subscriptionForm.customerType')} required value={this.state.customerType} onChange={this.handleChanges}>
+                                    <Select 
+                                        defaultValue="customer-type" 
+                                        name="customerType" 
+                                        labelText={i18n.t('subscriptionForm.customerType')} 
+                                        value={this.state.customerType} 
+                                        onChange={this.handleChanges}
+                                        invalidText={i18n.t('validation.invalid.required')}
+                                        invalid={this.state.invalid['customerType']} 
+                                    >
                                         <SelectItem
                                             text={i18n.t('subscriptionForm.selectType')}
                                             value="customer-type"
                                         />
                                         {customerType.map((customerType, i) => <SelectItem key={i} text={customerType} required value={customerType.toLowerCase()}>{customerType}</SelectItem>)}
                                     </Select>
-                                    <TextInput name="customerNo" labelText={i18n.t('subscriptionForm.customerNumber')} required value={this.state.customerNo} onChange={this.handleChanges}/>
+                                    <TextInput 
+                                        name="customerNo" 
+                                        labelText={i18n.t('subscriptionForm.customerNumber')} 
+                                        value={this.state.customerNo} 
+                                        onChange={this.handleChanges}
+                                        invalidText={i18n.t('validation.invalid.required')}
+                                        invalid={this.state.invalid['customerNo']} 
+                                    />
                                 </div>
                                 <div className="bx--col">
-                                    <TextInput name="customerName" labelText={i18n.t('subscriptionForm.customerName')} required value={this.state.customerName} onChange={this.handleChanges} />
-                                    <TextInput name="customerEmail" labelText={i18n.t('subscriptionForm.customerEmail')} required value={this.state.customerEmail} onChange={this.handleChanges}/>
+                                    <TextInput 
+                                        name="customerName" 
+                                        labelText={i18n.t('subscriptionForm.customerName')} 
+                                        value={this.state.customerName} 
+                                        onChange={this.handleChanges} 
+                                        invalidText={i18n.t('validation.invalid.required')}
+                                        invalid={this.state.invalid['customerName']} 
+                                    />
+                                    <TextInput 
+                                        name="customerEmail" 
+                                        labelText={i18n.t('subscriptionForm.customerEmail')} 
+                                        value={this.state.customerEmail} 
+                                        onChange={this.handleChanges}
+                                        invalidText={i18n.t('validation.invalid.email')}
+                                        invalid={this.state.invalid['customerEmail']} 
+                                    />
                                 </div>
                             </div>
                             { this.renderForm()}
@@ -75,7 +171,14 @@ export default class SubscriptionForm extends Component {
                 <p><strong>{i18n.t('subscriptionForm.newSubscription')}</strong></p><br/>
                 <div className="bx--row">
                     <div className="bx--col">
-                        <TextInput name="projectName" labelText={i18n.t('subscriptionForm.projectName')} required value={this.state.projectName} onChange={this.handleChanges} />
+                        <TextInput 
+                            name="projectName" 
+                            labelText={i18n.t('subscriptionForm.projectName')} 
+                            value={this.state.projectName} 
+                            onChange={this.handleChanges} 
+                            invalidText={i18n.t('validation.invalid.required')}
+                            invalid={this.state.invalid['projectName']} 
+                        />
                         <Select defaultValue="subscription-level" name="subscriptionLevel" labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel')} value={this.state.subscriptionLevel} onChange={this.handleChanges}>
                             <SelectItem
                                 text={i18n.t('subscriptionForm.chooseOption')}
@@ -83,7 +186,14 @@ export default class SubscriptionForm extends Component {
                             />
                             {subscriptionLevel.map((subscriptionLevel, i) => <SelectItem key={i} text={subscriptionLevel} value={subscriptionLevel.toLowerCase()}>{subscriptionLevel}</SelectItem>)}
                         </Select>
-                        <TextInput name="contactName" labelText={i18n.t('subscriptionForm.contactName')} required value={this.state.contactName} onChange={this.handleChanges} />
+                        <TextInput 
+                            name="contactName" 
+                            labelText={i18n.t('subscriptionForm.contactName')} 
+                            value={this.state.contactName} 
+                            onChange={this.handleChanges} 
+                            invalidText={i18n.t('validation.invalid.required')}
+                            invalid={this.state.invalid['contactName']} 
+                        />
                         <TextInput name="contactNumber" labelText={i18n.t('subscriptionForm.contactNumber')} value={this.state.contactNo} onChange={this.handleChanges} />
                     </div>
                     <div className="bx--col">
@@ -95,7 +205,8 @@ export default class SubscriptionForm extends Component {
                                 value={this.state.startDate}
                                 onChange={ this.handleChanges}
                                 type="text"
-                                required
+                                invalidText={i18n.t('validation.invalid.date')} 
+                                invalid={this.state.invalid['startDate']} 
                             />
                         </DatePicker>
                         <Select defaultValue="subscription-length" name="subscriptionLength" labelText={i18n.t('subscriptionForm.desiredSubscriptionLength')} value={this.state.subscriptionLength} onChange={this.handleChanges}>
@@ -105,7 +216,14 @@ export default class SubscriptionForm extends Component {
                             />
                             {subscriptionLength.map((subscriptionLength, i) => <SelectItem key={i} text={subscriptionLength} value={subscriptionLength.toLowerCase()}>{subscriptionLength}</SelectItem>)}
                         </Select>
-                        <TextInput name="contactEmail" labelText={i18n.t('subscriptionForm.contactEmail')} required value={this.state.contactEmail} onChange={this.handleChanges} />
+                        <TextInput 
+                            name="contactEmail" 
+                            labelText={i18n.t('subscriptionForm.contactEmail')} 
+                            value={this.state.contactEmail} 
+                            onChange={this.handleChanges} 
+                            invalidText={i18n.t('validation.invalid.email')} 
+                            invalid={this.state.invalid['contactEmail']} 
+                        />
                     </div>
                 </div>
             </div>
@@ -116,7 +234,14 @@ export default class SubscriptionForm extends Component {
                 <p><strong>{i18n.t('subscriptionForm.renewSubscription')}</strong></p><br/>
                 <div className="bx--row">
                     <div className="bx--col">
-                        <TextInput name="projectName" labelText={i18n.t('subscriptionForm.projectName')} required value={this.state.projectName} onChange={this.handleChanges} />
+                        <TextInput 
+                            name="projectName" 
+                            labelText={i18n.t('subscriptionForm.projectName')} 
+                            value={this.state.projectName} 
+                            onChange={this.handleChanges} 
+                            invalidText={i18n.t('validation.invalid.required')}
+                            invalid={this.state.invalid['projectName']} 
+                        />
                         <Select defaultValue="subscription-level" name="subscriptionLevel" labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel')} value={this.state.subscriptionLevel} onChange={this.handleChanges}>
                             <SelectItem
                                 text={i18n.t('subscriptionForm.chooseOption')}
@@ -124,7 +249,14 @@ export default class SubscriptionForm extends Component {
                             />
                             {subscriptionLevel.map((subscriptionLevel, i) => <SelectItem key={i} text={subscriptionLevel} value={subscriptionLevel.toLowerCase()}>{subscriptionLevel}</SelectItem>)}
                         </Select>
-                        <TextInput name="contactName" labelText={i18n.t('subscriptionForm.contactName')} required value={this.state.contactName} onChange={this.handleChanges} />
+                        <TextInput 
+                            name="contactName" 
+                            labelText={i18n.t('subscriptionForm.contactName')} 
+                            value={this.state.contactName} 
+                            onChange={this.handleChanges} 
+                            invalidText={i18n.t('validation.invalid.required')}
+                            invalid={this.state.invalid['contactName']}
+                        />
                         <TextInput name="contactNumber" labelText={i18n.t('subscriptionForm.contactNumber')} value={this.state.contactNo} onChange={this.handleChanges} />
                     </div>
                     <div className="bx--col">
@@ -136,7 +268,8 @@ export default class SubscriptionForm extends Component {
                                 value={this.state.startDate}
                                 onChange={ this.handleChanges}
                                 type="text"
-                                required
+                                invalidText={i18n.t('validation.invalid.date')} 
+                                invalid={this.state.invalid['startDate']} 
                             />
                         </DatePicker>
                         <Select defaultValue="subscription-length" name="subscriptionLength" labelText={i18n.t('subscriptionForm.desiredSubscriptionLength')} value={this.state.subscriptionLength} onChange={this.handleChanges}>
@@ -146,7 +279,14 @@ export default class SubscriptionForm extends Component {
                             />
                             {subscriptionLength.map((subscriptionLength, i) => <SelectItem key={i} text={subscriptionLength} value={subscriptionLength.toLowerCase()}>{subscriptionLength}</SelectItem>)}
                         </Select>
-                        <TextInput name="contactEmail" labelText={i18n.t('subscriptionForm.contactEmail')} required value={this.state.contactEmail} onChange={this.handleChanges} />
+                        <TextInput 
+                            name="contactEmail" 
+                            labelText={i18n.t('subscriptionForm.contactEmail')} 
+                            value={this.state.contactEmail} 
+                            onChange={this.handleChanges} 
+                            invalidText={i18n.t('validation.invalid.email')} 
+                            invalid={this.state.invalid['contactEmail']} 
+                        />
                     </div>
                 </div>
             </div>
