@@ -200,9 +200,29 @@ public class TicketResource {
             JSONObject jsonIssue = (JSONObject) issue;
             String jiraKey = jsonIssue.getString("key");
             Ticket t = ticketService.findTicketBySystemId(jiraKey);
-            // if Ticket exists in the db don't do anything
+            // if Ticket exists in the db, check to see if any values have changed
             if (t != null) {
-                System.out.println("Ticket already exists.");
+                System.out.println("Ticket already exists. Updating values if needed.");
+                // Summary
+                if (t.getDescription() != (String) jsonIssue.getJSONObject("fields").get("summary")) {
+                    t.setDescription((String) jsonIssue.getJSONObject("fields").get("summary"));
+                    t.setUpdateDate(ZonedDateTime.now());
+                }
+                // Type
+                if (t.getType() != (String) jsonIssue.getJSONObject("fields").getJSONObject("issuetype").get("name")) {
+                    t.setDescription((String) jsonIssue.getJSONObject("fields").getJSONObject("issuetype").get("name"));
+                    t.setUpdateDate(ZonedDateTime.now());
+                }
+                // Priority
+                if (t.getPriority() != (String) jsonIssue.getJSONObject("fields").getJSONObject("priority").get("name")) {
+                    t.setDescription((String) jsonIssue.getJSONObject("fields").getJSONObject("priority").get("name"));
+                    t.setUpdateDate(ZonedDateTime.now());
+                }
+                // Status
+                if (t.getStatus() != (String) jsonIssue.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name")) {
+                    t.setDescription((String) jsonIssue.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name"));
+                    t.setUpdateDate(ZonedDateTime.now());
+                }
             }
             // else create a Ticket
             else {

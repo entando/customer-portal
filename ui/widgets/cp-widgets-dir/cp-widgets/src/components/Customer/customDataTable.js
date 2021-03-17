@@ -61,27 +61,6 @@ componentDidUpdate(prevProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/*
-                {Object.keys(this.state.data).length !== 0 ? 
-                  this.state.data.data.map((project, index) => (
-                    project.projectSubscriptions.map((sub) => (
-                      <TableRow key={index} >
-                          <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
-                          {project.partners ? 
-                            <TableCell>
-                              {project.partners.map(partner => (
-                                <p>{partner.name}</p>
-                              ))}
-                            </TableCell> 
-                            : <TableCell>None</TableCell>}
-                          {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
-                          <TableCell>{sub.status}</TableCell>
-                          <TableCell>{String(new Date(sub.startDate))}</TableCell>
-                          <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)))}</TableCell>
-                          <TableCell>{project.tickets.length}</TableCell>
-                      </TableRow>
-                  )))) : null
-              }*/}
               {Object.keys(this.state.data).length !== 0 ? 
                   this.state.data.data.map((project, index) => {
                     if (project.projectSubscriptions.length === 0) {
@@ -104,8 +83,8 @@ componentDidUpdate(prevProps) {
                       )
                     }
                     else {
+                      var sub = project.projectSubscriptions[project.projectSubscriptions.length - 1];
                       return(
-                        project.projectSubscriptions.map((sub) => (
                           <TableRow key={index} >
                               <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
                               {project.partners.length !== 0 ? 
@@ -121,7 +100,7 @@ componentDidUpdate(prevProps) {
                               <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)))}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
                           </TableRow>
-                        ))
+                        
                       )
                     }
                   }) : null
