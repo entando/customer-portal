@@ -35,8 +35,6 @@ export const apiProjectGet = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-
-
 export const apiProjectsGetForCustomer = async (serviceUrl, customerNumber) => {
   const url = `${serviceUrl}/${resource}/subscriptions/customer/${customerNumber}`;
   const options = {
@@ -105,6 +103,15 @@ export const apiGetProjectsUsers = async (serviceUrl, projectId) => {
 
 export const apiGetProjectsTickets = async (serviceUrl, projectId) => {
   const url = `${serviceUrl}/${resource}/${projectId}/users/`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+  return request(url, options);
+};
+
+export const apiGetProjectIdNames = async (serviceUrl) => {
+  const url = `${serviceUrl}/${resource}/nameId/`;
   const options = {
     ...getDefaultOptions(),
     method: 'GET',

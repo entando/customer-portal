@@ -54,10 +54,10 @@ export const request = async (url, options) => {
   };
 
   if (response.status === 204) {
-    return { data: '' };
+    return { data: '', status: response.status};
   }
 
   return response.status >= 200 && response.status < 300
-    ? { data: await response.json(), headers }
+    ? { data: await response.json(), headers, status: response.status }
     : Promise.reject(new Error(response.statusText || response.status));
 };
