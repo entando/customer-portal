@@ -123,7 +123,7 @@ class AssignUser extends Component {
             ));
             userList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.userList')} value="" />);
         } else {
-            userList = <SelectItem text="There are currently no users in the system" value="" />;
+            userList = <SelectItem text={i18n.t('manageUsers.assign.noUsers')} value="" />;
         }
 
         if (projectIdsNames != null && Object.keys(projectIdsNames).length > 0) {
@@ -134,7 +134,7 @@ class AssignUser extends Component {
             ));
             projectList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.projectList')} value="" />);
         } else {
-            projectList = <SelectItem text="There are currently no projects in the system" value="" />;
+            projectList = <SelectItem text={i18n.t('manageUsers.assign.noProjects')} value="" />;
         }
 
         return { userList, projectList };

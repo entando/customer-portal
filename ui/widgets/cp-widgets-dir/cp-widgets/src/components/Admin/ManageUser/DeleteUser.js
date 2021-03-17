@@ -4,22 +4,23 @@ import { SubtractAlt16 } from '@carbon/icons-react';
 import { apiUsersGet, apiUserDelete } from '../../../api/portalusers';
 import withKeycloak from '../../../auth/withKeycloak';
 import { apiKeycloakUserGet } from '../../../api/keycloak';
+import i18n from '../../../i18n';
 
 const headerData = [
     {
-        header: 'User Name',
+        header: i18n.t('manageUsers.delete.userName'),
         key: 'username',
     },
     {
-        header: 'User Email',
+        header: i18n.t('manageUsers.delete.userEmail'),
         key: 'email',
     },
     {
-        header: 'Date Added',
+        header: i18n.t('manageUsers.delete.dateAdded'),
         key: 'dateAdded',
     },
     {
-        header: 'User Access',
+        header: i18n.t('manageUsers.delete.userAccess'),
         key: 'userAccess',
     }
 ];
@@ -74,7 +75,7 @@ class DeleteUser extends Component {
                 username: keycloakUser.username,
                 email: keycloakUser.email,
                 dateAdded: `${new Date(keycloakUser.createdTimestamp).toLocaleString('default', { month: 'long'})} ${new Date(keycloakUser.createdTimestamp).getFullYear()}`,
-                userAccess: portalUsernames.includes(keycloakUser.username) ? <a onClick={event => this.handleRemoveUser(keycloakUser.username, event)} href=""><SubtractAlt16 fill="red" />Remove User</a> : ''
+                userAccess: portalUsernames.includes(keycloakUser.username) ? <a onClick={event => this.handleRemoveUser(keycloakUser.username, event)} href=""><SubtractAlt16 fill="red" />{i18n.t('manageUsers.delete.removeUser')}</a> : ''
             }
         ));
 
