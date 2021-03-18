@@ -105,8 +105,8 @@ componentDidUpdate(prevProps) {
                                 : <TableCell>None</TableCell>}
                               {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
                               <TableCell>{sub.status}</TableCell>
-                              <TableCell>{String(new Date(sub.startDate))}</TableCell>
-                              <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)))}</TableCell>
+                              <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
+                              <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
                               <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <EditProjectModal project={project} serviceUrl={this.props.serviceUrl}/> : null}</TableCell>
                           </TableRow>
