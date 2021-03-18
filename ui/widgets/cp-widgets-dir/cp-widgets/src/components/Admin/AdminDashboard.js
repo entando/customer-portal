@@ -5,7 +5,7 @@ import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import AddProjectModal from './AddProjectModal'
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomersGet } from '../../api/customers';
+import { apiAdminCustomersGet, apiCustomersGet } from '../../api/customers';
 import CustomerAccordian from '../Customer/CustomerAccordian';
 import { number } from 'prop-types';
 import { hasKeycloakClientRole } from '../../api/helpers';

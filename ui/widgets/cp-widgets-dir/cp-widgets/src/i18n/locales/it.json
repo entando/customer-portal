@@ -138,7 +138,7 @@
 		"assign":{
 			"title": "Assegna un nuovo utente",
 			"desc": "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
-			"projectName": "Nome del progetto"
+			"projectName": "Nome del progetto",
 			"assignUser": "Assegna utente",
 			"selectRole": "Seleziona ruolo"
 		},
@@ -151,7 +151,7 @@
 		"invalid":{
 			"required": "Questo campo è obbligatorio.",
 			"email": "L'email non è valida.",
-			"date": "Inserisci una data nel formato "mm / gg / aaaa"."
+			"date": "Inserisci una data nel formato 'mm / gg / aaaa'."
 		}
 	}
 }
