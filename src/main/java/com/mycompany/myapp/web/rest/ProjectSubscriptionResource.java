@@ -58,7 +58,7 @@ public class ProjectSubscriptionResource {
     public ResponseEntity<ProjectSubscription> createProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException {
         log.debug("REST request to save ProjectSubscription : {}", subscriptionCreationRequest);
         ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
-        
+
         if (projectSubscription == null || projectSubscription.getId() != null) {
             throw new BadRequestAlertException("A new projectSubscription cannot already have an ID", ENTITY_NAME, "idexists");
         } else if (subscriptionCreationRequest.getEntandoVersionId() == null) {
@@ -120,7 +120,7 @@ public class ProjectSubscriptionResource {
 
         associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));
         entandoVersionOpt.ifPresent(entandoVersion -> projectSubscription.setEntandoVersion(entandoVersion));
-        
+
         ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, projectSubscription.getId().toString()))

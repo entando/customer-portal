@@ -21,7 +21,9 @@ class TicketList extends Component {
     if (authenticated) {
       try {
           const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
-          var tickets = await apiJiraTicketsGet(this.props.serviceUrl, project.data.systemId);
+          const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
+          const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length-1]
+          var tickets = await apiJiraTicketsGet(this.props.serviceUrl, currentTicketingSystem.systemId, project.data.systemId);
           for(var i = 0; i < tickets.data.length; i++) {
             apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id)
           }

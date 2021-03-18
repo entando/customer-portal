@@ -130,7 +130,7 @@ class Subscription extends React.Component {
                                                     </p>
                                                     <p><strong>Type:</strong> {type}</p>
                                                     <p><strong>Quantity Request:</strong> {quantityRequest}</p>
-                                                    <p><strong>Components:</strong> {components}</p>
+                                                    <p><strong>Status:</strong> {this.state.subscription.data.status}</p>
                                                 </div>
                                                 <div className="bx--col">
                                                     <p><strong>Level:</strong> {this.state.subscription.data.level}</p>
