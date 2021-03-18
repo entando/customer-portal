@@ -102,12 +102,18 @@ public class ProjectSubscriptionResource {
 
         if (projectSubscription == null || projectSubscription.getId() == null || !projectService.findOne(projectSubscription.getId()).isPresent()) {
             throw new BadRequestAlertException("Invalid Project Subscription id", ENTITY_NAME, "projectSubscriptionIdNull");
-        } else if (subscriptionCreationRequest.getEntandoVersionId() == null) {
+        } 
+        
+        // projectId and entandoVersioId are currently excluded for this update. commented out for null exception.
+        /*
+        else if (subscriptionCreationRequest.getEntandoVersionId() == null) {
             throw new BadRequestAlertException("Missing entando version id", ENTITY_NAME, "missingEntandoVersionId");
         } else if (subscriptionCreationRequest.getProjectId() == null) {
             throw new BadRequestAlertException("Missing project id ", ENTITY_NAME, "missingProjectId");
         }
 
+        // projectId and entandoVersioId are currently excluded for this update. commented out for null exception.
+         
         Optional<Project> associatedProjectOpt = projectService.findOne(subscriptionCreationRequest.getProjectId());
         if (!associatedProjectOpt.isPresent()) {
             throw new BadRequestAlertException("There was no project found with that id", ENTITY_NAME, "projectNotFound");
@@ -120,6 +126,7 @@ public class ProjectSubscriptionResource {
 
         associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));
         entandoVersionOpt.ifPresent(entandoVersion -> projectSubscription.setEntandoVersion(entandoVersion));
+        */
         
         ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
         return ResponseEntity.ok()

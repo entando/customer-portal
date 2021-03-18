@@ -3,6 +3,7 @@ import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea, Select, SelectItem, DatePicker, DatePickerInput} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProjectSubscriptionPut } from '../../api/subscriptions';
+import moment from 'moment';
 
 class EditSubscriptionModal extends Component {
     constructor(props) {
@@ -14,7 +15,33 @@ class EditSubscriptionModal extends Component {
             lengthInMonths: '',
             startDate: '',
             notes: '',
+            invalid: {}
         };
+    }
+
+    handleValidation() {
+        let invalid = {};
+        let formIsValid = true;
+
+        if (this.state.level === 'level') {
+            formIsValid = false;
+            invalid['level'] = true;
+        }
+
+        if (this.state.status === 'status') {
+            formIsValid = false;
+            invalid['status'] = true;
+        }
+
+        if(typeof this.state.startDate !== "undefined"){
+            if(!this.state.startDate.match(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/)){
+              formIsValid = false;
+              invalid['startDate'] = true;
+            }      	
+        }
+
+        this.setState({ invalid: invalid });
+        return formIsValid;
     }
 
     handleChanges = e => {
@@ -25,32 +52,33 @@ class EditSubscriptionModal extends Component {
     };
 
     handleFormSubmit = (e) => {
-        //e.preventDefault();
-        console.log(this.props.subscription.id)
-        const subscription = {
-            id: this.props.subscription.id,
-            level: this.state.level,
-            status: this.state.status,
-            lengthInMonths: this.state.lengthInMonths,
-            startDate: this.state.startDate,
-            notes: this.state.notes,
-        }
-        this.subscriptionPut(subscription);
-    };
+        const formIsValid = this.handleValidation();
 
-    isValid() {
-        if (this.state.customerName === '') {
-          return false;
+        if (formIsValid) {
+            //e.preventDefault();
+            console.log(this.props.subscription.id)
+            
+            const subscriptionRequest = {
+                projectSubscription : {
+                    id: this.props.subscription.id,
+                    level: this.state.level,
+                    status: this.state.status,
+                    lengthInMonths: this.state.lengthInMonths,
+                    startDate: moment(this.state.startDate).format(),
+                    notes: this.state.notes,
+                }
+            }
+
+            this.subscriptionPut(subscriptionRequest);
         }
-        return true;
-    }
+    };
 
     componentDidMount() {
         this.setState({
             level: this.props.subscription.level,
             status: this.props.subscription.status,
             lengthInMonths: this.props.subscription.lengthInMonths,
-            startDate: this.props.subscription.startDate,
+            startDate: moment(this.props.subscription.startDate).calendar(),
             notes: this.props.subscription.notes,
           })
     }
@@ -60,6 +88,8 @@ class EditSubscriptionModal extends Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
             const result = await apiProjectSubscriptionPut(this.props.serviceUrl, subscription);
+            this.render();
+            window.location.reload(false);
         }
     }
     
@@ -82,6 +112,8 @@ class EditSubscriptionModal extends Component {
                             labelText="Level"
                             value={this.state.level}
                             onChange={this.handleChanges}
+                            invalidText={i18n.t('validation.invalid.required')}
+                            invalid={this.state.invalid['level']} 
                             >
                             <SelectItem text="Select Level" value="level" />
                             {levelList.map((level, i) => (
@@ -95,6 +127,8 @@ class EditSubscriptionModal extends Component {
                             labelText="status"
                             value={this.state.status}
                             onChange={this.handleChanges}
+                            invalidText={i18n.t('validation.invalid.required')}
+                            invalid={this.state.invalid['status']} 
                             >
                             <SelectItem text="Select Status" value="status" />
                             {statusList.map((status, i) => (
@@ -111,7 +145,8 @@ class EditSubscriptionModal extends Component {
                                 value={this.state.startDate}
                                 onChange={ this.handleChanges}
                                 type="text"
-                                required
+                                invalidText={i18n.t('validation.invalid.date')} 
+                                invalid={this.state.invalid['startDate']} 
                             />
                         </DatePicker>
                         <TextInput name="lengthInMonths" labelText="Length In Months" value={this.state.lengthInMonths} onChange={this.handleChanges} />
