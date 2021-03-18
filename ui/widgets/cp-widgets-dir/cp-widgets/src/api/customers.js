@@ -79,3 +79,27 @@ export const apiAddProjectToCustomer = async (serviceUrl, customerId, projectId)
   };
   return request(url, options);
 };
+
+
+// Endpoints for backend security
+const adminResource = 'api/customers/admin';
+export const apiAdminCustomersGet = async (serviceUrl) => {
+  const url = getUrl(`${serviceUrl}/${adminResource}`);
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET'
+  };
+
+  return request(url, options);
+};
+
+const myResource = 'api/customers/mycustomers';
+export const apiMyCustomersGet = async (serviceUrl) => {
+  const url = getUrl(`${serviceUrl}/${myResource}`);
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET'
+  };
+
+  return request(url, options);
+};

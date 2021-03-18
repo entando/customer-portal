@@ -14,6 +14,7 @@ import com.mycompany.myapp.service.PortalUserService;
 import com.mycompany.myapp.service.ProjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,9 @@ public class CustomerResource {
     private final CustomerService customerService;
     private final PortalUserService portalUserService;
     private final ProjectService projectService;
+
+    @Autowired
+    SpringSecurityAuditorAware springSecurityAuditorAware;
 
     public CustomerResource(CustomerService customerService, PortalUserService portalUserService, ProjectService projectService) {
         this.customerService = customerService;
@@ -224,6 +228,45 @@ public class CustomerResource {
         return ResponseEntity.ok().headers(
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, customerId.toString()))
             .body(projects);
+    }
+
+    /**
+     * {@code GET  /customers/admin} : get all the customers.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
+     */
+    @GetMapping("/customers/admin")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    public List<Customer> adminGetAllCustomers() {
+        log.debug("REST request to get all Customers");
+        return customerService.findAll();
+    }
+
+    /**
+     * {@code GET  /customers/mycustomers} : get the user's customers.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
+     */
+    @GetMapping("/customers/mycustomers")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER + "')")
+    public List<Customer> getMyCustomers() {
+        log.debug("REST request to get user's Customers");
+
+        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
+        List<Project> projects = projectService.findAll();
+        Set<Customer> toAdd = new HashSet<>();
+        List<Customer> customers = new ArrayList<>();
+        for(Project project : projects) {
+            Set<PortalUser> users = projectService.getProjectUsers(project.getId());
+            for(PortalUser user : users) {
+                if (currentUser.equals(user.getUsername())) {
+                    toAdd.add(project.getCustomer());
+                    break;
+                }
+            }
+        }
+        customers.addAll(toAdd);
+        return customers;
     }
 
     public boolean userHasRole(String roleName) {

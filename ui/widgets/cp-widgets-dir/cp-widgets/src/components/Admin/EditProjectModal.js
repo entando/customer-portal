@@ -106,6 +106,7 @@ class EditProjectModal extends Component {
         if (formIsValid) {
             const project = {
                 id: this.props.project.id,
+                customer: this.props.project.customer,
                 name: this.state.name,
                 description: this.state.description,
                 systemId: this.state.systemId,

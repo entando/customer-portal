@@ -25,7 +25,7 @@ const adminConfig = [
   }
 ];
 
-const AdminConfiguration = () => (
+const AdminConfiguration = (props) => (
   <div>
     <h3 className="pageTitle">Entando Admin View</h3>
     <div className="form-container">

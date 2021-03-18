@@ -81,7 +81,7 @@ componentDidUpdate(prevProps) {
                           <TableCell>None</TableCell>
                           <TableCell>None</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
-                          <TableCell></TableCell>
+                          <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <EditProjectModal project={project} serviceUrl={this.props.serviceUrl}/> : null}</TableCell>
                       </TableRow>
                       )
                     }

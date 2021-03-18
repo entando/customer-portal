@@ -3,22 +3,19 @@ package com.mycompany.myapp.web.rest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import javax.validation.Valid;
 
+import com.mycompany.myapp.security.AuthoritiesConstants;
+import com.mycompany.myapp.security.SpringSecurityAuditorAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,6 +61,9 @@ public class ProjectResource {
 
     private final ProjectService projectService;
     private final TicketService ticketService;
+
+    @Autowired
+    SpringSecurityAuditorAware springSecurityAuditorAware;
 
     @Autowired
     private CustomerService customerService;
@@ -377,5 +377,44 @@ public class ProjectResource {
         });
 
         return new ResponseEntity<Map<Long, String>>(projectIdNameMap, HttpStatus.OK);
+    }
+
+    /**
+     * {@code GET  /projects/admin} : get all the Projects.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
+     */
+    @GetMapping("/projects/admin")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    public List<Project> adminGetAllProjects() {
+        log.debug("REST request to get all Projects");
+        return projectService.findAll();
+    }
+
+    /**
+     * {@code GET  /projects/myprojects} : get all the customers.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
+     */
+    @GetMapping("/projects/myprojects")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER + "')")
+    public List<Project> getMyProjects() {
+        log.debug("REST request to get user's Projects");
+
+        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
+        List<Project> projects = projectService.findAll();
+        Set<Project> toAdd = new HashSet<>();
+        List<Project> myProjects = new ArrayList<>();
+        for(Project project : projects) {
+            Set<PortalUser> users = projectService.getProjectUsers(project.getId());
+            for(PortalUser user : users) {
+                if (currentUser.equals(user.getUsername())) {
+                    toAdd.add(project);
+                    break;
+                }
+            }
+        }
+        myProjects.addAll(toAdd);
+        return myProjects;
     }
 }
