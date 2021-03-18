@@ -35,7 +35,7 @@ export const apiTicketPost = async (serviceUrl, ticket) => {
 };
 
 
-const jiraResource = 'api/tickets/ticketingsystem/GSP';
+const jiraResource = 'api/tickets/ticketingsystem';
 export const apiJiraTicketDelete = async (serviceUrl, id) => {
   const url = `${serviceUrl}/${jiraResource}/${id}`;
   const options = {
@@ -45,8 +45,8 @@ export const apiJiraTicketDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-export const apiJiraTicketsGet = async (serviceUrl, organization) => {
-  const url = `${serviceUrl}/${jiraResource}/${organization}`;
+export const apiJiraTicketsGet = async (serviceUrl, projectName, organization) => {
+  const url = `${serviceUrl}/${jiraResource}/${projectName}/${organization}`;
   const options = {
     ...getDefaultOptions(),
     method: 'GET',
