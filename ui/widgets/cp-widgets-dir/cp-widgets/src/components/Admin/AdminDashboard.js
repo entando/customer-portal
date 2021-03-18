@@ -9,7 +9,8 @@ import { apiCustomersGet } from '../../api/customers';
 import CustomerAccordian from '../Customer/CustomerAccordian';
 import { number } from 'prop-types';
 import { hasKeycloakClientRole } from '../../api/helpers';
-
+import SubscriptionForm from '../Forms/SubscriptionForm';
+import ManageUser from '../Admin/ManageUser/ManageUser';
 class AdminDashboard extends React.Component {
     constructor() {
         super();
@@ -91,6 +92,8 @@ class AdminDashboard extends React.Component {
                 <h3 className="pageTitle">{i18n.t('adminDashboard.title')} {this.props.role} {i18n.t('adminDashboard.view')}</h3>
             {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') ?
                 <Tile>
+                    <SubscriptionForm serviceUrl={this.props.serviceUrl} />
+                    <ManageUser serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl}/>
                     <p className="title">{i18n.t('adminDashboard.allCustomers')}</p>
                     <div className="bx--row">
                         <div className="bx--col">
@@ -98,6 +101,7 @@ class AdminDashboard extends React.Component {
                         </div>
                         {hasKeycloakClientRole('ROLE_ADMIN') ?
                         <div className="bx--col">
+                            
                             <div>
                                 <AddPartnerModal serviceUrl={this.props.serviceUrl} />
                                 <AddCustomerModal serviceUrl={this.props.serviceUrl} />

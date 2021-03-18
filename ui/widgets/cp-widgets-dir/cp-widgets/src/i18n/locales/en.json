@@ -124,11 +124,11 @@
     "title": "Welcome to Entando Portal",
     "formTitle": "New or Renew Subscription",
     "desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-    "customerType": "Customer Type *",
+    "subscriptionType": "Subscription Type *",
     "newSubscription": "New Subscription",
     "renewSubscription": "Renew Subscription",
-    "selectType": "Select Customer Type",
-    "chooseOption": "Choose an Option",
+    "selectType": "Select Subscription Type",
+    "chooseLevel": "Choose a level",
     "customerName": "Customer Name *",
     "customerNumber": "Customer Number *",
     "customerEmail": "Customer Email*",
@@ -138,7 +138,9 @@
     "desiredSubscriptionLength": "Desired Subscription Length",
     "contactName": "Contact Name *",
     "contactEmail": "Contact Email *",
-    "contactNumber": "Contact Phone Number"
+    "contactNumber": "Contact Phone Number",
+    "chooseVersion": "Choose Entando version",
+    "entandoVersion": "Entando Version"
   },
 
   "adminConfig": {
@@ -172,8 +174,8 @@
       "projectName": "Project Name",
       "assignUser": "Assign User",
       "selectRole": "Select Role",
-      "projectList": "Projects",
-      "userList": "Users",
+      "projectList": "Projects List",
+      "userList": "Users List",
       "noUsers": "There are currently no users in the system",
       "noProjects": "There are currently no projects in the system"
     },
