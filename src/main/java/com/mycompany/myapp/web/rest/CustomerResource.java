@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
-import javax.swing.*;
 import javax.validation.Valid;
 
 import com.mycompany.myapp.domain.PortalUser;
@@ -18,12 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -267,6 +264,41 @@ public class CustomerResource {
         }
         customers.addAll(toAdd);
         return customers;
+    }
+
+    /**
+     * {@code GET  /customers/mycustomers/:customerId/projects} : get the projects of "customerId" customer.
+     *
+     * @param customerId the id of the customer.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the projects, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/customers/mycustomers/{customerId}/projects")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER + "')")
+    public ResponseEntity<Set<Project>> getMyCustomerProjects(@PathVariable Long customerId) {
+        Set<Project> projects = customerService.getCustomerProjects(customerId);
+
+        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
+        Set<Project> toRemove = new HashSet<>();
+
+        for(Project project : projects) {
+            boolean userHasAccessToProject = false;
+            Set<PortalUser> users = projectService.getProjectUsers(project.getId());
+            for(PortalUser user : users) {
+                if (currentUser.equals(user.getUsername())) {
+                    userHasAccessToProject = true;
+                    break;
+                }
+            }
+            if (!userHasAccessToProject) {
+                toRemove.add(project);
+            }
+        }
+        projects.removeAll(toRemove);
+
+        return ResponseEntity.ok().headers(
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, customerId.toString()))
+            .body(projects);
     }
 
     public boolean userHasRole(String roleName) {

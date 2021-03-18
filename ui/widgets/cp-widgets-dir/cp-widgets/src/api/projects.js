@@ -118,3 +118,26 @@ export const apiGetProjectIdNames = async (serviceUrl) => {
   };
   return request(url, options);
 };
+
+// Endpoints for backend security
+const adminResource = 'api/projects/admin';
+export const apiAdminProjectsGet = async (serviceUrl) => {
+  const url = getUrl(`${serviceUrl}/${adminResource}`);
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET'
+  };
+
+  return request(url, options);
+};
+
+const myResource = 'api/projects/myprojects';
+export const apiMyProjectsGet = async (serviceUrl) => {
+  const url = getUrl(`${serviceUrl}/${myResource}`);
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET'
+  };
+
+  return request(url, options);
+};

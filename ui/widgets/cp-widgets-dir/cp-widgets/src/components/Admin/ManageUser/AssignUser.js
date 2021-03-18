@@ -32,6 +32,7 @@ class AssignUser extends Component {
                 users,
                 projects
             });
+            
         }
     }
 
