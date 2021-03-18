@@ -66,6 +66,7 @@ class EditSubscriptionModal extends Component {
                     lengthInMonths: this.state.lengthInMonths,
                     startDate: moment(this.state.startDate).format(),
                     notes: this.state.notes,
+                    project: this.props.project
                 }
             }
 
