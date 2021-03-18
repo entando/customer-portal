@@ -112,8 +112,7 @@ class AssignUser extends Component {
     setupFormComponents() {
         const users = this.state.users;
         const projectIdsNames = this.state.projects;
-        let userList,
-            projectList = (userList = null);
+        let userList, projectList = (userList = null);
 
         if (users.size > 0) {
             userList = [...users.keys()].map((assignUser, i) => (

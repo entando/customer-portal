@@ -5,6 +5,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiProjectsGet, apiAddTicketToProject } from '../../api/projects';
 import { apiUsersGet } from '../../api/portalusers';
 import { apiJiraTicketPost } from '../../api/tickets';
+import { hasKeycloakClientRole } from '../../api/helpers';
 
 class OpenTicket extends Component {
     constructor() {
@@ -23,33 +24,6 @@ class OpenTicket extends Component {
         };
         this.types = ["Bug", "Task"];
         this.priorities = ['Lowest', 'Low', 'High', 'Highest'];
-    }
-
-    async checkRole() {
-        const { t, keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-
-        var role = ''
-        if (keycloak.realmAccess) {
-            for (var i = 0; i < keycloak.tokenParsed.roles.length; i++) {
-              if (keycloak.tokenParsed.roles[i] == "ROLE_ADMIN") {
-                role = 'Admin'
-                break;
-              }
-              else if (keycloak.tokenParsed.roles[i] == "ROLE_SUPPORT") {
-                role = 'Support'
-              }
-              else if (keycloak.tokenParsed.roles[i] == "ROLE_PARTNER") {
-                role = 'Partner'
-              }
-              else if (keycloak.tokenParsed.roles[i] == "ROLE_CUSTOMER") {
-                role = 'Customer'
-              }
-            }
-            this.setState({
-                role: role
-            })
-        }
     }
 
     handleValidation() {
@@ -98,14 +72,13 @@ class OpenTicket extends Component {
         var authenticated = keycloak.initialized && keycloak.authenticated;
     
         if (authenticated) {
-            await this.checkRole();
-            if (this.state.role === 'Admin' || this.state.role === 'Support') {
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
                 var projects = await apiProjectsGet(this.props.serviceUrl)
                 this.setState({
                     projects: projects.data
                 })
             }
-            else if (this.state.role === 'Customer' || this.state.role === 'Partner') {
+            else if (hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
                 const users = await apiUsersGet(this.props.serviceUrl);
                 for (var i = 0; i < users.data.length; i++) {
                     if (keycloak.tokenParsed.preferred_username === users.data[i].username) {
