@@ -6,6 +6,8 @@ import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews
 import withKeycloak from '../../auth/withKeycloak';
 import { Link } from 'react-router-dom';
 import i18n from '../../i18n';
+import EditProjectModal from '../Admin/EditProjectModal'
+import { hasKeycloakClientRole } from '../../api/helpers';
 
 class CustomTable extends Component {
   constructor(props) {
@@ -79,6 +81,7 @@ componentDidUpdate(prevProps) {
                           <TableCell>None</TableCell>
                           <TableCell>None</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
+                          <TableCell></TableCell>
                       </TableRow>
                       )
                     }
@@ -99,6 +102,7 @@ componentDidUpdate(prevProps) {
                               <TableCell>{String(new Date(sub.startDate))}</TableCell>
                               <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)))}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
+                              <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <EditProjectModal project={project} serviceUrl={this.props.serviceUrl}/> : null}</TableCell>
                           </TableRow>
                         
                       )
@@ -171,6 +175,10 @@ const headerData = [
       header: i18n.t('customerDashboard.openTickets'),
       key: 'openTickets',
   },
+  {
+      header: i18n.t('customerDashboard.action'),
+      key: 'action',
+  }
 ];
 
 

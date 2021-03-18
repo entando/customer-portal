@@ -11,7 +11,7 @@ export const apiTicketingSystemDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-export const apiTicketingSystemsGet = async (serviceUrl ) => {
+export const apiTicketingSystemsGet = async (serviceUrl) => {
   const url = getUrl(
     `${serviceUrl}/${resource}`
   );
@@ -28,6 +28,16 @@ export const apiTicketingSystemPost = async (serviceUrl, ticketingsystem) => {
   const options = {
     ...getDefaultOptions(),
     method: 'POST',
+    body: ticketingsystem ? JSON.stringify(ticketingsystem) : null,
+  };
+  return request(url, options);
+};
+
+export const apiTicketingSystemPut = async (serviceUrl, ticketingsystem) => {
+  const url = `${serviceUrl}/${resource}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'PUT',
     body: ticketingsystem ? JSON.stringify(ticketingsystem) : null,
   };
   return request(url, options);

@@ -2,17 +2,16 @@ package com.mycompany.myapp.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import javax.swing.*;
 import javax.validation.Valid;
 
+import com.mycompany.myapp.domain.PortalUser;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.SpringSecurityAuditorAware;
+import com.mycompany.myapp.service.PortalUserService;
+import com.mycompany.myapp.service.ProjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,9 +57,13 @@ public class CustomerResource {
     private String applicationName;
 
     private final CustomerService customerService;
+    private final PortalUserService portalUserService;
+    private final ProjectService projectService;
 
-    public CustomerResource(CustomerService customerService) {
+    public CustomerResource(CustomerService customerService, PortalUserService portalUserService, ProjectService projectService) {
         this.customerService = customerService;
+        this.portalUserService = portalUserService;
+        this.projectService = projectService;
     }
 
     /**
@@ -110,10 +114,29 @@ public class CustomerResource {
     @GetMapping("/customers")
     //@Secured(AuthoritiesConstants.ADMIN)
     public List<Customer> getAllCustomers() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Authorities: " + authentication.getAuthorities().toString());
-        log.debug("REST request to get all Customers");
-        return customerService.findAll();
+        SpringSecurityAuditorAware security = new SpringSecurityAuditorAware();
+        Optional<String> currentUser = security.getCurrentUserLogin();
+
+        if(userHasRole("ROLE_ADMIN") || userHasRole("ROLE_SUPPORT")) {
+            log.debug("REST request to get all Customers");
+            return customerService.findAll();
+        }
+        else {
+            List<Project> projects = projectService.findAll();
+            Set<Customer> toAdd = new HashSet<>();
+            List<Customer> customers = new ArrayList<>();
+            for(Project project : projects) {
+                Set<PortalUser> users = projectService.getProjectUsers(project.getId());
+                for(PortalUser user : users) {
+                    if (currentUser.get().equals(user.getUsername())) {
+                        toAdd.add(project.getCustomer());
+                        break;
+                    }
+                }
+            }
+            customers.addAll(toAdd);
+            return customers;
+        }
     }
 
     /**
@@ -201,5 +224,15 @@ public class CustomerResource {
         return ResponseEntity.ok().headers(
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, customerId.toString()))
             .body(projects);
+    }
+
+    public boolean userHasRole(String roleName) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        for (GrantedAuthority role : authentication.getAuthorities()) {
+            if(role.toString().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

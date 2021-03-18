@@ -1,29 +1,31 @@
 {
-  "buttons": {
-    "submit": "Submit",
-    "cancel": "Cancel",
-    "save": "Save",
-    "addCustomer": "Add a Customer +",
-    "addProject": "Add a Project +",
-    "addPartner": "Add a Partner +",
-    "addProductVersion": "Add product version +"
-  },
-
-  "customerDashboard": {
-    "title": "Welcome to Entando Customer Portal",
-    "customerName": "Customer Name",
-    "customerId": "Customer Id",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "projectName": "Project Name",
-    "partnerName": "PartnerName",
-    "entandoVersion": "Entando Version",
-    "openTickets": "OpenTickets",
-    "subscriptions": "Subscriptions",
-    "tableDesc": "In this table there are open subscriptions",
-    "partners": "Partners",
-    "status": "Status"
-  },
+	"buttons":{
+		"submit": "Submit",
+		"cancel": "Cancel",
+		"save": "Save",
+		"edit": "Edit",
+		"addCustomer": "Add a Customer +",
+		"addProject": "Add a Project +",
+		"addPartner": "Add a Partner +",
+		"addProductVersion": "Add product version +"
+	},
+	
+  	"customerDashboard":{
+		"title": "Welcome to Entando Customer Portal",
+		"customerName": "Customer Name",
+		"customerId": "Customer Id",
+		"startDate": "Start Date",
+		"endDate": "End Date",
+		"projectName": "Project Name",
+		"partnerName": "PartnerName",
+		"entandoVersion": "Entando Version",
+		"openTickets": "OpenTickets",
+		"subscriptions": "Subscriptions",
+		"tableDesc":"In this table there are open subscriptions",
+		"partners": "Partners",
+		"status": "Status",
+		"action": "Action"
+	},
 
   "adminDashboard": {
     "title": "Welcome to Entando",
@@ -191,11 +193,22 @@
       "removeUser": "Remove User"
     }
   },
-  "validation": {
-    "invalid": {
-      "required": "This field is required.",
-      "email": "Email is not valid.",
-      "date": "Please enter a date in 'mm/dd/yyyy' format."
-    }
-  }
+	"editSubscription":{
+		"title":"Edit Subscription",
+		"desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+		"description": "Description",
+		"commitment": "Commitment",
+		"type": "Type",
+		"quantityRequest": "QuantityRequest",
+		"components": "Components",
+		"level": "Level"
+	},
+	"validation":{
+		"invalid":{
+			"required": "This field is required.",
+			"email": "Email is not valid.",
+			"date": "Please enter a date in 'mm/dd/yyyy' format."
+		}
+	}
 }
+

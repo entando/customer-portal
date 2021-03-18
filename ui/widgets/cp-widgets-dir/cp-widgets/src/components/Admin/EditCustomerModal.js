@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomerPost } from '../../api/customers';
+import { apiCustomerPut } from '../../api/customers';
 
-class AddCustomerModal extends Component {
+class EditCustomerModal extends Component {
     constructor(props) {
         super(props);
 
@@ -63,30 +63,81 @@ class AddCustomerModal extends Component {
         const name = input.name;
         const value = input.value;
         this.setState({ [name]: value });
+        this.handleValidation();
     };
+
+    async updateCustomer(customer) {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const result = await apiCustomerPut(this.props.serviceUrl, customer);
+        }
+    }
 
     handleFormSubmit = e => {
         const formIsValid = this.handleValidation();
 
         if (formIsValid) {
-            const customer = apiCustomerPost(this.props.serviceUrl, this.state);
-            this.render();
+            const customer = {
+                id: this.props.customer.id,
+                name: this.state.name,
+                customerNumber: this.state.customerNumber,
+                contactName: this.state.contactName,
+                contactPhone: this.state.contactPhone,
+                contactEmail:this.state.contactEmail,
+                notes:this.state.notes
+            }
+            this.updateCustomer(customer);
             window.location.reload(false);
         }
     };
 
+    componentDidMount() {
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        if (authenticated) {
+          this.setState({
+            name: this.props.customer.name,
+            customerNumber: this.props.customer.customerNumber,
+            contactName: this.props.customer.contactName,
+            contactPhone: this.props.customer.contactPhone,
+            contactEmail:this.props.customer.contactEmail,
+            notes:this.props.customer.notes
+          })
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+    
+        if (authenticated && changedAuth) {
+            this.setState({
+                name: this.props.customer.name,
+                customerNumber: this.props.customer.customerNumber,
+                contactName: this.props.customer.contactName,
+                contactPhone: this.props.customer.contactPhone,
+                contactEmail: this.props.customer.contactEmail,
+                notes: this.props.customer.notes
+              })
+        }
+    }
+
     render() {
         return (
             <ModalWrapper
-                buttonTriggerText={i18n.t('buttons.addCustomer')}
-                modalHeading={i18n.t('adminDashboard.addCustomer.title')}
-                buttonTriggerClassName="add-customer bx--btn bx--btn--tertiary"
+                buttonTriggerText={i18n.t('buttons.edit')}
+                modalHeading={i18n.t('adminDashboard.editCustomer.title')}
+                buttonTriggerClassName="bx--btn bx--btn--ghost"
                 className="modal-form"
                 id="modal-form-customer"
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">
-                    <p> {i18n.t('adminDashboard.addCustomer.desc')} </p>
+                    <p> {i18n.t('adminDashboard.editCustomer.desc')} </p>
                     <Form onSubmit={this.handleFormSubmit}>
                         <TextInput
                             name="name"
@@ -138,4 +189,4 @@ class AddCustomerModal extends Component {
     }
 }
 
-export default withKeycloak(AddCustomerModal);
+export default withKeycloak(EditCustomerModal);
