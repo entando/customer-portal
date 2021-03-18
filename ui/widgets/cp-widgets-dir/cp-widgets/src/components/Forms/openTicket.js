@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import i18n from '../../i18n';
 import { Form, TextInput, Select, SelectItem, Button, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiProjectsGet, apiAddTicketToProject } from '../../api/projects';
+import { apiProjectsGet, apiAdminProjectsGet, apiMyProjectsGet, apiAddTicketToProject } from '../../api/projects';
 import { apiUsersGet } from '../../api/portalusers';
 import { apiJiraTicketPost } from '../../api/tickets';
+import { apiTicketingSystemsGet } from '../../api/ticketingsystem';
 import { hasKeycloakClientRole } from '../../api/helpers';
 
 class OpenTicket extends Component {
@@ -73,22 +74,16 @@ class OpenTicket extends Component {
     
         if (authenticated) {
             if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
-                var projects = await apiProjectsGet(this.props.serviceUrl)
+                var projects = await apiAdminProjectsGet(this.props.serviceUrl)
                 this.setState({
                     projects: projects.data
                 })
             }
             else if (hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-                const users = await apiUsersGet(this.props.serviceUrl);
-                for (var i = 0; i < users.data.length; i++) {
-                    if (keycloak.tokenParsed.preferred_username === users.data[i].username) {
-                        if (users.data[i].project) {
-                            this.setState(prevState => ({
-                                projects: [...prevState.projects, users.data[i].project]
-                            }))
-                        }
-                    }
-                }
+                var projects = await apiMyProjectsGet(this.props.serviceUrl)
+                this.setState({
+                    projects: projects.data
+                })
             }
         }
 
@@ -106,12 +101,21 @@ class OpenTicket extends Component {
                 description: this.state.description,
                 priority: this.state.priority,
                 status: 'To Do',
+                // these dates are just placeholder to validate the POST request (date will be updated in the backend)
                 createDate: '2021-02-22T14:14:09-05:00',
                 updateDate: '2021-02-22T14:14:09-05:00'
             }
-            const result = await apiJiraTicketPost(this.props.serviceUrl, this.state.systemId, ticket);
+            const result = await apiJiraTicketPost(this.props.serviceUrl, this.state.ticketingSystem.systemId, this.state.systemId, ticket);
             //const addedTicket = await apiAddTicketToProject(this.props.serviceUrl, this.state.project.id, result.data.id);
         }
+    }
+
+    async getTicketingSystem() {
+        const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
+        const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length-1]
+        this.setState({
+            ticketingSystem: currentTicketingSystem
+        })
     }
 
     componentDidMount() {
@@ -120,6 +124,7 @@ class OpenTicket extends Component {
 
         if (authenticated) {
             this.fetchProjects();
+            this.getTicketingSystem();
         }
     }
 
@@ -131,6 +136,7 @@ class OpenTicket extends Component {
       
         if (authenticated && changedAuth) {
             this.fetchProjects();
+            this.getTicketingSystem();
         }
     }
         

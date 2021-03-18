@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
 import '../../index.scss';
-import { apiGetCustomersProjects } from '../../api/customers';
+import { apiGetCustomersProjects, apiGetMyCustomersProjects } from '../../api/customers';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import { Link } from 'react-router-dom';
@@ -22,11 +22,17 @@ class CustomTable extends Component {
     const authenticated = keycloak.initialized && keycloak.authenticated;
     
     if (authenticated) {
-        const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
-        
-        this.setState({
-            data: projects
-        });
+      var projects;
+      if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+        projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
+      }
+      else {
+        projects = await apiGetMyCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
+      }
+      
+      this.setState({
+          data: projects
+      });
     }
     this.render();
 }
@@ -117,34 +123,6 @@ componentDidUpdate(prevProps) {
     </div>
   )}
 }
-/*
-const headerData = [
-  {
-    header: 'Project Name',
-    key: 'projectName',
-  },
-  {
-    header: 'Description',
-    key: 'description',
-  },
-  {
-    header: 'System Id',
-    key: 'systemId',
-  },
-  {
-    header: 'Notes',
-    key: 'notes',
-  },
-  {
-      header: 'Contact Name',
-      key: 'contactName',
-  },
-  {
-      header: 'Open Tickets',
-      key: 'openTickets',
-  },
-];
-*/
 
 const headerData = [
   {

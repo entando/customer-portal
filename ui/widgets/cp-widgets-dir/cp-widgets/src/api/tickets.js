@@ -55,8 +55,8 @@ export const apiJiraTicketsGet = async (serviceUrl, projectName, organization) =
   return request(url, options);
 };
 
-export const apiJiraTicketPost = async (serviceUrl, organization, ticket) => {
-  const url = `${serviceUrl}/${jiraResource}/${organization}`;
+export const apiJiraTicketPost = async (serviceUrl, projectName, organization, ticket) => {
+  const url = `${serviceUrl}/${jiraResource}/${projectName}/${organization}`;
   const options = {
     ...getDefaultOptions(),
     method: 'POST',
