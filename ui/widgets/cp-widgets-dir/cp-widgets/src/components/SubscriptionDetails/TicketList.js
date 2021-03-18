@@ -82,7 +82,7 @@ componentDidUpdate(prevProps) {
                       <TableCell key={ticket.id}>{ticket.systemId.split("-")[0]}</TableCell>
                       <TableCell key={ticket.id}>{ticket.description}</TableCell>
                       <TableCell key={ticket.id}>{ticket.type}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.createDate}</TableCell>
+                      <TableCell key={ticket.id}>{new Date(ticket.createDate).toDateString()}</TableCell>
                       <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">View Ticket</a></TableCell>
                     </TableRow>
                   )
