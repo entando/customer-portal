@@ -44,7 +44,7 @@
 			"contactPhone": "Contatto telefonico",
 			"contactEmail": "Contatto email",
 			"notes": "Appunti",
-			"editTitle": "Edit Partner"
+			"editTitle": "Modifica partner"
 		},
 		"addCustomer":{
 			"title": "Aggiungi un cliente",
@@ -114,6 +114,7 @@
 		"title": "Entando Admin View",
 		"formTitle": "Tutti i clienti",
 		"desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+		
 		"integrationTicketingSystem": {
 			"title": "Integrazione con il sistema di ticketing",
 			"desc": "Questo ti permette di gestire il sistema di ticketing",
@@ -133,12 +134,13 @@
 			"supportEndDate": "Data di fine del supporto"
 		}
 	},
+	
 	"manageUsers":{
 		"title": "Titolo",
 		"assign":{
 			"title": "Assegna un nuovo utente",
 			"desc": "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
-			"projectName": "Nome del progetto"
+			"projectName": "Nome del progetto",
 			"assignUser": "Assegna utente",
 			"selectRole": "Seleziona ruolo"
 		},
@@ -151,7 +153,7 @@
 		"invalid":{
 			"required": "Questo campo è obbligatorio.",
 			"email": "L'email non è valida.",
-			"date": "Inserisci una data nel formato "mm / gg / aaaa"."
+			"date": "Inserisci una data nel formato 'mm / gg / aaaa'."
 		}
 	}
 }
