@@ -17,25 +17,24 @@ class AddCustomerModal extends Component {
             notes: '',
             invalid: {}
         };
+
+        this.baseState = this.state
     }
 
     handleValidation() {
         let invalid = {};
         let formIsValid = true;
 
-        //name
         if (this.state.name === '') {
             formIsValid = false;
             invalid['name'] = true;
         }
 
-        //customerNumber
         if (this.state.customerNumber === '') {
             formIsValid = false;
             invalid['customerNumber'] = true;
         }
 
-        //contactEmail
         if (typeof this.state.contactEmail !== 'undefined') {
             let lastAtPos = this.state.contactEmail.lastIndexOf('@');
             let lastDotPos = this.state.contactEmail.lastIndexOf('.');
@@ -75,12 +74,24 @@ class AddCustomerModal extends Component {
         }
     };
 
+    clearValues = () => {
+        const customerModalElement = document.querySelector('#modal-form-customer');
+          if(!customerModalElement.className.includes("is-visible")) {
+            this.setState(this.baseState);
+          }
+    }
+    
+    componentDidMount() {
+        const modalOpenButton = document.querySelector('.add-customer-button');
+        modalOpenButton.addEventListener("click", this.clearValues, false);
+    }
+
     render() {
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.addCustomer')}
                 modalHeading={i18n.t('adminDashboard.addCustomer.title')}
-                buttonTriggerClassName="add-customer bx--btn bx--btn--tertiary"
+                buttonTriggerClassName="add-customer bx--btn bx--btn--tertiary add-customer-button"
                 className="modal-form"
                 id="modal-form-customer"
                 handleSubmit={this.handleFormSubmit}

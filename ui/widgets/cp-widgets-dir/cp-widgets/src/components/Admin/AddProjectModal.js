@@ -131,18 +131,38 @@ class AddProjectModal extends Component {
     }
   };
 
+  clearValues = () => {
+    const projectModalElement = document.querySelector('#modal-form-project');
+      if(!projectModalElement.className.includes("is-visible")) {
+        this.setState({
+          customerId: '',
+          name: '',
+          description: '',
+          systemId: '',
+          contactName: '',
+          contactPhone: '',
+          contactEmail: '',
+          notes: '',
+          invalid: {}
+        })
+      }
+  }
+
   componentDidMount() {
     this.getCustomers();
     this.getAllProjects();
-  }
 
+    const modalOpenButton = document.querySelector('.add-project-button');
+    modalOpenButton.addEventListener("click", this.clearValues, false);
+  }
+  
   render() {
     const customerList = ['Customer1', 'Customer2', 'Customer3'];
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProject')}
         modalHeading="Add a project"
-        buttonTriggerClassName="add-project bx--btn bx--btn--tertiary"
+        buttonTriggerClassName="add-project bx--btn bx--btn--tertiary add-project-button"
         className="modal-form"
         id="modal-form-project"
         handleSubmit={this.handleFormSubmit}
