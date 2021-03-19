@@ -13,7 +13,7 @@ class CustomTable extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      data: {}
+      projects: {}
      }
   }
 
@@ -31,7 +31,7 @@ class CustomTable extends Component {
       }
       
       this.setState({
-          data: projects
+          projects: projects
       });
     }
     this.render();
@@ -55,7 +55,7 @@ componentDidUpdate(prevProps) {
   render() { 
     return (
       <div>
-        <DataTable rows={rowData} headers={headerData} data={this.state.data}>
+        <DataTable rows={rowData} headers={headerData}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
           <TableContainer title={i18n.t('customerDashboard.subscriptions')} description={i18n.t('customerDashboard.tableDesc')}>
             <Table {...getTableProps()}>
@@ -69,8 +69,8 @@ componentDidUpdate(prevProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {Object.keys(this.state.data).length !== 0 ? 
-                  this.state.data.data.map((project, index) => {
+              {Object.keys(this.state.projects).length !== 0 ? 
+                  this.state.projects.data.map((project, index) => {
                     if (project.projectSubscriptions.length === 0) {
                       return(
                         <TableRow key={index} >

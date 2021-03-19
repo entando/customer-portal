@@ -14,11 +14,13 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.mycompany.myapp.security.AuthoritiesConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,20 +69,20 @@ public class EntandoVersionResource {
      */
     @PostMapping("/entando-versions")
     public ResponseEntity<EntandoVersion> createEntandoVersion(@Valid @RequestBody EntandoVersionRequest entandoVersionRequest) throws URISyntaxException {
-    	
+
     	try {
 	    	if (entandoVersionRequest != null) {
 	    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(CustportAppConstant.INPUT_DATE_FORMAT);
 	    		LocalDate startDate = LocalDate.parse(entandoVersionRequest.getStartDate(), formatter);
 	    		LocalDate endDate = LocalDate.parse(entandoVersionRequest.getEndDate(), formatter);
-	    		
+
 	    		EntandoVersion objToAdd = new EntandoVersion();
 	    		objToAdd.setStartDate(startDate.atStartOfDay(ZoneId.systemDefault()));
 	    		objToAdd.setEndDate(endDate.atStartOfDay(ZoneId.systemDefault()));
 	    		objToAdd.setName(entandoVersionRequest.getName());
 
 	    		EntandoVersion result = entandoVersionService.save(objToAdd);
-	    		
+
 	    		return ResponseEntity.created(new URI("/api/entando-versions/" + result.getId()))
 	                    .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
 	                    .body(result);
@@ -90,11 +92,11 @@ public class EntandoVersionResource {
     	} catch (Exception exception) {
     		log.error("Error occurred while creating a entando version : " + entandoVersionRequest.getName(), exception);
     	}
-    	
+
     	// will be updated once the way to handle response error in front end is determined.
         return null;
     }
-    
+
     /**
      * {@code PUT  /entando-versions} : Updates an existing entandoVersion.
      *
@@ -105,6 +107,8 @@ public class EntandoVersionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/entando-versions")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<EntandoVersion> updateEntandoVersion(@Valid @RequestBody EntandoVersion entandoVersion) throws URISyntaxException {
         log.debug("REST request to update EntandoVersion : {}", entandoVersion);
         if (entandoVersion.getId() == null) {
@@ -115,13 +119,15 @@ public class EntandoVersionResource {
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, entandoVersion.getId().toString()))
             .body(result);
     }
-    
+
     @PutMapping("/entando-versions/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<EntandoVersion> updateEntandoVersionStatus(@PathVariable Long id) throws URISyntaxException {
-    	 
+
     	try {
     		Optional<EntandoVersion> entandoVersion = entandoVersionService.findOne(id);
-    	 
+
     		if (entandoVersion.isPresent()) {
     			EntandoVersion objToUpdate = entandoVersion.get();
     			objToUpdate.setStatus(!objToUpdate.isStatus());
@@ -130,7 +136,7 @@ public class EntandoVersionResource {
     	} catch(Exception e) {
     		log.error("Error occurred while updating entando version for id : " + id, e);
     	}
-    	 
+
     	 return ResponseEntity.noContent().headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 
@@ -140,17 +146,19 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of entandoVersions in body.
      */
     @GetMapping("/entando-versions")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<List<EntandoVersionResponse>> getAllEntandoVersions() {
-        
-    	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT); 
+
+    	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT);
         List<EntandoVersionResponse> entandoVersions = new ArrayList<>();
-        
+
         try {
 	        List<EntandoVersion> entandoVersionList = entandoVersionService.findAll();
-	
+
 	        for (EntandoVersion entandoVersion : entandoVersionList) {
 	        	EntandoVersionResponse res = new EntandoVersionResponse();
-	        	
+
 	        	res.setId(entandoVersion.getId());
 	        	res.setName(entandoVersion.getName());
 	        	res.setStatus(entandoVersion.isStatus());
@@ -160,7 +168,7 @@ public class EntandoVersionResource {
 	        	if(entandoVersion.getEndDate() != null) {
 	        		res.setEndDate(sdf.format(Date.from(entandoVersion.getEndDate().toInstant())));
 	        	}
-	        	
+
 	        	entandoVersions.add(res);
 	        }
         } catch(Exception e) {
@@ -177,6 +185,8 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the entandoVersion, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/entando-versions/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<EntandoVersion> getEntandoVersion(@PathVariable Long id) {
         log.debug("REST request to get EntandoVersion : {}", id);
         Optional<EntandoVersion> entandoVersion = entandoVersionService.findOne(id);
@@ -190,6 +200,8 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/entando-versions/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Void> deleteEntandoVersion(@PathVariable Long id) {
         log.debug("REST request to delete EntandoVersion : {}", id);
 
