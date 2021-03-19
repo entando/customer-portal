@@ -27,7 +27,9 @@ class ProductVersion extends Component {
   }
 
   componentDidMount() {
-    this.getProductVersions();
+    if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+      this.getProductVersions();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -37,7 +39,9 @@ class ProductVersion extends Component {
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
     if (authenticated && changedAuth) {
-      this.getProductVersions();
+      if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+        this.getProductVersions();
+      }
     }
   }
 

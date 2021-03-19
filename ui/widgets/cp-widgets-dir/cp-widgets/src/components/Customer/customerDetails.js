@@ -60,9 +60,6 @@ class CustomerDetails extends React.Component {
           <p>
             <strong>{i18n.t('customerDashboard.customerId')}</strong> {this.state.customer.id}
           </p>
-          <p>
-            <strong>{i18n.t('customerDashboard.startDate')}</strong> {this.state.customer.customerNumber}
-          </p>
         </Tile>
       </div>
     );
