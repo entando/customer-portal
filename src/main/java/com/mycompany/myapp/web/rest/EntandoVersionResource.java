@@ -63,11 +63,12 @@ public class EntandoVersionResource {
     /**
      * {@code POST  /entando-versions} : Create a new entandoVersion.
      *
-     * @param entandoVersion the entandoVersion to create.
+     * @param entandoVersionRequest the entandoVersion to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new entandoVersion, or with status {@code 400 (Bad Request)} if the entandoVersion has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/entando-versions")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<EntandoVersion> createEntandoVersion(@Valid @RequestBody EntandoVersionRequest entandoVersionRequest) throws URISyntaxException {
 
     	try {
@@ -107,8 +108,7 @@ public class EntandoVersionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/entando-versions")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<EntandoVersion> updateEntandoVersion(@Valid @RequestBody EntandoVersion entandoVersion) throws URISyntaxException {
         log.debug("REST request to update EntandoVersion : {}", entandoVersion);
         if (entandoVersion.getId() == null) {
@@ -121,8 +121,7 @@ public class EntandoVersionResource {
     }
 
     @PutMapping("/entando-versions/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<EntandoVersion> updateEntandoVersionStatus(@PathVariable Long id) throws URISyntaxException {
 
     	try {
@@ -146,8 +145,7 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of entandoVersions in body.
      */
     @GetMapping("/entando-versions")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<List<EntandoVersionResponse>> getAllEntandoVersions() {
 
     	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT);
@@ -200,8 +198,7 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/entando-versions/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Void> deleteEntandoVersion(@PathVariable Long id) {
         log.debug("REST request to delete EntandoVersion : {}", id);
 
