@@ -154,10 +154,11 @@ class AddProjectModal extends Component {
               defaultValue="customer-list"
               name="customerId"
               labelText={i18n.t('adminDashboard.addProject.customerList')}
+              defaultValue={{ label: "Select Dept", value: 0 }}
               value={this.state.customerId}
               onChange={this.handleChanges}
             >
-              <SelectItem text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list" />
+              <SelectItem disabled text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list" />
               {Object.keys(this.state.customerList).length !== 0
                 ? this.state.customerList.data.map((customerList, i) => (
                     <SelectItem key={i} text={customerList.name} value={customerList.id}>

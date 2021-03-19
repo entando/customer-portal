@@ -5,12 +5,13 @@ import { apiTicketingSystemsGet, apiTicketingSystemPost } from '../../api/ticket
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiGetProjectsUsers, apiProjectGet, apiGetProjectsTickets, apiAddTicketToProject } from '../../api/projects';
+import { hasKeycloakClientRole } from '../../api/helpers';
 
 class TicketList extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      data: {}
+      tickets: {}
      }
   }
 
@@ -25,22 +26,22 @@ class TicketList extends Component {
           const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length-1]
           var tickets = await apiJiraTicketsGet(this.props.serviceUrl, currentTicketingSystem.systemId, project.data.systemId);
           for(var i = 0; i < tickets.data.length; i++) {
-            apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id)
+            apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id);
           }
-
           this.setState({
-              data: tickets
+              tickets: tickets
           });
       }
       catch(err) {
         console.log(err)
       }
     }
-      this.render();
 }
 
 componentDidMount(){
+  if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
     this.fetchData();
+  }
 }
 
 componentDidUpdate(prevProps) {
@@ -53,10 +54,6 @@ componentDidUpdate(prevProps) {
     this.fetchData();
   }
 }
-
-  changeState = () => {   
-    this.setState({data:'test data'});  
-  };  
 
   render() { 
     return ( 
@@ -75,7 +72,7 @@ componentDidUpdate(prevProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {Object.keys(this.state.data).length !== 0 ? this.state.data.data.map((ticket) => {
+                {Object.keys(this.state.tickets).length !== 0 ? this.state.tickets.data.map((ticket) => {
                   return (
                     <TableRow key={ticket.id}>
                       <TableCell key={ticket.id}>{ticket.systemId}</TableCell>

@@ -113,7 +113,7 @@ class AddPartnerModal extends Component {
               value={this.state.projectId}
               onChange={this.handleChanges}
             >
-              <SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />
+              <SelectItem disabled text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />
               {Object.keys(this.state.projectList).length !== 0
                 ? this.state.projectList.data.map((projectList, i) => (
                     <SelectItem key={i} text={projectList.name} value={projectList.id}>

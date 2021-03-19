@@ -56,39 +56,13 @@ class Subscription extends React.Component {
         }
     }
 
-    async getPortalUsers() {
-        const { t, keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-        if (authenticated) {
-            const users = await apiUsersGet(this.props.serviceUrl)
-
-            this.setState({
-                users: users
-            })
-        }
-    }
-
-    async getProject(id) {
-        const { t, keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-        if (authenticated) {
-            const project =  await apiProjectGet(this.props.serviceUrl, id)
-
-            this.setState({
-                project: project
-            })
-        }
-    }
-
     componentDidMount(){
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
 
-        this.getSubscription();
-        if (this.state.subscription !== '') {
-            this.getProject(this.state.subscription.project.id);
+        if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+            this.getSubscription();
         }
-        this.getPortalUsers();
     }
 
     componentDidUpdate(prevProps) {
@@ -98,11 +72,9 @@ class Subscription extends React.Component {
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
     
         if (authenticated && changedAuth) {
-          this.getSubscription();
-          if (this.state.subscription !== '') {
-            this.getProject(this.state.subscription.project.id);
-          }
-          this.getPortalUsers();
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+                this.getSubscription();
+            }
         }
       }
 
@@ -111,11 +83,10 @@ class Subscription extends React.Component {
         var { t, keycloak } = this.props;
         var authenticated = keycloak.initialized && keycloak.authenticated;
 
-        // wait for data from api
         if (Object.keys(this.state.subscription).length !== 0) {
             return (
                 <div className="subscription-details">
-                    {Object.keys(this.state.subscription).length !== 0 ? <div><p>Project Id: {this.state.subscription.data.project.id}</p>
+                    <div>
                     <Tile>
                         <div className="bx--grid">
                             <div className="bx--row">
@@ -123,13 +94,13 @@ class Subscription extends React.Component {
                                     <p><strong>Description:</strong> {this.state.subscription.data.project.description}</p>
                                     <p><strong>Commitment:</strong>
                                     {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? 
-                                    
-                                    <>
-                                        {this.state.project.data.partners.map(partner => (
-                                            <> {partner.name} </>
-                                        ))}
-                                    </>
-                                    : <> None </>}
+                                        <>
+                                            {this.state.project.data.partners.map(partner => (
+                                                <> {partner.name} </>
+                                            ))}
+                                        </>
+                                        : <> None </>
+                                    }
                                     </p>
                                     <p><strong>Type:</strong> {type}</p>
                                     <p><strong>Quantity Request:</strong> {quantityRequest}</p>
@@ -150,7 +121,6 @@ class Subscription extends React.Component {
                     <br/>
                     <TicketList projectId={this.state.subscription.data.project.id} serviceUrl={this.props.serviceUrl} />
                     </div>
-                    : null }
                 </div>
             )
         }

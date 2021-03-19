@@ -1,6 +1,7 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.TicketingSystem;
+import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.service.TicketingSystemService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -47,6 +49,8 @@ public class TicketingSystemResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/ticketing-systems")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<TicketingSystem> createTicketingSystem(@Valid @RequestBody TicketingSystem ticketingSystem) throws URISyntaxException {
         log.debug("REST request to save TicketingSystem : {}", ticketingSystem);
         if (ticketingSystem.getId() != null) {
@@ -68,6 +72,8 @@ public class TicketingSystemResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/ticketing-systems")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<TicketingSystem> updateTicketingSystem(@Valid @RequestBody TicketingSystem ticketingSystem) throws URISyntaxException {
         log.debug("REST request to update TicketingSystem : {}", ticketingSystem);
         if (ticketingSystem.getId() == null) {
@@ -85,6 +91,8 @@ public class TicketingSystemResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of ticketingSystems in body.
      */
     @GetMapping("/ticketing-systems")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public List<TicketingSystem> getAllTicketingSystems() {
         log.debug("REST request to get all TicketingSystems");
         return ticketingSystemService.findAll();
@@ -97,6 +105,8 @@ public class TicketingSystemResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ticketingSystem, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/ticketing-systems/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<TicketingSystem> getTicketingSystem(@PathVariable Long id) {
         log.debug("REST request to get TicketingSystem : {}", id);
         Optional<TicketingSystem> ticketingSystem = ticketingSystemService.findOne(id);
@@ -110,6 +120,8 @@ public class TicketingSystemResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/ticketing-systems/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Void> deleteTicketingSystem(@PathVariable Long id) {
         log.debug("REST request to delete TicketingSystem : {}", id);
 

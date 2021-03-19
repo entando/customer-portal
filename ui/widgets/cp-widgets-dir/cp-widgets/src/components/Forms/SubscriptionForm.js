@@ -179,6 +179,7 @@ class SubscriptionForm extends Component {
         const formComponents = this.setupFormComponents()
         const { projectList, subscriptionList, versionList } = formComponents;
         const subscriptionLength = ['1 Year', '2 Years', '3 Years'];
+        
 
         return (
             <div>

@@ -2,6 +2,7 @@ package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Ticket;
 import com.mycompany.myapp.domain.TicketingSystem;
+import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.service.JiraTicketingSystemService;
 import com.mycompany.myapp.service.ProjectService;
 import com.mycompany.myapp.service.TicketService;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -61,6 +63,8 @@ public class TicketResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/tickets")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Ticket> createTicket(@Valid @RequestBody Ticket ticket) throws URISyntaxException {
         log.debug("REST request to save Ticket : {}", ticket);
         if (ticket.getId() != null) {
@@ -82,6 +86,8 @@ public class TicketResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/tickets")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Ticket> updateTicket(@Valid @RequestBody Ticket ticket) throws URISyntaxException {
         log.debug("REST request to update Ticket : {}", ticket);
         if (ticket.getId() == null) {
@@ -99,6 +105,8 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
      */
     @GetMapping("/tickets")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public List<Ticket> getAllTickets() {
         log.debug("REST request to get all Tickets");
         return ticketService.findAll();
@@ -111,6 +119,8 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ticket, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/tickets/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Ticket> getTicket(@PathVariable Long id) {
         log.debug("REST request to get Ticket : {}", id);
         Optional<Ticket> ticket = ticketService.findOne(id);
@@ -138,6 +148,8 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
      */
     @GetMapping("/tickets/ticketingsystem/{systemId}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public List<Ticket> fetchJiraTicketsByProject(@PathVariable String systemId) throws URISyntaxException {
         log.debug("REST request to get all Tickets by systemId: {}");
         List<Ticket> resultTickets = new ArrayList<Ticket>();
@@ -179,6 +191,8 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
      */
     @GetMapping("/tickets/ticketingsystem/{jiraProjectCode}/{organizationNumber}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public List<Ticket> fetchJiraTicketsByOrganizationAndProject(@PathVariable String jiraProjectCode,
                                                                  @PathVariable String organizationNumber) throws URISyntaxException {
         log.debug("REST request to get all Tickets by systemId and organization: {}");
@@ -245,6 +259,8 @@ public class TicketResource {
      * @return the JSON response
      */
     @PostMapping("/tickets/ticketingsystem/{systemId}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Ticket> createJiraTicket(@PathVariable String systemId, @Valid @RequestBody Ticket ticket)
         throws URISyntaxException {
         // find ticketing system for this systemId
@@ -270,6 +286,8 @@ public class TicketResource {
      * @return the JSON response
      */
     @PostMapping("/tickets/ticketingsystem/{jiraProjectCode}/{organizationNumber}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Ticket> createJiraTicketInOrg(@PathVariable String jiraProjectCode, @PathVariable String organizationNumber,
                                                         @Valid @RequestBody Ticket ticket) throws URISyntaxException {
         // find ticketing system for this systemId
@@ -295,6 +313,8 @@ public class TicketResource {
      * @return the JSON response
      */
     @PutMapping("/tickets/ticketingsystem/{systemId}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Ticket> updateJiraTicket(@PathVariable String systemId, @Valid @RequestBody Ticket ticket)
         throws URISyntaxException {
         // find ticketing system for this systemId
@@ -327,6 +347,8 @@ public class TicketResource {
      * @param systemId the systemId of the ticket
      */
     @DeleteMapping("/tickets/ticketingsystem/{systemId}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public String deleteJiraTicket(@PathVariable String systemId) {
         // find ticket by systemId in db
         String[] splitSystemId = systemId.split("-");

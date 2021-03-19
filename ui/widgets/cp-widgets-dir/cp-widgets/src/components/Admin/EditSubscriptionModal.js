@@ -116,7 +116,7 @@ class EditSubscriptionModal extends Component {
                             invalidText={i18n.t('validation.invalid.required')}
                             invalid={this.state.invalid['level']} 
                             >
-                            <SelectItem text="Select Level" value="level" />
+                            <SelectItem disabled text="Select Level" value="level" />
                             {levelList.map((level, i) => (
                                     <SelectItem key={i} text={level} value={level}>
                                         {level}
@@ -131,7 +131,7 @@ class EditSubscriptionModal extends Component {
                             invalidText={i18n.t('validation.invalid.required')}
                             invalid={this.state.invalid['status']} 
                             >
-                            <SelectItem text="Select Status" value="status" />
+                            <SelectItem disabled text="Select Status" value="status" />
                             {statusList.map((status, i) => (
                                 <SelectItem key={i} text={status} value={status}>
                                     {status}
