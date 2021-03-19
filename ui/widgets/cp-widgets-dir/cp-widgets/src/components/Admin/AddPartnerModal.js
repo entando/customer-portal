@@ -34,13 +34,11 @@ class AddPartnerModal extends Component {
     let invalid = {};
     let formIsValid = true;
 
-    //name
     if (this.state.name === '') {
       formIsValid = false;
       invalid['name'] = true;
     }
 
-    //partnerNumber
     if (this.state.partnerNumber === '') {
       formIsValid = false;
       invalid['partnerNumber'] = true;
@@ -89,8 +87,24 @@ class AddPartnerModal extends Component {
     }
   };
 
+  clearValues = () => {
+    const partnerModalElement = document.querySelector('#modal-form-partner');
+      if(!partnerModalElement.className.includes("is-visible")) {
+        this.setState({
+          projectId: '',
+          name: '',
+          partnerNumber: '',
+          notes: '',
+          invalid: {}
+        })
+      }
+  }
+
   componentDidMount() {
     this.getProjects();
+
+    const modalOpenButton = document.querySelector('.add-partner-button');
+    modalOpenButton.addEventListener("click", this.clearValues, false);
   }
 
   render() {
@@ -98,7 +112,7 @@ class AddPartnerModal extends Component {
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addPartner')}
         modalHeading={i18n.t('adminDashboard.addPartner.title')}
-        buttonTriggerClassName="add-partner bx--btn bx--btn--tertiary"
+        buttonTriggerClassName="add-partner bx--btn bx--btn--tertiary add-partner-button"
         className="modal-form"
         id="modal-form-partner"
         handleSubmit={this.handleFormSubmit}
