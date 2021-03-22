@@ -37,22 +37,33 @@ class SubscriptionForm extends Component {
     }
 
     componentDidMount() {
-        this.fetchData();
-    }
-
-    async fetchData() {
         const { t, keycloak } = this.props;
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
-            const productVersions = (await apiProductVersionsGet(this.props.serviceUrl)).data;
-
-            this.setState({
-                projects,
-                productVersions
-            });
+            this.fetchData();
         }
+    }
+
+    componentDidUpdate(prevProps) {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+      
+        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+      
+        if (authenticated && changedAuth) {
+            this.fetchData();
+        }
+    }
+
+    async fetchData() {
+        const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
+        const productVersions = (await apiProductVersionsGet(this.props.serviceUrl)).data;
+
+        this.setState({
+            projects,
+            productVersions
+        });
     }
 
     handleValidation() {
@@ -127,23 +138,21 @@ class SubscriptionForm extends Component {
                 startDate: new Date(this.state.startDate),
                 lengthInMonths: this.state.subscriptionLength,
                 level: this.state.subscriptionLevel,
-                status: this.subscriptionStatus() // TODO: Change this
+                status: this.subscriptionStatus()
             }
         }
 
-        console.log(subscriptionRequest);
-
         return await apiProjectSubscriptionPost(this.props.serviceUrl, subscriptionRequest);
-    }
-
-    subscriptionStatus() {
-        return hasKeycloakClientRole('ROLE_ADMIN') ? subscriptionStatus.active : subscriptionStatus.requested;
     }
 
     async renewSubscription() {
 
     }
 
+    subscriptionStatus() {
+        return hasKeycloakClientRole('ROLE_ADMIN') ? subscriptionStatus.active : subscriptionStatus.requested;
+    }
+    
     setupFormComponents() {
         const projectIdsNames = this.state.projects;        
         let projectList = null;
