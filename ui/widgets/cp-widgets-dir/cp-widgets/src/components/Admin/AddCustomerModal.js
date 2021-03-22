@@ -76,9 +76,9 @@ class AddCustomerModal extends Component {
 
     clearValues = () => {
         const customerModalElement = document.querySelector('#modal-form-customer');
-          if(!customerModalElement.className.includes("is-visible")) {
+        if(!customerModalElement.className.includes("is-visible")) {
             this.setState(this.baseState);
-          }
+        }
     }
     
     componentDidMount() {
