@@ -101,7 +101,6 @@ class AdminDashboard extends React.Component {
             {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') ?
                 <Tile>
                     <SubscriptionForm serviceUrl={this.props.serviceUrl} />
-                    <ManageUser serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl}/>
                     <p className="title">{i18n.t('adminDashboard.allCustomers')}</p>
                     <div className="bx--row">
                         <div className="bx--col">
