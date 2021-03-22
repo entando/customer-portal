@@ -103,3 +103,13 @@ export const apiMyCustomersGet = async (serviceUrl) => {
 
   return request(url, options);
 };
+
+export const apiGetMyCustomersProjects = async (serviceUrl, customerId) => {
+  const url = `${serviceUrl}/${myResource}/${customerId}/projects`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET'
+  };
+
+  return request(url, options);
+};

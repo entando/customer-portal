@@ -83,6 +83,7 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Project> createProject(@Valid @RequestBody Project project) throws URISyntaxException {
         log.debug("REST request to save Project : {}", project);
 
@@ -108,6 +109,7 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/projects")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Project> updateProject(@Valid @RequestBody Project project) throws URISyntaxException {
         log.debug("REST request to update Project : {}", project);
         if (project.getId() == null) {
@@ -120,12 +122,15 @@ public class ProjectResource {
     }
 
 	@GetMapping("/projects")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
 	public List<Project> getAllProjects() {
 		log.debug("REST request to get all Projects");
 		return projectService.findAll();
 	}
 
 	@GetMapping("/projects/subscriptions/customer/{customerNumber}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<List<SubscriptionListResponse>> getSubscriptionsForCustomer(@PathVariable String customerNumber) {
 		List<SubscriptionListResponse> subscriptionList = new ArrayList<>();
 
@@ -169,6 +174,8 @@ public class ProjectResource {
     }
 
     @GetMapping("/projects/subscriptions/detail")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(
             @RequestParam(value = "projectId") Long projectId) {
 
@@ -201,6 +208,8 @@ public class ProjectResource {
      *         the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Project> getProject(@PathVariable Long id) {
         log.debug("REST request to get Project : {}", id);
         Optional<Project> project = projectService.findOne(id);
@@ -214,7 +223,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/projects/{id}")
-    //@Secured(AuthoritiesConstants.ADMIN)
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
 
@@ -235,6 +244,8 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects/{projectId}/tickets/{ticketId}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Project> addTicketToProject(@PathVariable Long projectId, @PathVariable Long ticketId) throws URISyntaxException {
         log.debug("REST request to add Ticket to Project : {}", projectId);
         Project result = projectService.addTicketToProject(projectId, ticketId);
@@ -253,6 +264,8 @@ public class ProjectResource {
      *         the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{projectId}/tickets")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Set<Ticket>> getProjectTickets(@PathVariable Long projectId) {
         Set<Ticket> tickets = projectService.getProjectTickets(projectId);
         return ResponseEntity.ok().headers(
@@ -271,6 +284,7 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects/{projectId}/subscriptions/{subscriptionId}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Project> addSubscriptionToProject(@PathVariable Long projectId, @PathVariable Long subscriptionId) throws URISyntaxException {
         log.debug("REST request to add Ticket to Project : {}", projectId);
         Project result = projectService.addSubscriptionToProject(projectId, subscriptionId);
@@ -289,6 +303,8 @@ public class ProjectResource {
      *         the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{projectId}/subscriptions")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Set<ProjectSubscription>> getProjectSubscriptions(@PathVariable Long projectId) {
         Set<ProjectSubscription> subscriptions = projectService.getProjectSubscriptions(projectId);
         return ResponseEntity.ok().headers(
@@ -307,6 +323,7 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects/{projectId}/partners/{partnerId}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Project> addPartnerToProject(@PathVariable Long projectId, @PathVariable Long partnerId) throws URISyntaxException {
         log.debug("REST request to add Ticket to Project : {}", projectId);
         Project result = projectService.addPartnerToProject(projectId, partnerId);
@@ -325,6 +342,8 @@ public class ProjectResource {
      *         the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{projectId}/partners")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Set<Partner>> getProjectPartners(@PathVariable Long projectId) {
         Set<Partner> partners = projectService.getProjectPartners(projectId);
         return ResponseEntity.ok().headers(
@@ -343,6 +362,7 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects/{projectId}/users/{userId}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Project> addUserToProject(@PathVariable Long projectId, @PathVariable Long userId) throws URISyntaxException {
         log.debug("REST request to add a user to Project : {}", projectId);
         Project result = projectService.addUserToProject(projectId, userId);
@@ -361,6 +381,8 @@ public class ProjectResource {
      *         the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{projectId}/users")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Set<PortalUser>> getProjectUsers(@PathVariable Long projectId) {
         Set<PortalUser> users = projectService.getProjectUsers(projectId);
         return ResponseEntity.ok().headers(
@@ -369,6 +391,8 @@ public class ProjectResource {
     }
 
     @GetMapping("/projects/nameId")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Map<Long, String>> getProjectIdsAndNames() {
         List<Project> projects = projectService.findAll();
         Map<Long, String> projectIdNameMap = new HashMap<>();
@@ -416,5 +440,28 @@ public class ProjectResource {
         }
         myProjects.addAll(toAdd);
         return myProjects;
+    }
+
+    /**
+     * {@code GET  /projects/myproject/:id} : get the "id" project.
+     *
+     * @param id the id of the project to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the project, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/projects/myproject/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    public ResponseEntity<Project> getMyProject(@PathVariable Long id) {
+        log.debug("REST request to get Project : {}", id);
+        Optional<Project> project = projectService.findOne(id);
+
+        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
+        Set<PortalUser> projectUsers = projectService.getProjectUsers(project.get().getId());
+        for(PortalUser user : projectUsers) {
+            if (user.getUsername().equals(currentUser)) {
+                return ResponseUtil.wrapOrNotFound(project);
+            }
+        }
+        return null;
     }
 }

@@ -16,6 +16,7 @@ import { SubtractAlt16 } from '@carbon/icons-react';
 import { apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
 import withKeycloak from '../../../auth/withKeycloak';
 import AddProductVersionModal from '../AddProductVersionModal';
+import { hasKeycloakClientRole } from '../../../api/helpers';
 
 class ProductVersion extends Component {
   constructor() {
@@ -26,7 +27,9 @@ class ProductVersion extends Component {
   }
 
   componentDidMount() {
-    this.getProductVersions();
+    if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+      this.getProductVersions();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -36,7 +39,9 @@ class ProductVersion extends Component {
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
     if (authenticated && changedAuth) {
-      this.getProductVersions();
+      if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+        this.getProductVersions();
+      }
     }
   }
 
@@ -57,46 +62,51 @@ class ProductVersion extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <DataTable rows={rowData} headers={headerData}>
-          {({ rows, headers, getHeaderProps, getTableProps }) => (
-            <TableContainer>
-              <Table {...getTableProps()}>
-                <TableHead>
-                  <TableRow>
-                    {headers.map(header => (
-                      <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.keys(this.state.data).length !== 0
-                    ? this.state.data.data.map((productVersion, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{productVersion.name}</TableCell>
-                          <TableCell>
-                            <ToggleSmall
-                              onClick={() => this.handleToggleChange(productVersion.id)}
-                              aria-label="toggle button"
-                              id={productVersion.id}
-                              defaultToggled={productVersion.status ? true : false}
-                            />
-                          </TableCell>
-                          <TableCell>{productVersion.startDate}</TableCell>
-                          <TableCell>{productVersion.endDate}</TableCell>
-                        </TableRow>
-                      ))
-                    : null}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </DataTable>
-        <br />
-        <AddProductVersionModal serviceUrl={this.props.serviceUrl} />
-      </div>
-    );
+    if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+      return (
+        <div>
+          <DataTable rows={rowData} headers={headerData}>
+            {({ rows, headers, getHeaderProps, getTableProps }) => (
+              <TableContainer>
+                <Table {...getTableProps()}>
+                  <TableHead>
+                    <TableRow>
+                      {headers.map(header => (
+                        <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {Object.keys(this.state.data).length !== 0
+                      ? this.state.data.data.map((productVersion, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{productVersion.name}</TableCell>
+                            <TableCell>
+                              <ToggleSmall
+                                onClick={() => this.handleToggleChange(productVersion.id)}
+                                aria-label="toggle button"
+                                id={productVersion.id}
+                                defaultToggled={productVersion.status ? true : false}
+                              />
+                            </TableCell>
+                            <TableCell>{productVersion.startDate}</TableCell>
+                            <TableCell>{productVersion.endDate}</TableCell>
+                          </TableRow>
+                        ))
+                      : null}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </DataTable>
+          <br />
+          <AddProductVersionModal serviceUrl={this.props.serviceUrl} />
+        </div>
+      );
+    }
+    else {
+      return(<p>You are not authorized to view this</p>)
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AccordionItem } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomerGet, apiGetCustomersProjects } from '../../api/customers';
+import { apiCustomerGet, apiGetCustomersProjects,  apiGetMyCustomersProjects } from '../../api/customers';
 import { apiGetProjectsUsers } from '../../api/projects';
 import CustomTable from './customDataTable';
 import CustomerDetails from './customerDetails';
@@ -43,7 +43,14 @@ class CustomerAccordian extends React.Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
             const customer = await apiCustomerGet(this.props.serviceUrl, id);
-            const projects = await apiGetCustomersProjects(this.props.serviceUrl, id);
+
+            var projects;
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_ADMIN')) {
+                projects = await apiGetCustomersProjects(this.props.serviceUrl, id);
+            }
+            else {
+                projects = await apiGetMyCustomersProjects(this.props.serviceUrl, id);
+            }
 
             this.setState({
                 projects: projects.data,

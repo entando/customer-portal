@@ -5,7 +5,7 @@ import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import AddProjectModal from './AddProjectModal'
 import withKeycloak from '../../auth/withKeycloak';
-import { apiAdminCustomersGet, apiCustomersGet } from '../../api/customers';
+import { apiAdminCustomersGet, apiCustomersGet, apiMyCustomersGet } from '../../api/customers';
 import CustomerAccordian from '../Customer/CustomerAccordian';
 import { number } from 'prop-types';
 import { hasKeycloakClientRole } from '../../api/helpers';
@@ -24,7 +24,7 @@ class AdminDashboard extends React.Component {
     }
 
     componentDidMount(){
-        this.getCustomer();
+        this.getCustomers();
     }
 
     componentDidUpdate(prevProps) {
@@ -34,16 +34,22 @@ class AdminDashboard extends React.Component {
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
     
         if (authenticated && changedAuth) {
-          this.getCustomer();
+          this.getCustomers();
         }
       }
 
 
-    async getCustomer() {
+    async getCustomers() {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const customers = await apiCustomersGet(this.props.serviceUrl);
+            var customers;
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+                customers = await apiAdminCustomersGet(this.props.serviceUrl);
+            }
+            else {
+                customers = await apiMyCustomersGet(this.props.serviceUrl);
+            }
 
             this.setState({
                 customers: customers.data,
@@ -54,7 +60,7 @@ class AdminDashboard extends React.Component {
 
     handleSearch = (event) => {
         if (event.key === 'Enter') {
-            const newFilteredState = this.state.customers.filter(customer => customer.name.toLowerCase().includes(event.target.value.toLowerCase()))
+            const newFilteredState = this.state.customers.filter(customer => customer.name.toLowerCase().startsWith(event.target.value.toLowerCase()))
             this.setState({
                 filteredCustomers: newFilteredState,
                 currentPage: 0
@@ -100,7 +106,7 @@ class AdminDashboard extends React.Component {
                 null}
             {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') ?
                 <Tile>
-                    <SubscriptionForm serviceUrl={this.props.serviceUrl} />
+                    
                     <p className="title">{i18n.t('adminDashboard.allCustomers')}</p>
                     <div className="bx--row">
                         <div className="bx--col">

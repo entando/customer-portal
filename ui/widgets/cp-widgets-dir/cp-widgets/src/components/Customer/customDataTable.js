@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
 import '../../index.scss';
-import { apiGetCustomersProjects } from '../../api/customers';
+import { apiGetCustomersProjects, apiGetMyCustomersProjects } from '../../api/customers';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,7 @@ class CustomTable extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      data: {}
+      projects: {}
      }
   }
 
@@ -22,11 +22,17 @@ class CustomTable extends Component {
     const authenticated = keycloak.initialized && keycloak.authenticated;
     
     if (authenticated) {
-        const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
-        
-        this.setState({
-            data: projects
-        });
+      var projects;
+      if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+        projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
+      }
+      else {
+        projects = await apiGetMyCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
+      }
+      
+      this.setState({
+          projects: projects
+      });
     }
     this.render();
 }
@@ -49,7 +55,7 @@ componentDidUpdate(prevProps) {
   render() { 
     return (
       <div>
-        <DataTable rows={rowData} headers={headerData} data={this.state.data}>
+        <DataTable rows={rowData} headers={headerData}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
           <TableContainer title={i18n.t('customerDashboard.subscriptions')} description={i18n.t('customerDashboard.tableDesc')}>
             <Table {...getTableProps()}>
@@ -63,8 +69,8 @@ componentDidUpdate(prevProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {Object.keys(this.state.data).length !== 0 ? 
-                  this.state.data.data.map((project, index) => {
+              {Object.keys(this.state.projects).length !== 0 ? 
+                  this.state.projects.data.map((project, index) => {
                     if (project.projectSubscriptions.length === 0) {
                       return(
                         <TableRow key={index} >
@@ -99,8 +105,8 @@ componentDidUpdate(prevProps) {
                                 : <TableCell>None</TableCell>}
                               {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
                               <TableCell>{sub.status}</TableCell>
-                              <TableCell>{String(new Date(sub.startDate))}</TableCell>
-                              <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)))}</TableCell>
+                              <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
+                              <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
                               <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <EditProjectModal project={project} serviceUrl={this.props.serviceUrl}/> : null}</TableCell>
                           </TableRow>
@@ -117,34 +123,6 @@ componentDidUpdate(prevProps) {
     </div>
   )}
 }
-/*
-const headerData = [
-  {
-    header: 'Project Name',
-    key: 'projectName',
-  },
-  {
-    header: 'Description',
-    key: 'description',
-  },
-  {
-    header: 'System Id',
-    key: 'systemId',
-  },
-  {
-    header: 'Notes',
-    key: 'notes',
-  },
-  {
-      header: 'Contact Name',
-      key: 'contactName',
-  },
-  {
-      header: 'Open Tickets',
-      key: 'openTickets',
-  },
-];
-*/
 
 const headerData = [
   {

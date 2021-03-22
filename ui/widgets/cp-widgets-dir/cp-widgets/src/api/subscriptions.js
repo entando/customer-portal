@@ -39,3 +39,14 @@ export const apiProjectSubscriptionPut = async (serviceUrl, projectSubscriptionC
     };
     return request(url, options);
 };
+
+const myResource = 'api/project-subscriptions/mysubscription'
+export const apiGetMySubscription = async (serviceUrl, customerId) => {
+    const url = `${serviceUrl}/${myResource}/${customerId}`;
+    const options = {
+      ...getDefaultOptions(),
+      method: 'GET'
+    };
+  
+    return request(url, options);
+  };

@@ -131,18 +131,38 @@ class AddProjectModal extends Component {
     }
   };
 
+  clearValues = () => {
+    const projectModalElement = document.querySelector('#modal-form-project');
+      if(!projectModalElement.className.includes("is-visible")) {
+        this.setState({
+          customerId: '',
+          name: '',
+          description: '',
+          systemId: '',
+          contactName: '',
+          contactPhone: '',
+          contactEmail: '',
+          notes: '',
+          invalid: {}
+        })
+      }
+  }
+
   componentDidMount() {
     this.getCustomers();
     this.getAllProjects();
-  }
 
+    const modalOpenButton = document.querySelector('.add-project-button');
+    modalOpenButton.addEventListener("click", this.clearValues, false);
+  }
+  
   render() {
     const customerList = ['Customer1', 'Customer2', 'Customer3'];
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProject')}
         modalHeading="Add a project"
-        buttonTriggerClassName="add-project bx--btn bx--btn--tertiary"
+        buttonTriggerClassName="add-project bx--btn bx--btn--tertiary add-project-button"
         className="modal-form"
         id="modal-form-project"
         handleSubmit={this.handleFormSubmit}
@@ -154,10 +174,11 @@ class AddProjectModal extends Component {
               defaultValue="customer-list"
               name="customerId"
               labelText={i18n.t('adminDashboard.addProject.customerList')}
+              defaultValue={{ label: "Select Dept", value: 0 }}
               value={this.state.customerId}
               onChange={this.handleChanges}
             >
-              <SelectItem text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list" />
+              <SelectItem disabled text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list" />
               {Object.keys(this.state.customerList).length !== 0
                 ? this.state.customerList.data.map((customerList, i) => (
                     <SelectItem key={i} text={customerList.name} value={customerList.id}>

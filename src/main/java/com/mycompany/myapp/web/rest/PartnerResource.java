@@ -1,6 +1,7 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Partner;
+import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.service.PartnerService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,6 +48,7 @@ public class PartnerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/partners")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Partner> createPartner(@Valid @RequestBody Partner partner) throws URISyntaxException {
         log.debug("REST request to save Partner : {}", partner);
         if (partner.getId() != null) {
@@ -67,6 +70,7 @@ public class PartnerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/partners")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Partner> updatePartner(@Valid @RequestBody Partner partner) throws URISyntaxException {
         log.debug("REST request to update Partner : {}", partner);
         if (partner.getId() == null) {
@@ -84,6 +88,7 @@ public class PartnerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of partners in body.
      */
     @GetMapping("/partners")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public List<Partner> getAllPartners() {
         log.debug("REST request to get all Partners");
         return partnerService.findAll();
@@ -96,6 +101,8 @@ public class PartnerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the partner, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/partners/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Partner> getPartner(@PathVariable Long id) {
         log.debug("REST request to get Partner : {}", id);
         Optional<Partner> partner = partnerService.findOne(id);
@@ -109,6 +116,7 @@ public class PartnerResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/partners/{id}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Void> deletePartner(@PathVariable Long id) {
         log.debug("REST request to delete Partner : {}", id);
 
