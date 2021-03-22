@@ -133,19 +133,19 @@ class AddProjectModal extends Component {
 
   clearValues = () => {
     const projectModalElement = document.querySelector('#modal-form-project');
-      if(!projectModalElement.className.includes("is-visible")) {
-        this.setState({
-          customerId: '',
-          name: '',
-          description: '',
-          systemId: '',
-          contactName: '',
-          contactPhone: '',
-          contactEmail: '',
-          notes: '',
-          invalid: {}
-        })
-      }
+    if(!projectModalElement.className.includes("is-visible")) {
+      this.setState({
+        customerId: '',
+        name: '',
+        description: '',
+        systemId: '',
+        contactName: '',
+        contactPhone: '',
+        contactEmail: '',
+        notes: '',
+        invalid: {}
+      })
+    }
   }
 
   componentDidMount() {

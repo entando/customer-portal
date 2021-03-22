@@ -20,7 +20,9 @@ class EditProjectModal extends Component {
             contactPhone: '',
             contactEmail:'',
             notes:'',
-            invalid: {}
+            invalid: {},
+            modalId: '',
+            buttonId: ''
         };
     }
 
@@ -125,33 +127,58 @@ class EditProjectModal extends Component {
         }
     };
 
+    clearValues = () => {
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+
+        const customerModalElement = document.querySelector('#' + this.state.modalId);
+        if(!customerModalElement.className.includes("is-visible") && authenticated) {
+            this.setState({
+                name: this.props.project.name,
+                description: this.props.project.description,
+                systemId: this.props.project.systemId,
+                contactName: this.props.project.contactName,
+                contactPhone: this.props.project.contactPhone,
+                contactEmail:this.props.project.contactEmail,
+                notes:this.props.project.notes,
+                invalid: {}
+            })
+        }
+    }
+
     componentDidMount() {
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
     
         if (authenticated) {
-          this.getCustomers();
-          this.getAllProjects();
-          this.setState({
-            name: this.props.project.name,
-            description: this.props.project.description,
-            systemId: this.props.project.systemId,
-            contactName: this.props.project.contactName,
-            contactPhone: this.props.project.contactPhone,
-            contactEmail:this.props.project.contactEmail,
-            notes:this.props.project.notes
-          })
+            this.getCustomers();
+            this.getAllProjects();
+            this.setState({
+                name: this.props.project.name,
+                description: this.props.project.description,
+                systemId: this.props.project.systemId,
+                contactName: this.props.project.contactName,
+                contactPhone: this.props.project.contactPhone,
+                contactEmail:this.props.project.contactEmail,
+                notes:this.props.project.notes,
+                modalId: "modal-form-project-edit-" + this.props.project.id,
+                buttonId: "edit-project-button-" + this.props.project.id
+            })
+
+            const modalOpenButton = document.querySelector('.edit-project-button-' + this.props.project.id);
+            modalOpenButton.addEventListener("click", this.clearValues, false);
         }
     }
 
     render() {
+        const buttonClassName = "bx--btn bx--btn--ghost edit-project-button-" + this.props.project.id;
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}
                 modalHeading={i18n.t('adminDashboard.addProject.editTitle')}
-                buttonTriggerClassName="bx--btn bx--btn--ghost"
+                buttonTriggerClassName={buttonClassName}
                 className="modal-form"
-                id="modal-form-project"
+                id={this.state.modalId}
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">
