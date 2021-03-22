@@ -18,22 +18,32 @@ class AssignUser extends Component {
     }
 
     componentDidMount() {
-        this.fetchData();
-    }
-
-    async fetchData() {
         const { t, keycloak } = this.props;
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(this.props.keycloakUrl)).data);
-            const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
-            this.setState({
-                users,
-                projects
-            });
-            
+            this.fetchData();
         }
+    }
+
+    componentDidUpdate(prevProps) {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+      
+        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+      
+        if (authenticated && changedAuth) {
+            this.fetchData();
+        }
+    }
+
+    async fetchData() {
+        const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(this.props.keycloakUrl)).data);
+        const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
+        this.setState({
+            users,
+            projects
+        });
     }
 
     mapKeycloakUserEmails = keycloakUsers => {
