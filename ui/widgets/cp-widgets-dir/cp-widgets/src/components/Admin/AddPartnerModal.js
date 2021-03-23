@@ -34,6 +34,12 @@ class AddPartnerModal extends Component {
     let invalid = {};
     let formIsValid = true;
 
+    //project
+    if (this.state.projectId === '' || this.state.projectId === 'project-list') {
+      formIsValid = false;
+      invalid['projectId'] = true;
+    }
+
     if (this.state.name === '') {
       formIsValid = false;
       invalid['name'] = true;
@@ -71,6 +77,7 @@ class AddPartnerModal extends Component {
       const result = await apiPartnerPost(this.props.serviceUrl, partner);
       await apiAddPartnerToProject(this.props.serviceUrl, this.state.projectId, result.data.id);
     }
+    window.location.reload(false);
   }
 
   handleFormSubmit = e => {
@@ -83,21 +90,20 @@ class AddPartnerModal extends Component {
         notes: this.state.notes
       };
       this.partnerPost(partner);
-      window.location.reload(false);
     }
   };
 
   clearValues = () => {
     const partnerModalElement = document.querySelector('#modal-form-partner');
-      if(!partnerModalElement.className.includes("is-visible")) {
-        this.setState({
-          projectId: '',
-          name: '',
-          partnerNumber: '',
-          notes: '',
-          invalid: {}
-        })
-      }
+    if(!partnerModalElement.className.includes("is-visible")) {
+      this.setState({
+        projectId: '',
+        name: '',
+        partnerNumber: '',
+        notes: '',
+        invalid: {}
+      })
+    }
   }
 
   componentDidMount() {
@@ -126,8 +132,10 @@ class AddPartnerModal extends Component {
               labelText={i18n.t('adminDashboard.addPartner.projectList')}
               value={this.state.projectId}
               onChange={this.handleChanges}
+              invalidText={i18n.t('validation.invalid.required')}
+              invalid={this.state.invalid['projectId']}
             >
-              <SelectItem disabled text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />
+              <SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />
               {Object.keys(this.state.projectList).length !== 0
                 ? this.state.projectList.data.map((projectList, i) => (
                     <SelectItem key={i} text={projectList.name} value={projectList.id}>

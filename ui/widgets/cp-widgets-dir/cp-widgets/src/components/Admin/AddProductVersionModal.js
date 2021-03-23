@@ -14,6 +14,8 @@ class AddProductVersionModal extends Component {
       endDate: '',
       invalid: {}
     };
+
+    this.baseState = this.state
   }
 
   handleValidation() {
@@ -61,12 +63,24 @@ class AddProductVersionModal extends Component {
     }
   };
 
+  clearValues = () => {
+    const customerModalElement = document.querySelector('#modal-form-product-version');
+    if(!customerModalElement.className.includes("is-visible")) {
+      this.setState(this.baseState);
+    }
+  }
+
+  componentDidMount() {
+    const modalOpenButton = document.querySelector('.add-product-version-button');
+    modalOpenButton.addEventListener("click", this.clearValues, false);
+  }
+
   render() {
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProductVersion')}
         modalHeading={i18n.t('adminDashboard.addProductVersion.title')}
-        buttonTriggerClassName="add-product-version bx--btn bx--btn--tertiary"
+        buttonTriggerClassName="add-product-version bx--btn bx--btn--tertiary add-product-version-button"
         className="modal-form"
         id="modal-form-product-version"
         handleSubmit={this.handleFormSubmit}

@@ -15,7 +15,9 @@ class EditCustomerModal extends Component {
             contactPhone: '',
             contactEmail: '',
             notes: '',
-            invalid: {}
+            invalid: {},
+            modalId: '',
+            buttonId: ''
         };
     }
 
@@ -91,6 +93,24 @@ class EditCustomerModal extends Component {
         }
     };
 
+    clearValues = () => {
+        const { keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+
+        const customerModalElement = document.querySelector('#' + this.state.modalId);
+        if(!customerModalElement.className.includes("is-visible") && authenticated) {
+            this.setState({
+                name: this.props.customer.name,
+                customerNumber: this.props.customer.customerNumber,
+                contactName: this.props.customer.contactName,
+                contactPhone: this.props.customer.contactPhone,
+                contactEmail:this.props.customer.contactEmail,
+                notes:this.props.customer.notes,
+                invalid: {}
+            })
+        }
+    }
+
     componentDidMount() {
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
@@ -102,8 +122,13 @@ class EditCustomerModal extends Component {
             contactName: this.props.customer.contactName,
             contactPhone: this.props.customer.contactPhone,
             contactEmail:this.props.customer.contactEmail,
-            notes:this.props.customer.notes
+            notes:this.props.customer.notes,
+            modalId: "modal-form-customer-edit-" + this.props.customer.id,
+            buttonId: "edit-customer-button-" + this.props.customer.id
           })
+
+          const modalOpenButton = document.querySelector('.edit-customer-button-' + this.props.customer.id);
+          modalOpenButton.addEventListener("click", this.clearValues, false);
         }
     }
 
@@ -126,13 +151,14 @@ class EditCustomerModal extends Component {
     }
 
     render() {
+        const buttonClassName = "bx--btn bx--btn--ghost edit-customer-button-" + this.props.customer.id;
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}
                 modalHeading={i18n.t('adminDashboard.editCustomer.title')}
-                buttonTriggerClassName="bx--btn bx--btn--ghost"
+                buttonTriggerClassName={buttonClassName}
                 className="modal-form"
-                id="modal-form-customer"
+                id={this.state.modalId}
                 handleSubmit={this.handleFormSubmit}
             >
                 <div className="form-container">

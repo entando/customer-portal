@@ -87,7 +87,7 @@ componentDidUpdate(prevProps) {
                           <TableCell>None</TableCell>
                           <TableCell>None</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
-                          <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <EditProjectModal project={project} serviceUrl={this.props.serviceUrl}/> : null}</TableCell>
+                          <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal project={project} serviceUrl={this.props.serviceUrl}/> : null}</TableCell>
                       </TableRow>
                       )
                     }
@@ -108,7 +108,7 @@ componentDidUpdate(prevProps) {
                               <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
                               <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
-                              <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <EditProjectModal project={project} serviceUrl={this.props.serviceUrl}/> : null}</TableCell>
+                              <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal project={project} serviceUrl={this.props.serviceUrl}/> : null}</TableCell>
                           </TableRow>
                         
                       )

@@ -81,7 +81,24 @@ class EditSubscriptionModal extends Component {
             lengthInMonths: this.props.subscription.lengthInMonths,
             startDate: moment(this.props.subscription.startDate).calendar(),
             notes: this.props.subscription.notes,
-          })
+        })
+
+        const modalOpenButton = document.querySelector('.edit-sub-button');
+        modalOpenButton.addEventListener("click", this.clearValues, false);
+    }
+
+    clearValues = () => {
+        const customerModalElement = document.querySelector('#modal-form-sub-edit');
+        if(!customerModalElement.className.includes("is-visible")) {
+            this.setState({
+                level: this.props.subscription.level,
+                status: this.props.subscription.status,
+                lengthInMonths: this.props.subscription.lengthInMonths,
+                startDate: moment(this.props.subscription.startDate).calendar(),
+                notes: this.props.subscription.notes,
+                invalid: {}
+            })
+        }
     }
 
     async subscriptionPut(subscription) {
@@ -101,8 +118,9 @@ class EditSubscriptionModal extends Component {
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}
                 modalHeading={i18n.t('editSubscription.title')}
-                buttonTriggerClassName="add-project bx--btn bx--btn--tertiary"
+                buttonTriggerClassName="add-project bx--btn bx--btn--tertiary edit-sub-button"
                 className="modal-form"
+                id="modal-form-sub-edit"
                 handleSubmit={this.handleFormSubmit}
             >
                 <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>

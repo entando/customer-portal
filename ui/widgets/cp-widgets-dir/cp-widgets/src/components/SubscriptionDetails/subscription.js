@@ -34,25 +34,30 @@ class Subscription extends React.Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            var subscription;
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
-                subscription = await apiSubscriptionGet(this.props.serviceUrl, this.props.match.params.id);
-                var project = '';
-                if (subscription.data.project) {
-                    project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id)
+            try {
+                var subscription;
+                if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+                    subscription = await apiSubscriptionGet(this.props.serviceUrl, this.props.match.params.id);
+                    var project = '';
+                    if (subscription.data.project) {
+                        project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id)
+                    }
                 }
-            }
-            else if (hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-                subscription = await apiGetMySubscription(this.props.serviceUrl, this.props.match.params.id);
-                var project = '';
-                if (subscription.data.project) {
-                    project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id)
+                else if (hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+                    subscription = await apiGetMySubscription(this.props.serviceUrl, this.props.match.params.id);
+                    var project = '';
+                    if (subscription.data.project) {
+                        project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id)
+                    }
                 }
+                this.setState({
+                    subscription: subscription,
+                    project: project
+                })
             }
-            this.setState({
-                subscription: subscription,
-                project: project
-            })
+            catch(err) {
+                console.log(err)
+            }
         }
     }
 
@@ -114,7 +119,7 @@ class Subscription extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? 
+                        {hasKeycloakClientRole('ROLE_ADMIN') ? 
                             <EditSubscriptionModal project={this.state.project.data} subscription={this.state.subscription.data} serviceUrl={this.props.serviceUrl}/>
                         : null}
                     </Tile>

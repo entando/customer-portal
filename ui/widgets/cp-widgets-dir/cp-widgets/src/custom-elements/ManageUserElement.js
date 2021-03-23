@@ -26,6 +26,7 @@ const ATTRIBUTES = {
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
   serviceUrl: 'service-url',
+  keycloakUrl: 'keycloak-url',
 };
 
 class ManageUserElement extends HTMLElement {
