@@ -31,7 +31,7 @@
                 <constraints nullable="true" />
             </column>
             <column name="entando_version_id" type="bigint">
-                <constraints unique="true" nullable="true" uniqueConstraintName="ux_project_subscription_entando_version_id" />
+                <constraints nullable="true" />
             </column>
             <column name="project_id" type="bigint">
                 <constraints nullable="true" />

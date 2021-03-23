@@ -1,0 +1,99 @@
+// Design Notes
+// 1) Id fields are automatically added by jhipster so they aren't explicitly noted
+// 2) Default String length is 255.
+// 3) Notes fields are set to 1024, by default, and should only be visible to admins
+// 4) The current design includes a single TicketingSystem, not one per customer or project
+// 5) The application should be localized but individual entities and columns do not need to be localized (e.g. Customer.name)
+// 6) Identity Management - creating/updating users and their higher-level roles - customer, partner, support, admin - is handled in Keycloak.
+//    Assigning users to specific projects will be done within the Customer Portal itself. This design will provide the option
+//    for self-service capabilities in the future.
+// 7) For now, the only user mapping will be to a Project. At some point it could be useful to add a mapping to Customer and/or Partner
+
+entity Customer {
+    name String required
+    customerNumber String required //This is manually assigned by Sales
+    contactName String
+    contactPhone String
+    contactEmail String
+    notes String maxlength(1024)
+}
+
+entity Project {
+    name String required
+    description String required
+    systemId String /* Provide an identifier to map a Project in the Customer Portal to the corresponding entity in the Ticketing System */
+    contactName String
+    contactPhone String
+    contactEmail String
+    notes String maxlength(1024)
+}
+
+entity EntandoVersion {
+   name String required //Example: 6.3.0, possibly 6.3.0 Patch 1234
+   status Boolean
+   startDate ZonedDateTime
+   endDate ZonedDateTime
+   //Note: links to documentation, tutorials, patches for this version could be linked here eventually
+}
+
+entity ProjectSubscription {
+    level SubscriptionLevel required
+    status Status required
+    lengthInMonths Integer
+    startDate ZonedDateTime
+    notes String maxlength(1024)
+}
+
+enum Status {
+    REQUESTED, PENDING, ACTIVE, EXPIRED
+}
+
+enum SubscriptionLevel {
+   GOLD, PLATINUM
+}
+
+entity Partner {
+   name String required
+   partnerNumber String required //This is manually assigned by Sales
+   notes String maxlength(1024)
+}
+
+entity Ticket {
+    systemId String required //The ticketing system identifer, e.g. SUP-1
+    type String required //Bug or Feature Request
+    description String required
+    priority String //Don't use an enum for priority since it could vary by ticketing system
+    status String //Don't use an enum for status since it could vary by ticketing system
+    createDate ZonedDateTime required
+    updateDate ZonedDateTime required
+}
+
+entity TicketingSystem {
+    url String required //Base URL for the ticketing system
+    serviceAccount String required
+    serviceAccountSecret String required
+    systemId String //Identifier in the ticket system, e.g. base project name like SUP or TESTSUP
+}
+
+entity PortalUser {
+    username String required //Keycloak username
+    email String //Keycloak email address
+}
+
+relationship OneToMany {
+    Customer to Project{customer},
+    Project to ProjectSubscription{project},
+    Project to Ticket{project},
+    Project to Partner{project},
+    Project to PortalUser{project}
+}
+
+relationship ManyToOne {
+   ProjectSubscription{entandoVersion} to EntandoVersion
+}
+
+service all with serviceImpl
+//TODO: pagination could be needed here
+//paginate Project with pagination
+
+

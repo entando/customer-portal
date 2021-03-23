@@ -49,8 +49,8 @@ public class ProjectSubscription implements Serializable {
     @Column(name = "notes", length = 1024)
     private String notes;
 
-    @OneToOne
-    @JoinColumn(unique = true)
+    @ManyToOne
+    @JsonIgnoreProperties(value = "projectSubscriptions", allowSetters = true)
     private EntandoVersion entandoVersion;
 
     @ManyToOne
