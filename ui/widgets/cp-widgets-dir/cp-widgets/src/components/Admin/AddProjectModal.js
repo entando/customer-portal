@@ -28,6 +28,12 @@ class AddProjectModal extends Component {
     let invalid = {};
     let formIsValid = true;
 
+    //customer
+    if (this.state.customerId === '' || this.state.customerId === 'customer-list') {
+      formIsValid = false;
+      invalid['customerId'] = true;
+    }
+
     //name
     if (this.state.name === '') {
       formIsValid = false;
@@ -105,9 +111,11 @@ class AddProjectModal extends Component {
       const result = await apiProjectPost(this.props.serviceUrl, project);
       await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id);
     }
+    window.location.reload(false);
   }
 
   handleFormSubmit = e => {
+    console.log(this.state.customerId)
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
@@ -127,7 +135,6 @@ class AddProjectModal extends Component {
         }
       }
       this.projectPost(project);
-      window.location.reload(false);
     }
   };
 
@@ -177,8 +184,10 @@ class AddProjectModal extends Component {
               defaultValue={{ label: "Select Dept", value: 0 }}
               value={this.state.customerId}
               onChange={this.handleChanges}
+              invalidText={i18n.t('validation.invalid.required')}
+              invalid={this.state.invalid['customerId']}
             >
-              <SelectItem disabled text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list" />
+              <SelectItem text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list" />
               {Object.keys(this.state.customerList).length !== 0
                 ? this.state.customerList.data.map((customerList, i) => (
                     <SelectItem key={i} text={customerList.name} value={customerList.id}>
