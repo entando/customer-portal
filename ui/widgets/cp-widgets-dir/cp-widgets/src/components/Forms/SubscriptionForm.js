@@ -3,7 +3,7 @@ import i18n from '../../i18n';
 import { Form, TextInput, Select, SelectItem, Button, DatePicker, DatePickerInput } from 'carbon-components-react';
 import { apiGetProjectIdNames } from '../../api/projects';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiProjectSubscriptionPost, apiProjectSubscriptionPut } from '../../api/subscriptions';
+import { apiProjectSubscriptionPost, apiRenewSubscription } from '../../api/subscriptions';
 import { apiProductVersionsGet } from '../../api/productVersion';
 import { hasKeycloakClientRole } from '../../api/helpers';
 
@@ -19,20 +19,24 @@ const subscriptionStatus = {
     expired: 'EXPIRED'
 }
 
+const subscriptionTypes = ['New', 'Existing'];
+
 class SubscriptionForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
             subscriptionType: '',
-            projectName: '',
+            projectId: '',
             startDate: '',
             subscriptionLevel: '',
             subscriptionLength: '',
-            entandoVersion: '',
+            entandoVersionId: '',
             invalid: {},
             projects: {},
             productVersions: [],
-            selectedProjectId: ''
+            selectedProjectId: '',
+            submitSuccess: false,
+            formSubmitted: false
         };
     }
 
@@ -48,9 +52,9 @@ class SubscriptionForm extends Component {
     componentDidUpdate(prevProps) {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-      
+
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-      
+
         if (authenticated && changedAuth) {
             this.fetchData();
         }
@@ -75,9 +79,9 @@ class SubscriptionForm extends Component {
             invalid['subscriptionType'] = true;
         }
 
-        if (this.state.projectName === '') {
+        if (this.state.projectId === '') {
             formIsValid = false;
-            invalid['projectName'] = true;
+            invalid['projectId'] = true;
         }
 
         if (typeof this.state.startDate !== "undefined") {
@@ -96,10 +100,10 @@ class SubscriptionForm extends Component {
             formIsValid = false;
             invalid['level'] = true;
         }
-        
-        if (this.state.entandoVersion === '') {
+
+        if (this.state.entandoVersionId === '') {
             formIsValid = false;
-            invalid['version'] = true;
+            invalid['entandoVersionId'] = true;
         }
 
         this.setState({ invalid: invalid });
@@ -115,25 +119,50 @@ class SubscriptionForm extends Component {
 
     handleFormSubmit = (event) => {
         event.preventDefault();
-
+        this.setState({
+            submitSuccess: false,
+            formSubmitted: false
+        });
         const formIsValid = this.handleValidation();
 
         if (formIsValid) {
-           if (this.state.subscriptionType === 'new') {
-               this.newSubscription().then(res => {
-                   console.log(res);
-                   this.render();
-               });
-           } else {
-               this.renewSubscription();
-           }
+            if (this.state.subscriptionType === 'new') {
+                this.newSubscription().then(res => {
+                    this.setState({
+                        submitSuccess: true,
+                        formSubmitted: true
+                    });
+                    console.log(this.state, res.status);
+                }).catch(err => {
+                    this.setState({
+                        submitSuccess: false,
+                        formSubmitted: true
+                    });
+                });
+            } else if (this.state.subscriptionType === 'existing'){
+                this.renewSubscription().then(res => {
+                    console.log(res);
+                    this.setState({
+                        submitSuccess: true,
+                        formSubmitted: true
+                    });
+                    console.log(this.state, res.status);
+                }).catch(err => {
+                    console.log(err);
+                    console.log(this.state);
+                    this.setState({
+                        submitSuccess: false,
+                        formSubmitted: true
+                    });
+                });
+            }
         }
     };
 
     async newSubscription() {
         const subscriptionRequest = {
-            entandoVersionId: this.state.entandoVersion,
-            projectId: this.state.projectName,
+            entandoVersionId: this.state.entandoVersionId,
+            projectId: this.state.projectId,
             projectSubscription: {
                 startDate: new Date(this.state.startDate),
                 lengthInMonths: this.state.subscriptionLength,
@@ -146,15 +175,17 @@ class SubscriptionForm extends Component {
     }
 
     async renewSubscription() {
+        const { projectId, entandoVersionId } = this.state;
 
+        return await apiRenewSubscription(this.props.serviceUrl, projectId, entandoVersionId);
     }
 
     subscriptionStatus() {
         return hasKeycloakClientRole('ROLE_ADMIN') ? subscriptionStatus.active : subscriptionStatus.requested;
     }
-    
+
     setupFormComponents() {
-        const projectIdsNames = this.state.projects;        
+        const projectIdsNames = this.state.projects;
         let projectList = null;
 
         if (projectIdsNames != null && Object.keys(projectIdsNames).length > 0) {
@@ -191,17 +222,18 @@ class SubscriptionForm extends Component {
                     <div className="bx--row">
                         <div className="bx--col">
                             <Select
-                                name="projectName"
+                                id="projectId"
+                                name="projectId"
                                 labelText={i18n.t('subscriptionForm.projectName')}
-                                value={this.state.projectName}
+                                value={this.state.projectId}
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.required')}
-                                invalid={this.state.invalid['projectName']}
+                                invalid={this.state.invalid['projectId']}
                             >
                                 {projectList}
                             </Select>
-                            <Select 
-                                defaultValue=""
+                            <Select
+                                id="subscriptionLevel"
                                 name="subscriptionLevel"
                                 labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel')}
                                 value={this.state.subscriptionLevel} onChange={this.handleChanges}
@@ -211,13 +243,13 @@ class SubscriptionForm extends Component {
                                 {subscriptionLevelList}
                             </Select>
                             <Select
-                                defaultValue=""
-                                name="entandoVersion"
+                                id="entandoVersionId"
+                                name="entandoVersionId"
                                 labelText={i18n.t('subscriptionForm.entandoVersion')}
-                                value={this.state.entandoVersion}
+                                value={this.state.entandoVersionId}
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.required')}
-                                invalid={this.state.invalid['version']}
+                                invalid={this.state.invalid['entandoVersionId']}
                             >
                                 {versionList}
                             </Select>
@@ -225,6 +257,7 @@ class SubscriptionForm extends Component {
                         <div className="bx--col">
                             <DatePicker dateFormat="m/d/Y" datePickerType="simple">
                                 <DatePickerInput
+                                    id="startDate"
                                     name="startDate"
                                     placeholder="mm/dd/yyyy"
                                     labelText={i18n.t('subscriptionForm.desiredSubscriptionStartDate')}
@@ -235,38 +268,63 @@ class SubscriptionForm extends Component {
                                     invalid={this.state.invalid['startDate']}
                                 />
                             </DatePicker>
-                            <TextInput defaultValue="" name="subscriptionLength" labelText={i18n.t('subscriptionForm.desiredSubscriptionLength')} value={this.state.subscriptionLength} onChange={this.handleChanges} invalidText={i18n.t('validation.invalid.number')}
-                                invalid={this.state.invalid['subscriptionLength']} />
+                            <TextInput
+                                id="subscriptionLength"
+                                name="subscriptionLength"
+                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLength')}
+                                value={this.state.subscriptionLength}
+                                onChange={this.handleChanges}
+                                invalidText={i18n.t('validation.invalid.number')}
+                                invalid={this.state.invalid['subscriptionLength']}
+                            />
                         </div>
                     </div>
                 </div>
             )
-        } else if (this.state.subscriptionType === 'existing'){
+        } else if (this.state.subscriptionType === 'existing') {
             formInputs = (
                 <div>
                     <p><strong>{i18n.t('subscriptionForm.renewSubscription')}</strong></p><br />
                     <div className="bx--row">
                         <div className="bx--col">
                             <Select
-                                name="projectName"
+                                id="projectId"
+                                name="projectId"
                                 labelText={i18n.t('subscriptionForm.projectName')}
-                                value={this.state.projectName}
+                                value={this.state.projectId}
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.required')}
-                                invalid={this.state.invalid['projectName']}
+                                invalid={this.state.invalid['projectId']}
                             >
                                 {projectList}
                             </Select>
-                            <Select defaultValue="" name="subscriptionLevel" labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel')} value={this.state.subscriptionLevel} onChange={this.handleChanges}>
+                            <Select
+                                id="subscriptionLevel"
+                                name="subscriptionLevel"
+                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel')}
+                                value={this.state.subscriptionLevel}
+                                onChange={this.handleChanges}
+                                invalidText={i18n.t('validation.invalid.required')}
+                                invalid={this.state.invalid['level']}
+                                >
                                 {subscriptionLevelList}
                             </Select>
-                            <Select defaultValue="" name="entandoVersion" labelText={i18n.t('subscriptionForm.entandoVersion')} value={this.state.entandoVersion} onChange={this.handleChanges}>
+                            <Select
+                                id="entandoVersionId"
+                                name="entandoVersionId"
+                                labelText={i18n.t('subscriptionForm.entandoVersion')}
+                                value={this.state.entandoVersionId}
+                                onChange={this.handleChanges}
+                                invalidText={i18n.t('validation.invalid.required')}
+                                invalid={this.state.invalid['entandoVersionId']}
+                                >
                                 {versionList}
                             </Select>
                         </div>
                         <div className="bx--col">
                             <DatePicker dateFormat="m/d/Y" datePickerType="simple">
                                 <DatePickerInput
+                                    id="startDate"
                                     name="startDate"
                                     placeholder="mm/dd/yyyy"
                                     labelText={i18n.t('subscriptionForm.desiredSubscriptionStartDate')}
@@ -277,8 +335,15 @@ class SubscriptionForm extends Component {
                                     invalid={this.state.invalid['startDate']}
                                 />
                             </DatePicker>
-                            <TextInput defaultValue="" name="subscriptionLength" labelText={i18n.t('subscriptionForm.desiredSubscriptionLength')} value={this.state.subscriptionLength} onChange={this.handleChanges} invalidText={i18n.t('validation.invalid.number')}
-                                invalid={this.state.invalid['subscriptionLength']} />
+                            <TextInput
+                                id="subscriptionLength"
+                                name="subscriptionLength"
+                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLength')}
+                                value={this.state.subscriptionLength}
+                                onChange={this.handleChanges}
+                                invalidText={i18n.t('validation.invalid.number')}
+                                invalid={this.state.invalid['subscriptionLength']}
+                            />
                         </div>
                     </div>
                 </div>
@@ -288,8 +353,15 @@ class SubscriptionForm extends Component {
         return formInputs;
     }
 
+    renderSuccessErrorMessage() {
+        if (this.state.submitSuccess && this.state.formSubmitted) {
+            return <p>{i18n.t('subscriptionForm.submitSuccess')}</p>
+        } else if (this.state.formSubmitted) {
+            return <p>{i18n.t('subscriptionForm.submitError')}</p>
+        }
+    }
+
     render() {
-        const subscriptionTypes = ['New', 'Existing'];
 
         return (
             <div>
@@ -303,7 +375,7 @@ class SubscriptionForm extends Component {
                         <div className="bx--grid">
                             <div className="bx--row">
                                 <div className="bx--col">
-                                    <Select defaultValue="subscription-type" name="subscriptionType" labelText={i18n.t('subscriptionForm.subscriptionType')} required value={this.state.subscriptionType} onChange={this.handleChanges}>
+                                    <Select id="subscriptionType" name="subscriptionType" labelText={i18n.t('subscriptionForm.subscriptionType')} required value={this.state.subscriptionType} onChange={this.handleChanges}>
                                         <SelectItem
                                             text={i18n.t('subscriptionForm.selectType')}
                                             value="subscription-type"
@@ -316,6 +388,7 @@ class SubscriptionForm extends Component {
                         </div>
                         <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}  </Button>
                     </Form>
+                    {this.renderSuccessErrorMessage()}
                 </div>
             </div>
         );

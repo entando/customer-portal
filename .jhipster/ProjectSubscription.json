@@ -10,7 +10,7 @@
     {
       "fieldName": "status",
       "fieldType": "Status",
-      "fieldValues": "NEW,ACTIVE,EXPIRED",
+      "fieldValues": "REQUESTED,PENDING,ACTIVE,EXPIRED",
       "fieldValidateRules": ["required"]
     },
     {

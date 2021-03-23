@@ -142,7 +142,9 @@
     "contactEmail": "Contact Email *",
     "contactNumber": "Contact Phone Number",
     "chooseVersion": "Choose Entando version",
-    "entandoVersion": "Entando Version"
+    "entandoVersion": "Entando Version",
+    "submitSuccess": "Successfully added a project subscription",
+    "submitError": "Error in adding a project subscription"
   },
 
   "adminConfig": {

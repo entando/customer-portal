@@ -50,3 +50,14 @@ export const apiGetMySubscription = async (serviceUrl, customerId) => {
   
     return request(url, options);
   };
+
+export const apiRenewSubscription = async (serviceUrl, projectId, entandoVersionId) => {
+    const url = `${serviceUrl}/${resource}/renew/${projectId}/${entandoVersionId}`;
+
+    const options = {
+        ...getDefaultOptions(),
+        method: 'PUT'
+    };
+
+    return request(url, options);
+};

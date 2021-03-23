@@ -91,7 +91,7 @@ public class ProjectSubscriptionResource {
         associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));
         entandoVersionOpt.ifPresent(entandoVersion -> projectSubscription.setEntandoVersion(entandoVersion));
 
-        ProjectSubscription result = projectSubscriptionService.save(subscriptionCreationRequest.getProjectSubscription());
+        ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
         return ResponseEntity.created(new URI("/api/project-subscriptions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -212,5 +212,12 @@ public class ProjectSubscriptionResource {
             }
         }
         return null;
+    }
+
+    @PutMapping("project-subscriptions/renew/{projectId}/{entandoVersionId}")
+    public ResponseEntity<ProjectSubscription> renewProjectSubscription(@PathVariable Long projectId, @PathVariable Long entandoVersionId) {
+        log.debug("REST request to renew a subscription : entandoVersionId {}. projectVersionId {}", entandoVersionId, projectId);
+        Optional<ProjectSubscription> subscriptionToRenew = projectSubscriptionService.findLatestExpiredSubscription(entandoVersionId, projectId);
+        return ResponseUtil.wrapOrNotFound(subscriptionToRenew);
     }
 }
