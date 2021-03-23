@@ -114,7 +114,7 @@ class Subscription extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? 
+                        {hasKeycloakClientRole('ROLE_ADMIN') ? 
                             <EditSubscriptionModal project={this.state.project.data} subscription={this.state.subscription.data} serviceUrl={this.props.serviceUrl}/>
                         : null}
                     </Tile>
