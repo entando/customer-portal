@@ -45,7 +45,7 @@ class CustomerAccordian extends React.Component {
             const customer = await apiCustomerGet(this.props.serviceUrl, id);
 
             var projects;
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_ADMIN')) {
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
                 projects = await apiGetCustomersProjects(this.props.serviceUrl, id);
             }
             else {
