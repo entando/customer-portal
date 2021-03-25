@@ -85,13 +85,11 @@ public class ProjectSubscriptionServiceImpl implements ProjectSubscriptionServic
 
 	@Override
 	public Optional<ProjectSubscription> findLatestExpiredSubscription(Long entandoVersionId, Long projectId) {
-		Optional<ProjectSubscription> latestExpiredSubscription = this.findAll()
+		return this.findAll()
         .stream()
         .filter(subscription -> Objects.nonNull(subscription.getEntandoVersion()) && Objects.nonNull(subscription.getProject()))
         .filter(subscription -> subscription.getEntandoVersion().getId() == entandoVersionId && subscription.getProject().getId() == projectId)
         .sorted(Comparator.comparing(ProjectSubscription::getStartDate).reversed())
         .findFirst();
-
-		return latestExpiredSubscription;
 	}
 }
