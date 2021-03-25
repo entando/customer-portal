@@ -24,7 +24,10 @@ class TicketList extends Component {
           const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
           const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
           const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length-1]
-          var tickets = await apiJiraTicketsGet(this.props.serviceUrl, currentTicketingSystem.systemId, project.data.systemId);
+          console.log(this.props.serviceUrl)
+          console.log(project.data.systemId)
+          console.log(currentTicketingSystem.systemId)
+          const tickets = await apiJiraTicketsGet(this.props.serviceUrl, currentTicketingSystem.systemId, project.data.systemId);
           for(var i = 0; i < tickets.data.length; i++) {
             apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id);
           }
@@ -39,8 +42,13 @@ class TicketList extends Component {
 }
 
 componentDidMount(){
-  if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-    this.fetchData();
+  const { keycloak } = this.props;
+  const authenticated = keycloak.initialized && keycloak.authenticated;
+
+  if(authenticated) {
+    if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+      this.fetchData();
+    }
   }
 }
 
@@ -51,7 +59,9 @@ componentDidUpdate(prevProps) {
   const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
   if (authenticated && changedAuth) {
-    this.fetchData();
+    if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+      this.fetchData();
+    }
   }
 }
 
@@ -83,7 +93,7 @@ componentDidUpdate(prevProps) {
                       <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">View Ticket</a></TableCell>
                     </TableRow>
                   )
-                }) : <p>No tickets</p> }
+                }) : <p></p> }
               </TableBody>
             </Table>
           </TableContainer>

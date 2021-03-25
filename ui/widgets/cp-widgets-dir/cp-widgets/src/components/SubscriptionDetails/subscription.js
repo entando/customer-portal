@@ -24,9 +24,9 @@ class Subscription extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            subscription: '',
+            subscription: {},
             users: {},
-            project: ''
+            project: {}
         }
     }
 
@@ -65,8 +65,10 @@ class Subscription extends React.Component {
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
 
-        if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-            this.getSubscription();
+        if (authenticated) {
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+                this.getSubscription();
+            }
         }
     }
 
@@ -88,7 +90,7 @@ class Subscription extends React.Component {
         var { t, keycloak } = this.props;
         var authenticated = keycloak.initialized && keycloak.authenticated;
 
-        if (Object.keys(this.state.subscription).length !== 0) {
+        if (Object.keys(this.state.subscription).length !== 0 && Object.keys(this.state.project).length !== 0) {
             return (
                 <div className="subscription-details">
                     <div>
@@ -124,7 +126,7 @@ class Subscription extends React.Component {
                         : null}
                     </Tile>
                     <br/>
-                    <TicketList projectId={this.state.subscription.data.project.id} serviceUrl={this.props.serviceUrl} />
+                    <TicketList projectId={this.state.project.data.id} serviceUrl={this.props.serviceUrl} />
                     </div>
                 </div>
             )
