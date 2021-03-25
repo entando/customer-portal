@@ -2,6 +2,7 @@ package com.mycompany.myapp.service.impl;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -84,14 +85,13 @@ public class ProjectSubscriptionServiceImpl implements ProjectSubscriptionServic
 
 	@Override
 	public Optional<ProjectSubscription> findLatestExpiredSubscription(Long entandoVersionId, Long projectId) {
-		/*Optional<ProjectSubscription> latestExpiredSubscription = this.findAll()
+		Optional<ProjectSubscription> latestExpiredSubscription = this.findAll()
         .stream()
+        .filter(subscription -> Objects.nonNull(subscription.getEntandoVersion()) && Objects.nonNull(subscription.getProject()))
         .filter(subscription -> subscription.getEntandoVersion().getId() == entandoVersionId && subscription.getProject().getId() == projectId)
-        .sorted(Comparator.comparing(ProjectSubscription::getStartDate))
-        .findFirst();*/
+        .sorted(Comparator.comparing(ProjectSubscription::getStartDate).reversed())
+        .findFirst();
 
-        Optional<ProjectSubscription> latestExpiredSubscription = this.findAll().stream().findFirst();
-        System.out.println(latestExpiredSubscription);
 		return latestExpiredSubscription;
 	}
 }

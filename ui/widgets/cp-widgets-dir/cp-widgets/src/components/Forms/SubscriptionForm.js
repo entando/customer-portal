@@ -36,7 +36,7 @@ class SubscriptionForm extends Component {
             productVersions: [],
             selectedProjectId: '',
             submitSuccess: false,
-            formSubmitted: false
+            submitError: false
         };
     }
 
@@ -115,44 +115,45 @@ class SubscriptionForm extends Component {
         const name = input.name;
         const value = input.value;
         this.setState({ [name]: value });
+        this.setState({
+            submitSuccess: false,
+            submitError: false
+        });
     }
 
     handleFormSubmit = (event) => {
         event.preventDefault();
         this.setState({
             submitSuccess: false,
-            formSubmitted: false
+            submitError: false
         });
         const formIsValid = this.handleValidation();
 
         if (formIsValid) {
             if (this.state.subscriptionType === 'new') {
                 this.newSubscription().then(res => {
+                    console.log('new', res);
                     this.setState({
                         submitSuccess: true,
-                        formSubmitted: true
+                        submitError: false
                     });
-                    console.log(this.state, res.status);
                 }).catch(err => {
                     this.setState({
                         submitSuccess: false,
-                        formSubmitted: true
+                        submitError: true
                     });
                 });
-            } else if (this.state.subscriptionType === 'existing'){
+            } else if (this.state.subscriptionType === 'existing') {
                 this.renewSubscription().then(res => {
-                    console.log(res);
+                    console.log('renew', res);
                     this.setState({
                         submitSuccess: true,
-                        formSubmitted: true
+                        submitError: false
                     });
-                    console.log(this.state, res.status);
                 }).catch(err => {
-                    console.log(err);
-                    console.log(this.state);
                     this.setState({
                         submitSuccess: false,
-                        formSubmitted: true
+                        submitError: true
                     });
                 });
             }
@@ -175,9 +176,18 @@ class SubscriptionForm extends Component {
     }
 
     async renewSubscription() {
-        const { projectId, entandoVersionId } = this.state;
+        const subscriptionRequest = {
+            entandoVersionId: this.state.entandoVersionId,
+            projectId: this.state.projectId,
+            projectSubscription: {
+                startDate: new Date(this.state.startDate),
+                lengthInMonths: this.state.subscriptionLength,
+                level: this.state.subscriptionLevel,
+                status: this.subscriptionStatus()
+            }
+        }
 
-        return await apiRenewSubscription(this.props.serviceUrl, projectId, entandoVersionId);
+        return await apiRenewSubscription(this.props.serviceUrl, subscriptionRequest);
     }
 
     subscriptionStatus() {
@@ -306,7 +316,7 @@ class SubscriptionForm extends Component {
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.required')}
                                 invalid={this.state.invalid['level']}
-                                >
+                            >
                                 {subscriptionLevelList}
                             </Select>
                             <Select
@@ -317,7 +327,7 @@ class SubscriptionForm extends Component {
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.required')}
                                 invalid={this.state.invalid['entandoVersionId']}
-                                >
+                            >
                                 {versionList}
                             </Select>
                         </div>
@@ -353,16 +363,30 @@ class SubscriptionForm extends Component {
         return formInputs;
     }
 
-    renderSuccessErrorMessage() {
-        if (this.state.submitSuccess && this.state.formSubmitted) {
-            return <p>{i18n.t('subscriptionForm.submitSuccess')}</p>
-        } else if (this.state.formSubmitted) {
-            return <p>{i18n.t('subscriptionForm.submitError')}</p>
+    successErrorMessage() {
+        const isAdmin = hasKeycloakClientRole('ROLE_ADMIN');
+        const { subscriptionType, submitSuccess, submitError } = this.state;
+
+        if (subscriptionType === 'new') {
+            if (submitSuccess) {
+                return isAdmin ? this.createFormMessage('adminSubmitNewSuccess') : this.createFormMessage('customerSubmitSuccess');
+            } else if (submitError) {
+                return this.createFormMessage('newSubError');
+            }
+        } else {
+            if (submitSuccess) {
+                return isAdmin ? this.createFormMessage('adminRenewNewSuccess') : this.createFormMessage('customerSubmitSuccess');
+            } else if (submitError) {
+                return this.createFormMessage('renewSubError');
+            }
         }
     }
 
-    render() {
+    createFormMessage(subMessageKey) {
+        return <p>{i18n.t(`subscriptionForm.${subMessageKey}`)}</p>
+    }
 
+    render() {
         return (
             <div>
                 <h3 className="pageTitle">{i18n.t('subscriptionForm.title')}</h3>
@@ -378,17 +402,17 @@ class SubscriptionForm extends Component {
                                     <Select id="subscriptionType" name="subscriptionType" labelText={i18n.t('subscriptionForm.subscriptionType')} required value={this.state.subscriptionType} onChange={this.handleChanges}>
                                         <SelectItem
                                             text={i18n.t('subscriptionForm.selectType')}
-                                            value="subscription-type"
+                                            value=""
                                         />
                                         {subscriptionTypes.map((subscriptionType, i) => <SelectItem key={i} text={subscriptionType} required value={subscriptionType.toLowerCase()}>{subscriptionType}</SelectItem>)}
                                     </Select>
                                 </div>
                             </div>
                             {this.renderForm()}
+                            {this.state.subscriptionType ? <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}</Button> : ''}
+                            {this.successErrorMessage()}
                         </div>
-                        <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}  </Button>
                     </Form>
-                    {this.renderSuccessErrorMessage()}
                 </div>
             </div>
         );

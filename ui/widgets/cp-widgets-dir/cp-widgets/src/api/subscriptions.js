@@ -11,6 +11,15 @@ export const apiSubscriptionGet = async (serviceUrl, id) => {
     return request(url, options);
 };
 
+export const apiSubscriptionGetAll = async (serviceUrl) => {
+    const url = `${serviceUrl}/${resource}`;
+    const options = {
+        ...getDefaultOptions(),
+        method: 'GET',
+    };
+    return request(url, options);
+};
+
 // Project Subscription creation consists of an object containing a projectSubscription, an entandoVersionId, and a
 // project id, see SubscriptionCreationRequest.
 /**
@@ -51,12 +60,14 @@ export const apiGetMySubscription = async (serviceUrl, customerId) => {
     return request(url, options);
   };
 
-export const apiRenewSubscription = async (serviceUrl, projectId, entandoVersionId) => {
-    const url = `${serviceUrl}/${resource}/renew/${projectId}/${entandoVersionId}`;
+  // Same format as {projectSubscriptionCreation}
+export const apiRenewSubscription = async (serviceUrl, projectSubscriptionRenew) => {
+    const url = `${serviceUrl}/${resource}/renew`;
 
     const options = {
         ...getDefaultOptions(),
-        method: 'PUT'
+        method: 'PUT',
+        body: projectSubscriptionRenew ? JSON.stringify(projectSubscriptionRenew) : null
     };
 
     return request(url, options);
