@@ -82,7 +82,7 @@ componentDidUpdate(prevProps) {
                               ))}
                             </TableCell> 
                           : <TableCell>None</TableCell>}
-                          {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
+                          <TableCell>None</TableCell>
                           <TableCell>None</TableCell>
                           <TableCell>None</TableCell>
                           <TableCell>None</TableCell>
@@ -103,7 +103,7 @@ componentDidUpdate(prevProps) {
                                   ))}
                                 </TableCell> 
                                 : <TableCell>None</TableCell>}
-                              {project.entandoVersion ? <TableCell>{project.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
+                              {sub.entandoVersion ? <TableCell>{sub.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
                               <TableCell>{sub.status}</TableCell>
                               <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
                               <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>

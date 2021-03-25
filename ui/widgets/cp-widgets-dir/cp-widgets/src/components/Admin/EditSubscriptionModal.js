@@ -55,9 +55,6 @@ class EditSubscriptionModal extends Component {
         const formIsValid = this.handleValidation();
 
         if (formIsValid) {
-            //e.preventDefault();
-            console.log(this.props.subscription.id)
-            
             const subscriptionRequest = {
                 projectSubscription : {
                     id: this.props.subscription.id,
@@ -66,10 +63,10 @@ class EditSubscriptionModal extends Component {
                     lengthInMonths: this.state.lengthInMonths,
                     startDate: moment(this.state.startDate).format(),
                     notes: this.state.notes,
-                    project: this.props.project
+                    project: this.props.project,
+                    entandoVersion: this.props.subscription.entandoVersion
                 }
             }
-
             this.subscriptionPut(subscriptionRequest);
         }
     };

@@ -74,6 +74,15 @@ export const apiAddTicketToProject = async (serviceUrl, projectId, ticketId) => 
   return request(url, options);
 };
 
+export const apiAddSubscriptionToProject = async (serviceUrl, projectId, subscriptionId) => {
+  const url = `${serviceUrl}/${resource}/${projectId}/subscriptions/${subscriptionId}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'POST',
+  };
+  return request(url, options);
+};
+
 export const apiAddUserToProject = async (serviceUrl, projectId, userId) => {
   const url = `${serviceUrl}/${resource}/${projectId}/users/${userId}`;
   const options = {

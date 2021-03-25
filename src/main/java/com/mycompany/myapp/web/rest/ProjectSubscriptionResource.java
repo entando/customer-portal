@@ -60,7 +60,7 @@ public class ProjectSubscriptionResource {
 
     @Autowired
     SpringSecurityAuditorAware springSecurityAuditorAware;
-    
+
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -80,7 +80,7 @@ public class ProjectSubscriptionResource {
      * @param subscriptionCreationRequest the projectSubscription to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new projectSubscription, or with status {@code 400 (Bad Request)} if the projectSubscription has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
-     * @throws MessagingException 
+     * @throws MessagingException
      */
     @PostMapping("/project-subscriptions")
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
@@ -111,28 +111,28 @@ public class ProjectSubscriptionResource {
         entandoVersionOpt.ifPresent(entandoVersion -> projectSubscription.setEntandoVersion(entandoVersion));
 
         ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
-        
-        //send an email to entando team only when this request is from customers 
+
+        //send an email to entando team only when this request is from customers
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean hasUserRole = authentication.getAuthorities().stream()
                   .anyMatch(r -> r.getAuthority().equals(AuthoritiesConstants.CUSTOMER));
-        
+
         if (hasUserRole) {
             String from = ""; // email required
             String to = ""; // email required
-             
+
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
-             
+
             helper.setSubject("Subscription Notification");
             helper.setFrom(from);
             helper.setTo(to);
-            
+
             // put HTML
             helper.setText("<b>Hi</b>,<br><i>This is a notification for new subscription.</i>", true);
             javaMailSender.send(message);
         }
-        
+
         return ResponseEntity.created(new URI("/api/project-subscriptions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -154,7 +154,7 @@ public class ProjectSubscriptionResource {
         ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
         log.debug("REST request to update ProjectSubscription : {}", projectSubscription);
 
-        if (projectSubscription == null || projectSubscription.getId() == null || !projectService.findOne(projectSubscription.getId()).isPresent()) {
+        if (projectSubscription == null || projectSubscription.getId() == null || !projectSubscriptionService.findOne(projectSubscription.getId()).isPresent()) {
             throw new BadRequestAlertException("Invalid Project Subscription id", ENTITY_NAME, "projectSubscriptionIdNull");
         }
 
@@ -263,7 +263,7 @@ public class ProjectSubscriptionResource {
         long entandoVersionId = subscriptionCreationRequest.getEntandoVersionId();
         long projectId = subscriptionCreationRequest.getProjectId();
         ProjectSubscription renewSubscription = subscriptionCreationRequest.getProjectSubscription();
-        
+
         log.debug("REST request to renew a subscription : entandoVersionId {}. projectVersionId {}", entandoVersionId, projectId);
 
         Optional<ProjectSubscription> subscriptionToRenewOpt = projectSubscriptionService.findLatestExpiredSubscription(entandoVersionId, projectId);
@@ -275,7 +275,7 @@ public class ProjectSubscriptionResource {
         subscriptionToRenew.setLengthInMonths(renewSubscription.getLengthInMonths());
         subscriptionToRenew.setLevel(renewSubscription.getLevel());
         subscriptionToRenew.setStartDate(renewSubscription.getStartDate());
-        
+
         ProjectSubscription result = projectSubscriptionService.save(subscriptionToRenew);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
