@@ -1,6 +1,6 @@
 const projectSubscriptionApiGetResponse = {
   level: 'GOLD',
-  status: 'NEW',
+  status: 'ACTIVE',
   lengthInMonths: -415,
   startDate: '2013-01-24T19:00:06-05:00',
   notes:

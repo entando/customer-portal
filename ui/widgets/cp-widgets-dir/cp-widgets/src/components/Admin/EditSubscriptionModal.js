@@ -113,7 +113,7 @@ class EditSubscriptionModal extends Component {
     
     render() {
         const levelList = ['GOLD', 'PLATINUM'];
-        const statusList = ['NEW', 'ACTIVE', 'EXPIRED'];
+        const statusList = ['REQUESTED', 'PENDING', 'ACTIVE', 'EXPIRED'];
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}

@@ -110,7 +110,7 @@ public class ProjectSubscriptionResource {
         associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));
         entandoVersionOpt.ifPresent(entandoVersion -> projectSubscription.setEntandoVersion(entandoVersion));
 
-        ProjectSubscription result = projectSubscriptionService.save(subscriptionCreationRequest.getProjectSubscription());
+        ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
         
         //send an email to entando team only when this request is from customers 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -253,5 +253,32 @@ public class ProjectSubscriptionResource {
             }
         }
         return null;
+    }
+
+    @PutMapping("project-subscriptions/renew")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    public ResponseEntity<ProjectSubscription> renewProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException {
+        //ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
+        long entandoVersionId = subscriptionCreationRequest.getEntandoVersionId();
+        long projectId = subscriptionCreationRequest.getProjectId();
+        ProjectSubscription renewSubscription = subscriptionCreationRequest.getProjectSubscription();
+        
+        log.debug("REST request to renew a subscription : entandoVersionId {}. projectVersionId {}", entandoVersionId, projectId);
+
+        Optional<ProjectSubscription> subscriptionToRenewOpt = projectSubscriptionService.findLatestExpiredSubscription(entandoVersionId, projectId);
+        if (!subscriptionToRenewOpt.isPresent()) {
+            return ResponseUtil.wrapOrNotFound(subscriptionToRenewOpt);
+        }
+
+        ProjectSubscription subscriptionToRenew = subscriptionToRenewOpt.get();
+        subscriptionToRenew.setLengthInMonths(renewSubscription.getLengthInMonths());
+        subscriptionToRenew.setLevel(renewSubscription.getLevel());
+        subscriptionToRenew.setStartDate(renewSubscription.getStartDate());
+        
+        ProjectSubscription result = projectSubscriptionService.save(subscriptionToRenew);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 }

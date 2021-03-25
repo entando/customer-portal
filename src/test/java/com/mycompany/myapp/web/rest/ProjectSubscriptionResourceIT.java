@@ -42,7 +42,7 @@ public class ProjectSubscriptionResourceIT {
     private static final SubscriptionLevel DEFAULT_LEVEL = SubscriptionLevel.GOLD;
     private static final SubscriptionLevel UPDATED_LEVEL = SubscriptionLevel.PLATINUM;
 
-    private static final Status DEFAULT_STATUS = Status.NEW;
+    private static final Status DEFAULT_STATUS = Status.REQUESTED;
     private static final Status UPDATED_STATUS = Status.ACTIVE;
 
     private static final Integer DEFAULT_LENGTH_IN_MONTHS = 1;
