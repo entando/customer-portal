@@ -3,6 +3,7 @@ import i18n from '../../../i18n';
 import { Accordion, AccordionItem } from 'carbon-components-react';
 import AssignUser from './AssignUser';
 import DeleteUser from './DeleteUser';
+import { hasKeycloakClientRole } from '../../../api/helpers';
 
 class ManageUser extends Component {
   userFunctionality;
@@ -33,20 +34,25 @@ class ManageUser extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <h3 className="pageTitle">Entando Admin View</h3>
-        <div className="form-container">
-          <Accordion>
-            {this.userFunctionality.map((item, index) => (
-              <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description} open={item.open}>
-                <p>{item.content}</p>
-              </AccordionItem>
-            ))}
-          </Accordion>
+    if (hasKeycloakClientRole('ROLE_ADMIN')) {
+      return (
+        <div>
+          <h3 className="pageTitle">Entando Admin View</h3>
+          <div className="form-container">
+            <Accordion>
+              {this.userFunctionality.map((item, index) => (
+                <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description} open={item.open}>
+                  <p>{item.content}</p>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
         </div>
-      </div>
-    );
+      )
+    }
+    else {
+      return(<p>You are not authorized to view this</p>)
+    }
   }
 }
 

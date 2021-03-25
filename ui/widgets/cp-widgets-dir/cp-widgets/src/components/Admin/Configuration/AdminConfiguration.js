@@ -3,6 +3,7 @@ import i18n from '../../../i18n';
 import { Accordion, AccordionItem, Tile } from 'carbon-components-react';
 import TicketingSystem from './TicketingSystem';
 import ProductVersion from './ProductVersion';
+import { hasKeycloakClientRole } from '../../../api/helpers';
 
 class AdminConfiguration extends React.Component {
   constructor(props) {
@@ -30,24 +31,29 @@ class AdminConfiguration extends React.Component {
   }
 
 render() {
-  return(
-    <div>
-      <h3 className="pageTitle">Entando Admin View</h3>
-      <div className="form-container">
-        <Tile>
-          <p className="title">{i18n.t('adminConfig.title')}</p>
-          <p class="desc">{i18n.t('adminConfig.desc')}</p>
-        </Tile>
-        <Accordion>
-          {this.adminConfig.map((item, index) => (
-            <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description}>
-              <p>{item.content}</p>
-            </AccordionItem>
-          ))}
-        </Accordion>
+  if (hasKeycloakClientRole('ROLE_ADMIN')) {
+    return(
+      <div>
+        <h3 className="pageTitle">Entando Admin View</h3>
+        <div className="form-container">
+          <Tile>
+            <p className="title">{i18n.t('adminConfig.title')}</p>
+            <p class="desc">{i18n.t('adminConfig.desc')}</p>
+          </Tile>
+          <Accordion>
+            {this.adminConfig.map((item, index) => (
+              <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description}>
+                <p>{item.content}</p>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
+  else {
+    return(<p>You are not authorized to view this</p>)
+  }
 }
 
 }
