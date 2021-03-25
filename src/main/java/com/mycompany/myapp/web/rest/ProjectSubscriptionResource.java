@@ -1,5 +1,34 @@
 package com.mycompany.myapp.web.rest;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.mycompany.myapp.domain.EntandoVersion;
 import com.mycompany.myapp.domain.PortalUser;
 import com.mycompany.myapp.domain.Project;
@@ -14,20 +43,6 @@ import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.ProjectSubscription}.
@@ -45,6 +60,9 @@ public class ProjectSubscriptionResource {
 
     @Autowired
     SpringSecurityAuditorAware springSecurityAuditorAware;
+    
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     private final ProjectSubscriptionService projectSubscriptionService;
     private final ProjectService projectService;
@@ -62,11 +80,12 @@ public class ProjectSubscriptionResource {
      * @param subscriptionCreationRequest the projectSubscription to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new projectSubscription, or with status {@code 400 (Bad Request)} if the projectSubscription has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws MessagingException 
      */
     @PostMapping("/project-subscriptions")
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
         "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
-    public ResponseEntity<ProjectSubscription> createProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException {
+    public ResponseEntity<ProjectSubscription> createProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException, MessagingException {
         log.debug("REST request to save ProjectSubscription : {}", subscriptionCreationRequest);
         ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
 
@@ -92,6 +111,28 @@ public class ProjectSubscriptionResource {
         entandoVersionOpt.ifPresent(entandoVersion -> projectSubscription.setEntandoVersion(entandoVersion));
 
         ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
+        
+        //send an email to entando team only when this request is from customers 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean hasUserRole = authentication.getAuthorities().stream()
+                  .anyMatch(r -> r.getAuthority().equals(AuthoritiesConstants.CUSTOMER));
+        
+        if (hasUserRole) {
+            String from = ""; // email required
+            String to = ""; // email required
+             
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+             
+            helper.setSubject("Subscription Notification");
+            helper.setFrom(from);
+            helper.setTo(to);
+            
+            // put HTML
+            helper.setText("<b>Hi</b>,<br><i>This is a notification for new subscription.</i>", true);
+            javaMailSender.send(message);
+        }
+        
         return ResponseEntity.created(new URI("/api/project-subscriptions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);

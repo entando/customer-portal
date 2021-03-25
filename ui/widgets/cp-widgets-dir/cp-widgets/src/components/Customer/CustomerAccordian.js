@@ -71,9 +71,11 @@ class CustomerAccordian extends React.Component {
                     }
                     <AccordionItem title={this.props.title}>
                         {hasKeycloakClientRole('ROLE_ADMIN') ?
-                            <div><EditCustomerModal serviceUrl={this.props.serviceUrl} customer={this.state.customer} key={this.state.customer.id}/>  <br/></div> : null}
+                            <EditCustomerModal serviceUrl={this.props.serviceUrl} customer={this.state.customer} key={this.state.customer.id}/>  : null
+                        }
                         <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} />
-                    </AccordionItem></div> 
+                    </AccordionItem>
+                </div> 
             </div>
         )
     }
