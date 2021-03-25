@@ -40,6 +40,17 @@ class DeleteUser extends Component {
         this.fetchData();
     }
 
+    componentDidUpdate(prevProps) {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+      
+        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+      
+        if (authenticated && changedAuth) {
+            this.fetchData();
+        }
+    }
+
     async fetchData() {
         const { keycloak } = this.props;
 
