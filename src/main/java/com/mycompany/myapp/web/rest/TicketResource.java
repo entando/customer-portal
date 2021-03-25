@@ -237,15 +237,17 @@ public class TicketResource {
                     t.setDescription((String) jsonIssue.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name"));
                     t.setUpdateDate(ZonedDateTime.now());
                 }
+                resultTickets.add(t);
             }
             // else create a Ticket
             else {
                 System.out.println("Creating ticket...");
                 Ticket prepareTicketToCreate = prepareTicketToCreateWithProject(jiraKey, organizationNumber, ts.getUrl(),
                     ts.getServiceAccount(), ts.getServiceAccountSecret());
+                resultTickets.add(prepareTicketToCreate);
                 createTicket(prepareTicketToCreate);
             }
-            resultTickets.add(t);
+
         }
 
         // return JSON response from Jira
