@@ -143,11 +143,11 @@
     "contactNumber": "Contact Phone Number",
     "chooseVersion": "Choose Entando version",
     "entandoVersion": "Entando Version",
-    "adminSubmitNewSuccess": "Successfully added a project subscription",
-    "adminRenewNewSuccess": "Successfully renewed the latest project subscription",
-    "customerSubmitSuccess": "You will be contacted by an Entando Sales representative to finalize the subscription",
-    "newSubError": "Error in adding a project subscription",
-    "renewSubError": "Error in renewing a project subscription"
+    "adminSubmitNewSuccess": "Successfully added a project subscription.",
+    "adminRenewNewSuccess": "Successfully renewed the latest project subscription.",
+    "customerSubmitSuccess": "You will be contacted by an Entando Sales representative to finalize the subscription.",
+    "newSubError": "Error in adding a project subscription.",
+    "renewSubError": "Error in renewing a project subscription."
   },
 
   "adminConfig": {
