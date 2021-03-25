@@ -132,7 +132,6 @@ class SubscriptionForm extends Component {
         if (formIsValid) {
             if (this.state.subscriptionType === 'new') {
                 this.newSubscription().then(res => {
-                    console.log('new', res);
                     this.setState({
                         submitSuccess: true,
                         submitError: false
@@ -145,7 +144,6 @@ class SubscriptionForm extends Component {
                 });
             } else if (this.state.subscriptionType === 'existing') {
                 this.renewSubscription().then(res => {
-                    console.log('renew', res);
                     this.setState({
                         submitSuccess: true,
                         submitError: false
