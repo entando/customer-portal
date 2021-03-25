@@ -6,6 +6,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiProjectSubscriptionPost, apiRenewSubscription } from '../../api/subscriptions';
 import { apiProductVersionsGet } from '../../api/productVersion';
 import { hasKeycloakClientRole } from '../../api/helpers';
+import { apiAddSubscriptionToProject } from '../../api/projects';
 
 const subscriptionLevel = {
     GOLD: 'Gold',
@@ -132,6 +133,7 @@ class SubscriptionForm extends Component {
         if (formIsValid) {
             if (this.state.subscriptionType === 'new') {
                 this.newSubscription().then(res => {
+                    apiAddSubscriptionToProject(this.props.serviceUrl, this.state.projectId, res.data.id)
                     this.setState({
                         submitSuccess: true,
                         submitError: false
@@ -144,6 +146,7 @@ class SubscriptionForm extends Component {
                 });
             } else if (this.state.subscriptionType === 'existing') {
                 this.renewSubscription().then(res => {
+                    apiAddSubscriptionToProject(this.props.serviceUrl, this.state.projectId, res.data.id)
                     this.setState({
                         submitSuccess: true,
                         submitError: false
