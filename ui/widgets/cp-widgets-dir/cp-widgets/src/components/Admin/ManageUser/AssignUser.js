@@ -22,7 +22,7 @@ class AssignUser extends Component {
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            this.fetchData();
+            this.fetchData(keycloak.authServerUrl);
         }
     }
 
@@ -33,12 +33,12 @@ class AssignUser extends Component {
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
       
         if (authenticated && changedAuth) {
-            this.fetchData();
+            this.fetchData(keycloak.authServerUrl);
         }
     }
 
-    async fetchData() {
-        const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(this.props.keycloakUrl)).data);
+    async fetchData(keycloakUrl) {
+        const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(keycloakUrl)).data);
         const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
         this.setState({
             users,

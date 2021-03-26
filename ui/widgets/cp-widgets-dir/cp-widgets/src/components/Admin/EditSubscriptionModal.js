@@ -15,7 +15,8 @@ class EditSubscriptionModal extends Component {
             lengthInMonths: '',
             startDate: '',
             notes: '',
-            invalid: {}
+            invalid: {},
+            submitMsg: ''
         };
     }
 
@@ -67,7 +68,15 @@ class EditSubscriptionModal extends Component {
                     entandoVersion: this.props.subscription.entandoVersion
                 }
             }
-            this.subscriptionPut(subscriptionRequest);
+            this.subscriptionPut(subscriptionRequest).then(result => {
+                this.setState({
+                    submitMsg: 'Successfully updated subscription'
+                })
+            }).catch(err => {
+                this.setState({
+                    submitMsg: 'An error occurred when udating the subscription'
+                })
+            });
         }
     };
 
@@ -78,6 +87,7 @@ class EditSubscriptionModal extends Component {
             lengthInMonths: this.props.subscription.lengthInMonths,
             startDate: moment(this.props.subscription.startDate).calendar(),
             notes: this.props.subscription.notes,
+            submitMsg: ''
         })
 
         const modalOpenButton = document.querySelector('.edit-sub-button');
@@ -102,9 +112,7 @@ class EditSubscriptionModal extends Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const result = await apiProjectSubscriptionPut(this.props.serviceUrl, subscription);
-            this.render();
-            window.location.reload(false);
+            return await apiProjectSubscriptionPut(this.props.serviceUrl, subscription);
         }
     }
     
@@ -172,6 +180,7 @@ class EditSubscriptionModal extends Component {
                             value={this.state.notes} 
                             onChange={this.handleChanges} 
                         />
+                        <p>{this.state.submitMsg}</p>
                     </Form>
                 </div> 
             </ModalWrapper>

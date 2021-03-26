@@ -391,13 +391,31 @@ public class ProjectResource {
     }
 
     @GetMapping("/projects/nameId")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Map<Long, String>> getProjectIdsAndNames() {
         List<Project> projects = projectService.findAll();
         Map<Long, String> projectIdNameMap = new HashMap<>();
         projects.forEach(project -> {
             projectIdNameMap.put(project.getId(), project.getName());
+        });
+
+        return new ResponseEntity<Map<Long, String>>(projectIdNameMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/projects/myprojects/nameId")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER + "')")
+    public ResponseEntity<Map<Long, String>> getMyProjectIdsAndNames() {
+        List<Project> projects = projectService.findAll();
+        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
+        Map<Long, String> projectIdNameMap = new HashMap<>();
+        projects.forEach(project -> {
+            Set<PortalUser> users = projectService.getProjectUsers(project.getId());
+            for(PortalUser user : users) {
+                if (currentUser.equals(user.getUsername())) {
+                    projectIdNameMap.put(project.getId(), project.getName());
+                    break;
+                }
+            }
         });
 
         return new ResponseEntity<Map<Long, String>>(projectIdNameMap, HttpStatus.OK);

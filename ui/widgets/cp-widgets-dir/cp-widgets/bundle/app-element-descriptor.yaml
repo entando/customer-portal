@@ -1,6 +1,6 @@
 code: app-widget
 titles:
-  en: App Demo Widget
-  it: App Demo Widget
+  en: App Widget
+  it: App Widget
 group: free
 customUiPath: app-element.ftl

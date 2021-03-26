@@ -25,8 +25,7 @@ const ATTRIBUTES = {
   locale: 'locale',
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
-  serviceUrl: 'service-url',
-  keycloakUrl: 'keycloak-url',
+  serviceUrl: 'service-url'
 };
 
 class AssignUserElement extends HTMLElement {
@@ -58,11 +57,10 @@ class AssignUserElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
-    const keycloakUrl = this.getAttribute(ATTRIBUTES.keycloakUrl) || '';
     
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <AssignUser serviceUrl={serviceUrl} keycloakUrl={keycloakUrl}/>
+        <AssignUser serviceUrl={serviceUrl} />
       </KeycloakContext.Provider>,
       this.mountPoint
     );

@@ -145,7 +145,8 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of entandoVersions in body.
      */
     @GetMapping("/entando-versions")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<List<EntandoVersionResponse>> getAllEntandoVersions() {
 
     	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT);
