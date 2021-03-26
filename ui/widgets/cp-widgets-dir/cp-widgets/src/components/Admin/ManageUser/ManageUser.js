@@ -14,20 +14,22 @@ class ManageUser extends Component {
         label: (
           <div>
             <p className="title">{i18n.t('manageUsers.assign.title')}</p>
-            <p className="desc">{i18n.t('manageUsers.assign.desc')}</p>
+            {/*<p className="desc">{i18n.t('manageUsers.assign.desc')}</p>*/}
+            <p className="desc">Assign a user to an existing project</p>
           </div>
         ),
-        content: <AssignUser serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl} />,
+        content: <AssignUser serviceUrl={this.props.serviceUrl} />,
         open: true
       },
       {
         label: (
           <div>
             <p className="title">{i18n.t('manageUsers.manage.title')}</p>
-            <p className="desc">{i18n.t('manageUsers.manage.desc')}</p>
+            {/*<p className="desc">{i18n.t('manageUsers.manage.desc')}</p>*/}
+            <p className="desc">View and delete existing users</p>
           </div>
         ),
-        content: <DeleteUser serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl} />,
+        content: <DeleteUser serviceUrl={this.props.serviceUrl} />,
         open: false
       }
     ];

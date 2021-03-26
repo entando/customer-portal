@@ -148,7 +148,8 @@ class OpenTicket extends Component {
                     <Form onSubmit={this.handleFormSubmit}>
                         <div className="form-desc">
                             <h4>{i18n.t('supportTicketForm.formTitle')}</h4>
-                            <p>{i18n.t('supportTicketForm.desc')}</p>
+                            {/*<p>{i18n.t('supportTicketForm.desc')}</p>*/}
+                            <p>Create a support ticket for an existing project</p>
                         </div>
 
                         <div className="bx--grid">

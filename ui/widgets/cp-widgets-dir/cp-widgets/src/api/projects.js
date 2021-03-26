@@ -128,6 +128,15 @@ export const apiGetProjectIdNames = async (serviceUrl) => {
   return request(url, options);
 };
 
+export const apiGetMyProjectIdNames = async (serviceUrl) => {
+  const url = `${serviceUrl}/${resource}/myprojects/nameId/`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+  return request(url, options);
+};
+
 // Endpoints for backend security
 const adminResource = 'api/projects/admin';
 export const apiAdminProjectsGet = async (serviceUrl) => {

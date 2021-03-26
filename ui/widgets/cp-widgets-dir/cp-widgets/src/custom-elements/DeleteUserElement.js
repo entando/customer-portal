@@ -57,11 +57,10 @@ class DeleteUserElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
-    const keycloakUrl = this.getAttribute(ATTRIBUTES.keycloakUrl) || '';
     
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <DeleteUser serviceUrl={serviceUrl} keycloakUrl={keycloakUrl}/>
+        <DeleteUser serviceUrl={serviceUrl} />
       </KeycloakContext.Provider>,
       this.mountPoint
     );

@@ -38,11 +38,11 @@ class App extends Component {
                     <AuthenticatedView keycloak={keycloak}>
                         <BrowserRouter>
                             <Switch>
-                                <Route exact path="/" render={(props) => (
-                                    <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} keycloakUrl={this.props.keycloakUrl}/>
-                                )}/>
-                                <Route path="/subscription-details/:id" render={(props) => (
+                                <Route path="**/subscription-details/:id" render={(props) => (
                                     <Subscription {...props} serviceUrl={this.props.serviceUrl} />
+                                )}/>
+                                <Route path="**/" render={(props) => (
+                                    <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} />
                                 )}/>
                             </Switch>
                         </BrowserRouter>
@@ -58,7 +58,7 @@ class App extends Component {
                 <div id="entando-customer-portal">
                     <BrowserRouter>
                         <Switch>
-                            <Route path="/subscription-details/:id" render={(props) => (
+                            <Route path="**/subscription-details/:id" render={(props) => (
                                 <Subscription {...props} serviceUrl={this.props.serviceUrl} />
                             )}/>
                         </Switch>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import i18n from '../../i18n';
 import { Form, TextInput, Select, SelectItem, Button, DatePicker, DatePickerInput } from 'carbon-components-react';
-import { apiGetProjectIdNames } from '../../api/projects';
+import { apiGetProjectIdNames, apiGetMyProjectIdNames } from '../../api/projects';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProjectSubscriptionPost, apiRenewSubscription } from '../../api/subscriptions';
 import { apiProductVersionsGet } from '../../api/productVersion';
@@ -62,7 +62,13 @@ class SubscriptionForm extends Component {
     }
 
     async fetchData() {
-        const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
+        var projects = ''
+        if (hasKeycloakClientRole('ROLE_ADMIN')) {
+            projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
+        }
+        else {
+            projects = (await apiGetMyProjectIdNames(this.props.serviceUrl)).data;
+        }
         const productVersions = (await apiProductVersionsGet(this.props.serviceUrl)).data;
 
         this.setState({
