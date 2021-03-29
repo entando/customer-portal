@@ -131,6 +131,7 @@ class OpenTicket extends Component {
         var authenticated = keycloak.initialized && keycloak.authenticated;
     
         if (authenticated) {
+            console.log(this.state.project.systemId)
             const ticket = {
                 systemId: this.state.project.systemId,
                 type: this.state.type,
@@ -141,7 +142,7 @@ class OpenTicket extends Component {
                 createDate: '2021-02-22T14:14:09-05:00',
                 updateDate: '2021-02-22T14:14:09-05:00'
             }
-            return await apiJiraTicketPost(this.props.serviceUrl, this.state.ticketingSystem.systemId, this.state.systemId, ticket);
+            return await apiJiraTicketPost(this.props.serviceUrl, this.state.ticketingSystem.systemId, this.state.project.systemId, ticket);
             //const addedTicket = await apiAddTicketToProject(this.props.serviceUrl, this.state.project.id, result.data.id);
         }
     }
