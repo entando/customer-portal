@@ -15,6 +15,40 @@ class CustomTable extends Component {
     this.state = { 
       projects: {}
      }
+     this.headerData = [
+      {
+        header: i18n.t('customerDashboard.projectName'),
+        key: 'projectName',
+      },
+      {
+        header: i18n.t('customerDashboard.partners'),
+        key: 'partners',
+      },
+      {
+        header: i18n.t('customerDashboard.entandoVersion'),
+        key: 'entandoVersion',
+      },
+      {
+        header: i18n.t('customerDashboard.status'),
+        key: 'status',
+      },
+      {
+        header: i18n.t('customerDashboard.startDate'),
+        key: 'startDate',
+      },
+      {
+          header: i18n.t('customerDashboard.endDate'),
+          key: 'endDate',
+      },
+      {
+          header: i18n.t('customerDashboard.openTickets'),
+          key: 'openTickets',
+      },
+      {
+          header: i18n.t('customerDashboard.action'),
+          key: 'action',
+      }
+    ];
   }
 
   async fetchData() {
@@ -55,7 +89,7 @@ componentDidUpdate(prevProps) {
   render() { 
     return (
       <div>
-        <DataTable rows={rowData} headers={headerData}>
+        <DataTable rows={rowData} headers={this.headerData}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
           <TableContainer title={i18n.t('customerDashboard.subscriptions')} description={i18n.t('customerDashboard.tableDesc')}>
             <Table {...getTableProps()}>
@@ -123,41 +157,6 @@ componentDidUpdate(prevProps) {
     </div>
   )}
 }
-
-const headerData = [
-  {
-    header: i18n.t('customerDashboard.projectName'),
-    key: 'projectName',
-  },
-  {
-    header: i18n.t('customerDashboard.partners'),
-    key: 'partners',
-  },
-  {
-    header: i18n.t('customerDashboard.entandoVersion'),
-    key: 'entandoVersion',
-  },
-  {
-    header: i18n.t('customerDashboard.status'),
-    key: 'status',
-  },
-  {
-    header: i18n.t('customerDashboard.startDate'),
-    key: 'startDate',
-  },
-  {
-      header: i18n.t('customerDashboard.endDate'),
-      key: 'endDate',
-  },
-  {
-      header: i18n.t('customerDashboard.openTickets'),
-      key: 'openTickets',
-  },
-  {
-      header: i18n.t('customerDashboard.action'),
-      key: 'action',
-  }
-];
 
 
 const rowData = [

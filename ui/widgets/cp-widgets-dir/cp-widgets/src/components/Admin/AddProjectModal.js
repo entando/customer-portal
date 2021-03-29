@@ -168,14 +168,16 @@ class AddProjectModal extends Component {
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProject')}
-        modalHeading="Add a project"
+        modalHeading={i18n.t('adminDashboard.addProject.title')}
         buttonTriggerClassName="add-project bx--btn bx--btn--tertiary add-project-button"
         className="modal-form"
         id="modal-form-project"
         handleSubmit={this.handleFormSubmit}
+        primaryButtonText={i18n.t('modalText.save')}
+        secondaryButtonText={i18n.t('modalText.cancel')}
       >
         <div className="form-container">
-          <p> {i18n.t('adminDashboard.addProject.desc')} </p>
+          {/*<p> {i18n.t('adminDashboard.addProject.desc')} </p>*/}
           <Form onSubmit={this.handleFormSubmit}>
             <Select
               defaultValue="customer-list"

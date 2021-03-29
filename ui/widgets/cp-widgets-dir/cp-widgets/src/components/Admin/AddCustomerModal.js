@@ -95,9 +95,11 @@ class AddCustomerModal extends Component {
                 className="modal-form"
                 id="modal-form-customer"
                 handleSubmit={this.handleFormSubmit}
+                primaryButtonText={i18n.t('modalText.save')}
+                secondaryButtonText={i18n.t('modalText.cancel')}
             >
                 <div className="form-container">
-                    <p> {i18n.t('adminDashboard.addCustomer.desc')} </p>
+                    {/*<p> {i18n.t('adminDashboard.addCustomer.desc')} </p>8*/}
                     <Form onSubmit={this.handleFormSubmit}>
                         <TextInput
                             name="name"

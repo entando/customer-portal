@@ -122,9 +122,11 @@ class AddPartnerModal extends Component {
         className="modal-form"
         id="modal-form-partner"
         handleSubmit={this.handleFormSubmit}
+        primaryButtonText={i18n.t('modalText.save')}
+        secondaryButtonText={i18n.t('modalText.cancel')}
       >
         <div className="form-container">
-          <p> {i18n.t('adminDashboard.addPartner.desc')}</p>
+          {/*<p> {i18n.t('adminDashboard.addPartner.desc')}</p>*/}
           <Form onSubmit={this.handleFormSubmit}>
             <Select
               defaultValue="project-list"

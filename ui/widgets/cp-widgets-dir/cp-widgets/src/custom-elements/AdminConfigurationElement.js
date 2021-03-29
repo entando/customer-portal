@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import AdminConfiguration from '../components/Admin/Configuration/AdminConfiguration';
 import '../index.scss'
 import './dashboard.css'
+import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';
 
@@ -26,6 +27,7 @@ const ATTRIBUTES = {
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
   serviceUrl: 'service-url',
+  locale: 'locale'
 };
 
 class AdminConfigurationElement extends HTMLElement {
@@ -57,6 +59,8 @@ class AdminConfigurationElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
+    const locale = this.getAttribute(ATTRIBUTES.locale) || '';
+    Locale.setLocale(locale);
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>

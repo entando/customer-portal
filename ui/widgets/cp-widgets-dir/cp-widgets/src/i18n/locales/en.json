@@ -1,4 +1,11 @@
 {
+  "roles": {
+    "admin": "Admin",
+    "customer": "Customer",
+    "partner": "Partner",
+    "support": "Support"
+  },
+
 	"buttons":{
 		"submit": "Submit",
 		"cancel": "Cancel",
@@ -11,24 +18,28 @@
 	},
 	
   	"customerDashboard":{
-		"title": "Welcome to Entando Customer Portal",
-		"customerName": "Customer Name",
-		"customerId": "Customer Id",
-		"startDate": "Start Date",
-		"endDate": "End Date",
-		"projectName": "Project Name",
-		"partnerName": "PartnerName",
-		"entandoVersion": "Entando Version",
-		"openTickets": "OpenTickets",
-		"subscriptions": "Subscriptions",
-		"tableDesc":"In this table there are open subscriptions",
-		"partners": "Partners",
-		"status": "Status",
-		"action": "Action"
+      "title": "Welcome to Entando Customer Portal",
+      "customerName": "Customer Name",
+      "customerId": "Customer Id",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "projectName": "Project Name",
+      "partnerName": "PartnerName",
+      "entandoVersion": "Entando Version",
+      "openTickets": "Open Tickets",
+      "subscriptions": "Subscriptions",
+      "tableDesc":"In this table there are open subscriptions",
+      "partners": "Partners",
+      "status": "Status",
+      "action": "Action"
 	},
 
   "adminDashboard": {
     "title": "Welcome to Entando",
+    "adminTitle": "Welcome to Entando Admin View",
+    "customerTitle": "Welcome to Entando Customer View",
+    "partnerTitle": "Welcome to Entando Partner View",
+    "supportTitle": "Welcome to Entando Support View",
     "allCustomers": "All Customers",
     "searchText": "Which customer are you looking for?",
     "view": "View",
@@ -43,7 +54,8 @@
       "contactName": "Contact Name",
       "contactPhone": "Contact Phone",
       "contactEmail": "Contact Email",
-      "notes": "Notes"
+      "notes": "Notes",
+      "editTitle": "Edit Project"
     },
     "addCustomer": {
       "title": "Add a Customer",
@@ -70,7 +82,11 @@
       "productVersion": "Product Version",
       "productVersionStartDate": "Product Version Start Date",
       "productVersionEndDate": "Product Version End Date"
-    }
+    },
+    "editCustomer":{
+			"title": "Edit Customer",
+			"desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis."
+		}
   },
 
   "projectDetails": {
@@ -91,10 +107,21 @@
     "goToTicket": "Go to Ticket"
   },
 
+  "ticketDetails": {
+    "listOfTickets":"List of Tickets",
+    "tickets": "Tickets",
+    "issue": "Issue",
+    "project": "Project",
+    "description": "Description",
+    "type": "Type",
+    "creationDate":"Creation Date",
+    "link": "Link"
+  },
+
   "supportTicketForm": {
-    "title": "Welcome to Entando Customer Portal",
+    "title": "Entando Admin View",
     "formTitle": "Create new support ticket",
-    "desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+    "desc": "Create a support ticket for an existing project.",
     "select": "Select",
     "type": "Type",
     "selectProject": "Select Project",
@@ -122,8 +149,20 @@
     "addenhancementDescription": "Add Enhancement Description"
   },
 
+  "subscriptionDetails": {
+    "description": "Description",
+    "commitment": "Commitment",
+    "type": "Type",
+    "status": "Status",
+    "level": "Level",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "license": "License",
+    "lengthInMonths": "Length In Months"
+  },
+
   "subscriptionForm": {
-    "title": "Welcome to Entando Portal",
+    "title": "Entando Admin View",
     "formTitle": "New or Renew Subscription",
     "desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
     "subscriptionType": "Subscription Type *",
@@ -150,10 +189,15 @@
     "renewSubError": "Error in renewing a project subscription."
   },
 
+  "modalText": {
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+
   "adminConfig": {
     "title": "Entando Admin View",
     "formTitle": "All Customers",
-    "desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+    "desc": "Configure the Ticketing System and Entando Versions below.",
     "integrationTicketingSystem": {
       "title": "Integration with Ticketing System",
       "desc": "This allows you to manage the ticketing system",
@@ -174,10 +218,10 @@
     }
   },
   "manageUsers": {
-    "title": "Title",
+    "title": "Entando Admin View",
     "assign": {
       "title": "Assign a new User",
-      "desc": "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
+      "desc": "Assign a user to an existing project.",
       "projectName": "Project Name",
       "assignUser": "Assign User",
       "selectRole": "Select Role",
@@ -188,9 +232,10 @@
     },
     "manage": {
       "title": "Manage all Users",
-      "desc": "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs."
+      "desc": "View and delete existing users."
     },
     "delete": {
+      "desc": "View and delete existing users",
       "userName": "User Name",
       "userEmail": "User Email",
       "dateAdded": "Date Added",

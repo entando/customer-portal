@@ -1,4 +1,11 @@
 {
+	"roles": {
+		"admin": "Amministratore",
+		"customer": "Cliente",
+		"partner": "Socio",
+		"support": "Supporto"
+	},
+
 	"buttons":{
 		"submit": "Invia",
 		"cancel": "Annulla",
@@ -29,6 +36,10 @@
 	
 	"adminDashboard":{
 		"title": "Benvenuti a Entando",
+		"adminTitle": "Benvenuti a Entando Visualizza dell'Amministratore",
+   		"customerTitle": "Benvenuti a Entando Visualizza del Cliente",
+    	"partnerTitle": "Benvenuti a Entando Visualizza del Socio",
+    	"supportTitle": "Benvenuti a Entando Visualizza del Supporto",
 		"allCustomers":"Tutti i clienti",
 		"searchText": "Quale cliente stai cercando?",
 		"view": "Visualizza",
@@ -44,7 +55,7 @@
 			"contactPhone": "Contatto telefonico",
 			"contactEmail": "Contatto email",
 			"notes": "Appunti",
-			"editTitle": "Modifica partner"
+			"editTitle": "Modifica progetto"
 		},
 		"addCustomer":{
 			"title": "Aggiungi un cliente",
@@ -78,11 +89,52 @@
 		}
 	},
 
+	"supportTicketForm": {
+		"title": "Entando Visualizza dell'Amministratore",
+		"formTitle": "Creare un nuovo biglietto di supporto",
+		"desc": "Creare un nuovo biglietto di supporto per un progetto esistente.",
+		"select": "Seleziona",
+		"type": "Genere",
+		"selectProject": "Seleziona progetto",
+		"ticketNumber": "Ticket Number",
+		"customerName": "Customer Name",
+		"projectName": "ProjectName",
+		"ticketOpenedBy": "Ticket Opened By:",
+		"priority": "Priorità",
+		"partnerName": "Partner Name",
+		"ticketDescription": "Descrizione del biglietto",
+		"addticketDescription": "Aggiungi una descrizione del biglietto"
+	},
+
+	"subscriptionDetails": {
+		"description": "Descrizione",
+		"commitment": "Impegno",
+		"type": "Genere",
+		"status": "Stato",
+		"level": "Livello",
+		"startDate": "Data d'inizio",
+		"endDate": "Data di fine",
+		"license": "Licenza",
+		"lengthInMonths": "Durata in mesi"
+	},
+
+	"ticketDetails": {
+		"listOfTickets":"Elenco dei biglietti",
+    	"tickets": "Biglietti",
+		"issue": "Problema",
+		"project": "Progetto",
+		"description": "Descrizione",
+		"type": "Genere",
+		"creationDate":"Data di creazione",
+		"link": "Collegamento"
+	},
+
    	"subscriptionForm":{
-		"title": "Benvenuto nel portale Entando",
+		"title": "Entando Visualizza dell'Amministratore",
 		"formTitle":"Nuovo o rinnova abbonamento",
 		"desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
 		"customerType": "Tipo di cliente *",
+		"subscriptionType": "Genere di abbonamento *",
 		"newSubscription": "Nuovo abbonamento",
 		"renewSubscription": "Rinnova l'abbonamento",
 		"selectType": "Seleziona il tipo di cliente",
@@ -111,13 +163,13 @@
 	},
   
   	"adminConfig":{
-		"title": "Entando Admin View",
+		"title": "Entando Visualizza dell'Amministratore",
 		"formTitle": "Tutti i clienti",
-		"desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+		"desc": "Configura il sistema di biglietteria e la versione di Entando di seguito.",
 		
 		"integrationTicketingSystem": {
-			"title": "Integrazione con il sistema di ticketing",
-			"desc": "Questo ti permette di gestire il sistema di ticketing",
+			"title": "Integrazione con il sistema di biglietteria",
+			"desc": "Questo ti permette di gestire il sistema di biglietteria",
 			"selectBackendTicketingSystem": "Seleziona Backend Ticketing System",
 			"select": "Selezionare",
 			"url": "URL",
@@ -134,26 +186,42 @@
 			"supportEndDate": "Data di fine del supporto"
 		}
 	},
+
+	"modalText": {
+		"save": "Salva",
+		"cancel": "Annulla"
+	  },
 	
 	"manageUsers":{
-		"title": "Titolo",
+		"title": "Entando Visualizza dell'Amministratore",
 		"assign":{
 			"title": "Assegna un nuovo utente",
-			"desc": "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
+			"desc": "Assegnare un utente a un progetto esistente.",
 			"projectName": "Nome del progetto",
+			"projectList": "Elenco dei progetti",
+      		"userList": "Elenco degli utenti",
 			"assignUser": "Assegna utente",
 			"selectRole": "Seleziona ruolo"
 		},
 		"manage":{
 			"title": "Gestisci tutti gli utenti",
-			"desc": "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs."
-		}
+			"desc": "Visualizzare ed eliminare gli utenti esistenti."
+		},
+		"delete": {
+			"desc": "View and delete existing users",
+			"userName": "Nome atente",
+			"userEmail": "Email dell'utente",
+			"dateAdded": "Data aggiunta",
+			"userAccess": "Accesso utente",
+			"removeUser": "Rimuovere l'utente"
+		  }
 	},
 	"validation":{
 		"invalid":{
 			"required": "Questo campo è obbligatorio.",
 			"email": "L'email non è valida.",
-			"date": "Inserisci una data nel formato 'mm / gg / aaaa'."
+			"date": "Inserisci una data nel formato 'mm / gg / aaaa'.",
+			"number": "Questo campo deve essere un numero."
 		}
 	}
 }
