@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
 import { apiJiraTicketsGet } from '../../api/tickets';
-import { apiTicketingSystemsGet, apiTicketingSystemPost } from '../../api/ticketingsystem';
+import { apiTicketingSystemsGet } from '../../api/ticketingsystem';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiGetProjectsUsers, apiProjectGet, apiGetProjectsTickets, apiAddTicketToProject } from '../../api/projects';
+import { apiProjectGet, apiAddTicketToProject } from '../../api/projects';
 import { hasKeycloakClientRole } from '../../api/helpers';
+import i18n from '../../i18n';
 
 class TicketList extends Component {
   constructor(props) {
@@ -13,6 +14,32 @@ class TicketList extends Component {
     this.state = { 
       tickets: {}
      }
+     this.headerData = [
+      {
+        header: i18n.t('ticketDetails.issue'),
+        key: 'issue',
+      },
+      {
+        header: i18n.t('ticketDetails.project'),
+        key: 'project',
+      },
+      {
+        header: i18n.t('ticketDetails.description'),
+        key: 'description',
+      },
+      {
+        header: i18n.t('ticketDetails.type'),
+        key: 'type',
+      },
+      {
+        header: i18n.t('ticketDetails.creationDate'),
+        key: 'creationDate',
+      },
+      {
+          header: i18n.t('ticketDetails.link'),
+          key: 'link',
+      },
+    ];
   }
 
   async fetchData() {
@@ -65,9 +92,9 @@ componentDidUpdate(prevProps) {
   render() { 
     return ( 
       <div>
-        <DataTable rows={rowData} headers={headerData}>
+        <DataTable rows={rowData} headers={this.headerData}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
-          <TableContainer title="List of Tickets" description="Tickets">
+          <TableContainer title={i18n.t('ticketDetails.listOfTickets')} description={i18n.t('ticketDetails.tickets')}>
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
@@ -99,33 +126,6 @@ componentDidUpdate(prevProps) {
     </div>
   )}
 }
-
-const headerData = [
-  {
-    header: 'Issue',
-    key: 'projectName',
-  },
-  {
-    header: 'Project',
-    key: 'project',
-  },
-  {
-    header: 'Description',
-    key: 'description',
-  },
-  {
-    header: 'Type',
-    key: 'type',
-  },
-  {
-    header: 'Creation Date',
-    key: 'creationDate',
-  },
-  {
-      header: 'Link',
-      key: 'openTicket',
-  },
-];
 
 const rowData = [
   {

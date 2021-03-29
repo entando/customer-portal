@@ -7,6 +7,7 @@ import { apiUsersGet } from '../../api/portalusers';
 import { apiProjectGet } from '../../api/projects'; 
 import { hasKeycloakClientRole } from '../../api/helpers';
 import EditSubscriptionModal from '../Admin/EditSubscriptionModal';
+import i18n from '../../i18n';
 
 const subscriptionData = {
     description: 'Entando Product Support Subscription Suplier Portal',
@@ -98,8 +99,8 @@ class Subscription extends React.Component {
                         <div className="bx--grid">
                             <div className="bx--row">
                                 <div className="bx--col">
-                                    <p><strong>Description:</strong> {this.state.subscription.data.project.description}</p>
-                                    <p><strong>Commitment:</strong>
+                                    <p><strong>{i18n.t('subscriptionDetails.description')}:</strong> {this.state.subscription.data.project.description}</p>
+                                    <p><strong>{i18n.t('subscriptionDetails.commitment')}:</strong>
                                     {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? 
                                         <>
                                             {this.state.project.data.partners.map(partner => (
@@ -109,15 +110,14 @@ class Subscription extends React.Component {
                                         : <> None </>
                                     }
                                     </p>
-                                    <p><strong>Type:</strong> {type}</p>
-                                    <p><strong>Quantity Request:</strong> {quantityRequest}</p>
-                                    <p><strong>Status:</strong> {this.state.subscription.data.status}</p>
+                                    <p><strong>{i18n.t('subscriptionDetails.type')}:</strong> {type}</p>
+                                    <p><strong>{i18n.t('subscriptionDetails.status')}:</strong> {this.state.subscription.data.status}</p>
                                 </div>
                                 <div className="bx--col">
-                                    <p><strong>Level:</strong> {this.state.subscription.data.level}</p>
-                                    <p><strong>Start Date:</strong> {String(new Date(this.state.subscription.data.startDate).toDateString())}</p>
-                                    <p><strong>End Date:</strong> {String(new Date(new Date(this.state.subscription.data.startDate).setMonth(new Date(this.state.subscription.data.startDate).getMonth() + this.state.subscription.data.lengthInMonths)).toDateString())}</p>
-                                    <p><strong>License:</strong> {license}</p>
+                                    <p><strong>{i18n.t('subscriptionDetails.level')}:</strong> {this.state.subscription.data.level}</p>
+                                    <p><strong>{i18n.t('subscriptionDetails.startDate')}:</strong> {String(new Date(this.state.subscription.data.startDate).toDateString())}</p>
+                                    <p><strong>{i18n.t('subscriptionDetails.endDate')}:</strong> {String(new Date(new Date(this.state.subscription.data.startDate).setMonth(new Date(this.state.subscription.data.startDate).getMonth() + this.state.subscription.data.lengthInMonths)).toDateString())}</p>
+                                    <p><strong>{i18n.t('subscriptionDetails.license')}:</strong> {license}</p>
                                 </div>
                             </div>
                         </div>

@@ -6,25 +6,6 @@ import withKeycloak from '../../../auth/withKeycloak';
 import { apiKeycloakUserGet } from '../../../api/keycloak';
 import i18n from '../../../i18n';
 
-const headerData = [
-    {
-        header: i18n.t('manageUsers.delete.userName'),
-        key: 'username',
-    },
-    {
-        header: i18n.t('manageUsers.delete.userEmail'),
-        key: 'email',
-    },
-    {
-        header: i18n.t('manageUsers.delete.dateAdded'),
-        key: 'dateAdded',
-    },
-    {
-        header: i18n.t('manageUsers.delete.userAccess'),
-        key: 'userAccess',
-    }
-];
-
 class DeleteUser extends Component {
     constructor(props) {
         super(props);
@@ -34,6 +15,24 @@ class DeleteUser extends Component {
             displayUsers: [],
             filterText: ''
         };
+        this.headerData = [
+            {
+                header: i18n.t('manageUsers.delete.userName'),
+                key: 'username',
+            },
+            {
+                header: i18n.t('manageUsers.delete.userEmail'),
+                key: 'email',
+            },
+            {
+                header: i18n.t('manageUsers.delete.dateAdded'),
+                key: 'dateAdded',
+            },
+            {
+                header: i18n.t('manageUsers.delete.userAccess'),
+                key: 'userAccess',
+            }
+        ];
     }
 
     componentDidMount() {
@@ -119,7 +118,7 @@ class DeleteUser extends Component {
 
     render() {
         return (
-            <DataTable rows={this.state.displayUsers} headers={headerData}>
+            <DataTable rows={this.state.displayUsers} headers={this.headerData}>
                 {({ rows, headers, getHeaderProps, getTableProps }) => (
                     <TableContainer>
                         <Table {...getTableProps()}>

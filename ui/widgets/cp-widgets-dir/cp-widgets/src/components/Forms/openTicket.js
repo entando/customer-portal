@@ -148,8 +148,7 @@ class OpenTicket extends Component {
                     <Form onSubmit={this.handleFormSubmit}>
                         <div className="form-desc">
                             <h4>{i18n.t('supportTicketForm.formTitle')}</h4>
-                            {/*<p>{i18n.t('supportTicketForm.desc')}</p>*/}
-                            <p>Create a support ticket for an existing project</p>
+                            <p>{i18n.t('supportTicketForm.desc')}</p>
                         </div>
 
                         <div className="bx--grid">
@@ -183,7 +182,7 @@ class OpenTicket extends Component {
                                         invalid={this.state.invalid['type']} 
                                     >
                                         <SelectItem
-                                            text="Select"
+                                            text={i18n.t('supportTicketForm.select')}
                                             value="Task"
                                         />
                                         {this.types.map((type, i) => (
@@ -198,7 +197,7 @@ class OpenTicket extends Component {
                                         onChange={this.handleChanges}
                                     >
                                         <SelectItem
-                                            text="Select"
+                                            text={i18n.t('supportTicketForm.select')}
                                             value="Low"
                                         />
                                         {this.priorities.map((priority, i) => (

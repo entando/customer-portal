@@ -34,15 +34,11 @@ render() {
   if (hasKeycloakClientRole('ROLE_ADMIN')) {
     return(
       <div>
-        <h3 className="pageTitle">Entando Admin View</h3>
+        <h3 className="pageTitle">{i18n.t('adminConfig.title')}</h3>
         <div className="form-container">
           <Tile>
-            {/*
             <p className="title">{i18n.t('adminConfig.title')}</p>
             <p class="desc">{i18n.t('adminConfig.desc')}</p>
-            */}
-            <p className="title">Admin Configuration</p>
-            <p class="desc">Configure the Ticketing System and Entando Versions below</p>
           </Tile>
           <Accordion>
             {this.adminConfig.map((item, index) => (

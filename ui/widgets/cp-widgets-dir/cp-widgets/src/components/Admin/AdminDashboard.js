@@ -96,13 +96,13 @@ class AdminDashboard extends React.Component {
         return(
             <div className="admin-dashboard">
                 {hasKeycloakClientRole('ROLE_ADMIN') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.title')} Admin {i18n.t('adminDashboard.view')}</h3> : 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
                 hasKeycloakClientRole('ROLE_SUPPORT') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.title')} Support {i18n.t('adminDashboard.view')}</h3> : 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
                 hasKeycloakClientRole('ROLE_CUSTOMER') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.title')} Customer {i18n.t('adminDashboard.view')}</h3> : 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
                 hasKeycloakClientRole('ROLE_PARTNER') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.title')} Partner {i18n.t('adminDashboard.view')}</h3> : 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
                 null}
             {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') ?
                 <Tile>

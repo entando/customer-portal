@@ -14,8 +14,7 @@ class ManageUser extends Component {
         label: (
           <div>
             <p className="title">{i18n.t('manageUsers.assign.title')}</p>
-            {/*<p className="desc">{i18n.t('manageUsers.assign.desc')}</p>*/}
-            <p className="desc">Assign a user to an existing project</p>
+            <p className="desc">{i18n.t('manageUsers.assign.desc')}</p>
           </div>
         ),
         content: <AssignUser serviceUrl={this.props.serviceUrl} />,
@@ -25,8 +24,7 @@ class ManageUser extends Component {
         label: (
           <div>
             <p className="title">{i18n.t('manageUsers.manage.title')}</p>
-            {/*<p className="desc">{i18n.t('manageUsers.manage.desc')}</p>*/}
-            <p className="desc">View and delete existing users</p>
+            <p className="desc">{i18n.t('manageUsers.manage.desc')}</p>
           </div>
         ),
         content: <DeleteUser serviceUrl={this.props.serviceUrl} />,
@@ -39,7 +37,7 @@ class ManageUser extends Component {
     if (hasKeycloakClientRole('ROLE_ADMIN')) {
       return (
         <div>
-          <h3 className="pageTitle">Entando Admin View</h3>
+          <h3 className="pageTitle">{i18n.t('manageUsers.title')}</h3>
           <div className="form-container">
             <Accordion>
               {this.userFunctionality.map((item, index) => (

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import retargetEvents from 'react-shadow-dom-retarget-events';
 import '../index.scss'
 import './dashboard.css'
+import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';
 import App from '../components/App';
@@ -26,7 +27,8 @@ const ATTRIBUTES = {
   locale: 'locale',
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
-  serviceUrl: 'service-url'
+  serviceUrl: 'service-url',
+  locale: 'locale'
 };
 
 
@@ -59,6 +61,8 @@ class AppElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
+    const locale = this.getAttribute(ATTRIBUTES.locale) || '';
+    Locale.setLocale(locale);
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>

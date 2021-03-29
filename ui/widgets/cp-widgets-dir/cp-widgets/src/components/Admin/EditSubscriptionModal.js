@@ -127,13 +127,15 @@ class EditSubscriptionModal extends Component {
                 className="modal-form"
                 id="modal-form-sub-edit"
                 handleSubmit={this.handleFormSubmit}
+                primaryButtonText={i18n.t('modalText.save')}
+                secondaryButtonText={i18n.t('modalText.cancel')}
             >
-                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>
+                {/*<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>*/}
                 <div className="form-container">
                     <Form onSubmit={this.handleFormSubmit}>
                         <Select
                             name="level"
-                            labelText="Level"
+                            labelText={i18n.t('subscriptionDetails.level')}
                             value={this.state.level}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
@@ -148,7 +150,7 @@ class EditSubscriptionModal extends Component {
                         </Select>
                         <Select
                             name="status"
-                            labelText="status"
+                            labelText={i18n.t('subscriptionDetails.status')}
                             value={this.state.status}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
@@ -165,7 +167,7 @@ class EditSubscriptionModal extends Component {
                             <DatePickerInput
                                 name="startDate"
                                 placeholder="mm/dd/yyyy"
-                                labelText="Start Date"
+                                labelText={i18n.t('subscriptionDetails.startDate')}
                                 value={this.state.startDate}
                                 onChange={ this.handleChanges}
                                 type="text"
@@ -173,7 +175,7 @@ class EditSubscriptionModal extends Component {
                                 invalid={this.state.invalid['startDate']} 
                             />
                         </DatePicker>
-                        <TextInput name="lengthInMonths" labelText="Length In Months" value={this.state.lengthInMonths} onChange={this.handleChanges} />
+                        <TextInput name="lengthInMonths" labelText={i18n.t('subscriptionDetails.lengthInMonths')} value={this.state.lengthInMonths} onChange={this.handleChanges} />
                         <TextArea 
                             name="notes" 
                             labelText={i18n.t('adminDashboard.addProject.notes')} 
