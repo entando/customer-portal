@@ -12,7 +12,8 @@ class AddProductVersionModal extends Component {
       name: '',
       startDate: '',
       endDate: '',
-      invalid: {}
+      invalid: {},
+      submitMsg: ''
     };
 
     this.baseState = this.state
@@ -53,13 +54,27 @@ class AddProductVersionModal extends Component {
     this.setState({ [name]: value });
   };
 
+  async addProductVersion() {
+    const { t, keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
+    if (authenticated) {
+      return await apiProductVersionPost(this.props.serviceUrl, this.state);
+    }
+  }
+
   handleFormSubmit = e => {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
-      const productVersion = apiProductVersionPost(this.props.serviceUrl, this.state);
-      this.render();
-      window.location.reload(false);
+      this.addProductVersion().then(result => {
+        this.setState({
+            submitMsg: i18n.t('submitMessages.added')
+        })
+      }).catch(err => {
+          this.setState({
+              submitMsg: i18n.t('submitMessages.error')
+          })
+      });
     }
   };
 
@@ -120,6 +135,7 @@ class AddProductVersionModal extends Component {
                 invalid={this.state.invalid['endDate']}
               />
             </DatePicker>
+            <strong>{this.state.submitMsg}</strong>
           </Form>
         </div>
       </ModalWrapper>

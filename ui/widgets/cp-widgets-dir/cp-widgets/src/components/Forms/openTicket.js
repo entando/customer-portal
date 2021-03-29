@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import i18n from '../../i18n';
-import { Form, TextInput, Select, SelectItem, Button, TextArea } from 'carbon-components-react';
+import { Form, Select, SelectItem, Button, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiProjectsGet, apiAdminProjectsGet, apiMyProjectsGet, apiAddTicketToProject } from '../../api/projects';
-import { apiUsersGet } from '../../api/portalusers';
+import { apiAdminProjectsGet, apiMyProjectsGet, apiGetProjectSubscriptions } from '../../api/projects';
 import { apiJiraTicketPost } from '../../api/tickets';
 import { apiTicketingSystemsGet } from '../../api/ticketingsystem';
 import { hasKeycloakClientRole } from '../../api/helpers';
@@ -12,6 +11,7 @@ class OpenTicket extends Component {
     constructor() {
         super();
         this.state = {
+            project: {},
             projects: [],
             systemId: '',
             type: '',
@@ -21,7 +21,8 @@ class OpenTicket extends Component {
             createDate: '',
             updateDate: '',
             role: '',
-            invalid: {}
+            invalid: {},
+            submitMsg: ''
         };
         this.types = ["Bug", "Task"];
         this.priorities = ['Lowest', 'Low', 'High', 'Highest'];
@@ -31,7 +32,7 @@ class OpenTicket extends Component {
         let invalid = {};
         let formIsValid = true;
 
-        if(this.state.systemId === ''){
+        if(this.state.project.systemId === ''){
           formIsValid = false;
           invalid['systemId'] = true;
         }
@@ -54,7 +55,15 @@ class OpenTicket extends Component {
         const input = e.target;
         const name = input.name;
         const value = input.value;
-        this.setState({ [name]: value });
+
+        if (name === "project") {
+            this.setState({
+                project: JSON.parse(value),
+            })
+        }
+        else {
+            this.setState({ [name]: value });
+        }
     }
 
     handleFormSubmit = (event) => {
@@ -63,10 +72,37 @@ class OpenTicket extends Component {
         const formIsValid = this.handleValidation();
 
         if (formIsValid) {
-            this.createTicket();
-            window.location.reload(false);
+            // check if project has subscription 
+            this.fetchProjectSubscription(this.state.project.id).then(result => {
+                // if project has subscription, create ticket
+                if(result.data.length > 0) {
+                    this.createTicket().then(res => {
+                        this.setState({
+                            submitMsg: i18n.t('submitMessages.created')
+                        })
+                    }).catch(err => {
+                        this.setState({
+                            submitMsg: i18n.t('submitMessages.error')
+                        })
+                    });
+                }
+                // if no subscriptions, don't create ticket
+                else {
+                    this.setState({
+                        submitMsg: i18n.t('submitMessages.subscriptionRequired')
+                    })
+                }
+            }).catch(error => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.error')
+                })
+            });
         }
     };
+
+    async fetchProjectSubscription(projectId) {
+        return await apiGetProjectSubscriptions(this.props.serviceUrl, projectId);
+    }
 
     async fetchProjects() {
         const { t, keycloak } = this.props;
@@ -96,7 +132,7 @@ class OpenTicket extends Component {
     
         if (authenticated) {
             const ticket = {
-                systemId: this.state.systemId,
+                systemId: this.state.project.systemId,
                 type: this.state.type,
                 description: this.state.description,
                 priority: this.state.priority,
@@ -105,7 +141,7 @@ class OpenTicket extends Component {
                 createDate: '2021-02-22T14:14:09-05:00',
                 updateDate: '2021-02-22T14:14:09-05:00'
             }
-            const result = await apiJiraTicketPost(this.props.serviceUrl, this.state.ticketingSystem.systemId, this.state.systemId, ticket);
+            return await apiJiraTicketPost(this.props.serviceUrl, this.state.ticketingSystem.systemId, this.state.systemId, ticket);
             //const addedTicket = await apiAddTicketToProject(this.props.serviceUrl, this.state.project.id, result.data.id);
         }
     }
@@ -156,9 +192,9 @@ class OpenTicket extends Component {
                                 <div className="bx--col">
                                     <Select 
                                         defaultValue="ticketing-system" 
-                                        name="systemId" 
+                                        name="project" 
                                         labelText={i18n.t('supportTicketForm.selectProject')} 
-                                        value={this.state.systemId} 
+                                        value={JSON.stringify(this.state.project)} 
                                         onChange={this.handleChanges}
                                         invalidText={i18n.t('validation.invalid.required')}
                                         invalid={this.state.invalid['systemId']} 
@@ -168,9 +204,10 @@ class OpenTicket extends Component {
                                             value="ticketing-system"
                                         />
                                         {Object.keys(this.state.projects).length !== 0 ? this.state.projects.map((project, i) => {
-                                        return (
-                                            <SelectItem key={i} text={project.name} value={project.systemId}>{project.name}</SelectItem>
-                                        )}) : null}
+                                                return (
+                                                    <SelectItem key={i} text={project.name} value={JSON.stringify(project)}>{project.name}</SelectItem>
+                                                )
+                                        }) : null}
                                     </Select>
                                     <Select 
                                         defaultValue="Task" 
@@ -223,6 +260,7 @@ class OpenTicket extends Component {
                         </div>
                     </Form>
                 </div>
+                <strong>{this.state.submitMsg}</strong>
             </div>    
         );
     }

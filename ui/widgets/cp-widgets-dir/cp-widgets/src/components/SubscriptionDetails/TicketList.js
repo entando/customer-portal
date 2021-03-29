@@ -28,17 +28,29 @@ class TicketList extends Component {
         key: 'description',
       },
       {
+        header: i18n.t('ticketDetails.status'),
+        key: 'status',
+      },
+      {
         header: i18n.t('ticketDetails.type'),
         key: 'type',
+      },
+      {
+        header: i18n.t('ticketDetails.priority'),
+        key: 'priority',
       },
       {
         header: i18n.t('ticketDetails.creationDate'),
         key: 'creationDate',
       },
       {
-          header: i18n.t('ticketDetails.link'),
-          key: 'link',
+        header: i18n.t('ticketDetails.lastUpdated'),
+        key: 'lastUpdated',
       },
+      {
+        header: i18n.t('ticketDetails.link'),
+        key: 'link',
+      }
     ];
   }
 
@@ -107,14 +119,18 @@ componentDidUpdate(prevProps) {
               </TableHead>
               <TableBody>
                 {Object.keys(this.state.tickets).length !== 0 ? this.state.tickets.data.map((ticket) => {
+                  console.log(ticket)
                   return (
                     <TableRow key={ticket.id}>
                       <TableCell key={ticket.id}>{ticket.systemId}</TableCell>
                       <TableCell key={ticket.id}>{ticket.systemId.split("-")[0]}</TableCell>
                       <TableCell key={ticket.id}>{ticket.description}</TableCell>
+                      <TableCell key={ticket.id}>{ticket.status}</TableCell>
                       <TableCell key={ticket.id}>{ticket.type}</TableCell>
+                      <TableCell key={ticket.id}>{ticket.priority}</TableCell>
                       <TableCell key={ticket.id}>{new Date(ticket.createDate).toDateString()}</TableCell>
-                      <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">View Ticket</a></TableCell>
+                      <TableCell key={ticket.id}>{new Date(ticket.updateDate).toDateString()}</TableCell>
+                      <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">{i18n.t('ticketDetails.viewTicket')}</a></TableCell>
                     </TableRow>
                   )
                 }) : <p></p> }

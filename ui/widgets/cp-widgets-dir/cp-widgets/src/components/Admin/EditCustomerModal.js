@@ -17,7 +17,8 @@ class EditCustomerModal extends Component {
             notes: '',
             invalid: {},
             modalId: '',
-            buttonId: ''
+            buttonId: '',
+            submitMsg: ''
         };
     }
 
@@ -88,8 +89,15 @@ class EditCustomerModal extends Component {
                 contactEmail:this.state.contactEmail,
                 notes:this.state.notes
             }
-            this.updateCustomer(customer);
-            window.location.reload(false);
+            this.updateCustomer(customer).then(result => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.updated')
+                })
+            }).catch(err => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.error')
+                })
+            });
         }
     };
 
@@ -208,7 +216,7 @@ class EditCustomerModal extends Component {
                             value={this.state.notes}
                             onChange={this.handleChanges}
                         />
-                        {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
+                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div>
             </ModalWrapper>

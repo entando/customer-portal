@@ -111,7 +111,16 @@ export const apiGetProjectsUsers = async (serviceUrl, projectId) => {
 };
 
 export const apiGetProjectsTickets = async (serviceUrl, projectId) => {
-  const url = `${serviceUrl}/${resource}/${projectId}/users/`;
+  const url = `${serviceUrl}/${resource}/${projectId}/tickets/`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+  return request(url, options);
+};
+
+export const apiGetProjectSubscriptions = async (serviceUrl, projectId) => {
+  const url = `${serviceUrl}/${resource}/${projectId}/subscriptions/`;
   const options = {
     ...getDefaultOptions(),
     method: 'GET',

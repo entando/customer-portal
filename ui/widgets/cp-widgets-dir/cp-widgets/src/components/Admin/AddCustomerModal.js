@@ -15,7 +15,8 @@ class AddCustomerModal extends Component {
             contactPhone: '',
             contactEmail: '',
             notes: '',
-            invalid: {}
+            invalid: {},
+            submitMsg: ''
         };
 
         this.baseState = this.state
@@ -64,13 +65,36 @@ class AddCustomerModal extends Component {
         this.setState({ [name]: value });
     };
 
+    async customerPost(customer) {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            return await apiCustomerPost(this.props.serviceUrl, customer);
+        }
+    }
+
     handleFormSubmit = e => {
         const formIsValid = this.handleValidation();
 
         if (formIsValid) {
-            const customer = apiCustomerPost(this.props.serviceUrl, this.state);
-            this.render();
-            window.location.reload(false);
+            const customer = {
+                name: this.state.name,
+                customerNumber: this.state.customerNumber,
+                contactName: this.state.contactName,
+                contactPhone: this.state.contactPhone,
+                contactEmail: this.state.contactEmail,
+                notes: this.state.notes
+              };
+
+            this.customerPost(customer).then(result => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.added')
+                })
+            }).catch(err => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.error')
+                })
+            });
         }
     };
 
@@ -143,7 +167,7 @@ class AddCustomerModal extends Component {
                             value={this.state.notes}
                             onChange={this.handleChanges}
                         />
-                        {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
+                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div>
             </ModalWrapper>

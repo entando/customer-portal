@@ -22,7 +22,8 @@ class EditProjectModal extends Component {
             notes:'',
             invalid: {},
             modalId: '',
-            buttonId: ''
+            buttonId: '',
+            submitMsg: ''
         };
     }
 
@@ -122,8 +123,15 @@ class EditProjectModal extends Component {
                     return;
                 }
             }
-            this.projectPut(project);
-            window.location.reload(false);
+            this.projectPut(project).then(result => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.updated')
+                })
+            }).catch(err => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.error')
+                })
+            });
         }
     };
 
@@ -234,7 +242,7 @@ class EditProjectModal extends Component {
                             value={this.state.notes} 
                             onChange={this.handleChanges} 
                         />
-                        {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
+                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div> 
             </ModalWrapper>

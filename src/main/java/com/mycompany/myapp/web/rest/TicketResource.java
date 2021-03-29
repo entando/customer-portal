@@ -224,17 +224,17 @@ public class TicketResource {
                 }
                 // Type
                 if (t.getType() != (String) jsonIssue.getJSONObject("fields").getJSONObject("issuetype").get("name")) {
-                    t.setDescription((String) jsonIssue.getJSONObject("fields").getJSONObject("issuetype").get("name"));
+                    t.setType((String) jsonIssue.getJSONObject("fields").getJSONObject("issuetype").get("name"));
                     t.setUpdateDate(ZonedDateTime.now());
                 }
                 // Priority
                 if (t.getPriority() != (String) jsonIssue.getJSONObject("fields").getJSONObject("priority").get("name")) {
-                    t.setDescription((String) jsonIssue.getJSONObject("fields").getJSONObject("priority").get("name"));
+                    t.setPriority((String) jsonIssue.getJSONObject("fields").getJSONObject("priority").get("name"));
                     t.setUpdateDate(ZonedDateTime.now());
                 }
                 // Status
                 if (t.getStatus() != (String) jsonIssue.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name")) {
-                    t.setDescription((String) jsonIssue.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name"));
+                    t.setStatus((String) jsonIssue.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name"));
                     t.setUpdateDate(ZonedDateTime.now());
                 }
                 resultTickets.add(t);
@@ -372,6 +372,7 @@ public class TicketResource {
         ticketToCreate.setDescription((String) response.getJSONObject("fields").get("summary"));
         ticketToCreate.setSystemId(key);
         ticketToCreate.setType((String) response.getJSONObject("fields").getJSONObject("issuetype").get("name"));
+        ticketToCreate.setPriority((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
         ticketToCreate.setCreateDate(ZonedDateTime.now());
         ticketToCreate.setUpdateDate(ZonedDateTime.now());
         return ticketToCreate;
