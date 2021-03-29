@@ -14,7 +14,8 @@ class TicketingSystem extends Component {
             url: '',
             serviceAccount: '',
             serviceAccount: '',
-            systemId: ''
+            systemId: '',
+            submitMsg: ''
         }
     }
     
@@ -32,7 +33,7 @@ class TicketingSystem extends Component {
             serviceAccountSecret: this.state.serviceAccountSecret,
             systemId: this.state.systemId
         }
-        await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem);
+        return await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem);
     }
 
     async updateTicketingSystem() {
@@ -43,7 +44,7 @@ class TicketingSystem extends Component {
             serviceAccountSecret: this.state.serviceAccountSecret,
             systemId: this.state.systemId
         }
-        await apiTicketingSystemPut(this.props.serviceUrl, ticketingSystem);
+        return await apiTicketingSystemPut(this.props.serviceUrl, ticketingSystem);
     }
 
     async getTicketingSystems() {
@@ -81,22 +82,48 @@ class TicketingSystem extends Component {
         }
     }
 
+    async deleteTicketingSystem() {
+        return await apiTicketingSystemDelete(this.props.serviceUrl, this.state.ticketingSystem.id);
+    }
+
     handleDelete(e) {
         if (window.confirm("Are you sure you want to delete this ticketing system?")) {
-            apiTicketingSystemDelete(this.props.serviceUrl, this.state.ticketingSystem.id);
-            window.location.reload(false);
+            this.deleteTicketingSystem().then(result => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.deleted')
+                })
+            }).catch(err => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.error')
+                })
+            });
         }
     }
 
     handleFormSubmit = (event) => {
         event.preventDefault();
         if (this.state.ticketingSystem === '') {
-            this.createTicketingSystem();
+            this.createTicketingSystem().then(result => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.created')
+                })
+            }).catch(err => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.error')
+                })
+            });
         }
         else {
-            this.updateTicketingSystem();
+            this.updateTicketingSystem().then(result => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.updated')
+                })
+            }).catch(err => {
+                this.setState({
+                    submitMsg: i18n.t('submitMessages.error')
+                })
+            });
         }
-        window.location.reload(false);
     };
 
     render() { 
@@ -128,6 +155,7 @@ class TicketingSystem extends Component {
                                 <Button kind="danger" onClick={() => this.handleDelete()}> Delete </Button> : null
                             }
                         </div>
+                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div>
             );

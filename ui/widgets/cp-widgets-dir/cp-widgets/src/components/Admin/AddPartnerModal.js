@@ -15,7 +15,8 @@ class AddPartnerModal extends Component {
       name: '',
       partnerNumber: '',
       notes: '',
-      invalid: {}
+      invalid: {},
+      submitMsg: ''
     };
   }
 
@@ -75,9 +76,8 @@ class AddPartnerModal extends Component {
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const result = await apiPartnerPost(this.props.serviceUrl, partner);
-      await apiAddPartnerToProject(this.props.serviceUrl, this.state.projectId, result.data.id);
+      return await apiAddPartnerToProject(this.props.serviceUrl, this.state.projectId, result.data.id);
     }
-    window.location.reload(false);
   }
 
   handleFormSubmit = e => {
@@ -89,7 +89,15 @@ class AddPartnerModal extends Component {
         partnerNumber: this.state.partnerNumber,
         notes: this.state.notes
       };
-      this.partnerPost(partner);
+      this.partnerPost(partner).then(result => {
+        this.setState({
+            submitMsg: i18n.t('submitMessages.added')
+        })
+      }).catch(err => {
+          this.setState({
+              submitMsg: i18n.t('submitMessages.error')
+          })
+      });
     }
   };
 
@@ -169,7 +177,7 @@ class AddPartnerModal extends Component {
               value={this.state.notes}
               onChange={this.handleChanges}
             />
-            {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
+            <strong>{this.state.submitMsg}</strong>
           </Form>
         </div>
       </ModalWrapper>

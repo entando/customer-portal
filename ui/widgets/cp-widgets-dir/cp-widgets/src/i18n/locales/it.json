@@ -125,8 +125,11 @@
 		"project": "Progetto",
 		"description": "Descrizione",
 		"type": "Genere",
+		"status":"Stato",
 		"creationDate":"Data di creazione",
-		"link": "Collegamento"
+		"lastUpdated": "Ultimo aggiornamento",
+		"link": "Collegamento",
+		"viewTicket": "visualizza il biglietto"
 	},
 
    	"subscriptionForm":{
@@ -223,5 +226,14 @@
 			"date": "Inserisci una data nel formato 'mm / gg / aaaa'.",
 			"number": "Questo campo deve essere un numero."
 		}
-	}
+	},
+
+	"submitMessages": {
+		"subscriptionRequired": "A subscription is required to create tickets for this project",
+		"created": "Creato con successo",
+		"updated": "Aggiornato con successo",
+		"added": "Aggiunto con successo",
+		"deleted": "Cancellato con successo",
+		"error": "Si è verificato un errore"
+	  }
 }

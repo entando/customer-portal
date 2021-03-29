@@ -70,11 +70,11 @@ class EditSubscriptionModal extends Component {
             }
             this.subscriptionPut(subscriptionRequest).then(result => {
                 this.setState({
-                    submitMsg: 'Successfully updated subscription'
+                    submitMsg: i18n.t('submitMessages.updated')
                 })
             }).catch(err => {
                 this.setState({
-                    submitMsg: 'An error occurred when udating the subscription'
+                    submitMsg: i18n.t('submitMessages.error')
                 })
             });
         }
@@ -182,7 +182,7 @@ class EditSubscriptionModal extends Component {
                             value={this.state.notes} 
                             onChange={this.handleChanges} 
                         />
-                        <p>{this.state.submitMsg}</p>
+                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div> 
             </ModalWrapper>

@@ -114,8 +114,12 @@
     "project": "Project",
     "description": "Description",
     "type": "Type",
+    "status": "Status",
     "creationDate":"Creation Date",
-    "link": "Link"
+    "link": "Link",
+    "priority": "Priority",
+    "lastUpdated": "Last Updated",
+    "viewTicket": "View Ticket"
   },
 
   "supportTicketForm": {
@@ -260,6 +264,15 @@
 			"date": "Please enter a date in 'mm/dd/yyyy' format.",
       "number": "This field must be a number."
 		}
-	}
+	},
+
+  "submitMessages": {
+    "subscriptionRequired": "A subscription is required to create tickets for this project",
+    "created": "Successfully created",
+    "updated": "Successfully updated",
+    "added": "Successfully added",
+    "deleted": "Successfully deleted",
+    "error": "An error occurred"
+  }
 }
 

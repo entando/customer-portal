@@ -20,7 +20,8 @@ class AddProjectModal extends Component {
       contactPhone: '',
       contactEmail: '',
       notes: '',
-      invalid: {}
+      invalid: {},
+      submitMsg: ''
     };
   }
 
@@ -109,9 +110,8 @@ class AddProjectModal extends Component {
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const result = await apiProjectPost(this.props.serviceUrl, project);
-      await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id);
+      return await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id);
     }
-    window.location.reload(false);
   }
 
   handleFormSubmit = e => {
@@ -134,7 +134,15 @@ class AddProjectModal extends Component {
           return;
         }
       }
-      this.projectPost(project);
+      this.projectPost(project).then(result => {
+        this.setState({
+            submitMsg: i18n.t('submitMessages.added')
+        })
+      }).catch(err => {
+          this.setState({
+              submitMsg: i18n.t('submitMessages.error')
+          })
+      });
     }
   };
 
@@ -247,7 +255,7 @@ class AddProjectModal extends Component {
               value={this.state.notes}
               onChange={this.handleChanges}
             />
-            {/*<button disabled={!this.isValid()} type="submit">Submit</button>*/}
+            <strong>{this.state.submitMsg}</strong>
           </Form>
         </div>
       </ModalWrapper>

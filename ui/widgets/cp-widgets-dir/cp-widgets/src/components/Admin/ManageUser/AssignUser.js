@@ -13,7 +13,8 @@ class AssignUser extends Component {
             assignUser: '',
             users: new Map(),
             projects: {},
-            invalid: {}
+            invalid: {},
+            submitMsg: ''
         };
     }
 
@@ -67,9 +68,13 @@ class AssignUser extends Component {
         if (formIsValid) {
             this.assignUserToProject(projectId, assignUser).then(res => {
                 if (res.status === 201) {
-                    window.location.reload();
+                    this.setState({
+                        submitMsg: i18n.t('submitMessages.updated')
+                    })
                 } else {
-                    // TODO: Show error message
+                    this.setState({
+                        submitMsg: i18n.t('submitMessages.error')
+                    })
                 }
             });
         }
@@ -190,6 +195,7 @@ class AssignUser extends Component {
                             {i18n.t('buttons.submit')}{' '}
                         </Button>
                     </div>
+                    <strong>{this.state.submitMsg}</strong>
                 </Form>
             </div>
         );

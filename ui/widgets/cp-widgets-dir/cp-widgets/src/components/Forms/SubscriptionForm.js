@@ -390,7 +390,7 @@ class SubscriptionForm extends Component {
     }
 
     createFormMessage(subMessageKey) {
-        return <p>{i18n.t(`subscriptionForm.${subMessageKey}`)}</p>
+        return <strong>{i18n.t(`subscriptionForm.${subMessageKey}`)}</strong>
     }
 
     render() {
