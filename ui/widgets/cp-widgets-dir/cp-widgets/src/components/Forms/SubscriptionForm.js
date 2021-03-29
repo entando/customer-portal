@@ -396,7 +396,15 @@ class SubscriptionForm extends Component {
     render() {
         return (
             <div>
-                <h3 className="pageTitle">{i18n.t('subscriptionForm.title')}</h3>
+                {hasKeycloakClientRole('ROLE_ADMIN') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
+                hasKeycloakClientRole('ROLE_SUPPORT') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
+                hasKeycloakClientRole('ROLE_CUSTOMER') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
+                hasKeycloakClientRole('ROLE_PARTNER') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
+                null}
                 <div className="form-container">
                     <Form onSubmit={this.handleFormSubmit}>
                         <div className="form-desc">
