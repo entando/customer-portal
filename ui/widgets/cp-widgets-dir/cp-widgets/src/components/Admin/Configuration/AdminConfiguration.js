@@ -4,10 +4,14 @@ import { Accordion, AccordionItem, Tile } from 'carbon-components-react';
 import TicketingSystem from './TicketingSystem';
 import ProductVersion from './ProductVersion';
 import { hasKeycloakClientRole } from '../../../api/helpers';
+import withKeycloak from '../../../auth/withKeycloak';
 
 class AdminConfiguration extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loading: true
+    }
     this.adminConfig = [
       {
         label: (
@@ -30,32 +34,63 @@ class AdminConfiguration extends React.Component {
     ];
   }
 
-render() {
-  if (hasKeycloakClientRole('ROLE_ADMIN')) {
-    return(
-      <div>
-        <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
-        <div className="form-container">
-          <Tile>
-            <p className="title">{i18n.t('adminConfig.title')}</p>
-            <p class="desc">{i18n.t('adminConfig.desc')}</p>
-          </Tile>
-          <Accordion>
-            {this.adminConfig.map((item, index) => (
-              <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description}>
-                <p>{item.content}</p>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </div>
-    )
+componentDidMount() {
+  const { keycloak } = this.props;
+  const authenticated = keycloak.initialized && keycloak.authenticated;
+
+  if (authenticated) {
+    this.setState({
+      loading: false
+    })
   }
-  // Unauthorized
+}
+
+componentDidUpdate(prevProps) {
+  const { keycloak } = this.props;
+  const authenticated = keycloak.initialized && keycloak.authenticated;
+
+  const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+
+  if (authenticated && changedAuth) {
+    this.setState({
+      loading: false
+    });
+  }
+}
+
+render() {
+  if (!this.state.loading) {
+    // Authorized
+    if (hasKeycloakClientRole('ROLE_ADMIN')) {
+      return(
+        <div>
+          <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
+          <div className="form-container">
+            <Tile>
+              <p className="title">{i18n.t('adminConfig.title')}</p>
+              <p class="desc">{i18n.t('adminConfig.desc')}</p>
+            </Tile>
+            <Accordion>
+              {this.adminConfig.map((item, index) => (
+                <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description}>
+                  <p>{item.content}</p>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+      )
+    }
+    // Unauthorized
+    else {
+      return(<p>Unathorized</p>)
+    }
+  }
+  // Loading
   else {
     return(null)
-}
+  }
 }
 
 }
-export default AdminConfiguration;
+export default withKeycloak(AdminConfiguration);
