@@ -129,7 +129,7 @@ class EditProjectModal extends Component {
                     submitMsg: i18n.t('submitMessages.updated'),
                     submitColour: '#24a148'
                 })
-                this.props.updateCustomerList();
+                this.props.updateProjectList();
             }).catch(err => {
                 this.setState({
                     submitMsg: i18n.t('submitMessages.error'),

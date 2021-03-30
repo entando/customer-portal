@@ -11,13 +11,19 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            role: 'admin'
+            loading: true
         }
     }
 
     componentDidMount() {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
+
+        if (authenticated) {
+            this.setState({
+                loading: false
+            })
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -26,45 +32,45 @@ class App extends Component {
       
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
+        if (authenticated && changedAuth) {
+            this.setState({
+                loading: false
+            })
+        }
     }
 
     render() {
         var { t, keycloak } = this.props;
         var authenticated = keycloak.initialized && keycloak.authenticated;
         
-        if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') || hasKeycloakClientRole("ROLE_CUSTOMER")) {
-            return (
-                <div id="entando-customer-portal">
-                    <AuthenticatedView keycloak={keycloak}>
-                        <BrowserRouter>
-                            <Switch>
-                                <Route path="**/subscription-details/:id" render={(props) => (
-                                    <Subscription {...props} serviceUrl={this.props.serviceUrl} />
-                                )}/>
-                                <Route path="**/" render={(props) => (
-                                    <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} />
-                                )}/>
-                            </Switch>
-                        </BrowserRouter>
-                    </AuthenticatedView>
-                    <UnauthenticatedView keycloak={keycloak}>
-                        <p>Unauthenticated</p>
-                    </UnauthenticatedView>
-                </div>
-            )
+        if (!this.state.loading) {
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') || hasKeycloakClientRole("ROLE_CUSTOMER")) {
+                return (
+                    <div id="entando-customer-portal">
+                        <AuthenticatedView keycloak={keycloak}>
+                            <BrowserRouter>
+                                <Switch>
+                                    <Route path="**/subscription-details/:id" render={(props) => (
+                                        <Subscription {...props} serviceUrl={this.props.serviceUrl} />
+                                    )}/>
+                                    <Route path="**/" render={(props) => (
+                                        <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} />
+                                    )}/>
+                                </Switch>
+                            </BrowserRouter>
+                        </AuthenticatedView>
+                        <UnauthenticatedView keycloak={keycloak}>
+                            <p>Unauthenticated</p>
+                        </UnauthenticatedView>
+                    </div>
+                )
+            }
+            else {
+                return (<p>Unathorized</p>)
+            }
         }
         else {
-            return (
-                <div id="entando-customer-portal">
-                    <BrowserRouter>
-                        <Switch>
-                            <Route path="**/subscription-details/:id" render={(props) => (
-                                <Subscription {...props} serviceUrl={this.props.serviceUrl} />
-                            )}/>
-                        </Switch>
-                    </BrowserRouter>
-                </div>    
-            )
+            return(null)
         }
      }
   }

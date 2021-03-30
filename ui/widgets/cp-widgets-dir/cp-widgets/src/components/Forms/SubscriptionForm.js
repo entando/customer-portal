@@ -26,6 +26,7 @@ class SubscriptionForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: true,
             subscriptionType: '',
             projectId: '',
             startDate: '',
@@ -47,7 +48,12 @@ class SubscriptionForm extends Component {
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            this.fetchData();
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+                this.fetchData();
+            }
+            this.setState({
+                loading: false
+            })
         }
     }
 
@@ -58,7 +64,12 @@ class SubscriptionForm extends Component {
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
         if (authenticated && changedAuth) {
-            this.fetchData();
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+                this.fetchData();
+            }
+            this.setState({
+                loading: false
+            })
         }
     }
 
@@ -399,43 +410,53 @@ class SubscriptionForm extends Component {
     }
 
     render() {
-        return (
-            <div>
-                {hasKeycloakClientRole('ROLE_ADMIN') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
-                hasKeycloakClientRole('ROLE_SUPPORT') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
-                hasKeycloakClientRole('ROLE_CUSTOMER') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
-                hasKeycloakClientRole('ROLE_PARTNER') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
-                null}
-                <div className="form-container">
-                    {this.successErrorMessage()}
-                    <Form onSubmit={this.handleFormSubmit}>
-                        <div className="form-desc">
-                            <h4>{i18n.t('subscriptionForm.formTitle')}</h4>
-                            <p>{i18n.t('subscriptionForm.desc')}</p>
-                        </div>
-                        <div className="bx--grid">
-                            <div className="bx--row">
-                                <div className="bx--col">
-                                    <Select id="subscriptionType" name="subscriptionType" labelText={i18n.t('subscriptionForm.subscriptionType')} required value={this.state.subscriptionType} onChange={this.handleChanges}>
-                                        <SelectItem
-                                            text={i18n.t('subscriptionForm.selectType')}
-                                            value=""
-                                        />
-                                        {subscriptionTypes.map((subscriptionType, i) => <SelectItem key={i} text={subscriptionType} required value={subscriptionType.toLowerCase()}>{subscriptionType}</SelectItem>)}
-                                    </Select>
+        if (!this.state.loading) {
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+                return (
+                    <div>
+                        {hasKeycloakClientRole('ROLE_ADMIN') ? 
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
+                        hasKeycloakClientRole('ROLE_SUPPORT') ? 
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
+                        hasKeycloakClientRole('ROLE_CUSTOMER') ? 
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
+                        hasKeycloakClientRole('ROLE_PARTNER') ? 
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
+                        null}
+                        <div className="form-container">
+                            {this.successErrorMessage()}
+                            <Form onSubmit={this.handleFormSubmit}>
+                                <div className="form-desc">
+                                    <h4>{i18n.t('subscriptionForm.formTitle')}</h4>
+                                    <p>{i18n.t('subscriptionForm.desc')}</p>
                                 </div>
-                            </div>
-                            {this.renderForm()}
-                            {this.state.subscriptionType ? <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}</Button> : ''}
+                                <div className="bx--grid">
+                                    <div className="bx--row">
+                                        <div className="bx--col">
+                                            <Select id="subscriptionType" name="subscriptionType" labelText={i18n.t('subscriptionForm.subscriptionType')} required value={this.state.subscriptionType} onChange={this.handleChanges}>
+                                                <SelectItem
+                                                    text={i18n.t('subscriptionForm.selectType')}
+                                                    value=""
+                                                />
+                                                {subscriptionTypes.map((subscriptionType, i) => <SelectItem key={i} text={subscriptionType} required value={subscriptionType.toLowerCase()}>{subscriptionType}</SelectItem>)}
+                                            </Select>
+                                        </div>
+                                    </div>
+                                    {this.renderForm()}
+                                    {this.state.subscriptionType ? <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}</Button> : ''}
+                                </div>
+                            </Form>
                         </div>
-                    </Form>
-                </div>
-            </div>
-        );
+                    </div>
+                );
+            }
+            else {
+                return(<p>Unauthorized</p>)
+            }
+        }
+        else {
+            return(null)
+        }
     }
 }
 

@@ -11,6 +11,7 @@ class OpenTicket extends Component {
     constructor() {
         super();
         this.state = {
+            loading: true,
             project: {},
             projects: [],
             systemId: '',
@@ -157,11 +158,13 @@ class OpenTicket extends Component {
     }
 
     async getTicketingSystem() {
-        const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
-        const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length-1]
-        this.setState({
-            ticketingSystem: currentTicketingSystem
-        })
+        if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+            const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
+            const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length-1]
+            this.setState({
+                ticketingSystem: currentTicketingSystem
+            })
+        }
     }
 
     componentDidMount() {
@@ -171,6 +174,9 @@ class OpenTicket extends Component {
         if (authenticated) {
             this.fetchProjects();
             this.getTicketingSystem();
+            this.setState({
+                loading: false
+            });
         }
     }
 
@@ -183,105 +189,118 @@ class OpenTicket extends Component {
         if (authenticated && changedAuth) {
             this.fetchProjects();
             this.getTicketingSystem();
+            this.setState({
+                loading: false
+              });
         }
     }
         
     render() {
-        return (
-            <div>
-                {hasKeycloakClientRole('ROLE_ADMIN') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
-                hasKeycloakClientRole('ROLE_SUPPORT') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
-                hasKeycloakClientRole('ROLE_CUSTOMER') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
-                hasKeycloakClientRole('ROLE_PARTNER') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
-                null}
-                <div className="form-container">
-                    <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
-                    <Form onSubmit={this.handleFormSubmit}>
-                        <div className="form-desc">
-                            <h4>{i18n.t('supportTicketForm.formTitle')}</h4>
-                            <p>{i18n.t('supportTicketForm.desc')}</p>
-                        </div>
-                        <div className="bx--grid">
-                            <div className="bx--row">
-                                <div className="bx--col">
-                                    <Select 
-                                        defaultValue="ticketing-system" 
-                                        name="project" 
-                                        labelText={i18n.t('supportTicketForm.selectProject') + " *"} 
-                                        value={JSON.stringify(this.state.project)} 
-                                        onChange={this.handleChanges}
-                                        invalidText={i18n.t('validation.invalid.required')}
-                                        invalid={this.state.invalid['project']} 
-                                    >
-                                        <SelectItem
-                                            text={i18n.t('supportTicketForm.select')}
-                                            value="ticketing-system"
-                                        />
-                                        {Object.keys(this.state.projects).length !== 0 ? this.state.projects.map((project, i) => {
-                                                return (
-                                                    <SelectItem key={i} text={project.name} value={JSON.stringify(project)}>{project.name}</SelectItem>
-                                                )
-                                        }) : null}
-                                    </Select>
-                                    <Select 
-                                        defaultValue="Task" 
-                                        name="type" 
-                                        labelText={i18n.t('supportTicketForm.type') + " *"} 
-                                        value={this.state.type} 
-                                        onChange={this.handleChanges}
-                                        invalidText={i18n.t('validation.invalid.required')}
-                                        invalid={this.state.invalid['type']} 
-                                    >
-                                        <SelectItem
-                                            text={i18n.t('supportTicketForm.select')}
-                                            value="Task"
-                                        />
-                                        {this.types.map((type, i) => (
-                                            <SelectItem key={i} text={type} value={type}>{type}</SelectItem>
-                                        ))}
-                                    </Select>
-                                    <Select 
-                                        defaultValue="Low" 
-                                        name="priority" 
-                                        labelText={i18n.t('supportTicketForm.priority') + " *"} 
-                                        value={this.state.priority} 
-                                        onChange={this.handleChanges}
-                                        invalidText={i18n.t('validation.invalid.required')}
-                                        invalid={this.state.invalid['priority']} 
-                                    >
-                                        <SelectItem
-                                            text={i18n.t('supportTicketForm.select')}
-                                            value="Low"
-                                        />
-                                        {this.priorities.map((priority, i) => (
-                                            <SelectItem key={i} text={priority} value={priority}>{priority}</SelectItem>
-                                        ))}
-                                    </Select>
+        if (!this.state.loading) {
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+                return (
+                    <div>
+                        {hasKeycloakClientRole('ROLE_ADMIN') ? 
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
+                        hasKeycloakClientRole('ROLE_SUPPORT') ? 
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
+                        hasKeycloakClientRole('ROLE_CUSTOMER') ? 
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
+                        hasKeycloakClientRole('ROLE_PARTNER') ? 
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
+                        null}
+                        <div className="form-container">
+                            <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
+                            <Form onSubmit={this.handleFormSubmit}>
+                                <div className="form-desc">
+                                    <h4>{i18n.t('supportTicketForm.formTitle')}</h4>
+                                    <p>{i18n.t('supportTicketForm.desc')}</p>
                                 </div>
-                            </div>
-                            <div className="bx--row">
-                                <div className="bx--col">
-                                    <TextArea 
-                                        labelText={i18n.t('supportTicketForm.ticketDescription') + " *"} 
-                                        placeholder={i18n.t('supportTicketForm.addticketDescription')} 
-                                        name="description" 
-                                        value={this.state.description} 
-                                        onChange={this.handleChanges}  
-                                        invalidText={i18n.t('validation.invalid.required')}
-                                        invalid={this.state.invalid['description']} 
-                                    />
-                                    <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}  </Button>
+                                <div className="bx--grid">
+                                    <div className="bx--row">
+                                        <div className="bx--col">
+                                            <Select 
+                                                defaultValue="ticketing-system" 
+                                                name="project" 
+                                                labelText={i18n.t('supportTicketForm.selectProject') + " *"} 
+                                                value={JSON.stringify(this.state.project)} 
+                                                onChange={this.handleChanges}
+                                                invalidText={i18n.t('validation.invalid.required')}
+                                                invalid={this.state.invalid['project']} 
+                                            >
+                                                <SelectItem
+                                                    text={i18n.t('supportTicketForm.select')}
+                                                    value="ticketing-system"
+                                                />
+                                                {Object.keys(this.state.projects).length !== 0 ? this.state.projects.map((project, i) => {
+                                                        return (
+                                                            <SelectItem key={i} text={project.name} value={JSON.stringify(project)}>{project.name}</SelectItem>
+                                                        )
+                                                }) : null}
+                                            </Select>
+                                            <Select 
+                                                defaultValue="Task" 
+                                                name="type" 
+                                                labelText={i18n.t('supportTicketForm.type') + " *"} 
+                                                value={this.state.type} 
+                                                onChange={this.handleChanges}
+                                                invalidText={i18n.t('validation.invalid.required')}
+                                                invalid={this.state.invalid['type']} 
+                                            >
+                                                <SelectItem
+                                                    text={i18n.t('supportTicketForm.select')}
+                                                    value="Task"
+                                                />
+                                                {this.types.map((type, i) => (
+                                                    <SelectItem key={i} text={type} value={type}>{type}</SelectItem>
+                                                ))}
+                                            </Select>
+                                            <Select 
+                                                defaultValue="Low" 
+                                                name="priority" 
+                                                labelText={i18n.t('supportTicketForm.priority') + " *"} 
+                                                value={this.state.priority} 
+                                                onChange={this.handleChanges}
+                                                invalidText={i18n.t('validation.invalid.required')}
+                                                invalid={this.state.invalid['priority']} 
+                                            >
+                                                <SelectItem
+                                                    text={i18n.t('supportTicketForm.select')}
+                                                    value="Low"
+                                                />
+                                                {this.priorities.map((priority, i) => (
+                                                    <SelectItem key={i} text={priority} value={priority}>{priority}</SelectItem>
+                                                ))}
+                                            </Select>
+                                        </div>
+                                    </div>
+                                    <div className="bx--row">
+                                        <div className="bx--col">
+                                            <TextArea 
+                                                labelText={i18n.t('supportTicketForm.ticketDescription') + " *"} 
+                                                placeholder={i18n.t('supportTicketForm.addticketDescription')} 
+                                                name="description" 
+                                                value={this.state.description} 
+                                                onChange={this.handleChanges}  
+                                                invalidText={i18n.t('validation.invalid.required')}
+                                                invalid={this.state.invalid['description']} 
+                                            />
+                                            <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}  </Button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </Form>
                         </div>
-                    </Form>
-                </div>
-            </div>    
-        );
+                    </div>    
+                );
+            }
+            else {
+                return(<p>Unathorized</p>)
+            }
+        }
+        else {
+            return(null)
+        }
     }
 }
 
