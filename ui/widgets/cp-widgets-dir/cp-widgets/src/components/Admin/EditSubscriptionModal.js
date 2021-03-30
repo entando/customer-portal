@@ -74,6 +74,7 @@ class EditSubscriptionModal extends Component {
                     submitMsg: i18n.t('submitMessages.updated'),
                     submitColour: '#24a148'
                 })
+                this.props.updateSubscription();
             }).catch(err => {
                 this.setState({
                     submitMsg: i18n.t('submitMessages.error'),
@@ -172,18 +173,18 @@ class EditSubscriptionModal extends Component {
                                 name="startDate"
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.startDate')}
-                                value={this.state.startDate}
+                                defaultValue={this.state.startDate}
                                 onChange={ this.handleChanges}
                                 type="text"
                                 invalidText={i18n.t('validation.invalid.date')} 
                                 invalid={this.state.invalid['startDate']} 
                             />
                         </DatePicker>
-                        <TextInput name="lengthInMonths" labelText={i18n.t('subscriptionDetails.lengthInMonths')} value={this.state.lengthInMonths} onChange={this.handleChanges} />
+                        <TextInput name="lengthInMonths" labelText={i18n.t('subscriptionDetails.lengthInMonths')} defaultValue={this.state.lengthInMonths} onChange={this.handleChanges} />
                         <TextArea 
                             name="notes" 
                             labelText={i18n.t('adminDashboard.addProject.notes')} 
-                            value={this.state.notes} 
+                            defaultValue={this.state.notes} 
                             onChange={this.handleChanges} 
                         />
                     </Form>

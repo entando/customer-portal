@@ -74,6 +74,7 @@ class AddCustomerModal extends Component {
         }
     }
 
+
     handleFormSubmit = e => {
         const formIsValid = this.handleValidation();
 
@@ -92,6 +93,7 @@ class AddCustomerModal extends Component {
                     submitMsg: i18n.t('submitMessages.added'),
                     submitColour: '#24a148'
                 })
+                this.props.updateCustomerList();
             }).catch(err => {
                 this.setState({
                     submitMsg: i18n.t('submitMessages.error'),
@@ -99,6 +101,8 @@ class AddCustomerModal extends Component {
                 })
             });
         }
+        //this.props.testFunction();
+        //super.componentDidMount();
     };
 
     clearValues = () => {
@@ -130,7 +134,7 @@ class AddCustomerModal extends Component {
                     <Form onSubmit={this.handleFormSubmit}>
                         <TextInput
                             name="name"
-                            labelText={i18n.t('adminDashboard.addCustomer.customerName')}
+                            labelText={i18n.t('adminDashboard.addCustomer.customerName') + " *"}
                             value={this.state.name}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
@@ -138,7 +142,7 @@ class AddCustomerModal extends Component {
                         />
                         <TextInput
                             name="customerNumber"
-                            labelText={i18n.t('adminDashboard.addCustomer.customerNumber')}
+                            labelText={i18n.t('adminDashboard.addCustomer.customerNumber') + " *"}
                             value={this.state.customerNumber}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
@@ -158,7 +162,7 @@ class AddCustomerModal extends Component {
                         />
                         <TextInput
                             name="contactEmail"
-                            labelText={i18n.t('adminDashboard.addCustomer.contactEmail')}
+                            labelText={i18n.t('adminDashboard.addCustomer.contactEmail') + " *"}
                             value={this.state.contactEmail}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.email')}

@@ -116,7 +116,6 @@ class AddProjectModal extends Component {
   }
 
   handleFormSubmit = e => {
-    console.log(this.state.customerId)
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
@@ -140,6 +139,7 @@ class AddProjectModal extends Component {
             submitMsg: i18n.t('submitMessages.added'),
             submitColour: '#24a148'
         })
+        this.props.updateCustomerList();
       }).catch(err => {
           this.setState({
               submitMsg: i18n.t('submitMessages.error'),
@@ -194,7 +194,7 @@ class AddProjectModal extends Component {
             <Select
               defaultValue="customer-list"
               name="customerId"
-              labelText={i18n.t('adminDashboard.addProject.customerList')}
+              labelText={i18n.t('adminDashboard.addProject.customerList') + " *"}
               defaultValue={{ label: "Select Dept", value: 0 }}
               value={this.state.customerId}
               onChange={this.handleChanges}
@@ -213,7 +213,7 @@ class AddProjectModal extends Component {
 
             <TextInput
               name="name"
-              labelText={i18n.t('adminDashboard.addProject.projectName')}
+              labelText={i18n.t('adminDashboard.addProject.projectName') + " *"}
               value={this.state.name}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -221,7 +221,7 @@ class AddProjectModal extends Component {
             />
             <TextInput
               name="description"
-              labelText={i18n.t('adminDashboard.addProject.projectDesc')}
+              labelText={i18n.t('adminDashboard.addProject.projectDesc') + " *"}
               value={this.state.description}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -247,7 +247,7 @@ class AddProjectModal extends Component {
             />
             <TextInput
               name="contactEmail"
-              labelText={i18n.t('adminDashboard.addProject.contactEmail')}
+              labelText={i18n.t('adminDashboard.addProject.contactEmail') + " *"}
               value={this.state.contactEmail}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.email')}

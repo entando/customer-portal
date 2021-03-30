@@ -33,9 +33,9 @@ class OpenTicket extends Component {
         let invalid = {};
         let formIsValid = true;
 
-        if(this.state.project.systemId === ''){
+        if(this.state.project.systemId === undefined){
           formIsValid = false;
-          invalid['systemId'] = true;
+          invalid['project'] = true;
         }
 
         if(this.state.type === ''){
@@ -46,6 +46,11 @@ class OpenTicket extends Component {
         if(this.state.description === ''){
             formIsValid = false;
             invalid['description'] = true;
+        }
+
+        if(this.state.priority === ''){
+            formIsValid = false;
+            invalid['priority'] = true;
         }
 
         this.setState({invalid: invalid});
@@ -206,11 +211,11 @@ class OpenTicket extends Component {
                                     <Select 
                                         defaultValue="ticketing-system" 
                                         name="project" 
-                                        labelText={i18n.t('supportTicketForm.selectProject')} 
+                                        labelText={i18n.t('supportTicketForm.selectProject') + " *"} 
                                         value={JSON.stringify(this.state.project)} 
                                         onChange={this.handleChanges}
                                         invalidText={i18n.t('validation.invalid.required')}
-                                        invalid={this.state.invalid['systemId']} 
+                                        invalid={this.state.invalid['project']} 
                                     >
                                         <SelectItem
                                             text={i18n.t('supportTicketForm.select')}
@@ -225,7 +230,7 @@ class OpenTicket extends Component {
                                     <Select 
                                         defaultValue="Task" 
                                         name="type" 
-                                        labelText={i18n.t('supportTicketForm.type')} 
+                                        labelText={i18n.t('supportTicketForm.type') + " *"} 
                                         value={this.state.type} 
                                         onChange={this.handleChanges}
                                         invalidText={i18n.t('validation.invalid.required')}
@@ -242,9 +247,11 @@ class OpenTicket extends Component {
                                     <Select 
                                         defaultValue="Low" 
                                         name="priority" 
-                                        labelText={i18n.t('supportTicketForm.priority')} 
+                                        labelText={i18n.t('supportTicketForm.priority') + " *"} 
                                         value={this.state.priority} 
                                         onChange={this.handleChanges}
+                                        invalidText={i18n.t('validation.invalid.required')}
+                                        invalid={this.state.invalid['priority']} 
                                     >
                                         <SelectItem
                                             text={i18n.t('supportTicketForm.select')}
@@ -259,7 +266,7 @@ class OpenTicket extends Component {
                             <div className="bx--row">
                                 <div className="bx--col">
                                     <TextArea 
-                                        labelText={i18n.t('supportTicketForm.ticketDescription')} 
+                                        labelText={i18n.t('supportTicketForm.ticketDescription') + " *"} 
                                         placeholder={i18n.t('supportTicketForm.addticketDescription')} 
                                         name="description" 
                                         value={this.state.description} 

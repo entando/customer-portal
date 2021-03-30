@@ -62,6 +62,10 @@ class Subscription extends React.Component {
         }
     }
 
+    updateSubscription = () => {
+        this.getSubscription();
+    }
+
     componentDidMount(){
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
@@ -122,7 +126,7 @@ class Subscription extends React.Component {
                             </div>
                         </div>
                         {hasKeycloakClientRole('ROLE_ADMIN') ? 
-                            <EditSubscriptionModal project={this.state.project.data} subscription={this.state.subscription.data} serviceUrl={this.props.serviceUrl}/>
+                            <EditSubscriptionModal project={this.state.project.data} subscription={this.state.subscription.data} serviceUrl={this.props.serviceUrl} updateSubscription={this.updateSubscription}/>
                         : null}
                     </Tile>
                     <br/>
