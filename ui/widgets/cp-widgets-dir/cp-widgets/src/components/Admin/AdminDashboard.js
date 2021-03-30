@@ -140,7 +140,7 @@ class AdminDashboard extends React.Component {
                             if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
                                 if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
                                     return(
-                                        <CustomerAccordian key={customer.id} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name} updateCustomerList={this.updateCustomerList}/>
+                                        <CustomerAccordian key={customer.id} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name} updateCustomerList={this.updateCustomerList} locale={this.props.locale}/>
                                     )
                                 }
                                 else {

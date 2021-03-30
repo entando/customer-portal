@@ -50,11 +50,11 @@ class App extends Component {
                         <AuthenticatedView keycloak={keycloak}>
                             <BrowserRouter>
                                 <Switch>
-                                    <Route path="**/subscription-details/:id" render={(props) => (
-                                        <Subscription {...props} serviceUrl={this.props.serviceUrl} />
+                                    <Route path={"**/subscription-details/:id"} render={(props) => (
+                                        <Subscription {...props} serviceUrl={this.props.serviceUrl} locale={this.props.locale} />
                                     )}/>
                                     <Route path="**/" render={(props) => (
-                                        <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} />
+                                        <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} locale={this.props.locale} />
                                     )}/>
                                 </Switch>
                             </BrowserRouter>

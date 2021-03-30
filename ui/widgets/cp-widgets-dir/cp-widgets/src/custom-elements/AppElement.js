@@ -66,7 +66,7 @@ class AppElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <App serviceUrl={serviceUrl} />
+        <App serviceUrl={serviceUrl} locale={locale} />
       </KeycloakContext.Provider>,
       this.mountPoint
     );
