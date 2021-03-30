@@ -26,7 +26,6 @@ class EditCustomerModal extends Component {
     handleValidation() {
         let invalid = {};
         let formIsValid = true;
-        console.log(this.state.name)
 
         //name
         if (this.state.name === '') {
@@ -64,7 +63,6 @@ class EditCustomerModal extends Component {
     }
 
     handleChanges = e => {
-        console.log('a')
         const input = e.target;
         const name = input.name;
         const value = input.value;
