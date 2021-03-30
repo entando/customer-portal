@@ -372,6 +372,7 @@ public class TicketResource {
         ticketToCreate.setDescription((String) response.getJSONObject("fields").get("summary"));
         ticketToCreate.setSystemId(key);
         ticketToCreate.setType((String) response.getJSONObject("fields").getJSONObject("issuetype").get("name"));
+        ticketToCreate.setStatus((String) response.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name"));
         ticketToCreate.setPriority((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
         ticketToCreate.setCreateDate(ZonedDateTime.now());
         ticketToCreate.setUpdateDate(ZonedDateTime.now());
@@ -386,6 +387,8 @@ public class TicketResource {
         ticketToCreate.setDescription((String) response.getJSONObject("fields").get("summary"));
         ticketToCreate.setSystemId(key);
         ticketToCreate.setType((String) response.getJSONObject("fields").getJSONObject("issuetype").get("name"));
+        ticketToCreate.setStatus((String) response.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name"));
+        ticketToCreate.setPriority((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
         ticketToCreate.setCreateDate(ZonedDateTime.now());
         ticketToCreate.setUpdateDate(ZonedDateTime.now());
         ticketToCreate.setProject(projectService.getProjectBySystemId(organization));
