@@ -133,7 +133,7 @@ componentDidUpdate(prevProps) {
                       var sub = project.projectSubscriptions[project.projectSubscriptions.length - 1];
                       return(
                           <TableRow key={index} >
-                              <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
+                              <TableCell><Link to={`/entando-de-app/${this.props.locale}/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
                               {project.partners.length !== 0 ? 
                                 <TableCell>
                                   {project.partners.map(partner => (

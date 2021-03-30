@@ -156,6 +156,7 @@
   "subscriptionDetails": {
     "description": "Description",
     "commitment": "Commitment",
+    "partners": "Partners",
     "type": "Type",
     "status": "Status",
     "level": "Level",

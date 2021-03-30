@@ -104,7 +104,7 @@ class Subscription extends React.Component {
                             <div className="bx--row">
                                 <div className="bx--col">
                                     <p><strong>{i18n.t('subscriptionDetails.description')}:</strong> {this.state.subscription.data.project.description}</p>
-                                    <p><strong>{i18n.t('subscriptionDetails.commitment')}:</strong>
+                                    <p><strong>{i18n.t('subscriptionDetails.partners')}:</strong>
                                     {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? 
                                         <>
                                             {this.state.project.data.partners.map(partner => (
