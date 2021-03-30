@@ -36,12 +36,12 @@ class TicketList extends Component {
         key: 'priority',
       },
       {
-        header: i18n.t('ticketDetails.creationDate'),
-        key: 'creationDate',
+        header: i18n.t('ticketDetails.created'),
+        key: 'created',
       },
       {
-        header: i18n.t('ticketDetails.lastUpdated'),
-        key: 'lastUpdated',
+        header: i18n.t('ticketDetails.updated'),
+        key: 'updated',
       },
       {
         header: i18n.t('ticketDetails.link'),
@@ -64,10 +64,6 @@ class TicketList extends Component {
             apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id);
           }
 
-          const ticketOrder = { "Lowest": 1, "Low": 2, "Medium": 3 , "High": 4, "Highest": 5};
-          tickets.data.sort(function (a, b) {
-            return ticketOrder[b.priority] - ticketOrder[a.priority];
-          });
           this.setState({
               tickets: tickets
           });
@@ -76,16 +72,6 @@ class TicketList extends Component {
         console.log(err)
       }
     }
-}
-
-compare(a, b) {
-  if (a.priority < b.priority){
-    return -1;
-  }
-  if (a.priority > b.priority){
-    return 1;
-  }
-  return 0;
 }
 
 componentDidMount(){

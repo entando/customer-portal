@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomerPut } from '../../api/customers';
+import { apiCustomerGet, apiCustomerPut } from '../../api/customers';
 
 class EditCustomerModal extends Component {
     constructor(props) {
@@ -26,6 +26,7 @@ class EditCustomerModal extends Component {
     handleValidation() {
         let invalid = {};
         let formIsValid = true;
+        console.log(this.state.name)
 
         //name
         if (this.state.name === '') {
@@ -63,10 +64,12 @@ class EditCustomerModal extends Component {
     }
 
     handleChanges = e => {
+        console.log('a')
         const input = e.target;
         const name = input.name;
         const value = input.value;
         this.setState({ [name]: value });
+
     };
 
     async updateCustomer(customer) {
@@ -74,6 +77,24 @@ class EditCustomerModal extends Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
             return await apiCustomerPut(this.props.serviceUrl, customer);
+        }
+    }
+
+    async getCustomer(customerId) {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const customer = await apiCustomerGet(this.props.serviceUrl, customerId);
+            this.setState({
+                name: customer.name,
+                customerNumber: customer.customerNumber,
+                contactName: customer.contactName,
+                contactPhone: customer.contactPhone,
+                contactEmail:customer.contactEmail,
+                notes:customer.notes,
+                modalId: "modal-form-customer-edit-" + customer.id,
+                buttonId: "edit-customer-button-" + customer.id
+              })
         }
     }
 
@@ -177,11 +198,10 @@ class EditCustomerModal extends Component {
                 modalLabel={<p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>}
             >
                 <div className="form-container">
-                    {/*<p> {i18n.t('adminDashboard.editCustomer.desc')} </p>*/}
                     <Form onSubmit={this.handleFormSubmit}>
                         <TextInput
                             name="name"
-                            labelText={i18n.t('adminDashboard.addCustomer.customerName')}
+                            labelText={i18n.t('adminDashboard.addCustomer.customerName') + " *"}
                             defaultValue={this.state.name}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
@@ -189,7 +209,7 @@ class EditCustomerModal extends Component {
                         />
                         <TextInput
                             name="customerNumber"
-                            labelText={i18n.t('adminDashboard.addCustomer.customerNumber')}
+                            labelText={i18n.t('adminDashboard.addCustomer.customerNumber') + " *"}
                             defaultValue={this.state.customerNumber}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
@@ -209,7 +229,7 @@ class EditCustomerModal extends Component {
                         />
                         <TextInput
                             name="contactEmail"
-                            labelText={i18n.t('adminDashboard.addCustomer.contactEmail')}
+                            labelText={i18n.t('adminDashboard.addCustomer.contactEmail') + " *"}
                             defaultValue={this.state.contactEmail}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.email')}

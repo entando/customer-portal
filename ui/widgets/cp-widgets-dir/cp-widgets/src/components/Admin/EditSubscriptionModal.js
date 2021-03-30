@@ -140,7 +140,7 @@ class EditSubscriptionModal extends Component {
                     <Form onSubmit={this.handleFormSubmit}>
                         <Select
                             name="level"
-                            labelText={i18n.t('subscriptionDetails.level')}
+                            labelText={i18n.t('subscriptionDetails.level') + " *"}
                             value={this.state.level}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
@@ -155,7 +155,7 @@ class EditSubscriptionModal extends Component {
                         </Select>
                         <Select
                             name="status"
-                            labelText={i18n.t('subscriptionDetails.status')}
+                            labelText={i18n.t('subscriptionDetails.status') + " *"}
                             value={this.state.status}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
@@ -172,7 +172,7 @@ class EditSubscriptionModal extends Component {
                             <DatePickerInput
                                 name="startDate"
                                 placeholder="mm/dd/yyyy"
-                                labelText={i18n.t('subscriptionDetails.startDate')}
+                                labelText={i18n.t('subscriptionDetails.startDate') + " *"}
                                 defaultValue={this.state.startDate}
                                 onChange={ this.handleChanges}
                                 type="text"
@@ -180,7 +180,7 @@ class EditSubscriptionModal extends Component {
                                 invalid={this.state.invalid['startDate']} 
                             />
                         </DatePicker>
-                        <TextInput name="lengthInMonths" labelText={i18n.t('subscriptionDetails.lengthInMonths')} defaultValue={this.state.lengthInMonths} onChange={this.handleChanges} />
+                        <TextInput name="lengthInMonths" labelText={i18n.t('subscriptionDetails.lengthInMonths') + " *"} defaultValue={this.state.lengthInMonths} onChange={this.handleChanges} />
                         <TextArea 
                             name="notes" 
                             labelText={i18n.t('adminDashboard.addProject.notes')} 

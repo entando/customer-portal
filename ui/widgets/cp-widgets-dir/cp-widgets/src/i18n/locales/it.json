@@ -127,8 +127,8 @@
 		"description": "Descrizione",
 		"type": "Genere",
 		"status":"Stato",
-		"creationDate":"Data di creazione",
-		"lastUpdated": "Ultimo aggiornamento",
+		"created":"Creato",
+		"updated": "Aggiornato",
 		"link": "Collegamento",
 		"viewTicket": "visualizza il biglietto"
 	},

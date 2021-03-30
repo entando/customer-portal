@@ -115,10 +115,10 @@
     "description": "Description",
     "type": "Type",
     "status": "Status",
-    "creationDate":"Creation Date",
+    "created":"Created",
     "link": "Link",
     "priority": "Priority",
-    "lastUpdated": "Last Updated",
+    "updated": "Updated",
     "viewTicket": "View Ticket"
   },
 

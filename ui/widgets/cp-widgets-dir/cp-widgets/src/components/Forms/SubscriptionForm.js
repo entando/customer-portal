@@ -428,7 +428,6 @@ class SubscriptionForm extends Component {
                             <Form onSubmit={this.handleFormSubmit}>
                                 <div className="form-desc">
                                     <h4>{i18n.t('subscriptionForm.formTitle')}</h4>
-                                    <p>{i18n.t('subscriptionForm.desc')}</p>
                                 </div>
                                 <div className="bx--grid">
                                     <div className="bx--row">

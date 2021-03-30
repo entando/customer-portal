@@ -17,7 +17,7 @@ class OpenTicket extends Component {
             systemId: '',
             type: '',
             description: '',
-            priority: '',
+            priority: 'Medium',
             status: 'To Do',
             createDate: '',
             updateDate: '',
@@ -27,29 +27,29 @@ class OpenTicket extends Component {
             submitColour: 'black'
         };
         this.types = ["Bug", "Task"];
-        this.priorities = ['Lowest', 'Low', 'Medium', 'High', 'Highest'];
+        this.priorities = ['Highest', 'High', 'Medium', 'Low', 'Lowest'];
     }
 
     handleValidation() {
         let invalid = {};
         let formIsValid = true;
 
-        if(this.state.project.systemId === undefined){
+        if(this.state.project.systemId === undefined || this.state.project.systemId === 'Select'){
           formIsValid = false;
           invalid['project'] = true;
         }
 
-        if(this.state.type === ''){
+        if(this.state.type === '' || this.state.type === 'Select'){
             formIsValid = false;
             invalid['type'] = true;
         }
 
-        if(this.state.description === ''){
+        if(this.state.description === '' || this.state.description === 'Select'){
             formIsValid = false;
             invalid['description'] = true;
         }
 
-        if(this.state.priority === ''){
+        if(this.state.priority === '' || this.state.priority === 'Select'){
             formIsValid = false;
             invalid['priority'] = true;
         }
@@ -63,7 +63,7 @@ class OpenTicket extends Component {
         const name = input.name;
         const value = input.value;
 
-        if (name === "project") {
+        if (name === "project" && value != '') {
             this.setState({
                 project: JSON.parse(value),
             })
@@ -220,7 +220,6 @@ class OpenTicket extends Component {
                                     <div className="bx--row">
                                         <div className="bx--col">
                                             <Select 
-                                                defaultValue="ticketing-system" 
                                                 name="project" 
                                                 labelText={i18n.t('supportTicketForm.selectProject') + " *"} 
                                                 value={JSON.stringify(this.state.project)} 
@@ -230,7 +229,7 @@ class OpenTicket extends Component {
                                             >
                                                 <SelectItem
                                                     text={i18n.t('supportTicketForm.select')}
-                                                    value="ticketing-system"
+                                                    value=""
                                                 />
                                                 {Object.keys(this.state.projects).length !== 0 ? this.state.projects.map((project, i) => {
                                                         return (
@@ -239,7 +238,6 @@ class OpenTicket extends Component {
                                                 }) : null}
                                             </Select>
                                             <Select 
-                                                defaultValue="Task" 
                                                 name="type" 
                                                 labelText={i18n.t('supportTicketForm.type') + " *"} 
                                                 value={this.state.type} 
@@ -249,24 +247,23 @@ class OpenTicket extends Component {
                                             >
                                                 <SelectItem
                                                     text={i18n.t('supportTicketForm.select')}
-                                                    value="Task"
+                                                    value=""
                                                 />
                                                 {this.types.map((type, i) => (
                                                     <SelectItem key={i} text={type} value={type}>{type}</SelectItem>
                                                 ))}
                                             </Select>
                                             <Select 
-                                                defaultValue="Low" 
                                                 name="priority" 
                                                 labelText={i18n.t('supportTicketForm.priority') + " *"} 
-                                                value={this.state.priority} 
+                                                value={this.state.priority}
                                                 onChange={this.handleChanges}
                                                 invalidText={i18n.t('validation.invalid.required')}
                                                 invalid={this.state.invalid['priority']} 
                                             >
                                                 <SelectItem
                                                     text={i18n.t('supportTicketForm.select')}
-                                                    value="Low"
+                                                    value=""
                                                 />
                                                 {this.priorities.map((priority, i) => (
                                                     <SelectItem key={i} text={priority} value={priority}>{priority}</SelectItem>
