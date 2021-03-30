@@ -109,6 +109,7 @@
 	"subscriptionDetails": {
 		"description": "Descrizione",
 		"commitment": "Impegno",
+		"partners": "Socio",
 		"type": "Genere",
 		"status": "Stato",
 		"level": "Livello",
