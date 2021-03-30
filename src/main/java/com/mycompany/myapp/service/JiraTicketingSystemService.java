@@ -108,4 +108,13 @@ public interface JiraTicketingSystemService {
      * @param systemId the systemId of the ticket
      */
     String deleteJiraTicket(String systemId, String url, String serviceAccount, String serviceAccountSecret);
+
+    /**
+     * Getting accountId of a user from Jira.
+     *
+     * @param serviceAccount the serviceAccount of the ticketing system
+     * @param serviceAccountSecret the serviceAccountSecret of the ticketing system
+     * @param baseUrl the baseUrl of the project
+     */
+     String getJiraAccountIdOfSignedInUser(String baseUrl, String serviceAccount, String serviceAccountSecret);
 }

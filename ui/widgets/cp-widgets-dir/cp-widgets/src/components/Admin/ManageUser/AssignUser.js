@@ -14,7 +14,8 @@ class AssignUser extends Component {
             users: new Map(),
             projects: {},
             invalid: {},
-            submitMsg: ''
+            submitMsg: '',
+            submitColour: 'black'
         };
     }
 
@@ -69,11 +70,13 @@ class AssignUser extends Component {
             this.assignUserToProject(projectId, assignUser).then(res => {
                 if (res.status === 201) {
                     this.setState({
-                        submitMsg: i18n.t('submitMessages.updated')
+                        submitMsg: i18n.t('submitMessages.updated'),
+                        submitColour: '#24a148'
                     })
                 } else {
                     this.setState({
-                        submitMsg: i18n.t('submitMessages.error')
+                        submitMsg: i18n.t('submitMessages.error'),
+                        submitColour: '#da1e28'
                     })
                 }
             });
@@ -160,6 +163,7 @@ class AssignUser extends Component {
 
         return (
             <div>
+                <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
                 <Form onSubmit={this.handleFormSubmit}>
                     <div className="bx--grid">
                         <div className="bx--row">
@@ -195,7 +199,6 @@ class AssignUser extends Component {
                             {i18n.t('buttons.submit')}{' '}
                         </Button>
                     </div>
-                    <strong>{this.state.submitMsg}</strong>
                 </Form>
             </div>
         );

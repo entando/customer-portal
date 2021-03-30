@@ -16,7 +16,8 @@ class AddPartnerModal extends Component {
       partnerNumber: '',
       notes: '',
       invalid: {},
-      submitMsg: ''
+      submitMsg: '',
+      submitColour: 'black'
     };
   }
 
@@ -91,11 +92,13 @@ class AddPartnerModal extends Component {
       };
       this.partnerPost(partner).then(result => {
         this.setState({
-            submitMsg: i18n.t('submitMessages.added')
+            submitMsg: i18n.t('submitMessages.added'),
+            submitColour: '#24a148'
         })
       }).catch(err => {
           this.setState({
-              submitMsg: i18n.t('submitMessages.error')
+              submitMsg: i18n.t('submitMessages.error'),
+              submitColour: '#da1e28'
           })
       });
     }
@@ -132,6 +135,7 @@ class AddPartnerModal extends Component {
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
+        modalLabel={<p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>}
       >
         <div className="form-container">
           {/*<p> {i18n.t('adminDashboard.addPartner.desc')}</p>*/}
@@ -177,7 +181,6 @@ class AddPartnerModal extends Component {
               value={this.state.notes}
               onChange={this.handleChanges}
             />
-            <strong>{this.state.submitMsg}</strong>
           </Form>
         </div>
       </ModalWrapper>

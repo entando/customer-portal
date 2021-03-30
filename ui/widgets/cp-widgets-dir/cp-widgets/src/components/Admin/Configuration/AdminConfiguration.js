@@ -34,7 +34,7 @@ render() {
   if (hasKeycloakClientRole('ROLE_ADMIN')) {
     return(
       <div>
-        <h3 className="pageTitle">{i18n.t('adminConfig.title')}</h3>
+        <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
         <div className="form-container">
           <Tile>
             <p className="title">{i18n.t('adminConfig.title')}</p>
@@ -51,9 +51,10 @@ render() {
       </div>
     )
   }
+  // Unauthorized
   else {
-    return(<p>You are not authorized to view this</p>)
-  }
+    return(null)
+}
 }
 
 }

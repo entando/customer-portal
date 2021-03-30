@@ -16,7 +16,8 @@ class EditSubscriptionModal extends Component {
             startDate: '',
             notes: '',
             invalid: {},
-            submitMsg: ''
+            submitMsg: '',
+            submitColour: 'black'
         };
     }
 
@@ -70,11 +71,13 @@ class EditSubscriptionModal extends Component {
             }
             this.subscriptionPut(subscriptionRequest).then(result => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.updated')
+                    submitMsg: i18n.t('submitMessages.updated'),
+                    submitColour: '#24a148'
                 })
             }).catch(err => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.error')
+                    submitMsg: i18n.t('submitMessages.error'),
+                    submitColour: '#da1e28'
                 })
             });
         }
@@ -129,6 +132,7 @@ class EditSubscriptionModal extends Component {
                 handleSubmit={this.handleFormSubmit}
                 primaryButtonText={i18n.t('modalText.save')}
                 secondaryButtonText={i18n.t('modalText.cancel')}
+                modalLabel={<p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>}
             >
                 {/*<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>*/}
                 <div className="form-container">
@@ -182,7 +186,6 @@ class EditSubscriptionModal extends Component {
                             value={this.state.notes} 
                             onChange={this.handleChanges} 
                         />
-                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div> 
             </ModalWrapper>

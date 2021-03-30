@@ -15,7 +15,8 @@ class TicketingSystem extends Component {
             serviceAccount: '',
             serviceAccount: '',
             systemId: '',
-            submitMsg: ''
+            submitMsg: '',
+            submitColour: 'black'
         }
     }
     
@@ -90,11 +91,13 @@ class TicketingSystem extends Component {
         if (window.confirm("Are you sure you want to delete this ticketing system?")) {
             this.deleteTicketingSystem().then(result => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.deleted')
+                    submitMsg: i18n.t('submitMessages.deleted'),
+                    submitColour: '#24a148'
                 })
             }).catch(err => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.error')
+                    submitMsg: i18n.t('submitMessages.error'),
+                    submitColour: '#da1e28'
                 })
             });
         }
@@ -105,22 +108,26 @@ class TicketingSystem extends Component {
         if (this.state.ticketingSystem === '') {
             this.createTicketingSystem().then(result => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.created')
+                    submitMsg: i18n.t('submitMessages.created'),
+                    submitColour: '#24a148'
                 })
             }).catch(err => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.error')
+                    submitMsg: i18n.t('submitMessages.error'),
+                    submitColour: '#da1e28'
                 })
             });
         }
         else {
             this.updateTicketingSystem().then(result => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.updated')
+                    submitMsg: i18n.t('submitMessages.updated'),
+                    submitColour: '#24a148'
                 })
             }).catch(err => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.error')
+                    submitMsg: i18n.t('submitMessages.error'),
+                    submitColour: '#da1e28'
                 })
             });
         }
@@ -131,6 +138,7 @@ class TicketingSystem extends Component {
         if (hasKeycloakClientRole('ROLE_ADMIN')) {
             return (
                 <div className="cp-form">
+                    <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
                     <Form onSubmit={this.handleFormSubmit}>
                         <div className="bx--grid">
                             <div className="bx--row">
@@ -155,13 +163,13 @@ class TicketingSystem extends Component {
                                 <Button kind="danger" onClick={() => this.handleDelete()}> Delete </Button> : null
                             }
                         </div>
-                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div>
             );
         }
+        // Unauthorized
         else {
-            return(<p>You are not authorized to view this</p>)
+            return(null)
         }
     }
 }

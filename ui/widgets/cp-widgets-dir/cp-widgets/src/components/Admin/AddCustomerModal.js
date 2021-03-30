@@ -16,7 +16,8 @@ class AddCustomerModal extends Component {
             contactEmail: '',
             notes: '',
             invalid: {},
-            submitMsg: ''
+            submitMsg: '',
+            submitColour: 'black'
         };
 
         this.baseState = this.state
@@ -88,11 +89,13 @@ class AddCustomerModal extends Component {
 
             this.customerPost(customer).then(result => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.added')
+                    submitMsg: i18n.t('submitMessages.added'),
+                    submitColour: '#24a148'
                 })
             }).catch(err => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.error')
+                    submitMsg: i18n.t('submitMessages.error'),
+                    submitColour: '#da1e28'
                 })
             });
         }
@@ -121,9 +124,9 @@ class AddCustomerModal extends Component {
                 handleSubmit={this.handleFormSubmit}
                 primaryButtonText={i18n.t('modalText.save')}
                 secondaryButtonText={i18n.t('modalText.cancel')}
+                modalLabel={<p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>}
             >
                 <div className="form-container">
-                    {/*<p> {i18n.t('adminDashboard.addCustomer.desc')} </p>8*/}
                     <Form onSubmit={this.handleFormSubmit}>
                         <TextInput
                             name="name"
@@ -167,7 +170,6 @@ class AddCustomerModal extends Component {
                             value={this.state.notes}
                             onChange={this.handleChanges}
                         />
-                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div>
             </ModalWrapper>
