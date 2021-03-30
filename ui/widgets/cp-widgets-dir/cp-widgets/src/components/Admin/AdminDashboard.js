@@ -19,7 +19,8 @@ class AdminDashboard extends React.Component {
             customersProjects: {},
             role: '',
             filteredCustomers: {},
-            currentPage: 0
+            currentPage: 0,
+            test: ''
         }
     }
 
@@ -28,7 +29,7 @@ class AdminDashboard extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { keycloak } = this.props;
+        const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
     
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
@@ -76,6 +77,10 @@ class AdminDashboard extends React.Component {
         this.forceUpdate();
     }
 
+    updateCustomerList = () => {
+        this.getCustomers();
+    }
+
     render(){
         var numberOfPages = 1;
         if (Object.keys(this.state.filteredCustomers).length !== 0) {
@@ -115,9 +120,9 @@ class AdminDashboard extends React.Component {
                         <div className="bx--col">
                             
                             <div>
-                                <AddPartnerModal serviceUrl={this.props.serviceUrl} />
-                                <AddCustomerModal serviceUrl={this.props.serviceUrl} />
-                                <AddProjectModal serviceUrl={this.props.serviceUrl} />
+                                <AddPartnerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
+                                <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
+                                <AddProjectModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
                             </div>
                         </div> : null}
                     </div>
@@ -135,14 +140,13 @@ class AdminDashboard extends React.Component {
                             if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
                                 if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
                                     return(
-                                        <CustomerAccordian key={customer.id} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name}/>
+                                        <CustomerAccordian key={customer.id} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name} updateCustomerList={this.updateCustomerList}/>
                                     )
                                 }
                                 else {
                                     return(null)
                                 }
                             }
-                            // For Partner / Customer roles just show what they have access to
                             else {
                                 return(null)
                             }

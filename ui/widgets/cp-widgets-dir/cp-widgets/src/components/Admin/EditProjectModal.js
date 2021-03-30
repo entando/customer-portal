@@ -98,7 +98,7 @@ class EditProjectModal extends Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const result = await apiProjectPut(this.props.serviceUrl, project);
+            return await apiProjectPut(this.props.serviceUrl, project);
             //await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id)
         }
     }
@@ -129,6 +129,7 @@ class EditProjectModal extends Component {
                     submitMsg: i18n.t('submitMessages.updated'),
                     submitColour: '#24a148'
                 })
+                this.props.updateCustomerList();
             }).catch(err => {
                 this.setState({
                     submitMsg: i18n.t('submitMessages.error'),
@@ -201,7 +202,7 @@ class EditProjectModal extends Component {
                         <TextInput 
                             name="name" 
                             labelText={i18n.t('adminDashboard.addProject.projectName')} 
-                            value={this.state.name} 
+                            defaultValue={this.state.name} 
                             onChange={this.handleChanges} 
                             invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["name"]} 
@@ -209,7 +210,7 @@ class EditProjectModal extends Component {
                         <TextInput 
                             name="description" 
                             labelText={i18n.t('adminDashboard.addProject.projectDesc')} 
-                            value={this.state.description} 
+                            defaultValue={this.state.description} 
                             onChange={this.handleChanges} 
                             invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["description"]} 
@@ -217,25 +218,25 @@ class EditProjectModal extends Component {
                         <TextInput 
                             name="systemId" 
                             labelText={i18n.t('adminDashboard.addProject.systemId')} 
-                            value={this.state.systemId}
+                            defaultValue={this.state.systemId}
                             onChange={this.handleChanges} 
                         />
                         <TextInput 
                             name="contactName" 
                             labelText={i18n.t('adminDashboard.addProject.contactName')} 
-                            value={this.state.contactName} 
+                            defaultValue={this.state.contactName} 
                             onChange={this.handleChanges} 
                         />
                         <TextInput 
                             name="contactPhone" 
                             labelText={i18n.t('adminDashboard.addProject.contactPhone')} 
-                            value={this.state.contactPhone} 
+                            defaultValue={this.state.contactPhone} 
                             onChange={this.handleChanges} 
                         />
                         <TextInput 
                             name="contactEmail" 
                             labelText={i18n.t('adminDashboard.addProject.contactEmail')} 
-                            value={this.state.contactEmail} 
+                            defaultValue={this.state.contactEmail} 
                             onChange={this.handleChanges} 
                             invalidText={i18n.t('validation.invalid.email')} 
                             invalid={this.state.invalid["contactEmail"]} 
@@ -243,7 +244,7 @@ class EditProjectModal extends Component {
                         <TextArea 
                             name="notes" 
                             labelText={i18n.t('adminDashboard.addProject.notes')} 
-                            value={this.state.notes} 
+                            defaultValue={this.state.notes} 
                             onChange={this.handleChanges} 
                         />
                     </Form>

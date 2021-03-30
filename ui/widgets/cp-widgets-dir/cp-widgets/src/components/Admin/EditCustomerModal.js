@@ -73,7 +73,7 @@ class EditCustomerModal extends Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const result = await apiCustomerPut(this.props.serviceUrl, customer);
+            return await apiCustomerPut(this.props.serviceUrl, customer);
         }
     }
 
@@ -95,6 +95,7 @@ class EditCustomerModal extends Component {
                     submitMsg: i18n.t('submitMessages.updated'),
                     submitColour: '#24a148'
                 })
+                this.props.updateCustomerList();
             }).catch(err => {
                 this.setState({
                     submitMsg: i18n.t('submitMessages.error'),
@@ -181,7 +182,7 @@ class EditCustomerModal extends Component {
                         <TextInput
                             name="name"
                             labelText={i18n.t('adminDashboard.addCustomer.customerName')}
-                            value={this.state.name}
+                            defaultValue={this.state.name}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
                             invalid={this.state.invalid['name']}
@@ -189,7 +190,7 @@ class EditCustomerModal extends Component {
                         <TextInput
                             name="customerNumber"
                             labelText={i18n.t('adminDashboard.addCustomer.customerNumber')}
-                            value={this.state.customerNumber}
+                            defaultValue={this.state.customerNumber}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
                             invalid={this.state.invalid['customerNumber']}
@@ -197,19 +198,19 @@ class EditCustomerModal extends Component {
                         <TextInput
                             name="contactName"
                             labelText={i18n.t('adminDashboard.addCustomer.contactName')}
-                            value={this.state.contactName}
+                            defaultValue={this.state.contactName}
                             onChange={this.handleChanges}
                         />
                         <TextInput
                             name="contactPhone"
                             labelText={i18n.t('adminDashboard.addCustomer.contactPhone')}
-                            value={this.state.contactPhone}
+                            defaultValue={this.state.contactPhone}
                             onChange={this.handleChanges}
                         />
                         <TextInput
                             name="contactEmail"
                             labelText={i18n.t('adminDashboard.addCustomer.contactEmail')}
-                            value={this.state.contactEmail}
+                            defaultValue={this.state.contactEmail}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.email')}
                             invalid={this.state.invalid['contactEmail']}
@@ -217,7 +218,7 @@ class EditCustomerModal extends Component {
                         <TextArea
                             name="notes"
                             labelText={i18n.t('adminDashboard.addCustomer.notes')}
-                            value={this.state.notes}
+                            defaultValue={this.state.notes}
                             onChange={this.handleChanges}
                         />
                     </Form>

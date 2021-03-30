@@ -257,7 +257,7 @@ class SubscriptionForm extends Component {
                             <Select
                                 id="subscriptionLevel"
                                 name="subscriptionLevel"
-                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel')}
+                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel') + " *"}
                                 value={this.state.subscriptionLevel} onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.required')}
                                 invalid={this.state.invalid['level']}
@@ -267,7 +267,7 @@ class SubscriptionForm extends Component {
                             <Select
                                 id="entandoVersionId"
                                 name="entandoVersionId"
-                                labelText={i18n.t('subscriptionForm.entandoVersion')}
+                                labelText={i18n.t('subscriptionForm.entandoVersion') + " *"}
                                 value={this.state.entandoVersionId}
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.required')}
@@ -293,7 +293,7 @@ class SubscriptionForm extends Component {
                             <TextInput
                                 id="subscriptionLength"
                                 name="subscriptionLength"
-                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLength')}
+                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLength') + " *"}
                                 value={this.state.subscriptionLength}
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.number')}
@@ -323,7 +323,7 @@ class SubscriptionForm extends Component {
                             <Select
                                 id="subscriptionLevel"
                                 name="subscriptionLevel"
-                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel')}
+                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel') + " *"}
                                 value={this.state.subscriptionLevel}
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.required')}
@@ -334,7 +334,7 @@ class SubscriptionForm extends Component {
                             <Select
                                 id="entandoVersionId"
                                 name="entandoVersionId"
-                                labelText={i18n.t('subscriptionForm.entandoVersion')}
+                                labelText={i18n.t('subscriptionForm.entandoVersion') + " *"}
                                 value={this.state.entandoVersionId}
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.required')}
@@ -360,7 +360,7 @@ class SubscriptionForm extends Component {
                             <TextInput
                                 id="subscriptionLength"
                                 name="subscriptionLength"
-                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLength')}
+                                labelText={i18n.t('subscriptionForm.desiredSubscriptionLength') + " *"}
                                 value={this.state.subscriptionLength}
                                 onChange={this.handleChanges}
                                 invalidText={i18n.t('validation.invalid.number')}

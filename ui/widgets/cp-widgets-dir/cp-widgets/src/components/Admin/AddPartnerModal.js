@@ -95,6 +95,7 @@ class AddPartnerModal extends Component {
             submitMsg: i18n.t('submitMessages.added'),
             submitColour: '#24a148'
         })
+        this.props.updateCustomerList();
       }).catch(err => {
           this.setState({
               submitMsg: i18n.t('submitMessages.error'),
@@ -143,7 +144,7 @@ class AddPartnerModal extends Component {
             <Select
               defaultValue="project-list"
               name="projectId"
-              labelText={i18n.t('adminDashboard.addPartner.projectList')}
+              labelText={i18n.t('adminDashboard.addPartner.projectList') + " *"}
               value={this.state.projectId}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -161,7 +162,7 @@ class AddPartnerModal extends Component {
 
             <TextInput
               name="name"
-              labelText={i18n.t('adminDashboard.addPartner.partnerName')}
+              labelText={i18n.t('adminDashboard.addPartner.partnerName') + " *"}
               value={this.state.name}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -169,7 +170,7 @@ class AddPartnerModal extends Component {
             />
             <TextInput
               name="partnerNumber"
-              labelText={i18n.t('adminDashboard.addPartner.partnerNumber')}
+              labelText={i18n.t('adminDashboard.addPartner.partnerNumber') + " *"}
               value={this.state.partnerNumber}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
