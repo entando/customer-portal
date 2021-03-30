@@ -27,7 +27,7 @@ class OpenTicket extends Component {
             submitColour: 'black'
         };
         this.types = ["Bug", "Task"];
-        this.priorities = ['Lowest', 'Low', 'High', 'Highest'];
+        this.priorities = ['Lowest', 'Low', 'Medium', 'High', 'Highest'];
     }
 
     handleValidation() {

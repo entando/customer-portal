@@ -59,10 +59,15 @@ class TicketList extends Component {
           const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
           const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
           const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length-1]
-          const tickets = await apiJiraTicketsGet(this.props.serviceUrl, currentTicketingSystem.systemId, project.data.systemId);
+          var tickets = await apiJiraTicketsGet(this.props.serviceUrl, currentTicketingSystem.systemId, project.data.systemId);
           for(var i = 0; i < tickets.data.length; i++) {
             apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id);
           }
+
+          const ticketOrder = { "Lowest": 1, "Low": 2, "Medium": 3 , "High": 4, "Highest": 5};
+          tickets.data.sort(function (a, b) {
+            return ticketOrder[b.priority] - ticketOrder[a.priority];
+          });
           this.setState({
               tickets: tickets
           });
@@ -71,6 +76,16 @@ class TicketList extends Component {
         console.log(err)
       }
     }
+}
+
+compare(a, b) {
+  if (a.priority < b.priority){
+    return -1;
+  }
+  if (a.priority > b.priority){
+    return 1;
+  }
+  return 0;
 }
 
 componentDidMount(){
@@ -97,7 +112,7 @@ componentDidUpdate(prevProps) {
   }
 }
 
-  render() { 
+  render() {
     return ( 
       <div>
         <DataTable rows={rowData} headers={this.headerData}>
