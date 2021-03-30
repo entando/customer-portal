@@ -22,7 +22,8 @@ class OpenTicket extends Component {
             updateDate: '',
             role: '',
             invalid: {},
-            submitMsg: ''
+            submitMsg: '',
+            submitColour: 'black'
         };
         this.types = ["Bug", "Task"];
         this.priorities = ['Lowest', 'Low', 'High', 'Highest'];
@@ -78,23 +79,27 @@ class OpenTicket extends Component {
                 if(result.data.length > 0) {
                     this.createTicket().then(res => {
                         this.setState({
-                            submitMsg: i18n.t('submitMessages.created')
+                            submitMsg: i18n.t('submitMessages.created'),
+                            submitColour: '#24a148'
                         })
                     }).catch(err => {
                         this.setState({
-                            submitMsg: i18n.t('submitMessages.error')
+                            submitMsg: i18n.t('submitMessages.error'),
+                            submitColour: '#da1e28'
                         })
                     });
                 }
                 // if no subscriptions, don't create ticket
                 else {
                     this.setState({
-                        submitMsg: i18n.t('submitMessages.subscriptionRequired')
+                        submitMsg: i18n.t('submitMessages.subscriptionRequired'),
+                        submitColour: '#da1e28'
                     })
                 }
             }).catch(error => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.error')
+                    submitMsg: i18n.t('submitMessages.error'),
+                    submitColour: '#da1e28'
                 })
             });
         }
@@ -131,7 +136,6 @@ class OpenTicket extends Component {
         var authenticated = keycloak.initialized && keycloak.authenticated;
     
         if (authenticated) {
-            console.log(this.state.project.systemId)
             const ticket = {
                 systemId: this.state.project.systemId,
                 type: this.state.type,
@@ -180,14 +184,22 @@ class OpenTicket extends Component {
     render() {
         return (
             <div>
-                <h3 className="pageTitle">{i18n.t('supportTicketForm.title')}</h3>
+                {hasKeycloakClientRole('ROLE_ADMIN') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
+                hasKeycloakClientRole('ROLE_SUPPORT') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
+                hasKeycloakClientRole('ROLE_CUSTOMER') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
+                hasKeycloakClientRole('ROLE_PARTNER') ? 
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
+                null}
                 <div className="form-container">
+                    <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
                     <Form onSubmit={this.handleFormSubmit}>
                         <div className="form-desc">
                             <h4>{i18n.t('supportTicketForm.formTitle')}</h4>
                             <p>{i18n.t('supportTicketForm.desc')}</p>
                         </div>
-
                         <div className="bx--grid">
                             <div className="bx--row">
                                 <div className="bx--col">
@@ -261,7 +273,6 @@ class OpenTicket extends Component {
                         </div>
                     </Form>
                 </div>
-                <strong>{this.state.submitMsg}</strong>
             </div>    
         );
     }

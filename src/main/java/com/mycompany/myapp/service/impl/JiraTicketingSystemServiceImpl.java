@@ -1,13 +1,21 @@
 package com.mycompany.myapp.service.impl;
 
+import com.mycompany.myapp.security.SpringSecurityAuditorAware;
 import com.mycompany.myapp.service.JiraTicketingSystemService;
 import com.mycompany.myapp.service.TicketingSystemService;
 import com.mycompany.myapp.domain.TicketingSystem;
 import com.mycompany.myapp.domain.Ticket;
 import com.mycompany.myapp.repository.TicketingSystemRepository;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +29,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -30,18 +39,15 @@ import java.util.Optional;
 @Transactional
 public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemService {
 
+    @Autowired
+    SpringSecurityAuditorAware springSecurityAuditorAware;
+
     private final Logger log = LoggerFactory.getLogger(TicketingSystemServiceImpl.class);
 
     private final TicketingSystemRepository ticketingSystemRepository;
 
-    //private final String jiraUrl;
-
-    //private final String baseUrl;
-
     public JiraTicketingSystemServiceImpl(TicketingSystemRepository ticketingSystemRepository) {
         this.ticketingSystemRepository = ticketingSystemRepository;
-        //this.jiraUrl = "https://jorden-test-partner-portal.atlassian.net/rest/api/2/search?jql=project=";
-        //this.baseUrl = "https://jorden-test-partner-portal.atlassian.net/rest/api/latest/";
     }
 
     /**
@@ -299,9 +305,8 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
     public String createJiraTicketInOrg(String systemId, String organization, String baseUrl, String serviceAccount, String serviceAccountSecret, Ticket ticket) {
         String user = serviceAccount;
         String password = serviceAccountSecret;
-        List<Integer> orgList = new ArrayList<Integer>();
+        List<Integer> orgList = new ArrayList<>();
         orgList.add(Integer.parseInt(organization));
-        System.out.println(orgList);
 
         try {
             URL url = new URL(baseUrl + "issue");
@@ -314,24 +319,54 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             con.setRequestProperty("Authorization", authHeaderValue);
             con.setRequestProperty("Content-Type", "application/json; charset=utf8");
             con.setDoOutput(true);
-            String jsonInputString = "{\n" +
-                "    \"fields\": {\n" +
-                "       \"project\":\n" +
-                "       {\n" +
-                "          \"key\": \"" + systemId + "\"\n" +
-                "       },\n" +
-                "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
-                "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
-                "       \"customfield_10002\": " + orgList + ",\n" +
-                "       \"issuetype\": {\n" +
-                "          \"name\": \"" + ticket.getType() + "\"\n" +
-                "       },\n" +
-                "       \"priority\":\n" +
-                "       {\n" +
-                "          \"name\": \"" + ticket.getPriority() + "\"\n" +
-                "       }\n" +
-                "   }\n" +
-                "}";
+
+            String jsonInputString;
+            String signedInUser = getJiraAccountIdOfSignedInUser(baseUrl, serviceAccount, serviceAccountSecret);
+
+            if (signedInUser == null || signedInUser == "") {
+                jsonInputString = "{\n" +
+                    "    \"fields\": {\n" +
+                    "       \"project\":\n" +
+                    "       {\n" +
+                    "          \"key\": \"" + systemId + "\"\n" +
+                    "       },\n" +
+                    "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
+                    "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
+                    "       \"customfield_10002\": " + orgList + ",\n" +
+                    "       \"issuetype\": {\n" +
+                    "          \"name\": \"" + ticket.getType() + "\"\n" +
+                    "       },\n" +
+                    "       \"priority\":\n" +
+                    "       {\n" +
+                    "          \"name\": \"" + ticket.getPriority() + "\"\n" +
+                    "       }\n" +
+                    "   }\n" +
+                    "}";
+            }
+            else {
+                jsonInputString = "{\n" +
+                    "    \"fields\": {\n" +
+                    "       \"project\":\n" +
+                    "       {\n" +
+                    "          \"key\": \"" + systemId + "\"\n" +
+                    "       },\n" +
+                    "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
+                    "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
+                    "       \"customfield_10002\": " + orgList + ",\n" +
+                    "       \"issuetype\": {\n" +
+                    "          \"name\": \"" + ticket.getType() + "\"\n" +
+                    "       },\n" +
+                    "       \"priority\":\n" +
+                    "       {\n" +
+                    "          \"name\": \"" + ticket.getPriority() + "\"\n" +
+                    "       },\n" +
+                    "       \"reporter\":\n" +
+                    "       {\n" +
+                    "          \"accountId\": \"" + signedInUser + "\"\n" +
+                    "       }\n" +
+                    "   }\n" +
+                    "}";
+            }
             try(OutputStream os = con.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes("utf-8");
                 os.write(input, 0, input.length);
@@ -456,6 +491,74 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Getting accountId of a user from Jira.
+     *
+     * @param serviceAccount the serviceAccount of the ticketing system
+     * @param serviceAccountSecret the serviceAccountSecret of the ticketing system
+     * @param baseUrl the baseUrl of the project
+     */
+    public String getJiraAccountIdOfSignedInUser(String baseUrl, String serviceAccount, String serviceAccountSecret) {
+        String user = serviceAccount;
+        String password = serviceAccountSecret;
+        String signedInUser = getCurrentUserEmail().get();
+
+        try {
+            URL url = new URL(baseUrl + "user/search?query=" + signedInUser);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+
+            String auth = user + ":" + password;
+            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
+            String authHeaderValue = "Basic " + new String(encodedAuth);
+            con.setRequestProperty("Authorization", authHeaderValue);
+            con.setRequestProperty("Content-Type", "application/json; charset=utf8");
+
+            int status = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            con.disconnect();
+            JSONArray responseObject = new JSONArray(content.toString());
+
+            if (responseObject.length() == 0) {
+                return null;
+            }
+
+            return responseObject.getJSONObject(0).getString("accountId");
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // get signed in user's email address
+    public Optional<String> getCurrentUserEmail() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return Optional.ofNullable(securityContext.getAuthentication())
+            .map(authentication -> {
+                if (authentication.getPrincipal() instanceof UserDetails) {
+                    UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
+                    return springSecurityUser.getUsername();
+                } else if (authentication instanceof JwtAuthenticationToken) {
+                    return (String) ((JwtAuthenticationToken)authentication).getToken().getClaims().get("email");
+                } else if (authentication.getPrincipal() instanceof DefaultOidcUser) {
+                    Map<String, Object> attributes = ((DefaultOidcUser) authentication.getPrincipal()).getAttributes();
+                    if (attributes.containsKey("email")) {
+                        return (String) attributes.get("email");
+                    }
+                } else if (authentication.getPrincipal() instanceof String) {
+                    return (String) authentication.getPrincipal();
+                }
+                return null;
+            });
     }
 
 }

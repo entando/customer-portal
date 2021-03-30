@@ -37,7 +37,7 @@ class ManageUser extends Component {
     if (hasKeycloakClientRole('ROLE_ADMIN')) {
       return (
         <div>
-          <h3 className="pageTitle">{i18n.t('manageUsers.title')}</h3>
+          <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
           <div className="form-container">
             <Accordion>
               {this.userFunctionality.map((item, index) => (
@@ -50,9 +50,10 @@ class ManageUser extends Component {
         </div>
       )
     }
+    // Unauthorized
     else {
-      return(<p>You are not authorized to view this</p>)
-    }
+      return(null)
+  }
   }
 }
 

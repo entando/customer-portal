@@ -23,7 +23,8 @@ class EditProjectModal extends Component {
             invalid: {},
             modalId: '',
             buttonId: '',
-            submitMsg: ''
+            submitMsg: '',
+            submitColour: 'black'
         };
     }
 
@@ -125,11 +126,13 @@ class EditProjectModal extends Component {
             }
             this.projectPut(project).then(result => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.updated')
+                    submitMsg: i18n.t('submitMessages.updated'),
+                    submitColour: '#24a148'
                 })
             }).catch(err => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.error')
+                    submitMsg: i18n.t('submitMessages.error'),
+                    submitColour: '#da1e28'
                 })
             });
         }
@@ -190,6 +193,7 @@ class EditProjectModal extends Component {
                 handleSubmit={this.handleFormSubmit}
                 primaryButtonText={i18n.t('modalText.save')}
                 secondaryButtonText={i18n.t('modalText.cancel')}
+                modalLabel={<p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>}
             >
                 <div className="form-container">
                     {/*<p> {i18n.t('adminDashboard.addProject.desc')} </p>*/}
@@ -242,7 +246,6 @@ class EditProjectModal extends Component {
                             value={this.state.notes} 
                             onChange={this.handleChanges} 
                         />
-                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div> 
             </ModalWrapper>

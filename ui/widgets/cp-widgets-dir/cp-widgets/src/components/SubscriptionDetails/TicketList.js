@@ -20,10 +20,6 @@ class TicketList extends Component {
         key: 'issue',
       },
       {
-        header: i18n.t('ticketDetails.project'),
-        key: 'project',
-      },
-      {
         header: i18n.t('ticketDetails.description'),
         key: 'description',
       },
@@ -119,11 +115,9 @@ componentDidUpdate(prevProps) {
               </TableHead>
               <TableBody>
                 {Object.keys(this.state.tickets).length !== 0 ? this.state.tickets.data.map((ticket) => {
-                  console.log(ticket)
                   return (
                     <TableRow key={ticket.id}>
                       <TableCell key={ticket.id}>{ticket.systemId}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.systemId.split("-")[0]}</TableCell>
                       <TableCell key={ticket.id}>{ticket.description}</TableCell>
                       <TableCell key={ticket.id}>{ticket.status}</TableCell>
                       <TableCell key={ticket.id}>{ticket.type}</TableCell>

@@ -18,7 +18,8 @@ class EditCustomerModal extends Component {
             invalid: {},
             modalId: '',
             buttonId: '',
-            submitMsg: ''
+            submitMsg: '',
+            submitColour: 'black'
         };
     }
 
@@ -91,11 +92,13 @@ class EditCustomerModal extends Component {
             }
             this.updateCustomer(customer).then(result => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.updated')
+                    submitMsg: i18n.t('submitMessages.updated'),
+                    submitColour: '#24a148'
                 })
             }).catch(err => {
                 this.setState({
-                    submitMsg: i18n.t('submitMessages.error')
+                    submitMsg: i18n.t('submitMessages.error'),
+                    submitColour: '#da1e28'
                 })
             });
         }
@@ -170,6 +173,7 @@ class EditCustomerModal extends Component {
                 handleSubmit={this.handleFormSubmit}
                 primaryButtonText={i18n.t('modalText.save')}
                 secondaryButtonText={i18n.t('modalText.cancel')}
+                modalLabel={<p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>}
             >
                 <div className="form-container">
                     {/*<p> {i18n.t('adminDashboard.editCustomer.desc')} </p>*/}
@@ -216,7 +220,6 @@ class EditCustomerModal extends Component {
                             value={this.state.notes}
                             onChange={this.handleChanges}
                         />
-                        <strong>{this.state.submitMsg}</strong>
                     </Form>
                 </div>
             </ModalWrapper>

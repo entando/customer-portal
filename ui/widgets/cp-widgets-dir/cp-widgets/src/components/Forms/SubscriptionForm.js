@@ -37,7 +37,8 @@ class SubscriptionForm extends Component {
             productVersions: [],
             selectedProjectId: '',
             submitSuccess: false,
-            submitError: false
+            submitError: false,
+            submitColour: 'black'
         };
     }
 
@@ -142,12 +143,14 @@ class SubscriptionForm extends Component {
                     apiAddSubscriptionToProject(this.props.serviceUrl, this.state.projectId, res.data.id)
                     this.setState({
                         submitSuccess: true,
-                        submitError: false
+                        submitError: false,
+                        submitColour: '#24a148'
                     });
                 }).catch(err => {
                     this.setState({
                         submitSuccess: false,
-                        submitError: true
+                        submitError: true,
+                        submitColour: '#da1e28'
                     });
                 });
             } else if (this.state.subscriptionType === 'existing') {
@@ -155,12 +158,14 @@ class SubscriptionForm extends Component {
                     apiAddSubscriptionToProject(this.props.serviceUrl, this.state.projectId, res.data.id)
                     this.setState({
                         submitSuccess: true,
-                        submitError: false
+                        submitError: false,
+                        submitColour: '#24a148'
                     });
                 }).catch(err => {
                     this.setState({
                         submitSuccess: false,
-                        submitError: true
+                        submitError: true,
+                        submitColour: '#da1e28'
                     });
                 });
             }
@@ -390,7 +395,7 @@ class SubscriptionForm extends Component {
     }
 
     createFormMessage(subMessageKey) {
-        return <strong>{i18n.t(`subscriptionForm.${subMessageKey}`)}</strong>
+        return <p style={{color: this.state.submitColour}}>{i18n.t(`subscriptionForm.${subMessageKey}`)}</p>
     }
 
     render() {
@@ -406,6 +411,7 @@ class SubscriptionForm extends Component {
                     <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
                 null}
                 <div className="form-container">
+                    {this.successErrorMessage()}
                     <Form onSubmit={this.handleFormSubmit}>
                         <div className="form-desc">
                             <h4>{i18n.t('subscriptionForm.formTitle')}</h4>
@@ -425,7 +431,6 @@ class SubscriptionForm extends Component {
                             </div>
                             {this.renderForm()}
                             {this.state.subscriptionType ? <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}</Button> : ''}
-                            {this.successErrorMessage()}
                         </div>
                     </Form>
                 </div>
