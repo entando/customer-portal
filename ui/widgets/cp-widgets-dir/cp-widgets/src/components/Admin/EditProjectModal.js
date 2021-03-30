@@ -201,7 +201,7 @@ class EditProjectModal extends Component {
                     <Form onSubmit={this.handleFormSubmit}>
                         <TextInput 
                             name="name" 
-                            labelText={i18n.t('adminDashboard.addProject.projectName')} 
+                            labelText={i18n.t('adminDashboard.addProject.projectName') + " *"} 
                             defaultValue={this.state.name} 
                             onChange={this.handleChanges} 
                             invalidText={i18n.t('validation.invalid.required')} 
@@ -209,7 +209,7 @@ class EditProjectModal extends Component {
                         />
                         <TextInput 
                             name="description" 
-                            labelText={i18n.t('adminDashboard.addProject.projectDesc')} 
+                            labelText={i18n.t('adminDashboard.addProject.projectDesc') + " *"} 
                             defaultValue={this.state.description} 
                             onChange={this.handleChanges} 
                             invalidText={i18n.t('validation.invalid.required')} 
@@ -235,7 +235,7 @@ class EditProjectModal extends Component {
                         />
                         <TextInput 
                             name="contactEmail" 
-                            labelText={i18n.t('adminDashboard.addProject.contactEmail')} 
+                            labelText={i18n.t('adminDashboard.addProject.contactEmail') + " *"} 
                             defaultValue={this.state.contactEmail} 
                             onChange={this.handleChanges} 
                             invalidText={i18n.t('validation.invalid.email')} 
