@@ -79,6 +79,8 @@ class AdminDashboard extends React.Component {
 
     updateCustomerList = () => {
         this.getCustomers();
+        this.render();
+        this.forceUpdate();
     }
 
     render(){

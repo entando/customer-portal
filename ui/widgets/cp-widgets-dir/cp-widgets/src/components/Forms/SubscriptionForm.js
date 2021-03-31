@@ -89,6 +89,12 @@ class SubscriptionForm extends Component {
         });
     }
 
+    isNumeric(str) {
+        if (typeof str != "string") 
+            return false
+        return !isNaN(str) && !isNaN(parseFloat(str))
+    }
+
     handleValidation() {
         let invalid = {};
         let formIsValid = true;
@@ -110,7 +116,7 @@ class SubscriptionForm extends Component {
             }
         }
 
-        if (this.state.subscriptionLength === '' || !Number.isInteger(Number.parseInt(this.state.subscriptionLength))) {
+        if (this.state.subscriptionLength === '' || !this.isNumeric(this.state.subscriptionLength)) {
             formIsValid = false;
             invalid['subscriptionLength'] = true;
         }

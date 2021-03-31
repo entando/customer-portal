@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea, Select, SelectItem, DatePicker, DatePickerInput} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiProjectSubscriptionPut } from '../../api/subscriptions';
+import { apiProjectSubscriptionPut, apiSubscriptionGet } from '../../api/subscriptions';
 import moment from 'moment';
 
 class EditSubscriptionModal extends Component {
@@ -35,6 +35,11 @@ class EditSubscriptionModal extends Component {
             invalid['status'] = true;
         }
 
+        if (this.state.lengthInMonths === '' || !this.isNumeric(this.state.lengthInMonths)) {
+            formIsValid = false;
+            invalid['lengthInMonths'] = true;
+        }
+
         if(typeof this.state.startDate !== "undefined"){
             if(!this.state.startDate.match(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/)){
               formIsValid = false;
@@ -44,6 +49,12 @@ class EditSubscriptionModal extends Component {
 
         this.setState({ invalid: invalid });
         return formIsValid;
+    }
+
+    isNumeric(str) {
+        if (typeof str != "string") 
+            return false
+        return !isNaN(str) && !isNaN(parseFloat(str))
     }
 
     handleChanges = e => {
@@ -85,17 +96,15 @@ class EditSubscriptionModal extends Component {
     };
 
     componentDidMount() {
-        this.setState({
-            level: this.props.subscription.level,
-            status: this.props.subscription.status,
-            lengthInMonths: this.props.subscription.lengthInMonths,
-            startDate: moment(this.props.subscription.startDate).calendar(),
-            notes: this.props.subscription.notes,
-            submitMsg: ''
-        })
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+    
+        if (authenticated) { 
+            this.getSubscriptionDetails();
 
-        const modalOpenButton = document.querySelector('.edit-sub-button');
-        modalOpenButton.addEventListener("click", this.clearValues, false);
+            const modalOpenButton = document.querySelector('.edit-sub-button');
+            modalOpenButton.addEventListener("click", this.clearValues, false);
+        }
     }
 
     clearValues = () => {
@@ -108,6 +117,22 @@ class EditSubscriptionModal extends Component {
                 startDate: moment(this.props.subscription.startDate).calendar(),
                 notes: this.props.subscription.notes,
                 invalid: {}
+            })
+        }
+    }
+
+    async getSubscriptionDetails() {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const subscription =  await apiSubscriptionGet(this.props.serviceUrl, this.props.subscription.id);
+            this.setState({
+                level: subscription.data.level,
+                status: subscription.data.status,
+                lengthInMonths: subscription.data.lengthInMonths,
+                startDate: moment(subscription.data.startDate).calendar(),
+                notes: subscription.data.notes,
+                submitMsg: ''
             })
         }
     }
@@ -173,18 +198,25 @@ class EditSubscriptionModal extends Component {
                                 name="startDate"
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.startDate') + " *"}
-                                defaultValue={this.state.startDate}
+                                value={this.state.startDate}
                                 onChange={ this.handleChanges}
                                 type="text"
                                 invalidText={i18n.t('validation.invalid.date')} 
                                 invalid={this.state.invalid['startDate']} 
                             />
                         </DatePicker>
-                        <TextInput name="lengthInMonths" labelText={i18n.t('subscriptionDetails.lengthInMonths') + " *"} defaultValue={this.state.lengthInMonths} onChange={this.handleChanges} />
+                        <TextInput 
+                            name="lengthInMonths" 
+                            labelText={i18n.t('subscriptionDetails.lengthInMonths') + " *"} 
+                            value={this.state.lengthInMonths} 
+                            onChange={this.handleChanges} 
+                            invalidText={i18n.t('validation.invalid.number')} 
+                            invalid={this.state.invalid['lengthInMonths']} 
+                        />
                         <TextArea 
                             name="notes" 
                             labelText={i18n.t('adminDashboard.addProject.notes')} 
-                            defaultValue={this.state.notes} 
+                            value={this.state.notes} 
                             onChange={this.handleChanges} 
                         />
                     </Form>
