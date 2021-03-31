@@ -9,6 +9,7 @@
 	"buttons":{
 		"submit": "Submit",
 		"cancel": "Cancel",
+    "delete": "Delete",
 		"save": "Save",
 		"edit": "Edit",
 		"addCustomer": "Add a Customer +",

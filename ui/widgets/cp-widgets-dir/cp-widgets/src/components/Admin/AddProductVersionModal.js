@@ -72,6 +72,7 @@ class AddProductVersionModal extends Component {
             submitMsg: i18n.t('submitMessages.added'),
             submitColour: '#24a148'
         })
+        this.props.updateProductVersions();
       }).catch(err => {
           this.setState({
               submitMsg: i18n.t('submitMessages.error'),

@@ -15,7 +15,7 @@ class OpenTicket extends Component {
             project: {},
             projects: [],
             systemId: '',
-            type: '',
+            type: 'Bug',
             description: '',
             priority: 'Medium',
             status: 'To Do',
@@ -227,10 +227,6 @@ class OpenTicket extends Component {
                                                 invalidText={i18n.t('validation.invalid.required')}
                                                 invalid={this.state.invalid['project']} 
                                             >
-                                                <SelectItem
-                                                    text={i18n.t('supportTicketForm.select')}
-                                                    value=""
-                                                />
                                                 {Object.keys(this.state.projects).length !== 0 ? this.state.projects.map((project, i) => {
                                                         return (
                                                             <SelectItem key={i} text={project.name} value={JSON.stringify(project)}>{project.name}</SelectItem>
@@ -245,10 +241,6 @@ class OpenTicket extends Component {
                                                 invalidText={i18n.t('validation.invalid.required')}
                                                 invalid={this.state.invalid['type']} 
                                             >
-                                                <SelectItem
-                                                    text={i18n.t('supportTicketForm.select')}
-                                                    value=""
-                                                />
                                                 {this.types.map((type, i) => (
                                                     <SelectItem key={i} text={type} value={type}>{type}</SelectItem>
                                                 ))}
@@ -261,10 +253,6 @@ class OpenTicket extends Component {
                                                 invalidText={i18n.t('validation.invalid.required')}
                                                 invalid={this.state.invalid['priority']} 
                                             >
-                                                <SelectItem
-                                                    text={i18n.t('supportTicketForm.select')}
-                                                    value=""
-                                                />
                                                 {this.priorities.map((priority, i) => (
                                                     <SelectItem key={i} text={priority} value={priority}>{priority}</SelectItem>
                                                 ))}
