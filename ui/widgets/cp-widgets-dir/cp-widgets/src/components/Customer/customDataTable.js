@@ -4,7 +4,7 @@ import '../../index.scss';
 import { apiGetCustomersProjects, apiGetMyCustomersProjects } from '../../api/customers';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
-import { Link } from 'react-router-dom';
+import { Link, HashRouter } from 'react-router-dom';
 import i18n from '../../i18n';
 import EditProjectModal from '../Admin/EditProjectModal'
 import { hasKeycloakClientRole } from '../../api/helpers';

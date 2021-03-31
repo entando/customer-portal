@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Route, Switch } from 'react-router-dom';
 import AdminDashboard from './Admin/AdminDashboard';
 import Subscription from './SubscriptionDetails/subscription';
 import withKeycloak from '../auth/withKeycloak';
@@ -48,7 +48,7 @@ class App extends Component {
                 return (
                     <div id="entando-customer-portal">
                         <AuthenticatedView keycloak={keycloak}>
-                            <BrowserRouter>
+                            <HashRouter>
                                 <Switch>
                                     <Route path={"**/subscription-details/:id"} render={(props) => (
                                         <Subscription {...props} serviceUrl={this.props.serviceUrl} locale={this.props.locale} />
@@ -57,7 +57,7 @@ class App extends Component {
                                         <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} locale={this.props.locale} />
                                     )}/>
                                 </Switch>
-                            </BrowserRouter>
+                            </HashRouter>
                         </AuthenticatedView>
                         <UnauthenticatedView keycloak={keycloak}>
                             <p>Unauthenticated</p>

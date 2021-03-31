@@ -13,10 +13,13 @@ import {
   Button
 } from 'carbon-components-react';
 import { SubtractAlt16 } from '@carbon/icons-react';
-import { apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
+import { apiProductVersionDelete, apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
 import withKeycloak from '../../../auth/withKeycloak';
 import AddProductVersionModal from '../AddProductVersionModal';
 import { hasKeycloakClientRole } from '../../../api/helpers';
+import DeleteModal from '../DeleteModal';
+import EditCustomerModal from '../EditCustomerModal';
+import EditVersionModal from '../EditVersionModal';
 
 class ProductVersion extends Component {
   constructor() {
@@ -57,6 +60,36 @@ class ProductVersion extends Component {
     }
   }
 
+  async deleteVersion(id) {
+    const { t, keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
+    if (authenticated) {
+      return await apiProductVersionDelete(this.props.serviceUrl, id);
+    }
+  }
+
+  handleDeleteVersion = (e, id) => {
+    e.preventDefault();
+    if (window.confirm("Are you sure you want to delete this Entando version?")) {
+      this.deleteVersion(id).then(result => {
+        this.setState({
+            submitMsg: i18n.t('submitMessages.deleted'),
+            submitColour: '#24a148'
+        })
+        this.updateProductVersions();
+      }).catch(err => {
+        this.setState({
+            submitMsg: i18n.t('submitMessages.error'),
+            submitColour: '#da1e28'
+        })
+      });
+    }
+  }
+
+  updateProductVersions = () => {
+    this.getProductVersions();
+  }
+
   async handleToggleChange(id) {
     await apiUpdateProductVersionsStatus(this.props.serviceUrl, id);
   }
@@ -91,6 +124,15 @@ class ProductVersion extends Component {
                             </TableCell>
                             <TableCell>{productVersion.startDate}</TableCell>
                             <TableCell>{productVersion.endDate}</TableCell>
+                            <TableCell>
+                              <div style={{display: 'flex'}}>
+                                <EditVersionModal version={productVersion} serviceUrl={this.props.serviceUrl} updateProductVersions={this.updateProductVersions} />
+                                <a onClick={(e) => this.handleDeleteVersion(e, productVersion.id)} href="" style={{display: 'flex', marginTop: '12px'}}>
+                                  <SubtractAlt16 fill="red" style={{marginTop: '4px'}} />
+                                  <p>{i18n.t('buttons.delete')}</p>
+                                </a>
+                              </div>
+                            </TableCell>
                           </TableRow>
                         ))
                       : null}
@@ -100,7 +142,7 @@ class ProductVersion extends Component {
             )}
           </DataTable>
           <br />
-          <AddProductVersionModal serviceUrl={this.props.serviceUrl} />
+          <AddProductVersionModal serviceUrl={this.props.serviceUrl} updateProductVersions={this.updateProductVersions} />
         </div>
       );
     }
@@ -126,7 +168,11 @@ const headerData = [
   {
     header: i18n.t('adminConfig.manageProductVersion.supportEndDate'),
     key: 'endDate'
-  }
+  },
+  {
+    header: i18n.t('customerDashboard.action'),
+    key: 'action',
+}
 ];
 
 const rowData = [

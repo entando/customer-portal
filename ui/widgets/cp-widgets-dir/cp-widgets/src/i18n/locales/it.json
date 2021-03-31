@@ -9,6 +9,7 @@
 	"buttons":{
 		"submit": "Invia",
 		"cancel": "Annulla",
+		"delete": "Elimina",
 		"save": "Salva",
 		"edit": "modificare",
 		"addCustomer": "Aggiungi un cliente +",
