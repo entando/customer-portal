@@ -24,7 +24,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -220,23 +223,33 @@ public class TicketResource {
                 // Summary
                 if (t.getDescription() != (String) jsonIssue.getJSONObject("fields").get("summary")) {
                     t.setDescription((String) jsonIssue.getJSONObject("fields").get("summary"));
-                    t.setUpdateDate(ZonedDateTime.now());
                 }
                 // Type
                 if (t.getType() != (String) jsonIssue.getJSONObject("fields").getJSONObject("issuetype").get("name")) {
                     t.setType((String) jsonIssue.getJSONObject("fields").getJSONObject("issuetype").get("name"));
-                    t.setUpdateDate(ZonedDateTime.now());
                 }
                 // Priority
                 if (t.getPriority() != (String) jsonIssue.getJSONObject("fields").getJSONObject("priority").get("name")) {
                     t.setPriority((String) jsonIssue.getJSONObject("fields").getJSONObject("priority").get("name"));
-                    t.setUpdateDate(ZonedDateTime.now());
                 }
                 // Status
                 if (t.getStatus() != (String) jsonIssue.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name")) {
                     t.setStatus((String) jsonIssue.getJSONObject("fields").getJSONObject("status").getJSONObject("statusCategory").get("name"));
-                    t.setUpdateDate(ZonedDateTime.now());
                 }
+                // Create Date
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+                String createdDate = jsonIssue.getJSONObject("fields").getString("created");
+                ZonedDateTime formattedDate = ZonedDateTime.parse(createdDate, formatter);
+                if (t.getCreateDate() != formattedDate) {
+                    t.setCreateDate(formattedDate);
+                }
+                //Update Date
+                String updatedDate = jsonIssue.getJSONObject("fields").getString("updated");
+                formattedDate = ZonedDateTime.parse(updatedDate, formatter);
+                if (t.getUpdateDate() != formattedDate) {
+                    t.setUpdateDate(formattedDate);
+                }
+
                 resultTickets.add(t);
             }
             // else create a Ticket
@@ -374,8 +387,12 @@ public class TicketResource {
         ticketToCreate.setType((String) response.getJSONObject("fields").getJSONObject("issuetype").get("name"));
         ticketToCreate.setStatus((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
         ticketToCreate.setPriority((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
-        ticketToCreate.setCreateDate(ZonedDateTime.now());
-        ticketToCreate.setUpdateDate(ZonedDateTime.now());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        String createdDate = response.getJSONObject("fields").getString("created");
+        ticketToCreate.setCreateDate(ZonedDateTime.parse(createdDate, formatter));
+
+        String updatedDate = response.getJSONObject("fields").getString("updated");
+        ticketToCreate.setUpdateDate(ZonedDateTime.parse(updatedDate, formatter));
         return ticketToCreate;
     }
 
@@ -389,8 +406,13 @@ public class TicketResource {
         ticketToCreate.setType((String) response.getJSONObject("fields").getJSONObject("issuetype").get("name"));
         ticketToCreate.setStatus((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
         ticketToCreate.setPriority((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
-        ticketToCreate.setCreateDate(ZonedDateTime.now());
-        ticketToCreate.setUpdateDate(ZonedDateTime.now());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        String createdDate = response.getJSONObject("fields").getString("created");
+        ticketToCreate.setCreateDate(ZonedDateTime.parse(createdDate, formatter));
+
+        String updatedDate = response.getJSONObject("fields").getString("updated");
+        ticketToCreate.setUpdateDate(ZonedDateTime.parse(updatedDate, formatter));
         ticketToCreate.setProject(projectService.getProjectBySystemId(organization));
         return ticketToCreate;
     }

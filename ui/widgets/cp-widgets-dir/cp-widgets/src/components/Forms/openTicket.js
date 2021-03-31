@@ -280,7 +280,7 @@ class OpenTicket extends Component {
                 );
             }
             else {
-                return(<p>Unathorized</p>)
+                return(<p>Unauthorized</p>)
             }
         }
         else {
