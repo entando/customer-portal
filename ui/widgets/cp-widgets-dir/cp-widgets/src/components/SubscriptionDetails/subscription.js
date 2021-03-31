@@ -25,6 +25,7 @@ class Subscription extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: true,
             subscription: {},
             users: {},
             project: {}
@@ -53,7 +54,8 @@ class Subscription extends React.Component {
                 }
                 this.setState({
                     subscription: subscription,
-                    project: project
+                    project: project,
+                    loading: false
                 })
             }
             catch(err) {
@@ -95,48 +97,58 @@ class Subscription extends React.Component {
         var { t, keycloak } = this.props;
         var authenticated = keycloak.initialized && keycloak.authenticated;
 
-        if (Object.keys(this.state.subscription).length !== 0 && Object.keys(this.state.project).length !== 0) {
-            return (
-                <div className="subscription-details">
-                    <div>
-                    <Tile>
-                        <div className="bx--grid">
-                            <div className="bx--row">
-                                <div className="bx--col">
-                                    <p><strong>{i18n.t('subscriptionDetails.description')}:</strong> {this.state.subscription.data.project.description}</p>
-                                    <p><strong>{i18n.t('subscriptionDetails.partners')}:</strong>
-                                    {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? 
-                                        <>
-                                            {this.state.project.data.partners.map(partner => (
-                                                <> {partner.name} </>
-                                            ))}
-                                        </>
-                                        : <> None </>
-                                    }
-                                    </p>
-                                    <p><strong>{i18n.t('subscriptionDetails.type')}:</strong> {type}</p>
-                                    <p><strong>{i18n.t('subscriptionDetails.status')}:</strong> {this.state.subscription.data.status}</p>
+        if (!this.state.loading) {
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+                if (Object.keys(this.state.subscription).length !== 0 && Object.keys(this.state.project).length !== 0) {
+                    return (
+                        <div className="subscription-details">
+                            <div>
+                            <Tile>
+                                <div className="bx--grid">
+                                    <div className="bx--row">
+                                        <div className="bx--col">
+                                            <p><strong>{i18n.t('subscriptionDetails.description')}:</strong> {this.state.subscription.data.project.description}</p>
+                                            <p><strong>{i18n.t('subscriptionDetails.partners')}:</strong>
+                                            {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? 
+                                                <>
+                                                    {this.state.project.data.partners.map(partner => (
+                                                        <> {partner.name} </>
+                                                    ))}
+                                                </>
+                                                : <> None </>
+                                            }
+                                            </p>
+                                            <p><strong>{i18n.t('subscriptionDetails.type')}:</strong> {type}</p>
+                                            <p><strong>{i18n.t('subscriptionDetails.status')}:</strong> {this.state.subscription.data.status}</p>
+                                        </div>
+                                        <div className="bx--col">
+                                            <p><strong>{i18n.t('subscriptionDetails.level')}:</strong> {this.state.subscription.data.level}</p>
+                                            <p><strong>{i18n.t('subscriptionDetails.startDate')}:</strong> {String(new Date(this.state.subscription.data.startDate).toDateString())}</p>
+                                            <p><strong>{i18n.t('subscriptionDetails.endDate')}:</strong> {String(new Date(new Date(this.state.subscription.data.startDate).setMonth(new Date(this.state.subscription.data.startDate).getMonth() + this.state.subscription.data.lengthInMonths)).toDateString())}</p>
+                                            <p><strong>{i18n.t('subscriptionDetails.license')}:</strong> {license}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="bx--col">
-                                    <p><strong>{i18n.t('subscriptionDetails.level')}:</strong> {this.state.subscription.data.level}</p>
-                                    <p><strong>{i18n.t('subscriptionDetails.startDate')}:</strong> {String(new Date(this.state.subscription.data.startDate).toDateString())}</p>
-                                    <p><strong>{i18n.t('subscriptionDetails.endDate')}:</strong> {String(new Date(new Date(this.state.subscription.data.startDate).setMonth(new Date(this.state.subscription.data.startDate).getMonth() + this.state.subscription.data.lengthInMonths)).toDateString())}</p>
-                                    <p><strong>{i18n.t('subscriptionDetails.license')}:</strong> {license}</p>
-                                </div>
+                                {hasKeycloakClientRole('ROLE_ADMIN') ? 
+                                    <EditSubscriptionModal project={this.state.project.data} subscription={this.state.subscription.data} serviceUrl={this.props.serviceUrl} updateSubscription={this.updateSubscription}/>
+                                : null}
+                            </Tile>
+                            <br/>
+                            <TicketList projectId={this.state.project.data.id} serviceUrl={this.props.serviceUrl} />
                             </div>
                         </div>
-                        {hasKeycloakClientRole('ROLE_ADMIN') ? 
-                            <EditSubscriptionModal project={this.state.project.data} subscription={this.state.subscription.data} serviceUrl={this.props.serviceUrl} updateSubscription={this.updateSubscription}/>
-                        : null}
-                    </Tile>
-                    <br/>
-                    <TicketList projectId={this.state.project.data.id} serviceUrl={this.props.serviceUrl} />
-                    </div>
-                </div>
-            )
+                    )
+                }
+                else {
+                    return(<p>Not authorized to view this</p>)
+                }
+            }
+            else {
+                return(<p>Unauthorized</p>)
+            }
         }
         else {
-            return(<p>No Data</p>)
+            return(null)
         }
     }
 }

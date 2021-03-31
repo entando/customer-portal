@@ -160,7 +160,7 @@ class EditProjectModal extends Component {
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.startDate') + " *"}
                                 value={this.state.startDate}
-                                onChange={ this.handleChanges}
+                                onChange={this.handleChanges}
                                 type="text"
                                 invalidText={i18n.t('validation.invalid.date')} 
                                 invalid={this.state.invalid['startDate']} 
@@ -172,7 +172,7 @@ class EditProjectModal extends Component {
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.endDate') + " *"}
                                 value={this.state.endDate}
-                                onChange={ this.handleChanges}
+                                onChange={this.handleChanges}
                                 type="text"
                                 invalidText={i18n.t('validation.invalid.date')} 
                                 invalid={this.state.invalid['endDate']} 

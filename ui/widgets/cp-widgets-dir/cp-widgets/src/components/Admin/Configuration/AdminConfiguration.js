@@ -83,7 +83,7 @@ render() {
     }
     // Unauthorized
     else {
-      return(<p>Unathorized</p>)
+      return(<p>Unauthorized</p>)
     }
   }
   // Loading

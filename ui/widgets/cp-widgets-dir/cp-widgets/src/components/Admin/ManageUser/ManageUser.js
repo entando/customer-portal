@@ -81,7 +81,7 @@ class ManageUser extends Component {
       }
       // Unauthorized
       else {
-        return(<p>Unathorized</p>)
+        return(<p>Unauthorized</p>)
       }
     }
     // Loading
