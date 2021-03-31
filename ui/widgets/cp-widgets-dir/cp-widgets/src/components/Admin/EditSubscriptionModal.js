@@ -35,7 +35,8 @@ class EditSubscriptionModal extends Component {
             invalid['status'] = true;
         }
 
-        if (this.state.lengthInMonths === '' || !this.isNumeric(this.state.lengthInMonths)) {
+        console.log(this.state.lengthInMonths)
+        if (this.state.lengthInMonths === '' || !this.isNumeric(String(this.state.lengthInMonths))) {
             formIsValid = false;
             invalid['lengthInMonths'] = true;
         }
@@ -102,22 +103,6 @@ class EditSubscriptionModal extends Component {
         if (authenticated) { 
             this.getSubscriptionDetails();
 
-            const modalOpenButton = document.querySelector('.edit-sub-button');
-            modalOpenButton.addEventListener("click", this.clearValues, false);
-        }
-    }
-
-    clearValues = () => {
-        const customerModalElement = document.querySelector('#modal-form-sub-edit');
-        if(!customerModalElement.className.includes("is-visible")) {
-            this.setState({
-                level: this.props.subscription.level,
-                status: this.props.subscription.status,
-                lengthInMonths: this.props.subscription.lengthInMonths,
-                startDate: moment(this.props.subscription.startDate).calendar(),
-                notes: this.props.subscription.notes,
-                invalid: {}
-            })
         }
     }
 
@@ -130,7 +115,7 @@ class EditSubscriptionModal extends Component {
                 level: subscription.data.level,
                 status: subscription.data.status,
                 lengthInMonths: subscription.data.lengthInMonths,
-                startDate: moment(subscription.data.startDate).calendar(),
+                startDate: moment(this.props.subscription.startDate).calendar(),
                 notes: subscription.data.notes,
                 submitMsg: ''
             })
@@ -148,6 +133,7 @@ class EditSubscriptionModal extends Component {
     render() {
         const levelList = ['GOLD', 'PLATINUM'];
         const statusList = ['REQUESTED', 'PENDING', 'ACTIVE', 'EXPIRED'];
+        console.log(this.state.startDate)
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}
@@ -199,7 +185,7 @@ class EditSubscriptionModal extends Component {
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.startDate') + " *"}
                                 value={this.state.startDate}
-                                onChange={ this.handleChanges}
+                                onChange={this.handleChanges}
                                 type="text"
                                 invalidText={i18n.t('validation.invalid.date')} 
                                 invalid={this.state.invalid['startDate']} 

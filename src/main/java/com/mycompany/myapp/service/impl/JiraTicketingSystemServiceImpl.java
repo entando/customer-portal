@@ -323,7 +323,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             String jsonInputString;
             String signedInUser = getJiraAccountIdOfSignedInUser(baseUrl, serviceAccount, serviceAccountSecret);
 
-            if (signedInUser == null || signedInUser == "") {
+            if (signedInUser == null || signedInUser.equals("")) {
                 jsonInputString = "{\n" +
                     "    \"fields\": {\n" +
                     "       \"project\":\n" +
@@ -503,7 +503,14 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
     public String getJiraAccountIdOfSignedInUser(String baseUrl, String serviceAccount, String serviceAccountSecret) {
         String user = serviceAccount;
         String password = serviceAccountSecret;
-        String signedInUser = getCurrentUserEmail().get();
+        String signedInUser;
+
+        if (getCurrentUserEmail().isPresent()) {
+            signedInUser = getCurrentUserEmail().get();
+        }
+        else {
+            return null;
+        }
 
         try {
             URL url = new URL(baseUrl + "user/search?query=" + signedInUser);
@@ -548,7 +555,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                     UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
                     return springSecurityUser.getUsername();
                 } else if (authentication instanceof JwtAuthenticationToken) {
-                    return (String) ((JwtAuthenticationToken)authentication).getToken().getClaims().get("email");
+                    return (String) ((JwtAuthenticationToken) authentication).getToken().getClaims().get("email");
                 } else if (authentication.getPrincipal() instanceof DefaultOidcUser) {
                     Map<String, Object> attributes = ((DefaultOidcUser) authentication.getPrincipal()).getAttributes();
                     if (attributes.containsKey("email")) {
@@ -559,6 +566,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                 }
                 return null;
             });
+
     }
 
 }
