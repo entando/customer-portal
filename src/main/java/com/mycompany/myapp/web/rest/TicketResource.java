@@ -150,7 +150,7 @@ public class TicketResource {
      * @param systemId the systemId of the ticket to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
      */
-    @GetMapping("/tickets/ticketingsystem/{systemId}")
+    //@GetMapping("/tickets/ticketingsystem/{systemId}")
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
         "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public List<Ticket> fetchJiraTicketsByProject(@PathVariable String systemId) throws URISyntaxException {
@@ -203,7 +203,8 @@ public class TicketResource {
 
         // fetch tickets from Jira and store in a JSONArray
         TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(jiraProjectCode);
-        if (ts == null) {
+
+        if (ts == null || organizationNumber.trim().isEmpty()) {
             return null;
         }
 
