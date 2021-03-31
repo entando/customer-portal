@@ -35,7 +35,6 @@ class EditSubscriptionModal extends Component {
             invalid['status'] = true;
         }
 
-        console.log(this.state.lengthInMonths)
         if (this.state.lengthInMonths === '' || !this.isNumeric(String(this.state.lengthInMonths))) {
             formIsValid = false;
             invalid['lengthInMonths'] = true;
@@ -106,6 +105,12 @@ class EditSubscriptionModal extends Component {
         }
     }
 
+    handleStartDateChange = (date) => {
+        this.setState({
+            startDate: moment(date[0].toISOString()).format('MM/DD/YYYY')
+        })
+    }
+
     async getSubscriptionDetails() {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
@@ -133,7 +138,6 @@ class EditSubscriptionModal extends Component {
     render() {
         const levelList = ['GOLD', 'PLATINUM'];
         const statusList = ['REQUESTED', 'PENDING', 'ACTIVE', 'EXPIRED'];
-        console.log(this.state.startDate)
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}
@@ -179,13 +183,13 @@ class EditSubscriptionModal extends Component {
                                 </SelectItem>
                             ))}
                         </Select>
-                        <DatePicker dateFormat="m/d/Y" datePickerType="simple">
+                        <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
                             <DatePickerInput
                                 name="startDate"
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.startDate') + " *"}
                                 value={this.state.startDate}
-                                onChange={this.handleChanges}
+                                //onChange={this.handleChanges}
                                 type="text"
                                 invalidText={i18n.t('validation.invalid.date')} 
                                 invalid={this.state.invalid['startDate']} 

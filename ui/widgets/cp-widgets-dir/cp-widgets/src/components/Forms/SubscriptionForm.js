@@ -7,6 +7,7 @@ import { apiProjectSubscriptionPost, apiRenewSubscription } from '../../api/subs
 import { apiProductVersionsGet } from '../../api/productVersion';
 import { hasKeycloakClientRole } from '../../api/helpers';
 import { apiAddSubscriptionToProject } from '../../api/projects';
+import moment from 'moment';
 
 const subscriptionLevel = {
     GOLD: 'Gold',
@@ -144,6 +145,14 @@ class SubscriptionForm extends Component {
             submitSuccess: false,
             submitError: false
         });
+    }
+
+    handleStartDateChange = (date) => {
+        if (date !== "") {
+            this.setState({
+                startDate: moment(date[0].toISOString()).format('MM/DD/YYYY')
+            })
+        }
     }
 
     handleFormSubmit = (event) => {
@@ -294,14 +303,14 @@ class SubscriptionForm extends Component {
                             </Select>
                         </div>
                         <div className="bx--col">
-                            <DatePicker dateFormat="m/d/Y" datePickerType="simple">
+                            <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
                                 <DatePickerInput
                                     id="startDate"
                                     name="startDate"
                                     placeholder="mm/dd/yyyy"
                                     labelText={i18n.t('subscriptionForm.desiredSubscriptionStartDate')}
                                     value={this.state.startDate}
-                                    onChange={this.handleChanges}
+                                    //onChange={this.handleChanges}
                                     type="text"
                                     invalidText={i18n.t('validation.invalid.date')}
                                     invalid={this.state.invalid['startDate']}
@@ -361,14 +370,14 @@ class SubscriptionForm extends Component {
                             </Select>
                         </div>
                         <div className="bx--col">
-                            <DatePicker dateFormat="m/d/Y" datePickerType="simple">
+                            <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
                                 <DatePickerInput
                                     id="startDate"
                                     name="startDate"
                                     placeholder="mm/dd/yyyy"
                                     labelText={i18n.t('subscriptionForm.desiredSubscriptionStartDate')}
                                     value={this.state.startDate}
-                                    onChange={this.handleChanges}
+                                    //onChange={this.handleChanges}
                                     type="text"
                                     invalidText={i18n.t('validation.invalid.date')}
                                     invalid={this.state.invalid['startDate']}

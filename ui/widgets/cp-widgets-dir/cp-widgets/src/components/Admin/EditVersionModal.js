@@ -62,12 +62,24 @@ class EditProjectModal extends Component {
         }
       }
 
-    handleChanges = e => {
+    handleChanges = (e) => {
         const input = e.target;
         const name = input.name;
         const value = input.value;
         this.setState({ [name]: value });
     };
+
+    handleStartDateChange = (date) => {
+        this.setState({
+            startDate: moment(date[0].toISOString()).format('MM/DD/YYYY')
+        })
+    }
+
+    handleEndDateChange = (date) => {
+        this.setState({
+            endDate: moment(date[0].toISOString()).format('MM/DD/YYYY')
+        })
+    }
 
 
     async getVersionDetails() {
@@ -77,8 +89,8 @@ class EditProjectModal extends Component {
             const version = await apiProductVersionGet(this.props.serviceUrl, this.props.version.id);
             this.setState({
                 name: version.data.name,
-                startDate: moment(version.data.startDate).calendar(),
-                endDate: moment(version.data.endDate).calendar(),
+                startDate: moment(version.data.startDate).format('MM/DD/YYYY'),
+                endDate: moment(version.data.endDate).format('MM/DD/YYYY'),
                 modalId: "modal-form-version-edit-" + version.data.id,
                 buttonId: "edit-version-button-" + version.data.id
             })
@@ -154,19 +166,19 @@ class EditProjectModal extends Component {
                             invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["name"]} 
                         />
-                        <DatePicker dateFormat="m/d/Y" datePickerType="simple">
+                        <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
                             <DatePickerInput
                                 name="startDate"
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.startDate') + " *"}
                                 value={this.state.startDate}
-                                onChange={this.handleChanges}
+                                //onChange={this.handleChanges}
                                 type="text"
                                 invalidText={i18n.t('validation.invalid.date')} 
                                 invalid={this.state.invalid['startDate']} 
                             />
                         </DatePicker>
-                        <DatePicker dateFormat="m/d/Y" datePickerType="simple">
+                        <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleEndDateChange} name="endDate">
                             <DatePickerInput
                                 name="endDate"
                                 placeholder="mm/dd/yyyy"
