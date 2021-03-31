@@ -3,7 +3,7 @@ import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
-import { apiProjectPut, apiProjectsGet } from '../../api/projects';
+import { apiProjectGet, apiProjectPut, apiProjectsGet } from '../../api/projects';
 
 class EditProjectModal extends Component {
     constructor(props) {
@@ -68,6 +68,7 @@ class EditProjectModal extends Component {
         if (authenticated && changedAuth) {
           this.getCustomers();
           this.getAllProjects();
+          this.getProjectDetails();
         }
       }
 
@@ -84,6 +85,25 @@ class EditProjectModal extends Component {
         if (authenticated) {
             const customers = await apiCustomersGet(this.props.serviceUrl);
             this.setState({customerList: customers})
+        }
+    }
+
+    async getProjectDetails() {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const project = await apiProjectGet(this.props.serviceUrl, this.props.project.id);
+            this.setState({
+                name: project.data.name,
+                description: project.data.description,
+                systemId: project.data.systemId,
+                contactName: project.data.contactName,
+                contactPhone: project.data.contactPhone,
+                contactEmail:project.data.contactEmail,
+                notes:project.data.notes,
+                modalId: "modal-form-project-edit-" + project.data.id,
+                buttonId: "edit-project-button-" + project.data.id
+            })
         }
     }
 
@@ -165,17 +185,7 @@ class EditProjectModal extends Component {
         if (authenticated) {
             this.getCustomers();
             this.getAllProjects();
-            this.setState({
-                name: this.props.project.name,
-                description: this.props.project.description,
-                systemId: this.props.project.systemId,
-                contactName: this.props.project.contactName,
-                contactPhone: this.props.project.contactPhone,
-                contactEmail:this.props.project.contactEmail,
-                notes:this.props.project.notes,
-                modalId: "modal-form-project-edit-" + this.props.project.id,
-                buttonId: "edit-project-button-" + this.props.project.id
-            })
+            this.getProjectDetails();
 
             const modalOpenButton = document.querySelector('.edit-project-button-' + this.props.project.id);
             modalOpenButton.addEventListener("click", this.clearValues, false);
@@ -202,7 +212,7 @@ class EditProjectModal extends Component {
                         <TextInput 
                             name="name" 
                             labelText={i18n.t('adminDashboard.addProject.projectName') + " *"} 
-                            defaultValue={this.state.name} 
+                            value={this.state.name} 
                             onChange={this.handleChanges} 
                             invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["name"]} 
@@ -210,7 +220,7 @@ class EditProjectModal extends Component {
                         <TextInput 
                             name="description" 
                             labelText={i18n.t('adminDashboard.addProject.projectDesc') + " *"} 
-                            defaultValue={this.state.description} 
+                            value={this.state.description} 
                             onChange={this.handleChanges} 
                             invalidText={i18n.t('validation.invalid.required')} 
                             invalid={this.state.invalid["description"]} 
@@ -218,25 +228,25 @@ class EditProjectModal extends Component {
                         <TextInput 
                             name="systemId" 
                             labelText={i18n.t('adminDashboard.addProject.systemId')} 
-                            defaultValue={this.state.systemId}
+                            value={this.state.systemId}
                             onChange={this.handleChanges} 
                         />
                         <TextInput 
                             name="contactName" 
                             labelText={i18n.t('adminDashboard.addProject.contactName')} 
-                            defaultValue={this.state.contactName} 
+                            value={this.state.contactName} 
                             onChange={this.handleChanges} 
                         />
                         <TextInput 
                             name="contactPhone" 
                             labelText={i18n.t('adminDashboard.addProject.contactPhone')} 
-                            defaultValue={this.state.contactPhone} 
+                            value={this.state.contactPhone} 
                             onChange={this.handleChanges} 
                         />
                         <TextInput 
                             name="contactEmail" 
                             labelText={i18n.t('adminDashboard.addProject.contactEmail') + " *"} 
-                            defaultValue={this.state.contactEmail} 
+                            value={this.state.contactEmail} 
                             onChange={this.handleChanges} 
                             invalidText={i18n.t('validation.invalid.email')} 
                             invalid={this.state.invalid["contactEmail"]} 
@@ -244,7 +254,7 @@ class EditProjectModal extends Component {
                         <TextArea 
                             name="notes" 
                             labelText={i18n.t('adminDashboard.addProject.notes')} 
-                            defaultValue={this.state.notes} 
+                            value={this.state.notes} 
                             onChange={this.handleChanges} 
                         />
                     </Form>

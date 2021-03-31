@@ -11,6 +11,7 @@ export const apiSubscriptionGet = async (serviceUrl, id) => {
     return request(url, options);
 };
 
+
 export const apiSubscriptionGetAll = async (serviceUrl) => {
     const url = `${serviceUrl}/${resource}`;
     const options = {
