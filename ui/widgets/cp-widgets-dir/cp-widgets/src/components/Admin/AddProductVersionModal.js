@@ -3,6 +3,7 @@ import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, DatePicker, DatePickerInput } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProductVersionPost } from '../../api/productVersion';
+import moment from 'moment';
 
 class AddProductVersionModal extends Component {
   constructor(props) {
@@ -89,6 +90,18 @@ class AddProductVersionModal extends Component {
     }
   }
 
+  handleStartDateChange = (date) => {
+    this.setState({
+        startDate: moment(date[0].toISOString()).format('MM/DD/YYYY')
+    })
+  }
+
+  handleEndDateChange = (date) => {
+    this.setState({
+        endDate: moment(date[0].toISOString()).format('MM/DD/YYYY')
+    })
+  }
+
   componentDidMount() {
     const modalOpenButton = document.querySelector('.add-product-version-button');
     modalOpenButton.addEventListener("click", this.clearValues, false);
@@ -116,25 +129,25 @@ class AddProductVersionModal extends Component {
               invalidText={i18n.t('validation.invalid.required')}
               invalid={this.state.invalid['name']}
             />
-            <DatePicker dateFormat="m/d/Y" datePickerType="simple">
+            <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
               <DatePickerInput
                 name="startDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('adminDashboard.addProductVersion.productVersionStartDate')}
                 value={this.state.startDate}
-                onChange={this.handleChanges}
+                //onChange={this.handleChanges}
                 type="text"
                 invalidText={i18n.t('validation.invalid.date')}
                 invalid={this.state.invalid['startDate']}
               />
             </DatePicker>
-            <DatePicker dateFormat="m/d/Y" datePickerType="simple">
+            <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleEndDateChange}>
               <DatePickerInput
                 name="endDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('adminDashboard.addProductVersion.productVersionEndDate')}
                 value={this.state.endDate}
-                onChange={this.handleChanges}
+                //onChange={this.handleChanges}
                 type="text"
                 invalidText={i18n.t('validation.invalid.date')}
                 invalid={this.state.invalid['endDate']}
