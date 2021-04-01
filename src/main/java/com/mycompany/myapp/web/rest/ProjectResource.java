@@ -284,7 +284,8 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects/{projectId}/subscriptions/{subscriptionId}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
+        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Project> addSubscriptionToProject(@PathVariable Long projectId, @PathVariable Long subscriptionId) throws URISyntaxException {
         log.debug("REST request to add Ticket to Project : {}", projectId);
         Project result = projectService.addSubscriptionToProject(projectId, subscriptionId);
@@ -305,8 +306,8 @@ public class ProjectResource {
     @GetMapping("/projects/{projectId}/subscriptions")
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
         "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
-    public ResponseEntity<Set<ProjectSubscription>> getProjectSubscriptions(@PathVariable Long projectId) {
-        Set<ProjectSubscription> subscriptions = projectService.getProjectSubscriptions(projectId);
+    public ResponseEntity<List<ProjectSubscription>> getProjectSubscriptions(@PathVariable Long projectId) {
+        List<ProjectSubscription> subscriptions = projectService.getProjectSubscriptions(projectId);
         return ResponseEntity.ok().headers(
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, projectId.toString()))
             .body(subscriptions);

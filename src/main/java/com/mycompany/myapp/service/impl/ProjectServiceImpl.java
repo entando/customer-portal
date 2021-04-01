@@ -144,7 +144,7 @@ public class ProjectServiceImpl implements ProjectService {
      * @return the entity.
      */
     @Override
-    public Set<ProjectSubscription> getProjectSubscriptions(Long id) {
+    public List<ProjectSubscription> getProjectSubscriptions(Long id) {
         return projectRepository.findById(id).get().getProjectSubscriptions();
     }
 

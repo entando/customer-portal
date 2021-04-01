@@ -274,7 +274,8 @@
     "updated": "Successfully updated",
     "added": "Successfully added",
     "deleted": "Successfully deleted",
-    "error": "An error occurred"
+    "error": "An error occurred",
+    "ticketError": "An error occurred. Make sure this project has a corresponding organization in Jira."
   }
 }
 

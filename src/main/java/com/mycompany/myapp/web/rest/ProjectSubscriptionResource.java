@@ -4,9 +4,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 
-import javax.mail.MessagingException;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -117,21 +120,64 @@ public class ProjectSubscriptionResource {
         boolean hasUserRole = authentication.getAuthorities().stream()
                   .anyMatch(r -> r.getAuthority().equals(AuthoritiesConstants.CUSTOMER));
 
+        /*
         if (hasUserRole) {
-            String from = ""; // email required
-            String to = ""; // email required
+            String from = "jordengerovac@gmail.com"; // email required
+            String to = "jordengerovac@gmail.com"; // email required
+            String password = "74ylOr96$j7";
 
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message);
 
-            helper.setSubject("Subscription Notification");
-            helper.setFrom(from);
-            helper.setTo(to);
+            //JavaMailSenderImpl sender = new JavaMailSenderImpl();
+
+            //sender.setUsername("jordengerovac@gmail.com");
+            //sender.setPassword("74ylOr96$j7");
+            //sender.setHost("smtp.gmail.com");
+            //sender.setPort(587);
+
+
+            Properties props = new Properties();
+            props.put("mail.transport.protocol", "smtp");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.debug", "true");
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+            Session session = Session.getInstance(props,
+            new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(from, password);
+                }
+            });
+
+            try {
+
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(from));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+                message.setSubject("Subscription Notification");
+                message.setText("<b>Hi</b>,<br><i>This is a notification for new subscription.</i>");
+
+                Transport.send(message);
+
+                System.out.println("Done");
+
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+
+            //
+            //MimeMessage message = sender.createMimeMessage();
+            //MimeMessageHelper helper = new MimeMessageHelper(message);
+            //helper.setSubject("Subscription Notification");
+            //helper.setFrom(from);
+            //helper.setTo(to);
 
             // put HTML
-            helper.setText("<b>Hi</b>,<br><i>This is a notification for new subscription.</i>", true);
-            javaMailSender.send(message);
+            //helper.setText("<b>Hi</b>,<br><i>This is a notification for new subscription.</i>", true);
+            //sender.send(message);
+            //
         }
+        */
 
         return ResponseEntity.created(new URI("/api/project-subscriptions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))

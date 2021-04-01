@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
+import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, PaginationNav } from 'carbon-components-react';
 import { apiJiraTicketsGet } from '../../api/tickets';
 import { apiTicketingSystemsGet } from '../../api/ticketingsystem';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
@@ -12,7 +12,8 @@ class TicketList extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      tickets: {}
+      tickets: {},
+      currentPage: 0
      }
      this.headerData = [
       {
@@ -99,6 +100,19 @@ componentDidUpdate(prevProps) {
 }
 
   render() {
+    var numberOfPages = 1;
+    if (Object.keys(this.state.tickets).length !== 0) {
+        numberOfPages = Math.ceil(this.state.tickets.data.length / 10);
+    }
+
+    const paginationProps = () => ({
+      loop: Boolean(false),
+      page: Number(this.state.currentPage),
+      totalItems: Number(numberOfPages),
+      itemsShown: Number(1),
+      onChange: (event) => this.setState({currentPage: event}),
+    });
+
     return ( 
       <div>
         <DataTable rows={rowData} headers={this.headerData}>
@@ -115,25 +129,34 @@ componentDidUpdate(prevProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {Object.keys(this.state.tickets).length !== 0 ? this.state.tickets.data.map((ticket) => {
-                  return (
-                    <TableRow key={ticket.id}>
-                      <TableCell key={ticket.id}>{ticket.systemId}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.description}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.status}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.type}</TableCell>
-                      <TableCell key={ticket.id}>{ticket.priority}</TableCell>
-                      <TableCell key={ticket.id}>{new Date(ticket.createDate).toDateString()}</TableCell>
-                      <TableCell key={ticket.id}>{new Date(ticket.updateDate).toDateString()}</TableCell>
-                      <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">{i18n.t('ticketDetails.viewTicket')}</a></TableCell>
-                    </TableRow>
-                  )
+                {Object.keys(this.state.tickets).length !== 0 ? this.state.tickets.data.map((ticket, index) => {
+                  var indexOfLastItem = ((this.state.currentPage + 1) * 10) - 1;
+                  var firstIndexOfCurrentPage = this.state.currentPage * 10;
+
+                  if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
+                    return (
+                      <TableRow key={ticket.id}>
+                        <TableCell key={ticket.id}>{ticket.systemId}</TableCell>
+                        <TableCell key={ticket.id}>{ticket.description}</TableCell>
+                        <TableCell key={ticket.id}>{ticket.status}</TableCell>
+                        <TableCell key={ticket.id}>{ticket.type}</TableCell>
+                        <TableCell key={ticket.id}>{ticket.priority}</TableCell>
+                        <TableCell key={ticket.id}>{new Date(ticket.createDate).toDateString()}</TableCell>
+                        <TableCell key={ticket.id}>{new Date(ticket.updateDate).toDateString()}</TableCell>
+                        <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">{i18n.t('ticketDetails.viewTicket')}</a></TableCell>
+                      </TableRow>
+                    )
+                  }
+                  else {
+                    return(null)
+                  }
                 }) : <p></p> }
               </TableBody>
             </Table>
           </TableContainer>
         )}
       </DataTable>
+      <PaginationNav {...paginationProps()} cssClass='pagination-right' />
     </div>
   )}
 }
