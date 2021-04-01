@@ -162,9 +162,7 @@ class AddProjectModal extends Component {
         contactPhone: '',
         contactEmail: '',
         notes: '',
-        invalid: {},
-        submitMsg: '',
-        submitColour: 'black'
+        invalid: {}
       })
     }
   }
@@ -205,8 +203,8 @@ class AddProjectModal extends Component {
               invalid={this.state.invalid['customerId']}
             >
               <SelectItem text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list" />
-              {Object.keys(this.state.customerList).length !== 0
-                ? this.state.customerList.data.map((customerList, i) => (
+              {Object.keys(this.props.allCustomers).length !== 0
+                ? this.props.allCustomers.map((customerList, i) => (
                     <SelectItem key={i} text={customerList.name} value={customerList.id}>
                       {customerList.name}
                     </SelectItem>
