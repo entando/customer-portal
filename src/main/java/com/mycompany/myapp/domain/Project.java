@@ -9,7 +9,9 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,7 +55,7 @@ public class Project implements Serializable {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<ProjectSubscription> projectSubscriptions = new HashSet<>();
+    private List<ProjectSubscription> projectSubscriptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -171,11 +173,11 @@ public class Project implements Serializable {
         this.notes = notes;
     }
 
-    public Set<ProjectSubscription> getProjectSubscriptions() {
+    public List<ProjectSubscription> getProjectSubscriptions() {
         return projectSubscriptions;
     }
 
-    public Project projectSubscriptions(Set<ProjectSubscription> projectSubscriptions) {
+    public Project projectSubscriptions(List<ProjectSubscription> projectSubscriptions) {
         this.projectSubscriptions = projectSubscriptions;
         return this;
     }
@@ -192,7 +194,7 @@ public class Project implements Serializable {
         return this;
     }
 
-    public void setProjectSubscriptions(Set<ProjectSubscription> projectSubscriptions) {
+    public void setProjectSubscriptions(List<ProjectSubscription> projectSubscriptions) {
         this.projectSubscriptions = projectSubscriptions;
     }
 

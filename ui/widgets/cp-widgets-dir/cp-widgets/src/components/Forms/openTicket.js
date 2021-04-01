@@ -34,7 +34,7 @@ class OpenTicket extends Component {
         let invalid = {};
         let formIsValid = true;
 
-        if(this.state.project.systemId === undefined || this.state.project.systemId === 'Select'){
+        if(this.state.project.systemId === undefined || this.state.project.systemId === 'project-list'){
           formIsValid = false;
           invalid['project'] = true;
         }
@@ -63,7 +63,7 @@ class OpenTicket extends Component {
         const name = input.name;
         const value = input.value;
 
-        if (name === "project" && value != '') {
+        if (name === "project" && value != '' && value != 'project-list') {
             this.setState({
                 project: JSON.parse(value),
             })
@@ -90,7 +90,7 @@ class OpenTicket extends Component {
                         })
                     }).catch(err => {
                         this.setState({
-                            submitMsg: i18n.t('submitMessages.error'),
+                            submitMsg: i18n.t('submitMessages.ticketError'),
                             submitColour: '#da1e28'
                         })
                     });
@@ -220,13 +220,15 @@ class OpenTicket extends Component {
                                     <div className="bx--row">
                                         <div className="bx--col">
                                             <Select 
-                                                name="project" 
+                                                name="project"
+                                                defaultValue={{ label: "Select Proj", value: 0 }}
                                                 labelText={i18n.t('supportTicketForm.selectProject') + " *"} 
                                                 value={JSON.stringify(this.state.project)} 
                                                 onChange={this.handleChanges}
                                                 invalidText={i18n.t('validation.invalid.required')}
                                                 invalid={this.state.invalid['project']} 
                                             >
+                                                <SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />
                                                 {Object.keys(this.state.projects).length !== 0 ? this.state.projects.map((project, i) => {
                                                         return (
                                                             <SelectItem key={i} text={project.name} value={JSON.stringify(project)}>{project.name}</SelectItem>

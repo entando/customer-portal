@@ -236,6 +236,7 @@
 		"updated": "Aggiornato con successo",
 		"added": "Aggiunto con successo",
 		"deleted": "Cancellato con successo",
-		"error": "Si è verificato un errore"
+		"error": "Si è verificato un errore",
+		"ticketError": "Si è verificato un errore. Assicurarsi che questo progetto abbia un'organizzazione corrispondente a Jira."
 	  }
 }
