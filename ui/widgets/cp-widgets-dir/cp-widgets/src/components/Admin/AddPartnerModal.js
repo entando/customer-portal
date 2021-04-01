@@ -113,7 +113,9 @@ class AddPartnerModal extends Component {
         name: '',
         partnerNumber: '',
         notes: '',
-        invalid: {}
+        invalid: {},
+        submitMsg: '',
+        submitColour: 'black'
       })
     }
   }

@@ -162,7 +162,9 @@ class AddProjectModal extends Component {
         contactPhone: '',
         contactEmail: '',
         notes: '',
-        invalid: {}
+        invalid: {},
+        submitMsg: '',
+        submitColour: 'black'
       })
     }
   }
