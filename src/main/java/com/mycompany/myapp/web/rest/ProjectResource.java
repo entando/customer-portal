@@ -87,6 +87,13 @@ public class ProjectResource {
     public ResponseEntity<Project> createProject(@Valid @RequestBody Project project) throws URISyntaxException {
         log.debug("REST request to save Project : {}", project);
 
+        List<Project> projects = projectService.findAll();
+        for (Project p : projects) {
+            if (p.getSystemId().equals(project.getSystemId())) {
+                throw new BadRequestAlertException("A new project must have a unique system id", ENTITY_NAME, "systemidexists");
+            }
+        }
+
         if (project.getId() != null) {
             throw new BadRequestAlertException("A new project cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -112,6 +119,15 @@ public class ProjectResource {
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
     public ResponseEntity<Project> updateProject(@Valid @RequestBody Project project) throws URISyntaxException {
         log.debug("REST request to update Project : {}", project);
+
+
+        List<Project> projects = projectService.findAll();
+        for (Project p : projects) {
+            if (p.getSystemId().equals(project.getSystemId())) {
+                throw new BadRequestAlertException("A new project must have a unique system id", ENTITY_NAME, "systemidexists");
+            }
+        }
+
         if (project.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
