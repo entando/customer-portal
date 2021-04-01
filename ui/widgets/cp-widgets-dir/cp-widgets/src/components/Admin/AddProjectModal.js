@@ -129,7 +129,7 @@ class AddProjectModal extends Component {
         notes: this.state.notes
       };
       for (var i = 0; i < this.state.projects.length; i++) {
-        if (project.systemId === this.state.projects[i].systemId) {
+        if (project.systemId === this.state.projects[i].systemId && project.systemId.trim() !== "") {
           window.alert('That system id is already in use in another project');
           return;
         }
@@ -140,6 +140,7 @@ class AddProjectModal extends Component {
             submitColour: '#24a148'
         })
         this.props.updateCustomerList();
+        this.getAllProjects();
       }).catch(err => {
           this.setState({
               submitMsg: i18n.t('submitMessages.error'),
