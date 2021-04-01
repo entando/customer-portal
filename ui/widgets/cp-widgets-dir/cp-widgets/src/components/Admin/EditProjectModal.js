@@ -139,7 +139,7 @@ class EditProjectModal extends Component {
                 notes: this.state.notes
             }
             for (var i = 0; i < this.state.projects.length; i++) {
-                if((project.systemId === this.state.projects[i].systemId) && (project.id !== this.state.projects[i].id)) {
+                if((project.systemId === this.state.projects[i].systemId) && (project.id !== this.state.projects[i].id) && (project.systemId.trim() !== "")) {
                     window.alert('That system id is already in use in another project');
                     return;
                 }
