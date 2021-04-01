@@ -1,21 +1,21 @@
 import React from 'react';
 import i18n from '../../i18n';
-import { Accordion, AccordionItem, PaginationNav, Search, Tile, Pagination} from 'carbon-components-react';
+import { Accordion, PaginationNav, Search, Tile} from 'carbon-components-react';
 import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import AddProjectModal from './AddProjectModal'
 import withKeycloak from '../../auth/withKeycloak';
-import { apiAdminCustomersGet, apiCustomersGet, apiMyCustomersGet } from '../../api/customers';
+import { apiAdminCustomersGet, apiMyCustomersGet } from '../../api/customers';
 import CustomerAccordian from '../Customer/CustomerAccordian';
-import { number } from 'prop-types';
 import { hasKeycloakClientRole } from '../../api/helpers';
-import SubscriptionForm from '../Forms/SubscriptionForm';
-import ManageUser from '../Admin/ManageUser/ManageUser';
+import { apiProjectsGet } from '../../api/projects';
+
 class AdminDashboard extends React.Component {
     constructor() {
         super();
         this.state = {
             customers: {},
+            projects: {},
             customersProjects: {},
             role: '',
             filteredCustomers: {},
@@ -26,6 +26,7 @@ class AdminDashboard extends React.Component {
 
     componentDidMount(){
         this.getCustomers();
+        this.getProjects();
     }
 
     componentDidUpdate(prevProps) {
@@ -36,8 +37,21 @@ class AdminDashboard extends React.Component {
     
         if (authenticated && changedAuth) {
           this.getCustomers();
+          this.getProjects();
         }
       }
+
+    async getProjects() {
+        const { t, keycloak } = this.props;
+        const authenticated = keycloak.initialized && keycloak.authenticated;
+        if (authenticated) {
+            const projects = await apiProjectsGet(this.props.serviceUrl);
+
+            this.setState({
+                projects: projects.data,
+            })
+        }
+    }
 
 
     async getCustomers() {
@@ -79,6 +93,7 @@ class AdminDashboard extends React.Component {
 
     updateCustomerList = () => {
         this.getCustomers();
+        this.getProjects();
         this.render();
         this.forceUpdate();
     }
@@ -122,9 +137,9 @@ class AdminDashboard extends React.Component {
                         <div className="bx--col">
                             
                             <div>
-                                <AddPartnerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
+                                <AddPartnerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} allProjects={this.state.projects} />
                                 <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
-                                <AddProjectModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
+                                <AddProjectModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} allCustomers={this.state.customers} />
                             </div>
                         </div> : null}
                     </div>
