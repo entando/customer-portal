@@ -72,7 +72,12 @@ class CustomTable extends Component {
 }
 
 componentDidMount(){
-    this.fetchData();
+  const { keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
+
+    if (authenticated) {
+      this.fetchData();
+    }
 }
 
 updateProjectList = () => {
@@ -125,7 +130,7 @@ componentDidUpdate(prevProps) {
                           <TableCell>None</TableCell>
                           <TableCell>None</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
-                          <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
+                          <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
                       </TableRow>
                       )
                     }
@@ -146,7 +151,7 @@ componentDidUpdate(prevProps) {
                               <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
                               <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
-                              <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
+                              <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
                           </TableRow>
                         
                       )

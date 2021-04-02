@@ -123,7 +123,7 @@ public class ProjectResource {
 
         List<Project> projects = projectService.findAll();
         for (Project p : projects) {
-            if (p.getSystemId().equals(project.getSystemId()) && !project.getSystemId().trim().isEmpty()) {
+            if (p.getSystemId().equals(project.getSystemId()) && !project.getId().equals(p.getId()) && !project.getSystemId().trim().isEmpty()) {
                 throw new BadRequestAlertException("A new project must have a unique system id", ENTITY_NAME, "systemidexists");
             }
         }
