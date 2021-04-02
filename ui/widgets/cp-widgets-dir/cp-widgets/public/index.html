@@ -51,8 +51,10 @@
           //you are automatically redirected to keycloak login page to speed up development.
 
           const onLoad = window.location.hostname === 'localhost' ? 'login-required' : 'check-sso';
+          const silentCheckSsoRedirectUri = window.location.origin + '/silent-check-sso.html';
 
-          window.entando.keycloak.init({ onLoad }).success(onInit);
+          window.entando.keycloak.init({ onLoad, silentCheckSsoRedirectUri }).success(onInit);
+          
         }
         return initKeycloak;
       })();

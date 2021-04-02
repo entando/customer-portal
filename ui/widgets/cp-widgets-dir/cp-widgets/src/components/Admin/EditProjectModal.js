@@ -119,7 +119,6 @@ class EditProjectModal extends Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
             return await apiProjectPut(this.props.serviceUrl, project);
-            //await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id)
         }
     }
 
@@ -138,8 +137,8 @@ class EditProjectModal extends Component {
                 contactEmail: this.state.contactEmail,
                 notes: this.state.notes
             }
-            for (var i = 0; i < this.state.projects.length; i++) {
-                if((project.systemId === this.state.projects[i].systemId) && (project.id !== this.state.projects[i].id) && (project.systemId.trim() !== "")) {
+            for (var i = 0; i < this.props.allProjects.length; i++) {
+                if((project.systemId === this.props.allProjects[i].systemId) && (project.id !== this.props.allProjects[i].id) && (project.systemId.trim() !== "")) {
                     window.alert('That system id is already in use in another project');
                     return;
                 }
