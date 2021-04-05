@@ -17,7 +17,6 @@ import { apiProductVersionDelete, apiProductVersionsGet, apiUpdateProductVersion
 import withKeycloak from '../../../auth/withKeycloak';
 import AddProductVersionModal from '../AddProductVersionModal';
 import { hasKeycloakClientRole } from '../../../api/helpers';
-import DeleteModal from '../DeleteModal';
 import EditCustomerModal from '../EditCustomerModal';
 import EditVersionModal from '../EditVersionModal';
 

@@ -56,6 +56,7 @@ class CustomTable extends Component {
     const authenticated = keycloak.initialized && keycloak.authenticated;
     
     if (authenticated) {
+      try {
       var projects;
       if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
         projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
@@ -67,6 +68,9 @@ class CustomTable extends Component {
       this.setState({
           projects: projects
       });
+    } catch(error) {
+      console.log(error)
+    }
     }
     this.render();
 }
