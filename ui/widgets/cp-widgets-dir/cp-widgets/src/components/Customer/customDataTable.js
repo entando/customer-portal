@@ -100,7 +100,7 @@ componentDidUpdate(prevProps) {
       <div>
         <DataTable rows={rowData} headers={this.headerData}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
-          <TableContainer title={i18n.t('customerDashboard.subscriptions')} description={i18n.t('customerDashboard.tableDesc')}>
+          <TableContainer description={i18n.t('customerDashboard.tableDesc')}>
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
@@ -109,6 +109,7 @@ componentDidUpdate(prevProps) {
                       {header.header}
                     </TableHeader>
                   ))}
+                  {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <TableHeader>Notes</TableHeader> : null}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -131,29 +132,30 @@ componentDidUpdate(prevProps) {
                           <TableCell>None</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
                           <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
+                          {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '350px'}}>{project.notes}</TableCell> : null}
                       </TableRow>
                       )
                     }
                     else {
                       var sub = project.projectSubscriptions[project.projectSubscriptions.length - 1];
                       return(
-                          <TableRow key={index} >
-                              <TableCell><Link to={`/entando-de-app/${this.props.locale}/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
-                              {project.partners.length !== 0 ? 
-                                <TableCell>
-                                  {project.partners.map(partner => (
-                                    <p>{partner.name}</p>
-                                  ))}
-                                </TableCell> 
-                                : <TableCell>None</TableCell>}
-                              {sub.entandoVersion ? <TableCell>{sub.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
-                              <TableCell>{sub.status}</TableCell>
-                              <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
-                              <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>
-                              <TableCell>{project.tickets.length}</TableCell>
-                              <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
-                          </TableRow>
-                        
+                        <TableRow key={index} >
+                            <TableCell><Link to={`/entando-de-app/${this.props.locale}/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
+                            {project.partners.length !== 0 ? 
+                              <TableCell>
+                                {project.partners.map(partner => (
+                                  <p>{partner.name}</p>
+                                ))}
+                              </TableCell> 
+                              : <TableCell>None</TableCell>}
+                            {sub.entandoVersion ? <TableCell>{sub.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
+                            <TableCell>{sub.status}</TableCell>
+                            <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
+                            <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>
+                            <TableCell>{project.tickets.length}</TableCell>
+                            <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
+                            {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <TableCell>{project.notes}</TableCell> : null}
+                        </TableRow>
                       )
                     }
                   }) : null

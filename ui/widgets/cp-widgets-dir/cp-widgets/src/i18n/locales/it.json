@@ -15,7 +15,8 @@
 		"addCustomer": "Aggiungi un cliente +",
 		"addProject": "Aggiungi un progetto +",
 		"addPartner": "Aggiungi un partner +",
-		"addProductVersion": "Aggiungi la versione del prodotto +"
+		"addProductVersion": "Aggiungi la versione del prodotto +",
+    	"viewDetails": "Visualizza dettagli"
 	},
 	
   	"customerDashboard":{
@@ -107,6 +108,15 @@
 		"addticketDescription": "Aggiungi una descrizione del biglietto"
 	},
 
+	"customerDetails": {
+		"id": "Identificativo del cliente",
+		"name": "Nome del cliente",
+		"contactName": "Nome del contatto",
+		"contactPhone": "Contatto telefonico",
+    	"contactEmail": "Contatto email",
+    	"notes": "Appunti"
+	},
+
 	"subscriptionDetails": {
 		"description": "Descrizione",
 		"commitment": "Impegno",
@@ -117,7 +127,9 @@
 		"startDate": "Data d'inizio",
 		"endDate": "Data di fine",
 		"license": "Licenza",
-		"lengthInMonths": "Durata in mesi"
+		"lengthInMonths": "Durata in mesi",
+		"notes": "Appunti",
+		"assignedUsers": "Utenti assegnati"
 	},
 
 	"ticketDetails": {
