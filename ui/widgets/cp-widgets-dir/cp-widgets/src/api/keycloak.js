@@ -2,7 +2,7 @@ import { getDefaultOptions, getDefaultKeycloakOptions, request, getUrl } from '.
 
 const usersResourceProd = 'admin/realms/entando/users'
 //const usersResourceDev = 'admin/realms/jhipster/users'
-const tokenResourceProd = 'realms/entando/entando/openid-connect/token';
+const tokenResourceProd = 'realms/entando/protocol/openid-connect/token';
 //const tokenResourceDev = 'realms/jhipster/protocol/openid-connect/token';
 
 export const apiKeycloakUserGet = async (serviceUrl) => {
