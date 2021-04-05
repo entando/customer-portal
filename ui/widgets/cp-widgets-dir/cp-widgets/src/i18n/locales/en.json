@@ -15,7 +15,8 @@
 		"addCustomer": "Add a Customer +",
 		"addProject": "Add a Project +",
 		"addPartner": "Add a Partner +",
-		"addProductVersion": "Add product version +"
+		"addProductVersion": "Add product version +",
+    "viewDetails": "View Details"
 	},
 	
   	"customerDashboard":{
@@ -154,6 +155,15 @@
     "addenhancementDescription": "Add Enhancement Description"
   },
 
+  "customerDetails": {
+    "id": "Customer Id",
+		"name": "Customer Name",
+    "contactName": "Contact Name",
+    "contactPhone": "Contact Phone",
+    "contactEmail": "Contact Email",
+    "notes": "Notes"
+	},
+
   "subscriptionDetails": {
     "description": "Description",
     "commitment": "Commitment",
@@ -164,7 +174,9 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "license": "License",
-    "lengthInMonths": "Length In Months"
+    "lengthInMonths": "Length In Months",
+    "notes": "Notes",
+    "assignedUsers": "Assigned Users"
   },
 
   "subscriptionForm": {

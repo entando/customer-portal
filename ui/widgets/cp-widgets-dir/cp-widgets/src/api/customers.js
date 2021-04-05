@@ -2,7 +2,7 @@ import { getDefaultOptions, request, getUrl } from './helpers';
 
 const resource = 'api/customers';
 
-export const apiCustomersDelete = async (serviceUrl, id) => {
+export const apiCustomerDelete = async (serviceUrl, id) => {
   const url = `${serviceUrl}/${resource}/${id}`;
   const options = {
     ...getDefaultOptions(),
@@ -85,6 +85,16 @@ export const apiAddProjectToCustomer = async (serviceUrl, customerId, projectId)
 const adminResource = 'api/customers/admin';
 export const apiAdminCustomersGet = async (serviceUrl) => {
   const url = getUrl(`${serviceUrl}/${adminResource}`);
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET'
+  };
+
+  return request(url, options);
+};
+
+export const apiAdminCustomerGet = async (serviceUrl, customerId) => {
+  const url = getUrl(`${serviceUrl}/${adminResource}/${customerId}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET'

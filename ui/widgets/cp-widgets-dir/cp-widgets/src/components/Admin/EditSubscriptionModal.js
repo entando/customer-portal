@@ -120,7 +120,7 @@ class EditSubscriptionModal extends Component {
                 level: subscription.data.level,
                 status: subscription.data.status,
                 lengthInMonths: subscription.data.lengthInMonths,
-                startDate: moment(this.props.subscription.startDate).format('MM/DD/YYYY'),
+                startDate: moment(subscription.data.startDate).format('MM/DD/YYYY'),
                 notes: subscription.data.notes,
                 submitMsg: ''
             })

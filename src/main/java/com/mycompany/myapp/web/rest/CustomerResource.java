@@ -183,6 +183,20 @@ public class CustomerResource {
     }
 
     /**
+     * {@code GET  /customers/:id} : get the "id" customer.
+     *
+     * @param id the id of the customer to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the customer, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/customers/admin/{id}")
+    @PreAuthorize("hasAnyRole('" +  AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    public ResponseEntity<Customer> adminGetCustomer(@PathVariable Long id) {
+        log.debug("REST request to get Customer : {}", id);
+        Optional<Customer> customer = customerService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(customer);
+    }
+
+    /**
      * {@code DELETE  /customers/:id} : delete the "id" customer.
      *
      * @param id the id of the customer to delete.

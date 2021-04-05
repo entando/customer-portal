@@ -76,7 +76,7 @@ class SubscriptionForm extends Component {
 
     async fetchData() {
         var projects = ''
-        if (hasKeycloakClientRole('ROLE_ADMIN')) {
+        if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
             projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
         }
         else {

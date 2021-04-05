@@ -6,6 +6,8 @@ import withKeycloak from '../auth/withKeycloak';
 import { AuthenticatedView, UnauthenticatedView } from '../auth/KeycloakViews';
 import { apiKeycloakToken, apiKeycloakUserGet } from '../api/keycloak';
 import { hasKeycloakClientRole } from '../api/helpers';
+import customerDetails from './Customer/customerDetails';
+import CustomerProjectList from './Customer/CustomerProjectList';
 
 class App extends Component {
     constructor(props) {
@@ -50,6 +52,9 @@ class App extends Component {
                         <AuthenticatedView keycloak={keycloak}>
                             <HashRouter>
                                 <Switch>
+                                    <Route path={"**/customer-details/:id"} render={(props) => (
+                                        <CustomerProjectList {...props} serviceUrl={this.props.serviceUrl} locale={this.props.locale} />
+                                    )}/>
                                     <Route path={"**/subscription-details/:id"} render={(props) => (
                                         <Subscription {...props} serviceUrl={this.props.serviceUrl} locale={this.props.locale} />
                                     )}/>

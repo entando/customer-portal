@@ -8,7 +8,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiAdminCustomersGet, apiMyCustomersGet } from '../../api/customers';
 import CustomerAccordian from '../Customer/CustomerAccordian';
 import { hasKeycloakClientRole } from '../../api/helpers';
-import { apiProjectsGet } from '../../api/projects';
+import { apiProjectsGet, apiMyProjectsGet } from '../../api/projects';
 
 class AdminDashboard extends React.Component {
     constructor() {
@@ -45,8 +45,13 @@ class AdminDashboard extends React.Component {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            const projects = await apiProjectsGet(this.props.serviceUrl);
-
+            var projects = ''
+            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+                projects = await apiProjectsGet(this.props.serviceUrl);
+            }
+            else {
+                projects = await apiMyProjectsGet(this.props.serviceUrl);
+            }
             this.setState({
                 projects: projects.data,
             })
