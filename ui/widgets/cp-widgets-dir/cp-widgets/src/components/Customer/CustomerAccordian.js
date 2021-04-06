@@ -90,7 +90,7 @@ class CustomerAccordian extends React.Component {
                     <AccordionItem title={this.props.title}>
                         <div style={{display: 'flex'}}>
                             {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ?
-                                <Link style={{textDecoration: 'none'}} to={`/entando-de-app/${this.props.locale}/customer-details/${this.state.customer.id}`}><Button kind='ghost'>{i18n.t('buttons.viewDetails')}</Button></Link>  : null
+                                <Link style={{textDecoration: 'none'}} to={`/customer-details/${this.state.customer.id}`}><Button kind='ghost'>{i18n.t('buttons.viewDetails')}</Button></Link>  : null
                             }
                             {hasKeycloakClientRole('ROLE_ADMIN') ?
                                 <div style={{display: 'flex'}}>
