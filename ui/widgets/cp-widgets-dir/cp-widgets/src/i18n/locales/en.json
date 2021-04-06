@@ -288,6 +288,12 @@
     "deleted": "Successfully deleted",
     "error": "An error occurred",
     "ticketError": "An error occurred. Make sure this project has a corresponding organization in Jira."
+  },
+
+  "userMessages": {
+    "unauthorized": "Unauthorized",
+    "loading": "Loading",
+    "none": "None"
   }
 }
 

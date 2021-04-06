@@ -129,11 +129,11 @@ componentDidUpdate(prevProps) {
                                 <p>{partner.name}</p>
                               ))}
                             </TableCell> 
-                          : <TableCell>None</TableCell>}
-                          <TableCell>None</TableCell>
-                          <TableCell>None</TableCell>
-                          <TableCell>None</TableCell>
-                          <TableCell>None</TableCell>
+                          : <TableCell>{i18n.t('userMessages.none')}</TableCell>}
+                          <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                          <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                          <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                          <TableCell>{i18n.t('userMessages.none')}</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
                           <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
                           {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '350px'}}>{project.notes}</TableCell> : null}
@@ -151,8 +151,8 @@ componentDidUpdate(prevProps) {
                                   <p>{partner.name}</p>
                                 ))}
                               </TableCell> 
-                              : <TableCell>None</TableCell>}
-                            {sub.entandoVersion ? <TableCell>{sub.entandoVersion.name}</TableCell> : <TableCell>None</TableCell>}
+                              : <TableCell>{i18n.t('userMessages.none')}</TableCell>}
+                            {sub.entandoVersion ? <TableCell>{sub.entandoVersion.name}</TableCell> : <TableCell>{i18n.t('userMessages.none')}</TableCell>}
                             <TableCell>{sub.status}</TableCell>
                             <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
                             <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>

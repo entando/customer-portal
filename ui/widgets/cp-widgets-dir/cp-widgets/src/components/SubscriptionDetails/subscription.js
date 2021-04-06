@@ -164,11 +164,11 @@ class Subscription extends React.Component {
                     )
                 }
                 else {
-                    return(<p>Not authorized to view this</p>)
+                    return(<p>{i18n.t('userMessages.unauthorized')}</p>)
                 }
             }
             else {
-                return(<p>Unauthorized</p>)
+                return(<p>{i18n.t('userMessages.unauthorized')}</p>)
             }
         }
         else {

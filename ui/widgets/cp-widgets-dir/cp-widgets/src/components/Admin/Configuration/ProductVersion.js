@@ -146,7 +146,7 @@ class ProductVersion extends Component {
       );
     }
     else {
-      return(<p>You are not authorized to view this</p>)
+      return(<p>{i18n.t('userMessages.unauthorized')}</p>)
     }
   }
 }
