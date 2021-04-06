@@ -94,11 +94,11 @@ class CustomerProjectList extends React.Component {
                     )
                 }
                 else {
-                    return(<p>Loading data...</p>)
+                    return(<p>{i18n.t('userMessages.loading')}...</p>)
                 }
             }
             else {
-                return(<p>Unauthorized</p>)
+                return(<p>{i18n.t('userMessages.unauthorized')}</p>)
             }
         }
         else {

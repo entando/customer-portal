@@ -465,7 +465,7 @@ class SubscriptionForm extends Component {
                 );
             }
             else {
-                return(<p>Unauthorized</p>)
+                return(<p>{i18n.t('userMessages.unauthorized')}</p>)
             }
         }
         else {

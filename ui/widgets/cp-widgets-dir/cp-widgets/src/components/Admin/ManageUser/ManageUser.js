@@ -81,7 +81,7 @@ class ManageUser extends Component {
       }
       // Unauthorized
       else {
-        return(<p>Unauthorized</p>)
+        return(<p>{i18n.t('userMessages.unauthorized')}</p>)
       }
     }
     // Loading

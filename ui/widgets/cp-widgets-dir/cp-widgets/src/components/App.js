@@ -8,6 +8,7 @@ import { apiKeycloakToken, apiKeycloakUserGet } from '../api/keycloak';
 import { hasKeycloakClientRole } from '../api/helpers';
 import customerDetails from './Customer/customerDetails';
 import CustomerProjectList from './Customer/CustomerProjectList';
+import i18n from '../i18n';
 
 class App extends Component {
     constructor(props) {
@@ -65,13 +66,13 @@ class App extends Component {
                             </HashRouter>
                         </AuthenticatedView>
                         <UnauthenticatedView keycloak={keycloak}>
-                            <p>Unauthenticated</p>
+                            <p>{i18n.t('userMessages.unauthorized')}</p>
                         </UnauthenticatedView>
                     </div>
                 )
             }
             else {
-                return (<p>Unauthorized</p>)
+                return (<p>{i18n.t('userMessages.unauthorized')}</p>)
             }
         }
         else {

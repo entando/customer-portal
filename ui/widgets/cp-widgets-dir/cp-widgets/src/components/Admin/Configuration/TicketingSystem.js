@@ -169,7 +169,7 @@ class TicketingSystem extends Component {
         }
         // Unauthorized
         else {
-            return(null)
+            return(<p>{i18n.t('userMessages.unauthorized')}</p>)
         }
     }
 }
