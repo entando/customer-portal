@@ -136,19 +136,19 @@ class Subscription extends React.Component {
                                             <p><strong>{i18n.t('subscriptionDetails.startDate')}:</strong> {String(new Date(this.state.subscription.data.startDate).toDateString())}</p>
                                             <p><strong>{i18n.t('subscriptionDetails.endDate')}:</strong> {String(new Date(new Date(this.state.subscription.data.startDate).setMonth(new Date(this.state.subscription.data.startDate).getMonth() + this.state.subscription.data.lengthInMonths)).toDateString())}</p>
                                             <p><strong>{i18n.t('subscriptionDetails.license')}:</strong> {license}</p>
-                                            {(hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) ?
-                                            <div>
-                                                <><strong>{i18n.t('subscriptionDetails.assignedUsers')}:</strong></>
-                                                {this.state.project.data !== '' && Object.keys(this.state.users.data).length !== 0 ? 
+                                            {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? 
                                                 <>
-                                                    {this.state.users.data.map((user, index) => (
-                                                        <> {index === this.state.users.data.length - 1 ? user.username : user.username + ", "} </>
-                                                    ))}
-                                                </>
-                                                : <> None </>
-                                                }
-                                            </div>
-                                            : null
+                                                    <p><strong>{i18n.t('subscriptionDetails.assignedUsers')}:</strong>
+                                                    {this.state.project.data !== '' && Object.keys(this.state.users.data).length !== 0 ?
+                                                        <>
+                                                            {this.state.users.data.map((user, index) => (
+                                                                <> {index === this.state.users.data.length - 1 ? user.username : user.username + ", "} </>
+                                                            ))}
+                                                        </>
+                                                        : <> None </>
+                                                    }
+                                                    </p>
+                                                </> : null
                                             }
                                         </div>
                                     </div>
