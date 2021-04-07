@@ -8,7 +8,7 @@ import moment from 'moment';
 class EditSubscriptionModal extends Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
             level: '',
             status: '',
@@ -44,7 +44,7 @@ class EditSubscriptionModal extends Component {
             if(!this.state.startDate.match(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/)){
               formIsValid = false;
               invalid['startDate'] = true;
-            }      	
+            }
         }
 
         this.setState({ invalid: invalid });
@@ -52,7 +52,7 @@ class EditSubscriptionModal extends Component {
     }
 
     isNumeric(str) {
-        if (typeof str != "string") 
+        if (typeof str != "string")
             return false
         return !isNaN(str) && !isNaN(parseFloat(str))
     }
@@ -98,8 +98,8 @@ class EditSubscriptionModal extends Component {
     componentDidMount() {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-    
-        if (authenticated) { 
+
+        if (authenticated) {
             this.getSubscriptionDetails();
 
         }
@@ -134,7 +134,7 @@ class EditSubscriptionModal extends Component {
             return await apiProjectSubscriptionPut(this.props.serviceUrl, subscription);
         }
     }
-    
+
     render() {
         const levelList = ['GOLD', 'PLATINUM'];
         const statusList = ['REQUESTED', 'PENDING', 'ACTIVE', 'EXPIRED'];
@@ -159,7 +159,7 @@ class EditSubscriptionModal extends Component {
                             value={this.state.level}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
-                            invalid={this.state.invalid['level']} 
+                            invalid={this.state.invalid['level']}
                             >
                             <SelectItem disabled text="Select Level" value="level" />
                             {levelList.map((level, i) => (
@@ -174,7 +174,7 @@ class EditSubscriptionModal extends Component {
                             value={this.state.status}
                             onChange={this.handleChanges}
                             invalidText={i18n.t('validation.invalid.required')}
-                            invalid={this.state.invalid['status']} 
+                            invalid={this.state.invalid['status']}
                             >
                             <SelectItem disabled text="Select Status" value="status" />
                             {statusList.map((status, i) => (
@@ -183,34 +183,33 @@ class EditSubscriptionModal extends Component {
                                 </SelectItem>
                             ))}
                         </Select>
-                        <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
+                        <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange} value={this.state.startDate}>
                             <DatePickerInput
                                 name="startDate"
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.startDate') + " *"}
-                                value={this.state.startDate}
                                 //onChange={this.handleChanges}
                                 type="text"
-                                invalidText={i18n.t('validation.invalid.date')} 
-                                invalid={this.state.invalid['startDate']} 
+                                invalidText={i18n.t('validation.invalid.date')}
+                                invalid={this.state.invalid['startDate']}
                             />
                         </DatePicker>
-                        <TextInput 
-                            name="lengthInMonths" 
-                            labelText={i18n.t('subscriptionDetails.lengthInMonths') + " *"} 
-                            value={this.state.lengthInMonths} 
-                            onChange={this.handleChanges} 
-                            invalidText={i18n.t('validation.invalid.number')} 
-                            invalid={this.state.invalid['lengthInMonths']} 
+                        <TextInput
+                            name="lengthInMonths"
+                            labelText={i18n.t('subscriptionDetails.lengthInMonths') + " *"}
+                            value={this.state.lengthInMonths}
+                            onChange={this.handleChanges}
+                            invalidText={i18n.t('validation.invalid.number')}
+                            invalid={this.state.invalid['lengthInMonths']}
                         />
-                        <TextArea 
-                            name="notes" 
-                            labelText={i18n.t('adminDashboard.addProject.notes')} 
-                            value={this.state.notes} 
-                            onChange={this.handleChanges} 
+                        <TextArea
+                            name="notes"
+                            labelText={i18n.t('adminDashboard.addProject.notes')}
+                            value={this.state.notes}
+                            onChange={this.handleChanges}
                         />
                     </Form>
-                </div> 
+                </div>
             </ModalWrapper>
         )
     }
