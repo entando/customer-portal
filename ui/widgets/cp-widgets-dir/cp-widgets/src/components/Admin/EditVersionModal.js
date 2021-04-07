@@ -8,7 +8,7 @@ import moment from 'moment';
 class EditProjectModal extends Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
             name: '',
             startDate: '',
@@ -35,14 +35,14 @@ class EditProjectModal extends Component {
             if(!this.state.startDate.match(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/)){
               formIsValid = false;
               invalid['startDate'] = true;
-            }      	
+            }
         }
 
         if(typeof this.state.endDate !== "undefined"){
             if(!this.state.endDate.match(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/)){
               formIsValid = false;
               invalid['endDate'] = true;
-            }      	
+            }
         }
 
 
@@ -54,7 +54,7 @@ class EditProjectModal extends Component {
     componentDidUpdate(prevProps) {
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-    
+
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
         if (authenticated && changedAuth) {
@@ -134,7 +134,7 @@ class EditProjectModal extends Component {
     componentDidMount() {
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-    
+
         if (authenticated) {
             this.getVersionDetails();
             const modalOpenButton = document.querySelector('.edit-version-button-' + this.props.version.id);
@@ -158,40 +158,38 @@ class EditProjectModal extends Component {
             >
                 <div className="form-container">
                     <Form onSubmit={this.handleFormSubmit}>
-                        <TextInput 
-                            name="name" 
-                            labelText={i18n.t('adminDashboard.addProject.projectName') + " *"} 
-                            value={this.state.name} 
-                            onChange={this.handleChanges} 
-                            invalidText={i18n.t('validation.invalid.required')} 
-                            invalid={this.state.invalid["name"]} 
+                        <TextInput
+                            name="name"
+                            labelText={i18n.t('adminDashboard.addProject.projectName') + " *"}
+                            value={this.state.name}
+                            onChange={this.handleChanges}
+                            invalidText={i18n.t('validation.invalid.required')}
+                            invalid={this.state.invalid["name"]}
                         />
-                        <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
+                        <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange} value={this.state.startDate}>
                             <DatePickerInput
                                 name="startDate"
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.startDate') + " *"}
-                                value={this.state.startDate}
-                                //onChange={this.handleChanges}
+                                onChange={this.handleChanges}
                                 type="text"
-                                invalidText={i18n.t('validation.invalid.date')} 
-                                invalid={this.state.invalid['startDate']} 
+                                invalidText={i18n.t('validation.invalid.date')}
+                                invalid={this.state.invalid['startDate']}
                             />
                         </DatePicker>
-                        <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleEndDateChange} name="endDate">
+                        <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleEndDateChange} name="endDate" value={this.state.endDate}>
                             <DatePickerInput
                                 name="endDate"
                                 placeholder="mm/dd/yyyy"
                                 labelText={i18n.t('subscriptionDetails.endDate') + " *"}
-                                value={this.state.endDate}
                                 onChange={this.handleChanges}
                                 type="text"
-                                invalidText={i18n.t('validation.invalid.date')} 
-                                invalid={this.state.invalid['endDate']} 
+                                invalidText={i18n.t('validation.invalid.date')}
+                                invalid={this.state.invalid['endDate']}
                             />
                         </DatePicker>
                     </Form>
-                </div> 
+                </div>
             </ModalWrapper>
         )
     }
