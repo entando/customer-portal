@@ -125,7 +125,7 @@ class ProductVersion extends Component {
                             <TableCell>{productVersion.endDate}</TableCell>
                             <TableCell>
                               <div style={{display: 'flex'}}>
-                                <EditVersionModal version={productVersion} serviceUrl={this.props.serviceUrl} updateProductVersions={this.updateProductVersions} />
+                                <EditVersionModal key={productVersion.id} version={productVersion} serviceUrl={this.props.serviceUrl} updateProductVersions={this.updateProductVersions} />
                                 <a onClick={(e) => this.handleDeleteVersion(e, productVersion.id)} href="" style={{display: 'flex', marginTop: '12px'}}>
                                   <SubtractAlt16 fill="red" style={{marginTop: '4px'}} />
                                   <p>{i18n.t('buttons.delete')}</p>
