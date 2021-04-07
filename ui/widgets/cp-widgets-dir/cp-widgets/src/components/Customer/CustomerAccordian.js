@@ -87,7 +87,7 @@ class CustomerAccordian extends React.Component {
                     {hasKeycloakClientRole('ROLE_CUSTOMER') ? 
                         <CustomerDetails serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} /> : null 
                     }
-                    <AccordionItem title={this.props.title}>
+                    <AccordionItem title={this.props.title} open={this.props.accordionOpened}>
                         <div style={{display: 'flex'}}>
                             {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ?
                                 <Link style={{textDecoration: 'none'}} to={`/customer-details/${this.state.customer.id}`}><Button kind='ghost'>{i18n.t('buttons.viewDetails')}</Button></Link>  : null

@@ -156,11 +156,12 @@ class AdminDashboard extends React.Component {
                             // Pagination for Admin and Support roles (5 items per page)
                             var indexOfLastItem = ((this.state.currentPage + 1) * 5) - 1;
                             var firstIndexOfCurrentPage = this.state.currentPage * 5;
+                            var accordionOpened = this.state.customers.length === 1;
                             
                             if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
                                 if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
                                     return(
-                                        <CustomerAccordian key={customer.id} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name} updateCustomerList={this.updateCustomerList} locale={this.props.locale}/>
+                                        <CustomerAccordian key={customer.id} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name} updateCustomerList={this.updateCustomerList} locale={this.props.locale} accordionOpened={accordionOpened}/>
                                     )
                                 }
                                 else {
