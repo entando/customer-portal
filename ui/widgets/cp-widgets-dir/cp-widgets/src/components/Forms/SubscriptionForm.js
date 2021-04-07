@@ -250,9 +250,15 @@ class SubscriptionForm extends Component {
         ));
         subscriptionLevelList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseLevel')} value="" />)
 
-        const versionList = this.state.productVersions.map(version => (
-            <SelectItem key={version.id} text={version.name} value={version.id}>{version.name}</SelectItem>
-        ));
+        const versionList = this.state.productVersions.map(version => {
+            // only allow the user to choose from active entando versions
+            if (version.status) {
+                return(<SelectItem key={version.id} text={version.name} value={version.id}>{version.name}</SelectItem>)
+            }
+            else {
+                return(null)
+            }
+        });
         versionList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseVersion')} value="" />)
 
         return { projectList, subscriptionLevelList, versionList }

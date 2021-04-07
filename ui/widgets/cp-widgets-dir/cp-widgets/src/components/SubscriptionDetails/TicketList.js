@@ -13,6 +13,8 @@ class TicketList extends Component {
     super(props);
     this.state = { 
       tickets: {},
+      project: {},
+      currentTicketingSystem: {},
       currentPage: 0
      }
      this.headerData = [
@@ -66,7 +68,9 @@ class TicketList extends Component {
           }
 
           this.setState({
-              tickets: tickets
+              tickets: tickets,
+              project: project,
+              currentTicketingSystem: currentTicketingSystem
           });
       }
       catch(err) {
@@ -117,7 +121,10 @@ componentDidUpdate(prevProps) {
       <div>
         <DataTable rows={rowData} headers={this.headerData}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
-          <TableContainer title={i18n.t('ticketDetails.listOfTickets')} description={i18n.t('ticketDetails.tickets')}>
+          <TableContainer 
+            title={i18n.t('ticketDetails.listOfTickets')} 
+            description={Object.keys(this.state.tickets).length !== 0 && Object.keys(this.state.project).length !== 0  ? <a href={this.state.currentTicketingSystem.url.substr(0, this.state.currentTicketingSystem.url.indexOf("/rest")) + "/browse/" + this.state.tickets.data[0].systemId + "?jql=Organizations=" + this.state.project.data.systemId} style={{textDecoration: 'none'}} target="_blank" >{i18n.t('ticketDetails.tickets')}</a> : <a>{i18n.t('ticketDetails.tickets')}</a>}
+          >
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
@@ -143,7 +150,7 @@ componentDidUpdate(prevProps) {
                         <TableCell key={ticket.id}>{ticket.priority}</TableCell>
                         <TableCell key={ticket.id}>{new Date(ticket.createDate).toDateString()}</TableCell>
                         <TableCell key={ticket.id}>{new Date(ticket.updateDate).toDateString()}</TableCell>
-                        <TableCell key={ticket.id}><a href={"https://jorden-test-partner-portal.atlassian.net/browse/" + ticket.systemId} target="_blank">{i18n.t('ticketDetails.viewTicket')}</a></TableCell>
+                        <TableCell key={ticket.id}><a href={this.state.currentTicketingSystem.url.substr(0, this.state.currentTicketingSystem.url.indexOf("/rest")) + "/browse/" + ticket.systemId} target="_blank">{i18n.t('ticketDetails.viewTicket')}</a></TableCell>
                       </TableRow>
                     )
                   }
