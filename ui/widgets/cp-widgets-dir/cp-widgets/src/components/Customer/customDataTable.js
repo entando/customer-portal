@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
-import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
+import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, Button } from 'carbon-components-react';
 import '../../index.scss';
-import { apiGetCustomersProjects, apiGetMyCustomersProjects } from '../../api/customers';
+import { apiGetCustomersProjects, apiGetMyCustomersProjects, apiDeleteProjectFromCustomer } from '../../api/customers';
 import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import { Link, HashRouter } from 'react-router-dom';
 import i18n from '../../i18n';
 import EditProjectModal from '../Admin/EditProjectModal'
 import { hasKeycloakClientRole } from '../../api/helpers';
+import { apiProjectsDelete } from '../../api/projects';
 
 class CustomTable extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      projects: {}
+      projects: {},
+      action: "Edit",
+      showMenu: false,
      }
      this.headerData = [
       {
@@ -44,6 +47,10 @@ class CustomTable extends Component {
           header: i18n.t('customerDashboard.openTickets'),
           key: 'openTickets',
       },
+      {
+        header: i18n.t('customerDetails.notes'),
+        key: 'notes',
+      },  
       {
           header: i18n.t('customerDashboard.action'),
           key: 'action',
@@ -88,6 +95,52 @@ updateProjectList = () => {
   this.fetchData();
 }
 
+handleActions = (e, id) => {
+  if (e.target.value === "View") {
+    window.location.href = `/#/subscription-details/${id}`
+  }
+  console.log(e);
+}
+
+showMenu = () => {
+  this.setState({
+    showMenu: !this.state.showMenu
+  })
+  //document.addEventListener('mousedown', this.closeMenu);
+}
+
+closeMenu = () => {
+  this.setState({ showMenu: false }, () => {
+    document.removeEventListener('click', this.closeMenu);
+  });  
+}
+
+async deleteProject(id) {
+  const { t, keycloak } = this.props;
+  const authenticated = keycloak.initialized && keycloak.authenticated;
+  if (authenticated) {
+    return await apiDeleteProjectFromCustomer(this.props.serviceUrl, this.props.customerNumber, id);
+  }
+}
+
+handleDeleteProject = (e, id) => {
+  e.preventDefault();
+  if (window.confirm("Are you sure you want to delete this project?")) {
+    this.deleteProject(id).then(result => {
+      this.setState({
+          submitMsg: i18n.t('submitMessages.deleted'),
+          submitColour: '#24a148'
+      })
+      this.props.updateCustomerList();
+    }).catch(err => {
+      this.setState({
+          submitMsg: i18n.t('submitMessages.error'),
+          submitColour: '#da1e28'
+      })
+    });
+  }
+}
+
 componentDidUpdate(prevProps) {
     const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
@@ -108,12 +161,25 @@ componentDidUpdate(prevProps) {
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
-                  {headers.map((header) => (
-                    <TableHeader {...getHeaderProps({ header })}>
-                      {header.header}
-                    </TableHeader>
-                  ))}
-                  {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <TableHeader>Notes</TableHeader> : null}
+                  {headers.map((header) => {
+                    if(header.header === i18n.t('customerDetails.notes')) {
+                      if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+                        return(
+                          <TableHeader {...getHeaderProps({ header })}>
+                            {header.header}
+                          </TableHeader>
+                        )
+                      }
+                    }
+                    else {
+                      return(
+                        <TableHeader {...getHeaderProps({ header })}>
+                          {header.header}
+                        </TableHeader>
+                      )
+                    }
+                  })}
+                  
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -135,8 +201,35 @@ componentDidUpdate(prevProps) {
                           <TableCell>{i18n.t('userMessages.none')}</TableCell>
                           <TableCell>{i18n.t('userMessages.none')}</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
-                          <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
-                          {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '350px'}}>{project.notes}</TableCell> : null}
+                          {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
+                          <TableCell>
+                            <div>
+                              <Button onClick={this.showMenu} style={{padding: '10px 20px'}} kind="tertiary">
+                                +
+                              </Button>
+                              {this.state.showMenu ? 
+                                <div 
+                                  className="menu" 
+                                  style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}} 
+                                >
+                                  <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
+                                  {hasKeycloakClientRole('ROLE_ADMIN') ?
+                                    <div>
+                                      <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/>
+                                      <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
+                                    </div> : null
+                                  }
+                                  {hasKeycloakClientRole('ROLE_ADMIN') ?
+                                    <div>
+                                      <Button kind='ghost' onClick={(e) => this.handleDeleteProject(e, project.id)} style={{display: 'block', width: '100%', color: 'red'}}>Delete</Button>
+                                      <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
+                                    </div> : null
+                                  }
+                                </div>
+                                : null
+                              }
+                            </div>
+                          </TableCell>
                       </TableRow>
                       )
                     }
@@ -157,8 +250,36 @@ componentDidUpdate(prevProps) {
                             <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
                             <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>
                             <TableCell>{project.tickets.length}</TableCell>
-                            <TableCell>{hasKeycloakClientRole('ROLE_ADMIN') ? <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/> : null}</TableCell>
-                            {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? <TableCell>{project.notes}</TableCell> : null}
+                            {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
+                            <TableCell>
+                              <div>
+                                <Button onClick={this.showMenu} style={{padding: '10px 20px'}} kind="tertiary">
+                                  +
+                                </Button>
+                                {this.state.showMenu ? 
+                                  <div 
+                                    className="menu" 
+                                    style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}} 
+                                  >
+                                    <Button kind='ghost' style={{display: 'block', width: '100%'}} onClick={(e) => this.handleActions(e, sub.id)} value="View">View</Button>
+                                    <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
+                                    {hasKeycloakClientRole('ROLE_ADMIN') ?
+                                      <div>
+                                        <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/>
+                                        <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
+                                      </div> : null
+                                    }
+                                    {hasKeycloakClientRole('ROLE_ADMIN') ?
+                                      <div>
+                                        <Button kind='ghost' onClick={(e) => this.handleDeleteProject(e, project.id)} style={{display: 'block', width: '100%', color: 'red'}}>Delete</Button>
+                                        <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
+                                      </div> : null
+                                    }
+                                  </div>
+                                  : null
+                                }
+                              </div>
+                            </TableCell>
                         </TableRow>
                       )
                     }

@@ -99,7 +99,7 @@ class CustomerAccordian extends React.Component {
                                 </div>  : null
                             }
                         </div>
-                        <CustomTable key={(new Date).getTime()} serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} locale={this.props.locale} />
+                        <CustomTable key={(new Date).getTime()} serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} locale={this.props.locale} updateCustomerList={this.props.updateCustomerList} />
                     </AccordionItem>
                 </div> 
             </div>
