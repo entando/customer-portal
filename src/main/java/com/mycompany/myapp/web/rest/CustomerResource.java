@@ -45,6 +45,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 @RestController
 @RequestMapping("/api")
 @Transactional
+@PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
 public class CustomerResource {
 
     private final Logger log = LoggerFactory.getLogger(CustomerResource.class);
@@ -117,30 +118,30 @@ public class CustomerResource {
     @GetMapping("/customers")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public List<Customer> getAllCustomers() {
+        log.debug("REST request to get all Customers");
+
+        if(userHasAdminOrSupport()) {
+            return customerService.findAll();
+        }
+
         SpringSecurityAuditorAware security = new SpringSecurityAuditorAware();
         Optional<String> currentUser = security.getCurrentUserLogin();
 
-        if(userHasRole(AuthoritiesConstants.ADMIN) || userHasRole(AuthoritiesConstants.SUPPORT)) {
-            log.debug("REST request to get all Customers");
-            return customerService.findAll();
-        }
-        else {
-            //TODO: This won't scale and should eventually be refactored to use join on assigned users
-            List<Project> projects = projectService.findAll();
-            Set<Customer> toAdd = new HashSet<>();
-            List<Customer> customers = new ArrayList<>();
-            for(Project project : projects) {
-                Set<PortalUser> users = projectService.getProjectUsers(project.getId());
-                for(PortalUser user : users) {
-                    if (currentUser.get().equals(user.getUsername())) {
-                        toAdd.add(project.getCustomer());
-                        break;
-                    }
+        //TODO: This and similar methods below won't scale and should eventually be refactored to use join on assigned users
+        List<Project> projects = projectService.findAll();
+        Set<Customer> toAdd = new HashSet<>();
+        List<Customer> customers = new ArrayList<>();
+        for(Project project : projects) {
+            Set<PortalUser> users = projectService.getProjectUsers(project.getId());
+            for(PortalUser user : users) {
+                if (currentUser.get().equals(user.getUsername())) {
+                    toAdd.add(project.getCustomer());
+                    break;
                 }
             }
-            customers.addAll(toAdd);
-            return customers;
         }
+        customers.addAll(toAdd);
+        return customers;
     }
 
     /**
@@ -151,7 +152,7 @@ public class CustomerResource {
     @GetMapping("/customers/all")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Map<String, String>> getCustomersForAdminDashboard() {
-        Map<String, String> customers = new HashMap<String, String>();
+        Map<String, String> customers = new HashMap<>();
 
         try {
 	        List<Customer> customerList = customerService.findAll();
@@ -163,7 +164,7 @@ public class CustomerResource {
     		log.error("Error occurred while fetching all customer", e);
     	}
 
-        return new ResponseEntity<Map<String, String>>(customers, HttpStatus.OK);
+        return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
     /**
@@ -173,11 +174,21 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the customer, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/customers/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<Customer> getCustomer(@PathVariable Long id) {
         log.debug("REST request to get Customer : {}", id);
-        Optional<Customer> customer = customerService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(customer);
+        Optional<Customer> optional = customerService.findOne(id);
+
+        //Check that the user has access to this customer
+        if(!userHasAdminOrSupport() && optional.isPresent()) {
+            List<Customer> customers = getMyCustomers();
+            Customer customer = optional.get();
+            if(!customers.contains(customer)) {
+                optional = Optional.empty();
+            }
+        }
+
+        return ResponseUtil.wrapOrNotFound(optional);
     }
 
     /**
@@ -269,20 +280,25 @@ public class CustomerResource {
     public List<Customer> getMyCustomers() {
         log.debug("REST request to get user's Customers");
 
-        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
-        List<Project> projects = projectService.findAll();
-        Set<Customer> toAdd = new HashSet<>();
         List<Customer> customers = new ArrayList<>();
-        for(Project project : projects) {
-            Set<PortalUser> users = projectService.getProjectUsers(project.getId());
-            for(PortalUser user : users) {
-                if (currentUser.equals(user.getUsername())) {
+
+        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
+        Optional<PortalUser> optional = portalUserService.findByUsername(currentUser);
+        if (optional.isPresent()) {
+            PortalUser currentPortalUser = optional.get();
+
+            List<Project> projects = projectService.findAll();
+            Set<Customer> toAdd = new HashSet<>();
+
+            for(Project project : projects) {
+                Set<PortalUser> users = projectService.getProjectUsers(project.getId());
+                if (users.contains(currentPortalUser)) {
                     toAdd.add(project.getCustomer());
-                    break;
                 }
             }
+            customers.addAll(toAdd);
         }
-        customers.addAll(toAdd);
+
         return customers;
     }
 
@@ -299,26 +315,25 @@ public class CustomerResource {
         Set<Project> projects = customerService.getCustomerProjects(customerId);
 
         String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
-        Set<Project> toRemove = new HashSet<>();
-
-        for(Project project : projects) {
-            boolean userHasAccessToProject = false;
-            Set<PortalUser> users = projectService.getProjectUsers(project.getId());
-            for(PortalUser user : users) {
-                if (currentUser.equals(user.getUsername())) {
-                    userHasAccessToProject = true;
-                    break;
+        Optional<PortalUser> optional = portalUserService.findByUsername(currentUser);
+        Set<Project> result = new HashSet<>();
+        if (optional.isPresent()) {
+            PortalUser currentPortalUser = optional.get();
+            for(Project project : projects) {
+                Set<PortalUser> users = projectService.getProjectUsers(project.getId());
+                if (users.contains(currentPortalUser)) {
+                    result.add(project);
                 }
             }
-            if (!userHasAccessToProject) {
-                toRemove.add(project);
-            }
         }
-        projects.removeAll(toRemove);
 
         return ResponseEntity.ok().headers(
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, customerId.toString()))
-            .body(projects);
+            .body(result);
+    }
+
+    private boolean userHasAdminOrSupport() {
+        return userHasRole(AuthoritiesConstants.ADMIN) || userHasRole(AuthoritiesConstants.SUPPORT);
     }
 
     private boolean userHasRole(String roleName) {
