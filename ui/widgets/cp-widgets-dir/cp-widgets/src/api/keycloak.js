@@ -1,18 +1,10 @@
-import { getDefaultOptions, getDefaultKeycloakOptions, request, getUrl } from './helpers';
+import { getDefaultKeycloakOptions, request, getUrl } from './helpers';
 
-const usersResourceProd = 'admin/realms/entando/users'
-//const usersResourceDev = 'admin/realms/jhipster/users'
-const tokenResourceProd = 'realms/entando/protocol/openid-connect/token';
-//const tokenResourceDev = 'realms/jhipster/protocol/openid-connect/token';
-
+const usersResource = `admin/realms/${process.env.REACT_APP_KEYCLOAK_REALM}/users`;
+const tokenResource = `realms/${process.env.REACT_APP_KEYCLOAK_REALM}/protocol/openid-connect/token`;
+ 
 export const apiKeycloakUserGet = async (serviceUrl) => {
-  const url = `${serviceUrl}/${usersResourceProd}`;
-  const keycloakBody = {
-    client_id: "admin_cli",
-    username: "admin",
-    password: "admin",
-    grant_type: "password"
-  }
+  const url = `${serviceUrl}/${usersResource}`;
   const options = {
     ...getDefaultKeycloakOptions(),
     method: 'GET',
@@ -22,7 +14,7 @@ export const apiKeycloakUserGet = async (serviceUrl) => {
 
 export const apiKeycloakToken = async (serviceUrl) => {
   const url = getUrl(
-    `${serviceUrl}/${tokenResourceProd}`
+    `${serviceUrl}/${tokenResource}`
   );
   const keycloakBody = {
     client_id: "web_app",
