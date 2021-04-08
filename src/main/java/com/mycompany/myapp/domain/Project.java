@@ -20,6 +20,7 @@ import java.util.Set;
 @Entity
 @Table(name = "project")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@NamedQuery(name = "Project.findAll", query = "select p from Project p order by p.id")
 public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;

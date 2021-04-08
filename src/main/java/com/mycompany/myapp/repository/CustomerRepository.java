@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mycompany.myapp.domain.Customer;
+import com.mycompany.myapp.domain.EntandoVersion;
 import com.mycompany.myapp.domain.Ticket;
 
 import org.springframework.data.jpa.repository.*;
@@ -16,6 +17,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     List<Customer> findByName(String name);
-    
+
     Optional<Customer> findByCustomerNumber(String customerNumber);
+
+    @Override
+    @Query
+    public List<Customer> findAll();
 }
