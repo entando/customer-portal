@@ -95,13 +95,6 @@ updateProjectList = () => {
   this.fetchData();
 }
 
-handleActions = (e, id) => {
-  if (e.target.value === "View") {
-    window.location.href = `/#/subscription-details/${id}`
-  }
-  console.log(e);
-}
-
 showMenu = (e, id) => {
   var showMenu = {};
   showMenu[String(id)] = !this.state.showMenu[String(id)];
@@ -264,7 +257,7 @@ componentDidUpdate(prevProps) {
                                     className="menu" 
                                     style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}} 
                                   >
-                                    <Button kind='ghost' style={{display: 'block', width: '100%'}} onClick={(e) => this.handleActions(e, sub.id)} value="View">View</Button>
+                                    <Link to={`/subscription-details/${sub.id}`} style={{textDecoration: 'none'}}><Button kind='ghost' style={{display: 'block', width: '100%'}} value="View">View</Button></Link>
                                     <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
                                     {hasKeycloakClientRole('ROLE_ADMIN') ?
                                       <div>
