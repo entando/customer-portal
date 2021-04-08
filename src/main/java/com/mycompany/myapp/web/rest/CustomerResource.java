@@ -75,7 +75,7 @@ public class CustomerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/customers")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer customer) throws URISyntaxException {
         log.debug("REST request to save Customer : {}", customer);
         if (customer.getId() != null) {
@@ -97,7 +97,7 @@ public class CustomerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/customers")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Customer> updateCustomer(@Valid @RequestBody Customer customer) throws URISyntaxException {
         log.debug("REST request to update Customer : {}", customer);
         if (customer.getId() == null) {
@@ -115,17 +115,17 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
      */
     @GetMapping("/customers")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public List<Customer> getAllCustomers() {
         SpringSecurityAuditorAware security = new SpringSecurityAuditorAware();
         Optional<String> currentUser = security.getCurrentUserLogin();
 
-        if(userHasRole("ROLE_ADMIN") || userHasRole("ROLE_SUPPORT")) {
+        if(userHasRole(AuthoritiesConstants.ADMIN) || userHasRole(AuthoritiesConstants.SUPPORT)) {
             log.debug("REST request to get all Customers");
             return customerService.findAll();
         }
         else {
+            //TODO: This won't scale and should eventually be refactored to use join on assigned users
             List<Project> projects = projectService.findAll();
             Set<Customer> toAdd = new HashSet<>();
             List<Customer> customers = new ArrayList<>();
@@ -149,8 +149,7 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the map of customers' names and numbers in body.
      */
     @GetMapping("/customers/all")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Map<String, String>> getCustomersForAdminDashboard() {
         Map<String, String> customers = new HashMap<String, String>();
 
@@ -174,8 +173,7 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the customer, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/customers/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Customer> getCustomer(@PathVariable Long id) {
         log.debug("REST request to get Customer : {}", id);
         Optional<Customer> customer = customerService.findOne(id);
@@ -189,7 +187,7 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the customer, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/customers/admin/{id}")
-    @PreAuthorize("hasAnyRole('" +  AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Customer> adminGetCustomer(@PathVariable Long id) {
         log.debug("REST request to get Customer : {}", id);
         Optional<Customer> customer = customerService.findOne(id);
@@ -203,7 +201,7 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/customers/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         log.debug("REST request to delete Customer : {}", id);
 
@@ -222,7 +220,7 @@ public class CustomerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/customers/{customerId}/projects/{projectId}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Customer> addProjectToCustomer(@PathVariable Long customerId, @PathVariable Long projectId) throws URISyntaxException {
         log.debug("REST request to add Project to Customer : {}", customerId);
         Customer result = customerService.addProjectToCustomer(customerId, projectId);
@@ -241,7 +239,7 @@ public class CustomerResource {
      *         the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/customers/{customerId}/projects")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Set<Project>> getCustomerProjects(@PathVariable Long customerId) {
         Set<Project> projects = customerService.getCustomerProjects(customerId);
         return ResponseEntity.ok().headers(
@@ -255,7 +253,7 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
      */
     @GetMapping("/customers/admin")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public List<Customer> adminGetAllCustomers() {
         log.debug("REST request to get all Customers");
         return customerService.findAll();
@@ -267,7 +265,7 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
      */
     @GetMapping("/customers/mycustomers")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_CUSTOMER_OR_PARTNER)
     public List<Customer> getMyCustomers() {
         log.debug("REST request to get user's Customers");
 
@@ -296,7 +294,7 @@ public class CustomerResource {
      *         the projects, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/customers/mycustomers/{customerId}/projects")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_CUSTOMER_OR_PARTNER)
     public ResponseEntity<Set<Project>> getMyCustomerProjects(@PathVariable Long customerId) {
         Set<Project> projects = customerService.getCustomerProjects(customerId);
 
@@ -323,7 +321,7 @@ public class CustomerResource {
             .body(projects);
     }
 
-    public boolean userHasRole(String roleName) {
+    private boolean userHasRole(String roleName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         for (GrantedAuthority role : authentication.getAuthorities()) {
             if(role.toString().equals(roleName)) {
