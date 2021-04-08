@@ -16,7 +16,7 @@ class CustomTable extends Component {
     this.state = { 
       projects: {},
       action: "Edit",
-      showMenu: false,
+      showMenu: {},
      }
      this.headerData = [
       {
@@ -102,9 +102,11 @@ handleActions = (e, id) => {
   console.log(e);
 }
 
-showMenu = () => {
+showMenu = (e, id) => {
+  var showMenu = {};
+  showMenu[String(id)] = !this.state.showMenu[String(id)];
   this.setState({
-    showMenu: !this.state.showMenu
+    showMenu: showMenu
   })
   //document.addEventListener('mousedown', this.closeMenu);
 }
@@ -153,6 +155,7 @@ componentDidUpdate(prevProps) {
   }
 
   render() { 
+    console.log(this.state)
     return (
       <div>
         <DataTable rows={rowData} headers={this.headerData}>
@@ -204,10 +207,10 @@ componentDidUpdate(prevProps) {
                           {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                           <TableCell>
                             <div>
-                              <Button onClick={this.showMenu} style={{padding: '10px 20px'}} kind="tertiary">
+                              <Button onClick={(e) => this.showMenu(e, project.id)} style={{padding: '10px 20px'}} kind="tertiary">
                                 +
                               </Button>
-                              {this.state.showMenu ? 
+                              {this.state.showMenu[String(project.id)] ? 
                                 <div 
                                   className="menu" 
                                   style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}} 
@@ -253,10 +256,10 @@ componentDidUpdate(prevProps) {
                             {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                             <TableCell>
                               <div>
-                                <Button onClick={this.showMenu} style={{padding: '10px 20px'}} kind="tertiary">
+                                <Button onClick={(e) => this.showMenu(e, project.id)} style={{padding: '10px 20px'}} kind="tertiary">
                                   +
                                 </Button>
-                                {this.state.showMenu ? 
+                                {this.state.showMenu[String(project.id)] ? 
                                   <div 
                                     className="menu" 
                                     style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}} 
