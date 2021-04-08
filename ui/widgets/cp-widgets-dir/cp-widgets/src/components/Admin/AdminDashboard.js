@@ -1,6 +1,6 @@
 import React from 'react';
 import i18n from '../../i18n';
-import { Accordion, PaginationNav, Search, Tile} from 'carbon-components-react';
+import { Accordion, AccordionItem, PaginationNav, Search, Tile} from 'carbon-components-react';
 import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import AddProjectModal from './AddProjectModal'

@@ -10,7 +10,9 @@ import {
   TableBody,
   TableCell,
   ToggleSmall,
-  Button
+  Button,
+  AccordionItem,
+  Accordion
 } from 'carbon-components-react';
 import { SubtractAlt16 } from '@carbon/icons-react';
 import { apiProductVersionDelete, apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';

@@ -192,7 +192,7 @@ class EditProjectModal extends Component {
     }
 
     render() {
-        const buttonClassName = "bx--btn bx--btn--ghost edit-project-button-" + this.props.project.id;
+        const buttonClassName = "dropdown-button-button bx--btn bx--btn--ghost edit-project-button-" + this.props.project.id;
         return (
             <ModalWrapper
                 buttonTriggerText={i18n.t('buttons.edit')}

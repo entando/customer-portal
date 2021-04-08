@@ -212,6 +212,31 @@ public class CustomerResource {
     }
 
     /**
+     * {@code DELETE  /customers/:id} : delete the "id" customer.
+     *
+     * @param customerId the id of the customer to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping("/customers/{customerId}/projects/{projectId}")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    public ResponseEntity<Void> deleteProjectFromCustomer(@PathVariable Long customerId, @PathVariable Long projectId) {
+        log.debug("REST request to delete project {} from Customer : {}", projectId, customerId);
+
+        Optional<Customer> customer = customerService.findOne(customerId);
+        Set<Project> projects = customer.get().getProjects();
+
+        for(Project project : projects) {
+            if (project.getId().equals(projectId)) {
+                customer.get().removeProject(project);
+                projectService.delete(projectId);
+                break;
+            }
+        }
+
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, customerId.toString())).build();
+    }
+
+    /**
      * {@code POST  /customers/:customerId/projects/:projectId} : Add a project to a customer.
      *
      * @param customerId the customer id.

@@ -80,6 +80,15 @@ export const apiAddProjectToCustomer = async (serviceUrl, customerId, projectId)
   return request(url, options);
 };
 
+export const apiDeleteProjectFromCustomer = async (serviceUrl, customerId, projectId) => {
+  const url = `${serviceUrl}/${resource}/${customerId}/projects/${projectId}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'DELETE'
+  };
+  return request(url, options);
+};
+
 
 // Endpoints for backend security
 const adminResource = 'api/customers/admin';
