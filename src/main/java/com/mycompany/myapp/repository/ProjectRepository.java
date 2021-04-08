@@ -21,4 +21,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Iterable<Project> findByCustomer(Customer customer);
     List<Project> findByName(String name);
+
+    @Override
+    @Query
+    public List<Project> findAll();
 }

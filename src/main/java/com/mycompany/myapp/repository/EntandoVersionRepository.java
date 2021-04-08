@@ -14,4 +14,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EntandoVersionRepository extends JpaRepository<EntandoVersion, Long> {
     List<EntandoVersion> findByName(String name);
+
+    @Override
+    @Query
+    public List<EntandoVersion> findAll();
 }

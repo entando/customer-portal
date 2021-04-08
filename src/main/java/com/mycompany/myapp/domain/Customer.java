@@ -16,6 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "customer")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@NamedQuery(name = "Customer.findAll", query = "select c from Customer c order by c.id")
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
