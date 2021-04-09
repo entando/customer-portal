@@ -7,7 +7,13 @@ import AddProjectModal from './AddProjectModal'
 import withKeycloak from '../../auth/withKeycloak';
 import { apiAdminCustomersGet, apiMyCustomersGet } from '../../api/customers';
 import CustomerAccordian from '../Customer/CustomerAccordian';
-import { hasKeycloakClientRole } from '../../api/helpers';
+import {
+  isPortalAdmin,
+  isPortalSupport,
+  isPortalPartner,
+  isPortalCustomer,
+  isPortalAdminOrSupport, isPortalUser
+} from '../../api/helpers';
 import { apiProjectsGet, apiMyProjectsGet } from '../../api/projects';
 
 class AdminDashboard extends React.Component {
@@ -30,11 +36,11 @@ class AdminDashboard extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { t, keycloak } = this.props;
+        const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-    
+
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-    
+
         if (authenticated && changedAuth) {
           this.getCustomers();
           this.getProjects();
@@ -42,11 +48,11 @@ class AdminDashboard extends React.Component {
       }
 
     async getProjects() {
-        const { t, keycloak } = this.props;
+        const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
             var projects = ''
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+            if (isPortalAdminOrSupport()) {
                 projects = await apiProjectsGet(this.props.serviceUrl);
             }
             else {
@@ -60,11 +66,11 @@ class AdminDashboard extends React.Component {
 
 
     async getCustomers() {
-        const { t, keycloak } = this.props;
+        const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
             var customers;
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+            if (isPortalAdminOrSupport()) {
                 customers = await apiAdminCustomersGet(this.props.serviceUrl);
             }
             else {
@@ -109,7 +115,7 @@ class AdminDashboard extends React.Component {
         else {
             numberOfPages = 1;
         }
-        
+
         const props = () => ({
             loop: Boolean(false),
             page: Number(this.state.currentPage),
@@ -120,25 +126,25 @@ class AdminDashboard extends React.Component {
 
         return(
             <div className="admin-dashboard">
-                {hasKeycloakClientRole('ROLE_ADMIN') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
-                hasKeycloakClientRole('ROLE_SUPPORT') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
-                hasKeycloakClientRole('ROLE_CUSTOMER') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
-                hasKeycloakClientRole('ROLE_PARTNER') ? 
-                    <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
+                {isPortalAdmin() ?
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> :
+                  isPortalSupport() ?
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> :
+                  isPortalCustomer() ?
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> :
+                  isPortalPartner() ?
+                    <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> :
                 null}
-            {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_PARTNER') ?
+            {isPortalAdmin() || isPortalSupport() || isPortalPartner() ?
                 <Tile>
                     <p className="title">{i18n.t('adminDashboard.allCustomers')}</p>
                     <div className="bx--row">
                         <div className="bx--col">
                             <Search onChange={this.handleSearch} id="search" placeHolderText={i18n.t('adminDashboard.searchText')} onKeyPress={this.handleSearch}/>
                         </div>
-                        {hasKeycloakClientRole('ROLE_ADMIN') ?
+                        {isPortalAdmin() ?
                         <div className="bx--col">
-                            
+
                             <div>
                                 <AddPartnerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} allProjects={this.state.projects} />
                                 <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
@@ -146,10 +152,10 @@ class AdminDashboard extends React.Component {
                             </div>
                         </div> : null}
                     </div>
-                </Tile>  
+                </Tile>
                 : null
             }
-                    
+
                 <div className="form-container">
                     <Accordion>
                         {Object.keys(this.state.customers).length !== 0 ? this.state.filteredCustomers.map((customer, index) => {
@@ -157,19 +163,19 @@ class AdminDashboard extends React.Component {
                             var indexOfLastItem = ((this.state.currentPage + 1) * 5) - 1;
                             var firstIndexOfCurrentPage = this.state.currentPage * 5;
                             var accordionOpened = this.state.customers.length === 1;
-                            
-                            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+
+                            if (isPortalUser()) {
                                 if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
                                     return(
                                         <CustomerAccordian key={customer.id} serviceUrl={this.props.serviceUrl} customerNumber={customer.id} title={customer.name} updateCustomerList={this.updateCustomerList} locale={this.props.locale} accordionOpened={accordionOpened}/>
                                     )
                                 }
                                 else {
-                                    return(null)
+                                    return null
                                 }
                             }
                             else {
-                                return(null)
+                                return null
                             }
                         }) : null}
                     </Accordion>
@@ -178,7 +184,7 @@ class AdminDashboard extends React.Component {
             </div>
         )
     }
-    
+
 }
 
 export default withKeycloak(AdminDashboard);
