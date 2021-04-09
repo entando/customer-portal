@@ -10,6 +10,39 @@ export const getKeycloakToken = () => {
   return '';
 };
 
+const ADMIN = 'ROLE_ADMIN';
+const SUPPORT = 'ROLE_SUPPORT';
+const PARTNER = 'ROLE_PARTNER';
+const CUSTOMER = 'ROLE_CUSTOMER';
+
+export const isPortalAdmin = () => {
+  return hasKeycloakClientRole(ADMIN);
+}
+
+export const isPortalSupport = () => {
+  return hasKeycloakClientRole(SUPPORT);
+}
+
+export const isPortalPartner = () => {
+  return hasKeycloakClientRole(PARTNER);
+}
+
+export const isPortalCustomer = () => {
+  return hasKeycloakClientRole(CUSTOMER);
+}
+
+export const isPortalAdminOrSupport = () => {
+  return isPortalAdmin() || isPortalSupport();
+}
+
+export const isPortalCustomerOrPartner = () => {
+  return isPortalCustomer() || isPortalPartner();
+}
+
+export const isPortalUser = () => {
+  return isPortalAdminOrSupport() || isPortalCustomerOrPartner();
+}
+
 export const hasKeycloakClientRole = (clientRole) => {
   if (getKeycloakToken()) {
     const { resourceAccess } = window.entando.keycloak;
