@@ -60,6 +60,8 @@ class ProjectActionItems extends React.Component {
                             <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
                         </div> : null
                         }
+                        <a href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page.page?project=${this.props.project.id}`} style={{textDecoration: 'none'}}><Button kind='ghost' style={{display: 'block', width: '100%'}} value="Subscription Request">Subscription Request</Button></a>
+                        <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
                         {hasKeycloakClientRole('ROLE_ADMIN') ?
                         <div>
                             <Button kind='ghost' onClick={(e) => this.props.handleDeleteProject(e, this.props.project.id)} style={{display: 'block', width: '100%', color: 'red'}}>Delete</Button>
@@ -93,10 +95,14 @@ class ProjectActionItems extends React.Component {
                             <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
                         </div> : null
                         }
-                        <a href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.props.project.id}`} style={{textDecoration: 'none'}}><Button kind='ghost' style={{display: 'block', width: '100%'}} value="View">Open Ticket</Button></a>
+                        <a href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.props.project.id}`} style={{textDecoration: 'none'}}><Button kind='ghost' style={{display: 'block', width: '100%'}} value="Open Ticket">Open Ticket</Button></a>
+                        <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
+                        <a href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page.page?project=${this.props.project.id}`} style={{textDecoration: 'none'}}><Button kind='ghost' style={{display: 'block', width: '100%'}} value="Subscription Request">Subscription Request</Button></a>
                         <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
                         {hasKeycloakClientRole('ROLE_ADMIN') ?
                         <div>
+                            <a href={`/entando-de-app/${this.props.locale}/manage_users.page?project=${this.props.project.id}`} style={{textDecoration: 'none'}}><Button kind='ghost' style={{display: 'block', width: '100%'}} value="Manage Users">Manage Users</Button></a>
+                            <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
                             <Button kind='ghost' onClick={(e) => this.props.handleDeleteProject(e, this.props.project.id)} style={{display: 'block', width: '100%', color: 'red'}}>Delete</Button>
                             <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
                         </div> : null
