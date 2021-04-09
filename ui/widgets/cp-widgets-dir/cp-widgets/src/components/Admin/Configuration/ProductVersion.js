@@ -18,8 +18,7 @@ import { SubtractAlt16 } from '@carbon/icons-react';
 import { apiProductVersionDelete, apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
 import withKeycloak from '../../../auth/withKeycloak';
 import AddProductVersionModal from '../AddProductVersionModal';
-import { hasKeycloakClientRole } from '../../../api/helpers';
-import EditCustomerModal from '../EditCustomerModal';
+import { isPortalAdminOrSupport } from '../../../api/helpers';
 import EditVersionModal from '../EditVersionModal';
 
 class ProductVersion extends Component {
@@ -31,7 +30,7 @@ class ProductVersion extends Component {
   }
 
   componentDidMount() {
-    if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+    if (isPortalAdminOrSupport()) {
       this.getProductVersions();
     }
   }
@@ -43,7 +42,7 @@ class ProductVersion extends Component {
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
     if (authenticated && changedAuth) {
-      if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+      if (isPortalAdminOrSupport()) {
         this.getProductVersions();
       }
     }
@@ -96,7 +95,7 @@ class ProductVersion extends Component {
   }
 
   render() {
-    if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+    if (isPortalAdminOrSupport()) {
       return (
         <div>
           <DataTable rows={rowData} headers={headerData}>

@@ -2,9 +2,8 @@ import React from 'react';
 import { Tile } from 'carbon-components-react';
 import CustomTable from './customDataTable';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiAdminProjectsGet } from '../../api/projects';
-import { apiAdminCustomerGet, apiGetCustomersProjects } from '../../api/customers'; 
-import { hasKeycloakClientRole } from '../../api/helpers';
+import { apiAdminCustomerGet, apiGetCustomersProjects } from '../../api/customers';
+import { isPortalAdminOrSupport } from '../../api/helpers';
 import i18n from '../../i18n';
 
 class CustomerProjectList extends React.Component {
@@ -18,7 +17,7 @@ class CustomerProjectList extends React.Component {
     }
 
     async getCustomer() {
-        const { t, keycloak } = this.props;
+        const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
             try {
@@ -41,35 +40,27 @@ class CustomerProjectList extends React.Component {
     }
 
     componentDidMount(){
-        const { keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-
-        if (authenticated) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
-                this.getCustomer();
-            }
+        if (isPortalAdminOrSupport()) {
+            this.getCustomer();
         }
     }
 
     componentDidUpdate(prevProps) {
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-    
+
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-    
+
         if (authenticated && changedAuth) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+            if (isPortalAdminOrSupport()) {
                 this.getCustomer();
             }
         }
       }
 
     render() {
-        var { t, keycloak } = this.props;
-        var authenticated = keycloak.initialized && keycloak.authenticated;
-
         if (!this.state.loading) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+            if (isPortalAdminOrSupport()) {
                 if (Object.keys(this.state.customer).length !== 0) {
                     return (
                         <div>
@@ -102,7 +93,7 @@ class CustomerProjectList extends React.Component {
             }
         }
         else {
-            return(null)
+            return null;
         }
     }
 }
