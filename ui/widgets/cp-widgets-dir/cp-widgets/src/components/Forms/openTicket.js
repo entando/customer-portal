@@ -122,15 +122,45 @@ class OpenTicket extends Component {
         if (authenticated) {
             if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
                 var projects = await apiAdminProjectsGet(this.props.serviceUrl)
-                this.setState({
-                    projects: projects.data
-                })
+                let search = window.location.search;
+                let params = new URLSearchParams(search);
+                let projectParam = params.get('project');
+                if (projectParam) {
+                    projects.data.forEach((project) => { 
+                        if (String(project.id) === projectParam) {
+                            projects = project;
+                            this.setState({
+                                projects: [projects]
+                            })
+                        }
+                    })
+                }
+                else {
+                    this.setState({
+                        projects: projects.data
+                    })
+                }
             }
             else if (hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-                var projects = await apiMyProjectsGet(this.props.serviceUrl)
-                this.setState({
-                    projects: projects.data
-                })
+                var projects = await apiAdminProjectsGet(this.props.serviceUrl)
+                let search = window.location.search;
+                let params = new URLSearchParams(search);
+                let projectParam = params.get('project');
+                if (projectParam) {
+                    projects.data.forEach((project) => { 
+                        if (String(project.id) === projectParam) {
+                            projects = project;
+                            this.setState({
+                                projects: [projects]
+                            })
+                        }
+                    })
+                }
+                else {
+                    this.setState({
+                        projects: projects.data
+                    })
+                }
             }
         }
 
@@ -196,7 +226,7 @@ class OpenTicket extends Component {
     }
         
     render() {
-        if (!this.state.loading) {
+        if (!this.state.loading && this.state.projects.length !== 0) {
             if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
                 return (
                     <div>
@@ -221,14 +251,13 @@ class OpenTicket extends Component {
                                         <div className="bx--col">
                                             <Select 
                                                 name="project"
-                                                defaultValue={{ label: "Select Proj", value: 0 }}
                                                 labelText={i18n.t('supportTicketForm.selectProject') + " *"} 
                                                 value={JSON.stringify(this.state.project)} 
                                                 onChange={this.handleChanges}
                                                 invalidText={i18n.t('validation.invalid.required')}
                                                 invalid={this.state.invalid['project']} 
                                             >
-                                                <SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />
+                                                {/*<SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />*/}
                                                 {Object.keys(this.state.projects).length !== 0 ? this.state.projects.map((project, i) => {
                                                         return (
                                                             <SelectItem key={i} text={project.name} value={JSON.stringify(project)}>{project.name}</SelectItem>
