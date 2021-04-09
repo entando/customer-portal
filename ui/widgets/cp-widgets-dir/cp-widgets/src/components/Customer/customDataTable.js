@@ -9,6 +9,7 @@ import i18n from '../../i18n';
 import EditProjectModal from '../Admin/EditProjectModal'
 import { hasKeycloakClientRole } from '../../api/helpers';
 import { apiProjectsDelete } from '../../api/projects';
+import ProjectActionItems from '../Admin/ProjectActionItems';
 
 class CustomTable extends Component {
   constructor(props) {
@@ -148,7 +149,6 @@ componentDidUpdate(prevProps) {
   }
 
   render() { 
-    console.log(this.state)
     return (
       <div>
         <DataTable rows={rowData} headers={this.headerData}>
@@ -199,32 +199,7 @@ componentDidUpdate(prevProps) {
                           <TableCell>{project.tickets.length}</TableCell>
                           {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                           <TableCell>
-                            <div>
-                              <Button onClick={(e) => this.showMenu(e, project.id)} style={{padding: '10px 20px'}} kind="tertiary">
-                                +
-                              </Button>
-                              {this.state.showMenu[String(project.id)] ? 
-                                <div 
-                                  className="menu" 
-                                  style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}} 
-                                >
-                                  <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
-                                  {hasKeycloakClientRole('ROLE_ADMIN') ?
-                                    <div>
-                                      <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/>
-                                      <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
-                                    </div> : null
-                                  }
-                                  {hasKeycloakClientRole('ROLE_ADMIN') ?
-                                    <div>
-                                      <Button kind='ghost' onClick={(e) => this.handleDeleteProject(e, project.id)} style={{display: 'block', width: '100%', color: 'red'}}>Delete</Button>
-                                      <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
-                                    </div> : null
-                                  }
-                                </div>
-                                : null
-                              }
-                            </div>
+                            <ProjectActionItems serviceUrl={this.props.serviceUrl} hasSubscription={false} project={project} allProjects={this.state.projects.data} handleDeleteProject={this.handleDeleteProject} updateProjectList={this.updateProjectList} />
                           </TableCell>
                       </TableRow>
                       )
@@ -248,33 +223,7 @@ componentDidUpdate(prevProps) {
                             <TableCell>{project.tickets.length}</TableCell>
                             {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                             <TableCell>
-                              <div>
-                                <Button onClick={(e) => this.showMenu(e, project.id)} style={{padding: '10px 20px'}} kind="tertiary">
-                                  +
-                                </Button>
-                                {this.state.showMenu[String(project.id)] ? 
-                                  <div 
-                                    className="menu" 
-                                    style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}} 
-                                  >
-                                    <Link to={`/subscription-details/${sub.id}`} style={{textDecoration: 'none'}}><Button kind='ghost' style={{display: 'block', width: '100%'}} value="View">View</Button></Link>
-                                    <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
-                                    {hasKeycloakClientRole('ROLE_ADMIN') ?
-                                      <div>
-                                        <EditProjectModal key={project.id} allProjects={this.state.projects.data} project={project} serviceUrl={this.props.serviceUrl} updateProjectList={this.updateProjectList}/>
-                                        <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
-                                      </div> : null
-                                    }
-                                    {hasKeycloakClientRole('ROLE_ADMIN') ?
-                                      <div>
-                                        <Button kind='ghost' onClick={(e) => this.handleDeleteProject(e, project.id)} style={{display: 'block', width: '100%', color: 'red'}}>Delete</Button>
-                                        <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}} />
-                                      </div> : null
-                                    }
-                                  </div>
-                                  : null
-                                }
-                              </div>
+                              <ProjectActionItems serviceUrl={this.props.serviceUrl} locale={this.props.locale} sub={sub} hasSubscription={true} project={project} allProjects={this.state.projects.data} handleDeleteProject={this.handleDeleteProject} updateProjectList={this.updateProjectList} />
                             </TableCell>
                         </TableRow>
                       )
