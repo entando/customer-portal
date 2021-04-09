@@ -154,3 +154,8 @@ Desktop.ini
 ########
 .ent/ent-state
 
+
+####
+/bundle/
+
+.ent/ent-state

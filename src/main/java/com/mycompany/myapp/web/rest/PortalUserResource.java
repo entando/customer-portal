@@ -25,6 +25,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
 public class PortalUserResource {
 
     private final Logger log = LoggerFactory.getLogger(PortalUserResource.class);
@@ -48,7 +49,7 @@ public class PortalUserResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/portal-users")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<PortalUser> createPortalUser(@Valid @RequestBody PortalUser portalUser) throws URISyntaxException {
         log.debug("REST request to save PortalUser : {}", portalUser);
         if (portalUser.getId() != null) {
@@ -70,7 +71,7 @@ public class PortalUserResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/portal-users")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<PortalUser> updatePortalUser(@Valid @RequestBody PortalUser portalUser) throws URISyntaxException {
         log.debug("REST request to update PortalUser : {}", portalUser);
         if (portalUser.getId() == null) {
@@ -88,7 +89,7 @@ public class PortalUserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of portalUsers in body.
      */
     @GetMapping("/portal-users")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public List<PortalUser> getAllPortalUsers() {
         log.debug("REST request to get all PortalUsers");
         return portalUserService.findAll();
@@ -101,7 +102,7 @@ public class PortalUserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the portalUser, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/portal-users/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<PortalUser> getPortalUser(@PathVariable Long id) {
         log.debug("REST request to get PortalUser : {}", id);
         Optional<PortalUser> portalUser = portalUserService.findOne(id);
@@ -115,7 +116,7 @@ public class PortalUserResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/portal-users/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Void> deletePortalUser(@PathVariable Long id) {
         log.debug("REST request to delete PortalUser : {}", id);
 
@@ -130,8 +131,7 @@ public class PortalUserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the portalUser, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/portal-users/username/{username}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<PortalUser> getPortalUserByUserName(@PathVariable String username) {
         log.debug("REST request to get PortalUser by username: {}", username);
         Optional<PortalUser> portalUser = portalUserService.findByUsername(username);
