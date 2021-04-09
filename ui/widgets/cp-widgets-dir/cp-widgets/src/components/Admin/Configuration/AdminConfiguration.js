@@ -3,7 +3,7 @@ import i18n from '../../../i18n';
 import { Accordion, AccordionItem, Tile } from 'carbon-components-react';
 import TicketingSystem from './TicketingSystem';
 import ProductVersion from './ProductVersion';
-import { hasKeycloakClientRole } from '../../../api/helpers';
+import { isPortalAdmin } from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class AdminConfiguration extends React.Component {
@@ -61,14 +61,14 @@ componentDidUpdate(prevProps) {
 render() {
   if (!this.state.loading) {
     // Authorized
-    if (hasKeycloakClientRole('ROLE_ADMIN')) {
+    if (isPortalAdmin()) {
       return(
         <div>
           <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
           <div className="form-container">
             <Tile>
               <p className="title">{i18n.t('adminConfig.title')}</p>
-              <p class="desc">{i18n.t('adminConfig.desc')}</p>
+              <p className="desc">{i18n.t('adminConfig.desc')}</p>
             </Tile>
             <Accordion>
               {this.adminConfig.map((item, index) => (

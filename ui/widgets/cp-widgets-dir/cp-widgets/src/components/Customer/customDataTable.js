@@ -7,14 +7,14 @@ import withKeycloak from '../../auth/withKeycloak';
 import { Link, HashRouter } from 'react-router-dom';
 import i18n from '../../i18n';
 import EditProjectModal from '../Admin/EditProjectModal'
-import { hasKeycloakClientRole } from '../../api/helpers';
+import { isPortalAdminOrSupport } from '../../api/helpers';
 import { apiProjectsDelete } from '../../api/projects';
 import ProjectActionItems from '../Admin/ProjectActionItems';
 
 class CustomTable extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       projects: {},
       action: "Edit",
       showMenu: {},
@@ -51,7 +51,7 @@ class CustomTable extends Component {
       {
         header: i18n.t('customerDetails.notes'),
         key: 'notes',
-      },  
+      },
       {
           header: i18n.t('customerDashboard.action'),
           key: 'action',
@@ -62,17 +62,17 @@ class CustomTable extends Component {
   async fetchData() {
     const { t, keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
-    
+
     if (authenticated) {
       try {
       var projects;
-      if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+      if (isPortalAdminOrSupport()) {
         projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
       }
       else {
         projects = await apiGetMyCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
       }
-      
+
       this.setState({
           projects: projects
       });
@@ -108,7 +108,7 @@ showMenu = (e, id) => {
 closeMenu = () => {
   this.setState({ showMenu: false }, () => {
     document.removeEventListener('click', this.closeMenu);
-  });  
+  });
 }
 
 async deleteProject(id) {
@@ -148,7 +148,7 @@ componentDidUpdate(prevProps) {
     }
   }
 
-  render() { 
+  render() {
     return (
       <div>
         <DataTable rows={rowData} headers={this.headerData}>
@@ -159,7 +159,7 @@ componentDidUpdate(prevProps) {
                 <TableRow>
                   {headers.map((header) => {
                     if(header.header === i18n.t('customerDetails.notes')) {
-                      if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+                      if (isPortalAdminOrSupport()) {
                         return(
                           <TableHeader {...getHeaderProps({ header })}>
                             {header.header}
@@ -175,29 +175,29 @@ componentDidUpdate(prevProps) {
                       )
                     }
                   })}
-                  
+
                 </TableRow>
               </TableHead>
               <TableBody>
-              {Object.keys(this.state.projects).length !== 0 ? 
+              {Object.keys(this.state.projects).length !== 0 ?
                   this.state.projects.data.map((project, index) => {
                     if (project.projectSubscriptions.length === 0) {
                       return(
                         <TableRow key={index} >
                           <TableCell>{project.name}</TableCell>
-                          {project.partners.length !== 0 ? 
+                          {project.partners.length !== 0 ?
                             <TableCell>
                               {project.partners.map(partner => (
                                 <p>{partner.name}</p>
                               ))}
-                            </TableCell> 
+                            </TableCell>
                           : <TableCell>{i18n.t('userMessages.none')}</TableCell>}
                           <TableCell>{i18n.t('userMessages.none')}</TableCell>
                           <TableCell>{i18n.t('userMessages.none')}</TableCell>
                           <TableCell>{i18n.t('userMessages.none')}</TableCell>
                           <TableCell>{i18n.t('userMessages.none')}</TableCell>
                           <TableCell>{project.tickets.length}</TableCell>
-                          {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
+                          {isPortalAdminOrSupport()  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                           <TableCell>
                             <ProjectActionItems serviceUrl={this.props.serviceUrl} locale={this.props.locale} hasSubscription={false} project={project} allProjects={this.state.projects.data} handleDeleteProject={this.handleDeleteProject} updateProjectList={this.updateProjectList} />
                           </TableCell>
@@ -209,19 +209,19 @@ componentDidUpdate(prevProps) {
                       return(
                         <TableRow key={index} >
                             <TableCell><Link to={`/subscription-details/${sub.id}`}>{project.name}</Link></TableCell>
-                            {project.partners.length !== 0 ? 
+                            {project.partners.length !== 0 ?
                               <TableCell>
                                 {project.partners.map(partner => (
                                   <p>{partner.name}</p>
                                 ))}
-                              </TableCell> 
+                              </TableCell>
                               : <TableCell>{i18n.t('userMessages.none')}</TableCell>}
                             {sub.entandoVersion ? <TableCell>{sub.entandoVersion.name}</TableCell> : <TableCell>{i18n.t('userMessages.none')}</TableCell>}
                             <TableCell>{sub.status}</TableCell>
                             <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
                             <TableCell>{String(new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)).toDateString())}</TableCell>
                             <TableCell>{project.tickets.length}</TableCell>
-                            {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
+                            {isPortalAdminOrSupport()  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                             <TableCell>
                               <ProjectActionItems serviceUrl={this.props.serviceUrl} locale={this.props.locale} sub={sub} hasSubscription={true} project={project} allProjects={this.state.projects.data} handleDeleteProject={this.handleDeleteProject} updateProjectList={this.updateProjectList} />
                             </TableCell>
@@ -276,7 +276,7 @@ const rowData = [
       startDate: 'October, 2019',
       endDate: 'October, 2022',
       openTickets: '1',
-    }  
+    }
 ];
- 
+
 export default withKeycloak(CustomTable);
