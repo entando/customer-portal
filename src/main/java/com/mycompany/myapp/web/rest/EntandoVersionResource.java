@@ -45,6 +45,7 @@ import io.github.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
 public class EntandoVersionResource {
 
     private final Logger log = LoggerFactory.getLogger(EntandoVersionResource.class);
@@ -68,7 +69,7 @@ public class EntandoVersionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/entando-versions")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<EntandoVersion> createEntandoVersion(@Valid @RequestBody EntandoVersionRequest entandoVersionRequest) throws URISyntaxException {
 
     	try {
@@ -108,7 +109,7 @@ public class EntandoVersionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/entando-versions")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<EntandoVersion> updateEntandoVersion(@Valid @RequestBody EntandoVersion entandoVersion) throws URISyntaxException {
         log.debug("REST request to update EntandoVersion : {}", entandoVersion);
         if (entandoVersion.getId() == null) {
@@ -121,7 +122,7 @@ public class EntandoVersionResource {
     }
 
     @PutMapping("/entando-versions/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<EntandoVersion> updateEntandoVersionStatus(@PathVariable Long id) throws URISyntaxException {
 
     	try {
@@ -145,8 +146,7 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of entandoVersions in body.
      */
     @GetMapping("/entando-versions")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<List<EntandoVersionResponse>> getAllEntandoVersions() {
 
     	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT);
@@ -184,8 +184,7 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the entandoVersion, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/entando-versions/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<EntandoVersion> getEntandoVersion(@PathVariable Long id) {
         log.debug("REST request to get EntandoVersion : {}", id);
         Optional<EntandoVersion> entandoVersion = entandoVersionService.findOne(id);
@@ -199,7 +198,7 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/entando-versions/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Void> deleteEntandoVersion(@PathVariable Long id) {
         log.debug("REST request to delete EntandoVersion : {}", id);
 

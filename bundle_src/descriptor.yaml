@@ -1,9 +1,9 @@
-code: custportapp-bundle
-description: This is the custportApp bundle
+code: customerportal-bundle
+description: This is the Customer Portal bundle
 
 components:
   plugins:
-    - plugins/custportapp-plugin.yaml
+    - plugins/customerportal-plugin.yaml
 
   widgets:
     - ui/widgets/cp-widgets-dir/cp-widgets/admin-dashboard-widget-descriptor.yaml
@@ -26,30 +26,5 @@ components:
     - ui/widgets/cp-widgets-dir/cp-widgets/product-version-widget-descriptor.yaml
     - ui/widgets/cp-widgets-dir/cp-widgets/open-ticket-widget-descriptor.yaml
     - ui/widgets/cp-widgets-dir/cp-widgets/admin-configuration-widget-descriptor.yaml
-#    - ui/widgets/customer/tableWidget/customer-table-widget-descriptor.yaml
-#    - ui/widgets/customer/detailsWidget/customer-details-widget-descriptor.yaml
-#    - ui/widgets/customer/formWidget/customer-form-widget-descriptor.yaml
-#    - ui/widgets/customer/customer-dashboard-widget/customer-dashboard-widget-descriptor.yaml
-#    - ui/widgets/project/tableWidget/project-table-widget-descriptor.yaml
-#    - ui/widgets/project/detailsWidget/project-details-widget-descriptor.yaml
-#    - ui/widgets/project/formWidget/project-form-widget-descriptor.yaml
-#    - ui/widgets/entando-version/tableWidget/entando-version-table-widget-descriptor.yaml
-#    - ui/widgets/entando-version/detailsWidget/entando-version-details-widget-descriptor.yaml
-#    - ui/widgets/entando-version/formWidget/entando-version-form-widget-descriptor.yaml
-#    - ui/widgets/project-subscription/tableWidget/project-subscription-table-widget-descriptor.yaml
-#    - ui/widgets/project-subscription/detailsWidget/project-subscription-details-widget-descriptor.yaml
-#    - ui/widgets/project-subscription/formWidget/project-subscription-form-widget-descriptor.yaml
-#    - ui/widgets/partner/tableWidget/partner-table-widget-descriptor.yaml
-#    - ui/widgets/partner/detailsWidget/partner-details-widget-descriptor.yaml
-#    - ui/widgets/partner/formWidget/partner-form-widget-descriptor.yaml
-#    - ui/widgets/ticket/tableWidget/ticket-table-widget-descriptor.yaml
-#    - ui/widgets/ticket/detailsWidget/ticket-details-widget-descriptor.yaml
-#    - ui/widgets/ticket/formWidget/ticket-form-widget-descriptor.yaml
-#    - ui/widgets/ticketing-system/tableWidget/ticketing-system-table-widget-descriptor.yaml
-#    - ui/widgets/ticketing-system/detailsWidget/ticketing-system-details-widget-descriptor.yaml
-#    - ui/widgets/ticketing-system/formWidget/ticketing-system-form-widget-descriptor.yaml
-#    - ui/widgets/portal-user/tableWidget/portal-user-table-widget-descriptor.yaml
-#    - ui/widgets/portal-user/detailsWidget/portal-user-details-widget-descriptor.yaml
-#    - ui/widgets/portal-user/formWidget/portal-user-form-widget-descriptor.yaml
 # entando-needle-descriptor-add-widgets - Entando blueprint will add widget bundle files here
 

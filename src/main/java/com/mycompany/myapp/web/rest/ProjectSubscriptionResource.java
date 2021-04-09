@@ -52,6 +52,7 @@ import io.github.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
 public class ProjectSubscriptionResource {
 
     private final Logger log = LoggerFactory.getLogger(ProjectSubscriptionResource.class);
@@ -86,8 +87,7 @@ public class ProjectSubscriptionResource {
      * @throws MessagingException
      */
     @PostMapping("/project-subscriptions")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<ProjectSubscription> createProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException, MessagingException {
         log.debug("REST request to save ProjectSubscription : {}", subscriptionCreationRequest);
         ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
@@ -194,8 +194,7 @@ public class ProjectSubscriptionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/project-subscriptions")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<ProjectSubscription> updateProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException {
         ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
         log.debug("REST request to update ProjectSubscription : {}", projectSubscription);
@@ -240,8 +239,7 @@ public class ProjectSubscriptionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projectSubscriptions in body.
      */
     @GetMapping("/project-subscriptions")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public List<ProjectSubscription> getAllProjectSubscriptions() {
         log.debug("REST request to get all ProjectSubscriptions");
         return projectSubscriptionService.findAll();
@@ -254,7 +252,7 @@ public class ProjectSubscriptionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the projectSubscription, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/project-subscriptions/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<ProjectSubscription> getProjectSubscription(@PathVariable Long id) {
         log.debug("REST request to get ProjectSubscription : {}", id);
         Optional<ProjectSubscription> projectSubscription = projectSubscriptionService.findOne(id);
@@ -268,8 +266,7 @@ public class ProjectSubscriptionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/project-subscriptions/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<Void> deleteProjectSubscription(@PathVariable Long id) {
         log.debug("REST request to delete ProjectSubscription : {}", id);
 
@@ -284,8 +281,7 @@ public class ProjectSubscriptionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the projectSubscription, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/project-subscriptions/mysubscription/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<ProjectSubscription> getMyProjectSubscription(@PathVariable Long id) {
         log.debug("REST request to get ProjectSubscription : {}", id);
         Optional<ProjectSubscription> projectSubscription = projectSubscriptionService.findOne(id);
@@ -302,8 +298,7 @@ public class ProjectSubscriptionResource {
     }
 
     @PutMapping("project-subscriptions/renew")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<ProjectSubscription> renewProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException {
         //ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
         long entandoVersionId = subscriptionCreationRequest.getEntandoVersionId();
