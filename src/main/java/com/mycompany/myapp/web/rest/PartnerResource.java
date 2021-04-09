@@ -25,6 +25,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
 public class PartnerResource {
 
     private final Logger log = LoggerFactory.getLogger(PartnerResource.class);
@@ -48,7 +49,7 @@ public class PartnerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/partners")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Partner> createPartner(@Valid @RequestBody Partner partner) throws URISyntaxException {
         log.debug("REST request to save Partner : {}", partner);
         if (partner.getId() != null) {
@@ -70,7 +71,7 @@ public class PartnerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/partners")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Partner> updatePartner(@Valid @RequestBody Partner partner) throws URISyntaxException {
         log.debug("REST request to update Partner : {}", partner);
         if (partner.getId() == null) {
@@ -88,7 +89,7 @@ public class PartnerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of partners in body.
      */
     @GetMapping("/partners")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public List<Partner> getAllPartners() {
         log.debug("REST request to get all Partners");
         return partnerService.findAll();
@@ -101,8 +102,7 @@ public class PartnerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the partner, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/partners/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.CUSTOMER + "', '" + AuthoritiesConstants.PARTNER +
-        "', '" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<Partner> getPartner(@PathVariable Long id) {
         log.debug("REST request to get Partner : {}", id);
         Optional<Partner> partner = partnerService.findOne(id);
@@ -116,7 +116,7 @@ public class PartnerResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/partners/{id}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Void> deletePartner(@PathVariable Long id) {
         log.debug("REST request to delete Partner : {}", id);
 
