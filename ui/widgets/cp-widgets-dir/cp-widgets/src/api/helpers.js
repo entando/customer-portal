@@ -10,10 +10,10 @@ export const getKeycloakToken = () => {
   return '';
 };
 
-const ADMIN = 'ROLE_ADMIN';
-const SUPPORT = 'ROLE_SUPPORT';
-const PARTNER = 'ROLE_PARTNER';
-const CUSTOMER = 'ROLE_CUSTOMER';
+const ADMIN = 'cp-admin';
+const SUPPORT = 'cp-support';
+const PARTNER = 'cp-partner';
+const CUSTOMER = 'cp-customer';
 
 export const isPortalAdmin = () => {
   return hasKeycloakClientRole(ADMIN);
