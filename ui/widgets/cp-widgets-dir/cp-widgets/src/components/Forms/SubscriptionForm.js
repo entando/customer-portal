@@ -84,6 +84,23 @@ class SubscriptionForm extends Component {
         }
         const productVersions = (await apiProductVersionsGet(this.props.serviceUrl)).data;
 
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        let projectParam = params.get('project');
+
+        if (projectParam) {
+            Object.keys(projects).map((id, value) => {
+                if (id !== projectParam) {
+                    delete projects[id]
+                }
+            });
+            if (Object.keys(projects).length === 1) {
+                this.setState({
+                    projectId: Object.keys(projects)[0]
+                });
+            }
+        }
+
         this.setState({
             projects,
             productVersions
@@ -240,7 +257,9 @@ class SubscriptionForm extends Component {
             projectList = Object.keys(projectIdsNames).map((projectId, i) => (
                 <SelectItem key={i} text={projectIdsNames[projectId]} value={projectId}>{projectIdsNames[projectId]}</SelectItem>
             ));
-            projectList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.projectList')} value="" />);
+            if (Object.keys(projectIdsNames).length > 1) {
+                projectList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.projectList')} value="" />);
+            }
         } else {
             projectList = <SelectItem text={i18n.t('manageUsers.assign.noProjects')} value="" />;
         }

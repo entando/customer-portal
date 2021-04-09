@@ -130,7 +130,8 @@ class OpenTicket extends Component {
                         if (String(project.id) === projectParam) {
                             projects = project;
                             this.setState({
-                                projects: [projects]
+                                projects: [projects],
+                                project: projects
                             })
                         }
                     })
@@ -149,9 +150,10 @@ class OpenTicket extends Component {
                 if (projectParam) {
                     projects.data.forEach((project) => { 
                         if (String(project.id) === projectParam) {
-                            projects = project;
+                            var foundProject = project;
                             this.setState({
-                                projects: [projects]
+                                projects: [foundProject],
+                                project: foundProject
                             })
                         }
                     })
@@ -257,7 +259,7 @@ class OpenTicket extends Component {
                                                 invalidText={i18n.t('validation.invalid.required')}
                                                 invalid={this.state.invalid['project']} 
                                             >
-                                                {/*<SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />*/}
+                                                {this.state.projects.length > 1 ? <SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" /> : null}
                                                 {Object.keys(this.state.projects).length !== 0 ? this.state.projects.map((project, i) => {
                                                         return (
                                                             <SelectItem key={i} text={project.name} value={JSON.stringify(project)}>{project.name}</SelectItem>

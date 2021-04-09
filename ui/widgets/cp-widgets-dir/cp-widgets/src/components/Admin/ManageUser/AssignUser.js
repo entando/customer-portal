@@ -41,7 +41,24 @@ class AssignUser extends Component {
 
     async fetchData(keycloakUrl) {
         const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(keycloakUrl)).data);
-        const projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
+        var projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        let projectParam = params.get('project');
+
+        if (projectParam) {
+            Object.keys(projects).map((id, value) => {
+                if (id !== projectParam) {
+                    delete projects[id]
+                }
+            });
+            if (Object.keys(projects).length === 1) {
+                this.setState({
+                    projectId: Object.keys(projects)[0]
+                });
+            }
+        }  
+
         this.setState({
             users,
             projects
@@ -150,7 +167,9 @@ class AssignUser extends Component {
                     test
                 </SelectItem>
             ));
-            projectList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.projectList')} value="" />);
+            if (Object.keys(projectIdsNames).length > 1) {
+                projectList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.projectList')} value="" />);
+            }
         } else {
             projectList = <SelectItem text={i18n.t('manageUsers.assign.noProjects')} value="" />;
         }
