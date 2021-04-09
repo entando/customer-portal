@@ -2,8 +2,8 @@ image: nathanshaw/customerportal:0.0.2-SNAPSHOT
 dbms: postgresql
 healthCheckPath: "/management/health"
 roles:
-  - "ROLE_ADMIN"
-  - "ROLE_SUPPORT"
-  - "ROLE_CUSTOMER"
-  - "ROLE_PARTNER"
+  - "cp-admin"
+  - "cp-support"
+  - "cp-partner"
+  - "cp-customer"
 # entando-needle-descriptor-add-roles - Entando blueprint will add roles here
