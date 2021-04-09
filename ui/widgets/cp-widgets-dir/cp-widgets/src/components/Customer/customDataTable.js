@@ -199,7 +199,7 @@ componentDidUpdate(prevProps) {
                           <TableCell>{project.tickets.length}</TableCell>
                           {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')  ? <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                           <TableCell>
-                            <ProjectActionItems serviceUrl={this.props.serviceUrl} hasSubscription={false} project={project} allProjects={this.state.projects.data} handleDeleteProject={this.handleDeleteProject} updateProjectList={this.updateProjectList} />
+                            <ProjectActionItems serviceUrl={this.props.serviceUrl} locale={this.props.locale} hasSubscription={false} project={project} allProjects={this.state.projects.data} handleDeleteProject={this.handleDeleteProject} updateProjectList={this.updateProjectList} />
                           </TableCell>
                       </TableRow>
                       )
