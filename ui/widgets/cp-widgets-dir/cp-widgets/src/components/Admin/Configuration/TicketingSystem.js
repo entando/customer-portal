@@ -2,24 +2,23 @@ import React, { Component } from 'react';
 import i18n from '../../../i18n';
 import { Form, TextInput, Select, SelectItem, Button} from 'carbon-components-react';
 import { apiTicketingSystemPost, apiTicketingSystemsGet, apiTicketingSystemPut, apiTicketingSystemDelete } from '../../../api/ticketingsystem';
-import { hasKeycloakClientRole } from '../../../api/helpers';
+import { isPortalAdmin } from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class TicketingSystem extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             ticketingSystem: '',
             ticketingSystemType:'',
             url: '',
-            serviceAccount: '',
             serviceAccount: '',
             systemId: '',
             submitMsg: '',
             submitColour: 'black'
         }
     }
-    
+
     handleChanges = (e) => {
         const input = e.target;
         const name = input.name;
@@ -52,7 +51,7 @@ class TicketingSystem extends Component {
         const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl)
         if (ticketingSystems.data.length > 0) {
             const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length-1]
-            
+
             this.setState({
                 ticketingSystem: currentTicketingSystem,
                 url: currentTicketingSystem.url,
@@ -75,9 +74,9 @@ class TicketingSystem extends Component {
     componentDidUpdate(prevProps) {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-      
+
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-      
+
         if (authenticated && changedAuth) {
             this.getTicketingSystems();
         }
@@ -133,9 +132,9 @@ class TicketingSystem extends Component {
         }
     };
 
-    render() { 
+    render() {
         const ticketingSystem = ['Jira', 'Other'];
-        if (hasKeycloakClientRole('ROLE_ADMIN')) {
+        if (isPortalAdmin()) {
             return (
                 <div className="cp-form">
                     <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
@@ -173,5 +172,5 @@ class TicketingSystem extends Component {
         }
     }
 }
- 
+
 export default withKeycloak(TicketingSystem);

@@ -5,7 +5,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiAdminProjectsGet, apiMyProjectsGet, apiGetProjectSubscriptions } from '../../api/projects';
 import { apiJiraTicketPost } from '../../api/tickets';
 import { apiTicketingSystemsGet } from '../../api/ticketingsystem';
-import { hasKeycloakClientRole } from '../../api/helpers';
+import { isPortalUser, isPortalAdminOrSupport, isPortalCustomerOrPartner, isPortalCustomer, isPortalAdmin, isPortalPartner, isPortalSupport } from '../../api/helpers';
 
 class OpenTicket extends Component {
     constructor() {
@@ -79,7 +79,7 @@ class OpenTicket extends Component {
         const formIsValid = this.handleValidation();
 
         if (formIsValid) {
-            // check if project has subscription 
+            // check if project has subscription
             this.fetchProjectSubscription(this.state.project.id).then(result => {
                 // if project has subscription, create ticket
                 if(result.data.length > 0) {
@@ -116,22 +116,17 @@ class OpenTicket extends Component {
     }
 
     async fetchProjects() {
-        const { t, keycloak } = this.props;
-        var authenticated = keycloak.initialized && keycloak.authenticated;
-    
-        if (authenticated) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
-                var projects = await apiAdminProjectsGet(this.props.serviceUrl)
-                this.setState({
-                    projects: projects.data
-                })
-            }
-            else if (hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-                var projects = await apiMyProjectsGet(this.props.serviceUrl)
-                this.setState({
-                    projects: projects.data
-                })
-            }
+        if (isPortalAdminOrSupport()) {
+            var projects = await apiAdminProjectsGet(this.props.serviceUrl)
+            this.setState({
+                projects: projects.data
+            })
+        }
+        else if (isPortalCustomerOrPartner()) {
+            var projects = await apiMyProjectsGet(this.props.serviceUrl)
+            this.setState({
+                projects: projects.data
+            })
         }
 
         this.render();
@@ -140,7 +135,7 @@ class OpenTicket extends Component {
     async createTicket() {
         const { t, keycloak } = this.props;
         var authenticated = keycloak.initialized && keycloak.authenticated;
-    
+
         if (authenticated) {
             const ticket = {
                 systemId: this.state.project.systemId,
@@ -158,7 +153,7 @@ class OpenTicket extends Component {
     }
 
     async getTicketingSystem() {
-        if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+        if (isPortalUser()) {
             const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
             const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length-1]
             this.setState({
@@ -183,9 +178,9 @@ class OpenTicket extends Component {
     componentDidUpdate(prevProps) {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-      
+
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-      
+
         if (authenticated && changedAuth) {
             this.fetchProjects();
             this.getTicketingSystem();
@@ -194,20 +189,20 @@ class OpenTicket extends Component {
               });
         }
     }
-        
+
     render() {
         if (!this.state.loading) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+            if (isPortalUser()) {
                 return (
                     <div>
-                        {hasKeycloakClientRole('ROLE_ADMIN') ? 
-                            <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
-                        hasKeycloakClientRole('ROLE_SUPPORT') ? 
-                            <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
-                        hasKeycloakClientRole('ROLE_CUSTOMER') ? 
-                            <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
-                        hasKeycloakClientRole('ROLE_PARTNER') ? 
-                            <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
+                        {isPortalAdmin() ?
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> :
+                        isPortalSupport() ?
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> :
+                        isPortalCustomer() ?
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> :
+                        isPortalPartner() ?
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> :
                         null}
                         <div className="form-container">
                             <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
@@ -219,14 +214,14 @@ class OpenTicket extends Component {
                                 <div className="bx--grid">
                                     <div className="bx--row">
                                         <div className="bx--col">
-                                            <Select 
+                                            <Select
                                                 name="project"
                                                 defaultValue={{ label: "Select Proj", value: 0 }}
-                                                labelText={i18n.t('supportTicketForm.selectProject') + " *"} 
-                                                value={JSON.stringify(this.state.project)} 
+                                                labelText={i18n.t('supportTicketForm.selectProject') + " *"}
+                                                value={JSON.stringify(this.state.project)}
                                                 onChange={this.handleChanges}
                                                 invalidText={i18n.t('validation.invalid.required')}
-                                                invalid={this.state.invalid['project']} 
+                                                invalid={this.state.invalid['project']}
                                             >
                                                 <SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />
                                                 {Object.keys(this.state.projects).length !== 0 ? this.state.projects.map((project, i) => {
@@ -235,25 +230,25 @@ class OpenTicket extends Component {
                                                         )
                                                 }) : null}
                                             </Select>
-                                            <Select 
-                                                name="type" 
-                                                labelText={i18n.t('supportTicketForm.type') + " *"} 
-                                                value={this.state.type} 
+                                            <Select
+                                                name="type"
+                                                labelText={i18n.t('supportTicketForm.type') + " *"}
+                                                value={this.state.type}
                                                 onChange={this.handleChanges}
                                                 invalidText={i18n.t('validation.invalid.required')}
-                                                invalid={this.state.invalid['type']} 
+                                                invalid={this.state.invalid['type']}
                                             >
                                                 {this.types.map((type, i) => (
                                                     <SelectItem key={i} text={type} value={type}>{type}</SelectItem>
                                                 ))}
                                             </Select>
-                                            <Select 
-                                                name="priority" 
-                                                labelText={i18n.t('supportTicketForm.priority') + " *"} 
+                                            <Select
+                                                name="priority"
+                                                labelText={i18n.t('supportTicketForm.priority') + " *"}
                                                 value={this.state.priority}
                                                 onChange={this.handleChanges}
                                                 invalidText={i18n.t('validation.invalid.required')}
-                                                invalid={this.state.invalid['priority']} 
+                                                invalid={this.state.invalid['priority']}
                                             >
                                                 {this.priorities.map((priority, i) => (
                                                     <SelectItem key={i} text={priority} value={priority}>{priority}</SelectItem>
@@ -263,14 +258,14 @@ class OpenTicket extends Component {
                                     </div>
                                     <div className="bx--row">
                                         <div className="bx--col">
-                                            <TextArea 
-                                                labelText={i18n.t('supportTicketForm.ticketDescription') + " *"} 
-                                                placeholder={i18n.t('supportTicketForm.addticketDescription')} 
-                                                name="description" 
-                                                value={this.state.description} 
-                                                onChange={this.handleChanges}  
+                                            <TextArea
+                                                labelText={i18n.t('supportTicketForm.ticketDescription') + " *"}
+                                                placeholder={i18n.t('supportTicketForm.addticketDescription')}
+                                                name="description"
+                                                value={this.state.description}
+                                                onChange={this.handleChanges}
                                                 invalidText={i18n.t('validation.invalid.required')}
-                                                invalid={this.state.invalid['description']} 
+                                                invalid={this.state.invalid['description']}
                                             />
                                             <Button kind="primary" tabIndex={0} type="submit" > {i18n.t('buttons.submit')}  </Button>
                                         </div>
@@ -278,7 +273,7 @@ class OpenTicket extends Component {
                                 </div>
                             </Form>
                         </div>
-                    </div>    
+                    </div>
                 );
             }
             else {

@@ -2,16 +2,15 @@ import React, { Component } from 'react';
 import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, PaginationNav } from 'carbon-components-react';
 import { apiJiraTicketsGet } from '../../api/tickets';
 import { apiTicketingSystemsGet } from '../../api/ticketingsystem';
-import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProjectGet, apiAddTicketToProject } from '../../api/projects';
-import { hasKeycloakClientRole } from '../../api/helpers';
+import { isPortalUser } from '../../api/helpers';
 import i18n from '../../i18n';
 
 class TicketList extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       tickets: {},
       project: {},
       currentTicketingSystem: {},
@@ -80,13 +79,8 @@ class TicketList extends Component {
 }
 
 componentDidMount(){
-  const { keycloak } = this.props;
-  const authenticated = keycloak.initialized && keycloak.authenticated;
-
-  if(authenticated) {
-    if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-      this.fetchData();
-    }
+  if (isPortalUser()) {
+    this.fetchData();
   }
 }
 
@@ -96,10 +90,8 @@ componentDidUpdate(prevProps) {
 
   const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
-  if (authenticated && changedAuth) {
-    if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-      this.fetchData();
-    }
+  if (authenticated && changedAuth && isPortalUser()) {
+    this.fetchData();
   }
 }
 
@@ -117,12 +109,12 @@ componentDidUpdate(prevProps) {
       onChange: (event) => this.setState({currentPage: event}),
     });
 
-    return ( 
+    return (
       <div>
         <DataTable rows={rowData} headers={this.headerData}>
         {({ rows, headers, getHeaderProps, getTableProps }) => (
-          <TableContainer 
-            title={i18n.t('ticketDetails.listOfTickets')} 
+          <TableContainer
+            title={i18n.t('ticketDetails.listOfTickets')}
             description={Object.keys(this.state.tickets).length !== 0 && Object.keys(this.state.project).length !== 0  ? <a href={this.state.currentTicketingSystem.url.substr(0, this.state.currentTicketingSystem.url.indexOf("/rest")) + "/browse/" + this.state.tickets.data[0].systemId + "?jql=Organizations=" + this.state.project.data.systemId} style={{textDecoration: 'none'}} target="_blank" >{i18n.t('ticketDetails.tickets')}</a> : <a>{i18n.t('ticketDetails.tickets')}</a>}
           >
             <Table {...getTableProps()}>
@@ -193,7 +185,7 @@ const rowData = [
         creationDate: 'October, 2019',
         openTicket: <a href="">Open Ticket</a>,
      },
-  
+
 ];
- 
+
 export default withKeycloak(TicketList);

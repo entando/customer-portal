@@ -3,9 +3,8 @@ import TicketList from './TicketList';
 import { Tile } from 'carbon-components-react';
 import { apiSubscriptionGet, apiGetMySubscription } from '../../api/subscriptions'
 import withKeycloak from '../../auth/withKeycloak';
-import { apiUsersGet } from '../../api/portalusers';
-import { apiGetProjectsUsers, apiProjectGet } from '../../api/projects'; 
-import { hasKeycloakClientRole } from '../../api/helpers';
+import { apiGetProjectsUsers, apiProjectGet } from '../../api/projects';
+import { isPortalAdminOrSupport, isPortalCustomerOrPartner, isPortalUser, isPortalAdmin } from '../../api/helpers';
 import EditSubscriptionModal from '../Admin/EditSubscriptionModal';
 import i18n from '../../i18n';
 
@@ -40,7 +39,7 @@ class Subscription extends React.Component {
             try {
                 var subscription;
                 var users = '';
-                if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+                if (isPortalAdminOrSupport()) {
                     subscription = await apiSubscriptionGet(this.props.serviceUrl, this.props.match.params.id);
                     var project = '';
                     if (subscription.data.project) {
@@ -48,7 +47,7 @@ class Subscription extends React.Component {
                         users = await apiGetProjectsUsers(this.props.serviceUrl, project.data.id)
                     }
                 }
-                else if (hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+                else if (isPortalCustomerOrPartner()) {
                     subscription = await apiGetMySubscription(this.props.serviceUrl, this.props.match.params.id);
                     var project = '';
                     if (subscription.data.project) {
@@ -74,36 +73,27 @@ class Subscription extends React.Component {
     }
 
     componentDidMount(){
-        const { keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-
-        if (authenticated) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-                this.getSubscription();
-            }
+        if (isPortalUser()) {
+            this.getSubscription();
         }
     }
 
     componentDidUpdate(prevProps) {
         const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-    
+
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-    
-        if (authenticated && changedAuth) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
-                this.getSubscription();
-            }
+
+        if (authenticated && changedAuth && isPortalUser()) {
+            this.getSubscription();
         }
       }
 
     render() {
         const { description, commitment, type, quantityRequest, components, level, startDate, endDate, license } = subscriptionData
-        var { t, keycloak } = this.props;
-        var authenticated = keycloak.initialized && keycloak.authenticated;
 
         if (!this.state.loading) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+            if (isPortalUser()) {
                 if (Object.keys(this.state.subscription).length !== 0 && Object.keys(this.state.project).length !== 0) {
                     return (
                         <div className="subscription-details">
@@ -116,7 +106,7 @@ class Subscription extends React.Component {
                                             <p><strong>{i18n.t('customerDashboard.projectName')}:</strong> {this.state.project.data.name}</p>
                                             <p><strong>{i18n.t('subscriptionDetails.description')}:</strong> {this.state.subscription.data.project.description}</p>
                                             <p><strong>{i18n.t('subscriptionDetails.partners')}:</strong>
-                                            {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? 
+                                            {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ?
                                                 <>
                                                     {this.state.project.data.partners.map((partner, index) => (
                                                         <> {index === this.state.project.data.partners.length - 1 ? partner.name : partner.name + ", "} </>
@@ -126,7 +116,7 @@ class Subscription extends React.Component {
                                             }
                                             </p>
                                             <p><strong>{i18n.t('subscriptionDetails.type')}:</strong> {type}</p>
-                                            {(hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) ?
+                                            {isPortalAdminOrSupport() ?
                                                 <p><strong>{i18n.t('subscriptionDetails.notes')}:</strong> {this.state.subscription.data.notes}</p> : null
                                             }
                                         </div>
@@ -136,7 +126,7 @@ class Subscription extends React.Component {
                                             <p><strong>{i18n.t('subscriptionDetails.startDate')}:</strong> {String(new Date(this.state.subscription.data.startDate).toDateString())}</p>
                                             <p><strong>{i18n.t('subscriptionDetails.endDate')}:</strong> {String(new Date(new Date(this.state.subscription.data.startDate).setMonth(new Date(this.state.subscription.data.startDate).getMonth() + this.state.subscription.data.lengthInMonths)).toDateString())}</p>
                                             <p><strong>{i18n.t('subscriptionDetails.license')}:</strong> {license}</p>
-                                            {hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') ? 
+                                            {isPortalAdminOrSupport() ?
                                                 <>
                                                     <p><strong>{i18n.t('subscriptionDetails.assignedUsers')}:</strong>
                                                     {this.state.project.data !== '' && Object.keys(this.state.users.data).length !== 0 ?
@@ -153,7 +143,7 @@ class Subscription extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                {hasKeycloakClientRole('ROLE_ADMIN') ? 
+                                {isPortalAdmin() ?
                                     <EditSubscriptionModal project={this.state.project.data} subscription={this.state.subscription.data} serviceUrl={this.props.serviceUrl} updateSubscription={this.updateSubscription}/>
                                 : null}
                             </Tile>
@@ -172,7 +162,7 @@ class Subscription extends React.Component {
             }
         }
         else {
-            return(null)
+            return null
         }
     }
 }

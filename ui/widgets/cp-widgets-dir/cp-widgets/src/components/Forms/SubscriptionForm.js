@@ -5,7 +5,13 @@ import { apiGetProjectIdNames, apiGetMyProjectIdNames } from '../../api/projects
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProjectSubscriptionPost, apiRenewSubscription } from '../../api/subscriptions';
 import { apiProductVersionsGet } from '../../api/productVersion';
-import { hasKeycloakClientRole } from '../../api/helpers';
+import {
+  isPortalAdmin,
+  isPortalAdminOrSupport,
+  isPortalCustomer, isPortalPartner,
+  isPortalSupport,
+  isPortalUser
+} from '../../api/helpers';
 import { apiAddSubscriptionToProject } from '../../api/projects';
 import moment from 'moment';
 
@@ -45,11 +51,11 @@ class SubscriptionForm extends Component {
     }
 
     componentDidMount() {
-        const { t, keycloak } = this.props;
+        const {keycloak } = this.props;
 
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+            if (isPortalUser()) {
                 this.fetchData();
             }
             this.setState({
@@ -59,13 +65,13 @@ class SubscriptionForm extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { t, keycloak } = this.props;
+        const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
 
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
         if (authenticated && changedAuth) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+            if (isPortalUser()) {
                 this.fetchData();
             }
             this.setState({
@@ -76,7 +82,7 @@ class SubscriptionForm extends Component {
 
     async fetchData() {
         var projects = ''
-        if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT')) {
+        if (isPortalAdminOrSupport()) {
             projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
         }
         else {
@@ -91,7 +97,7 @@ class SubscriptionForm extends Component {
     }
 
     isNumeric(str) {
-        if (typeof str != "string") 
+        if (typeof str != "string")
             return false
         return !isNaN(str) && !isNaN(parseFloat(str))
     }
@@ -229,7 +235,7 @@ class SubscriptionForm extends Component {
     }
 
     subscriptionStatus() {
-        return hasKeycloakClientRole('ROLE_ADMIN') ? subscriptionStatus.active : subscriptionStatus.requested;
+        return isPortalAdmin() ? subscriptionStatus.active : subscriptionStatus.requested;
     }
 
     setupFormComponents() {
@@ -408,7 +414,7 @@ class SubscriptionForm extends Component {
     }
 
     successErrorMessage() {
-        const isAdmin = hasKeycloakClientRole('ROLE_ADMIN');
+        const isAdmin = isPortalAdmin();
         const { subscriptionType, submitSuccess, submitError } = this.state;
 
         if (subscriptionType === 'new') {
@@ -432,17 +438,17 @@ class SubscriptionForm extends Component {
 
     render() {
         if (!this.state.loading) {
-            if (hasKeycloakClientRole('ROLE_ADMIN') || hasKeycloakClientRole('ROLE_SUPPORT') || hasKeycloakClientRole('ROLE_CUSTOMER') || hasKeycloakClientRole('ROLE_PARTNER')) {
+            if (isPortalUser()) {
                 return (
                     <div>
-                        {hasKeycloakClientRole('ROLE_ADMIN') ? 
-                            <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> : 
-                        hasKeycloakClientRole('ROLE_SUPPORT') ? 
-                            <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> : 
-                        hasKeycloakClientRole('ROLE_CUSTOMER') ? 
-                            <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> : 
-                        hasKeycloakClientRole('ROLE_PARTNER') ? 
-                            <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> : 
+                        {isPortalAdmin() ?
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3> :
+                        isPortalSupport() ?
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3> :
+                        isPortalCustomer() ?
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3> :
+                        isPortalPartner() ?
+                            <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3> :
                         null}
                         <div className="form-container">
                             {this.successErrorMessage()}

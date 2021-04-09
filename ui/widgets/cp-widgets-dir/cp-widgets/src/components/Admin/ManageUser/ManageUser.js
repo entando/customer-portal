@@ -3,7 +3,7 @@ import i18n from '../../../i18n';
 import { Accordion, AccordionItem } from 'carbon-components-react';
 import AssignUser from './AssignUser';
 import DeleteUser from './DeleteUser';
-import { hasKeycloakClientRole } from '../../../api/helpers';
+import { isPortalAdmin } from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class ManageUser extends Component {
@@ -40,20 +40,20 @@ class ManageUser extends Component {
   componentDidMount() {
     const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
-  
+
     if (authenticated) {
       this.setState({
         loading: false
       })
     }
   }
-  
+
   componentDidUpdate(prevProps) {
     const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
-  
+
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-  
+
     if (authenticated && changedAuth) {
       this.setState({
         loading: false
@@ -63,7 +63,7 @@ class ManageUser extends Component {
 
   render() {
     if (!this.state.loading) {
-      if (hasKeycloakClientRole('ROLE_ADMIN')) {
+      if (isPortalAdmin()) {
         return (
           <div>
             <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
