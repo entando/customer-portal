@@ -6,6 +6,7 @@ import { apiAdminProjectsGet, apiMyProjectsGet, apiGetProjectSubscriptions } fro
 import { apiJiraTicketPost } from '../../api/tickets';
 import { apiTicketingSystemsGet } from '../../api/ticketingsystem';
 import {
+  isPortalAdmin,
   isPortalAdminOrSupport,
   isPortalCustomer,
   isPortalCustomerOrPartner,
