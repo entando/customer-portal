@@ -38,7 +38,7 @@ class DeleteUser extends Component {
     componentDidMount() {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-      
+
         if (authenticated) {
             this.fetchData(keycloak.authServerUrl);
         }
@@ -47,9 +47,9 @@ class DeleteUser extends Component {
     componentDidUpdate(prevProps) {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-      
+
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-      
+
         if (authenticated && changedAuth) {
             this.fetchData(keycloak.authServerUrl);
         }
@@ -61,7 +61,7 @@ class DeleteUser extends Component {
         const authenticated = keycloak.initialized && keycloak.authenticated;
         if (authenticated) {
             const portalUsers = this.handleMapFormatting((await apiUsersGet(this.props.serviceUrl)).data);
-            const keycloakUsers = this.handleMapFormatting((await apiKeycloakUserGet(keycloakUrl)).data);
+            const keycloakUsers = this.handleMapFormatting((await apiKeycloakUserGet(keycloakUrl, keycloak.realm)).data);
 
             this.setState({
                 portalUsers,
