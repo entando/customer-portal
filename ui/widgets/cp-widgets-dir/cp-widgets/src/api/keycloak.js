@@ -1,9 +1,7 @@
 import { getDefaultKeycloakOptions, request, getUrl } from './helpers';
 
-const usersResource = `admin/realms/${process.env.REACT_APP_KEYCLOAK_REALM}/users`;
-const tokenResource = `realms/${process.env.REACT_APP_KEYCLOAK_REALM}/protocol/openid-connect/token`;
- 
-export const apiKeycloakUserGet = async (serviceUrl) => {
+export const apiKeycloakUserGet = async (serviceUrl, realm) => {
+  const usersResource = `admin/realms/${realm}/users`;
   const url = `${serviceUrl}/${usersResource}`;
   const options = {
     ...getDefaultKeycloakOptions(),
@@ -12,7 +10,8 @@ export const apiKeycloakUserGet = async (serviceUrl) => {
   return await request(url, options);
 };
 
-export const apiKeycloakToken = async (serviceUrl) => {
+export const apiKeycloakToken = async (serviceUrl, realm) => {
+  const tokenResource = `realms/${realm}/protocol/openid-connect/token`;
   const url = getUrl(
     `${serviceUrl}/${tokenResource}`
   );

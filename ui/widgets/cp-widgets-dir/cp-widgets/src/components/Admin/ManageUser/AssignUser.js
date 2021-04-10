@@ -31,16 +31,17 @@ class AssignUser extends Component {
     componentDidUpdate(prevProps) {
         const { t, keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
-      
+
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-      
+
         if (authenticated && changedAuth) {
             this.fetchData(keycloak.authServerUrl);
         }
     }
 
     async fetchData(keycloakUrl) {
-        const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(keycloakUrl)).data);
+      const { keycloak } = this.props;
+      const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(keycloakUrl, keycloak.realm)).data);
         var projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
         let search = window.location.search;
         let params = new URLSearchParams(search);
@@ -57,7 +58,7 @@ class AssignUser extends Component {
                     projectId: Object.keys(projects)[0]
                 });
             }
-        }  
+        }
 
         this.setState({
             users,
