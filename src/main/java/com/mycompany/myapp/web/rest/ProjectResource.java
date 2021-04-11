@@ -436,7 +436,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
      */
     @GetMapping("/projects/admin")
-    @PreAuthorize(AuthoritiesConstants.HAS_CUSTOMER_OR_PARTNER)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public List<Project> adminGetAllProjects() {
         log.debug("REST request to get all Projects");
         return projectService.findAll();
