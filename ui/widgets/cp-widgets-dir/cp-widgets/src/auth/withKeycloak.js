@@ -15,11 +15,9 @@ export default function withKeycloak(WrappedComponent) {
     }
   }
 
-  
   WithKeycloakComponent.propTypes = {
     forwardedRef: refType,
   };
-  
 
   WithKeycloakComponent.defaultProps = {
     forwardedRef: () => {},

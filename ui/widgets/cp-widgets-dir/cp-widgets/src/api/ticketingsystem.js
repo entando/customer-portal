@@ -11,10 +11,8 @@ export const apiTicketingSystemDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-export const apiTicketingSystemsGet = async (serviceUrl) => {
-  const url = getUrl(
-    `${serviceUrl}/${resource}`
-  );
+export const apiTicketingSystemsGet = async serviceUrl => {
+  const url = getUrl(`${serviceUrl}/${resource}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET',

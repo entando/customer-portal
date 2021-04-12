@@ -6,10 +6,7 @@ import locales from './locales';
 const defaultNs = 'translation';
 
 // adds the default namespace ('translation') to resources object per i18next documentation
-const resources = Object.keys(locales).reduce(
-  (acc, lang) => ({ ...acc, [lang]: { [defaultNs]: locales[lang] } }),
-  {}
-);
+const resources = Object.keys(locales).reduce((acc, lang) => ({ ...acc, [lang]: { [defaultNs]: locales[lang] } }), {});
 
 export const translateFn = i18next.t;
 

@@ -43,6 +43,9 @@ public class TicketResourceIT {
     private static final String DEFAULT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_SUMMARY = "AAAAAAAAAA";
+    private static final String UPDATED_SUMMARY = "BBBBBBBBBB";
+
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
@@ -82,6 +85,7 @@ public class TicketResourceIT {
         Ticket ticket = new Ticket()
             .systemId(DEFAULT_SYSTEM_ID)
             .type(DEFAULT_TYPE)
+            .summary(DEFAULT_SUMMARY)
             .description(DEFAULT_DESCRIPTION)
             .priority(DEFAULT_PRIORITY)
             .status(DEFAULT_STATUS)
@@ -99,6 +103,7 @@ public class TicketResourceIT {
         Ticket ticket = new Ticket()
             .systemId(UPDATED_SYSTEM_ID)
             .type(UPDATED_TYPE)
+            .summary(UPDATED_SUMMARY)
             .description(UPDATED_DESCRIPTION)
             .priority(UPDATED_PRIORITY)
             .status(UPDATED_STATUS)
@@ -128,6 +133,7 @@ public class TicketResourceIT {
         Ticket testTicket = ticketList.get(ticketList.size() - 1);
         assertThat(testTicket.getSystemId()).isEqualTo(DEFAULT_SYSTEM_ID);
         assertThat(testTicket.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testTicket.getSummary()).isEqualTo(DEFAULT_SUMMARY);
         assertThat(testTicket.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testTicket.getPriority()).isEqualTo(DEFAULT_PRIORITY);
         assertThat(testTicket.getStatus()).isEqualTo(DEFAULT_STATUS);
@@ -180,6 +186,25 @@ public class TicketResourceIT {
         int databaseSizeBeforeTest = ticketRepository.findAll().size();
         // set the field null
         ticket.setType(null);
+
+        // Create the Ticket, which fails.
+
+
+        restTicketMockMvc.perform(post("/api/tickets").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(ticket)))
+            .andExpect(status().isBadRequest());
+
+        List<Ticket> ticketList = ticketRepository.findAll();
+        assertThat(ticketList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkSummaryIsRequired() throws Exception {
+        int databaseSizeBeforeTest = ticketRepository.findAll().size();
+        // set the field null
+        ticket.setSummary(null);
 
         // Create the Ticket, which fails.
 
@@ -263,6 +288,7 @@ public class TicketResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(ticket.getId().intValue())))
             .andExpect(jsonPath("$.[*].systemId").value(hasItem(DEFAULT_SYSTEM_ID)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
+            .andExpect(jsonPath("$.[*].summary").value(hasItem(DEFAULT_SUMMARY)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].priority").value(hasItem(DEFAULT_PRIORITY)))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
@@ -283,6 +309,7 @@ public class TicketResourceIT {
             .andExpect(jsonPath("$.id").value(ticket.getId().intValue()))
             .andExpect(jsonPath("$.systemId").value(DEFAULT_SYSTEM_ID))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
+            .andExpect(jsonPath("$.summary").value(DEFAULT_SUMMARY))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.priority").value(DEFAULT_PRIORITY))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS))
@@ -312,6 +339,7 @@ public class TicketResourceIT {
         updatedTicket
             .systemId(UPDATED_SYSTEM_ID)
             .type(UPDATED_TYPE)
+            .summary(UPDATED_SUMMARY)
             .description(UPDATED_DESCRIPTION)
             .priority(UPDATED_PRIORITY)
             .status(UPDATED_STATUS)
@@ -329,6 +357,7 @@ public class TicketResourceIT {
         Ticket testTicket = ticketList.get(ticketList.size() - 1);
         assertThat(testTicket.getSystemId()).isEqualTo(UPDATED_SYSTEM_ID);
         assertThat(testTicket.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testTicket.getSummary()).isEqualTo(UPDATED_SUMMARY);
         assertThat(testTicket.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testTicket.getPriority()).isEqualTo(UPDATED_PRIORITY);
         assertThat(testTicket.getStatus()).isEqualTo(UPDATED_STATUS);

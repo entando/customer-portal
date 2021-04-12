@@ -11,10 +11,8 @@ export const apiPartnerDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-export const apiPartnersGet = async (serviceUrl) => {
-  const url = getUrl(
-    `${serviceUrl}/${resource}`
-  );
+export const apiPartnersGet = async serviceUrl => {
+  const url = getUrl(`${serviceUrl}/${resource}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET',

@@ -15,10 +15,10 @@ class AddProductVersionModal extends Component {
       endDate: '',
       invalid: {},
       submitMsg: '',
-      submitColour: 'black'
+      submitColour: 'black',
     };
 
-    this.baseState = this.state
+    this.baseState = this.state;
   }
 
   handleValidation() {
@@ -68,43 +68,45 @@ class AddProductVersionModal extends Component {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
-      this.addProductVersion().then(result => {
-        this.setState({
-            submitMsg: i18n.t('submitMessages.added'),
-            submitColour: '#24a148'
-        })
-        this.props.updateProductVersions();
-      }).catch(err => {
+      this.addProductVersion()
+        .then(result => {
           this.setState({
-              submitMsg: i18n.t('submitMessages.error'),
-              submitColour: '#da1e28'
-          })
-      });
+            submitMsg: i18n.t('submitMessages.added'),
+            submitColour: '#24a148',
+          });
+          this.props.updateProductVersions();
+        })
+        .catch(err => {
+          this.setState({
+            submitMsg: i18n.t('submitMessages.error'),
+            submitColour: '#da1e28',
+          });
+        });
     }
   };
 
   clearValues = () => {
     const customerModalElement = document.querySelector('#modal-form-product-version');
-    if(!customerModalElement.className.includes("is-visible")) {
+    if (!customerModalElement.className.includes('is-visible')) {
       this.setState(this.baseState);
     }
-  }
+  };
 
-  handleStartDateChange = (date) => {
+  handleStartDateChange = date => {
     this.setState({
-        startDate: moment(date[0].toISOString()).format('MM/DD/YYYY')
-    })
-  }
+      startDate: moment(date[0].toISOString()).format('MM/DD/YYYY'),
+    });
+  };
 
-  handleEndDateChange = (date) => {
+  handleEndDateChange = date => {
     this.setState({
-        endDate: moment(date[0].toISOString()).format('MM/DD/YYYY')
-    })
-  }
+      endDate: moment(date[0].toISOString()).format('MM/DD/YYYY'),
+    });
+  };
 
   componentDidMount() {
     const modalOpenButton = document.querySelector('.add-product-version-button');
-    modalOpenButton.addEventListener("click", this.clearValues, false);
+    modalOpenButton.addEventListener('click', this.clearValues, false);
   }
 
   render() {
@@ -116,7 +118,7 @@ class AddProductVersionModal extends Component {
         className="modal-form"
         id="modal-form-product-version"
         handleSubmit={this.handleFormSubmit}
-        modalLabel={<p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>}
+        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
         <div className="form-container">
           <p> {i18n.t('adminDashboard.addProductVersion.desc')} </p>

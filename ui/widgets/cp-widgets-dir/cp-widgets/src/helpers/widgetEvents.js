@@ -7,8 +7,7 @@ export const publishWidgetEvent = (eventId, payload) => {
   window.dispatchEvent(widgetEvent);
 };
 
-export const createWidgetEventPublisher = eventType => payload =>
-  publishWidgetEvent(eventType, payload);
+export const createWidgetEventPublisher = eventType => payload => publishWidgetEvent(eventType, payload);
 
 export const subscribeToWidgetEvent = (eventType, eventHandler) => {
   window.addEventListener(eventType, eventHandler);

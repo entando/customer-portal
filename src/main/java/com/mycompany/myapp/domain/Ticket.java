@@ -34,6 +34,10 @@ public class Ticket implements Serializable {
     private String type;
 
     @NotNull
+    @Column(name = "summary", nullable = false)
+    private String summary;
+
+    @NotNull
     @Column(name = "description", nullable = false)
     private String description;
 
@@ -52,7 +56,7 @@ public class Ticket implements Serializable {
     private ZonedDateTime updateDate;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = {"tickets", "partners", "portalUsers", "projectSubscriptions", "customer"}, allowSetters = true)
+    @JsonIgnoreProperties(value = "tickets", allowSetters = true)
     private Project project;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -88,6 +92,19 @@ public class Ticket implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public Ticket summary(String summary) {
+        this.summary = summary;
+        return this;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getDescription() {
@@ -192,6 +209,7 @@ public class Ticket implements Serializable {
             "id=" + getId() +
             ", systemId='" + getSystemId() + "'" +
             ", type='" + getType() + "'" +
+            ", summary='" + getSummary() + "'" +
             ", description='" + getDescription() + "'" +
             ", priority='" + getPriority() + "'" +
             ", status='" + getStatus() + "'" +

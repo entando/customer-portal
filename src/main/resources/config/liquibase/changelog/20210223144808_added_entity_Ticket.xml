@@ -21,6 +21,9 @@
             <column name="type" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
+            <column name="summary" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
             <column name="description" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
@@ -66,6 +69,7 @@
             <column name="id" type="numeric"/>
             <column name="system_id" type="string"/>
             <column name="type" type="string"/>
+            <column name="summary" type="string"/>
             <column name="description" type="string"/>
             <column name="priority" type="string"/>
             <column name="status" type="string"/>

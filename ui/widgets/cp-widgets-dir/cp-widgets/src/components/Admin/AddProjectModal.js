@@ -22,7 +22,7 @@ class AddProjectModal extends Component {
       notes: '',
       invalid: {},
       submitMsg: '',
-      submitColour: 'black'
+      submitColour: 'black',
     };
   }
 
@@ -74,7 +74,7 @@ class AddProjectModal extends Component {
   async getAllProjects() {
     const projects = await apiProjectsGet(this.props.serviceUrl);
     this.setState({
-      projects: projects.data
+      projects: projects.data,
     });
   }
 
@@ -126,33 +126,35 @@ class AddProjectModal extends Component {
         contactName: this.state.contactName,
         contactPhone: this.state.contactPhone,
         contactEmail: this.state.contactEmail,
-        notes: this.state.notes
+        notes: this.state.notes,
       };
       for (var i = 0; i < this.state.projects.length; i++) {
-        if (project.systemId === this.state.projects[i].systemId && project.systemId.trim() !== "") {
+        if (project.systemId === this.state.projects[i].systemId && project.systemId.trim() !== '') {
           window.alert('That system id is already in use in another project');
           return;
         }
       }
-      this.projectPost(project).then(result => {
-        this.setState({
-            submitMsg: i18n.t('submitMessages.added'),
-            submitColour: '#24a148'
-        })
-        this.props.updateCustomerList();
-        this.getAllProjects();
-      }).catch(err => {
+      this.projectPost(project)
+        .then(result => {
           this.setState({
-              submitMsg: i18n.t('submitMessages.error'),
-              submitColour: '#da1e28'
-          })
-      });
+            submitMsg: i18n.t('submitMessages.added'),
+            submitColour: '#24a148',
+          });
+          this.props.updateCustomerList();
+          this.getAllProjects();
+        })
+        .catch(err => {
+          this.setState({
+            submitMsg: i18n.t('submitMessages.error'),
+            submitColour: '#da1e28',
+          });
+        });
     }
   };
 
   clearValues = () => {
     const projectModalElement = document.querySelector('#modal-form-project');
-    if(!projectModalElement.className.includes("is-visible")) {
+    if (!projectModalElement.className.includes('is-visible')) {
       this.setState({
         customerId: '',
         name: '',
@@ -162,19 +164,19 @@ class AddProjectModal extends Component {
         contactPhone: '',
         contactEmail: '',
         notes: '',
-        invalid: {}
-      })
+        invalid: {},
+      });
     }
-  }
+  };
 
   componentDidMount() {
     this.getCustomers();
     this.getAllProjects();
 
     const modalOpenButton = document.querySelector('.add-project-button');
-    modalOpenButton.addEventListener("click", this.clearValues, false);
+    modalOpenButton.addEventListener('click', this.clearValues, false);
   }
-  
+
   render() {
     const customerList = ['Customer1', 'Customer2', 'Customer3'];
     return (
@@ -187,7 +189,7 @@ class AddProjectModal extends Component {
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
-        modalLabel={<p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>}
+        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
         <div className="form-container">
           {/*<p> {i18n.t('adminDashboard.addProject.desc')} </p>*/}
@@ -195,8 +197,8 @@ class AddProjectModal extends Component {
             <Select
               defaultValue="customer-list"
               name="customerId"
-              labelText={i18n.t('adminDashboard.addProject.customerList') + " *"}
-              defaultValue={{ label: "Select Dept", value: 0 }}
+              labelText={i18n.t('adminDashboard.addProject.customerList') + ' *'}
+              defaultValue={{ label: 'Select Dept', value: 0 }}
               value={this.state.customerId}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -214,7 +216,7 @@ class AddProjectModal extends Component {
 
             <TextInput
               name="name"
-              labelText={i18n.t('adminDashboard.addProject.projectName') + " *"}
+              labelText={i18n.t('adminDashboard.addProject.projectName') + ' *'}
               value={this.state.name}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -222,7 +224,7 @@ class AddProjectModal extends Component {
             />
             <TextInput
               name="description"
-              labelText={i18n.t('adminDashboard.addProject.projectDesc') + " *"}
+              labelText={i18n.t('adminDashboard.addProject.projectDesc') + ' *'}
               value={this.state.description}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -248,7 +250,7 @@ class AddProjectModal extends Component {
             />
             <TextInput
               name="contactEmail"
-              labelText={i18n.t('adminDashboard.addProject.contactEmail') + " *"}
+              labelText={i18n.t('adminDashboard.addProject.contactEmail') + ' *'}
               value={this.state.contactEmail}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.email')}
