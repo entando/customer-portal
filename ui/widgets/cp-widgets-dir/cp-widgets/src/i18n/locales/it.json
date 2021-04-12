@@ -18,7 +18,7 @@
 		"addProductVersion": "Aggiungi la versione del prodotto +",
     	"viewDetails": "Visualizza dettagli"
 	},
-	
+
   	"customerDashboard":{
 		"title": "Benvenuto nel Portale Clienti Entando",
 		"customerName": "Nome del cliente",
@@ -35,7 +35,7 @@
 		"status": "Stato",
 		"action": "Azione"
 	},
-	
+
 	"adminDashboard":{
 		"title": "Benvenuti a Entando",
 		"adminTitle": "Benvenuti a Entando Visualizza dell'Amministratore",
@@ -43,6 +43,7 @@
     	"partnerTitle": "Benvenuti a Entando Visualizza del Socio",
     	"supportTitle": "Benvenuti a Entando Visualizza del Supporto",
 		"allCustomers":"Tutti i clienti",
+    "searchLabel": "Ricerca dei clienti",
 		"searchText": "Quale cliente stai cercando?",
 		"view": "Visualizza",
 		"addProject":{
@@ -178,12 +179,12 @@
 		"components": "Componenti",
 		"level": "Livello"
 	},
-  
+
   	"adminConfig":{
 		"title": "Entando Visualizza dell'Amministratore",
 		"formTitle": "Tutti i clienti",
 		"desc": "Configura il sistema di biglietteria e la versione di Entando di seguito.",
-		
+
 		"integrationTicketingSystem": {
 			"title": "Integrazione con il sistema di biglietteria",
 			"desc": "Questo ti permette di gestire il sistema di biglietteria",
@@ -208,7 +209,7 @@
 		"save": "Salva",
 		"cancel": "Annulla"
 	  },
-	
+
 	"manageUsers":{
 		"title": "Entando Visualizza dell'Amministratore",
 		"assign":{

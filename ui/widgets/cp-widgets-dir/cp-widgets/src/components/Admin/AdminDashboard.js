@@ -140,7 +140,10 @@ class AdminDashboard extends React.Component {
                     <p className="title">{i18n.t('adminDashboard.allCustomers')}</p>
                     <div className="bx--row">
                         <div className="bx--col">
-                            <Search onChange={this.handleSearch} id="search" placeHolderText={i18n.t('adminDashboard.searchText')} onKeyPress={this.handleSearch}/>
+                            <Search onChange={this.handleSearch} id="search"
+                                    placeholder={i18n.t('adminDashboard.searchText')}
+                                    labelText={i18n.t('adminDashboard.searchLabel')}
+                                    onKeyPress={this.handleSearch}/>
                         </div>
                         {isPortalAdmin() ?
                         <div className="bx--col">

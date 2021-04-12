@@ -18,7 +18,7 @@
 		"addProductVersion": "Add product version +",
     "viewDetails": "View Details"
 	},
-	
+
   	"customerDashboard":{
       "title": "Welcome to Entando Customer Portal",
       "customerName": "Customer Name",
@@ -43,6 +43,7 @@
     "partnerTitle": "Welcome to Entando Partner View",
     "supportTitle": "Welcome to Entando Support View",
     "allCustomers": "All Customers",
+    "searchLabel": "Customer Search",
     "searchText": "Which customer are you looking for?",
     "view": "View",
     "addProject": {
