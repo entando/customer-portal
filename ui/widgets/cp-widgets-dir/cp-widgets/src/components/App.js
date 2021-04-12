@@ -17,7 +17,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        const { t, keycloak } = this.props;
+        const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
 
         if (authenticated) {
@@ -28,7 +28,7 @@ class App extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { t, keycloak } = this.props;
+        const { keycloak } = this.props;
         const authenticated = keycloak.initialized && keycloak.authenticated;
 
         const changedAuth = prevProps.keycloak.authenticated !== authenticated;
@@ -41,8 +41,7 @@ class App extends Component {
     }
 
     render() {
-        var { t, keycloak } = this.props;
-        var authenticated = keycloak.initialized && keycloak.authenticated;
+        var { keycloak } = this.props;
 
         if (!this.state.loading) {
             if (isPortalUser()) {
