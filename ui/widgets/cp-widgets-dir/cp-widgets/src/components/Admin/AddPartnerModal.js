@@ -17,7 +17,7 @@ class AddPartnerModal extends Component {
       notes: '',
       invalid: {},
       submitMsg: '',
-      submitColour: 'black'
+      submitColour: 'black',
     };
   }
 
@@ -88,26 +88,28 @@ class AddPartnerModal extends Component {
       const partner = {
         name: this.state.name,
         partnerNumber: this.state.partnerNumber,
-        notes: this.state.notes
+        notes: this.state.notes,
       };
-      this.partnerPost(partner).then(result => {
-        this.setState({
-            submitMsg: i18n.t('submitMessages.added'),
-            submitColour: '#24a148'
-        })
-        this.props.updateCustomerList();
-      }).catch(err => {
+      this.partnerPost(partner)
+        .then(result => {
           this.setState({
-              submitMsg: i18n.t('submitMessages.error'),
-              submitColour: '#da1e28'
-          })
-      });
+            submitMsg: i18n.t('submitMessages.added'),
+            submitColour: '#24a148',
+          });
+          this.props.updateCustomerList();
+        })
+        .catch(err => {
+          this.setState({
+            submitMsg: i18n.t('submitMessages.error'),
+            submitColour: '#da1e28',
+          });
+        });
     }
   };
 
   clearValues = () => {
     const partnerModalElement = document.querySelector('#modal-form-partner');
-    if(!partnerModalElement.className.includes("is-visible")) {
+    if (!partnerModalElement.className.includes('is-visible')) {
       this.setState({
         projectId: '',
         name: '',
@@ -115,16 +117,16 @@ class AddPartnerModal extends Component {
         notes: '',
         invalid: {},
         submitMsg: '',
-        submitColour: 'black'
-      })
+        submitColour: 'black',
+      });
     }
-  }
+  };
 
   componentDidMount() {
     this.getProjects();
 
     const modalOpenButton = document.querySelector('.add-partner-button');
-    modalOpenButton.addEventListener("click", this.clearValues, false);
+    modalOpenButton.addEventListener('click', this.clearValues, false);
   }
 
   render() {
@@ -138,7 +140,7 @@ class AddPartnerModal extends Component {
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
-        modalLabel={<p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>}
+        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
         <div className="form-container">
           {/*<p> {i18n.t('adminDashboard.addPartner.desc')}</p>*/}
@@ -146,7 +148,7 @@ class AddPartnerModal extends Component {
             <Select
               defaultValue="project-list"
               name="projectId"
-              labelText={i18n.t('adminDashboard.addPartner.projectList') + " *"}
+              labelText={i18n.t('adminDashboard.addPartner.projectList') + ' *'}
               value={this.state.projectId}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -164,7 +166,7 @@ class AddPartnerModal extends Component {
 
             <TextInput
               name="name"
-              labelText={i18n.t('adminDashboard.addPartner.partnerName') + " *"}
+              labelText={i18n.t('adminDashboard.addPartner.partnerName') + ' *'}
               value={this.state.name}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -172,7 +174,7 @@ class AddPartnerModal extends Component {
             />
             <TextInput
               name="partnerNumber"
-              labelText={i18n.t('adminDashboard.addPartner.partnerNumber') + " *"}
+              labelText={i18n.t('adminDashboard.addPartner.partnerNumber') + ' *'}
               value={this.state.partnerNumber}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}

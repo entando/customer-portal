@@ -11,10 +11,8 @@ export const apiProjectsDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-export const apiProjectsGet = async (serviceUrl) => {
-  const url = getUrl(
-    `${serviceUrl}/${resource}`
-  );
+export const apiProjectsGet = async serviceUrl => {
+  const url = getUrl(`${serviceUrl}/${resource}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET',
@@ -24,9 +22,7 @@ export const apiProjectsGet = async (serviceUrl) => {
 };
 
 export const apiProjectGet = async (serviceUrl, id) => {
-  const url = getUrl(
-    `${serviceUrl}/${resource}/${id}`
-  );
+  const url = getUrl(`${serviceUrl}/${resource}/${id}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET',
@@ -128,7 +124,7 @@ export const apiGetProjectSubscriptions = async (serviceUrl, projectId) => {
   return request(url, options);
 };
 
-export const apiGetProjectIdNames = async (serviceUrl) => {
+export const apiGetProjectIdNames = async serviceUrl => {
   const url = `${serviceUrl}/${resource}/nameId/`;
   const options = {
     ...getDefaultOptions(),
@@ -137,7 +133,7 @@ export const apiGetProjectIdNames = async (serviceUrl) => {
   return request(url, options);
 };
 
-export const apiGetMyProjectIdNames = async (serviceUrl) => {
+export const apiGetMyProjectIdNames = async serviceUrl => {
   const url = `${serviceUrl}/${resource}/myprojects/nameId/`;
   const options = {
     ...getDefaultOptions(),
@@ -148,22 +144,22 @@ export const apiGetMyProjectIdNames = async (serviceUrl) => {
 
 // Endpoints for backend security
 const adminResource = 'api/projects/admin';
-export const apiAdminProjectsGet = async (serviceUrl) => {
+export const apiAdminProjectsGet = async serviceUrl => {
   const url = getUrl(`${serviceUrl}/${adminResource}`);
   const options = {
     ...getDefaultOptions(),
-    method: 'GET'
+    method: 'GET',
   };
 
   return request(url, options);
 };
 
 const myResource = 'api/projects/myprojects';
-export const apiMyProjectsGet = async (serviceUrl) => {
+export const apiMyProjectsGet = async serviceUrl => {
   const url = getUrl(`${serviceUrl}/${myResource}`);
   const options = {
     ...getDefaultOptions(),
-    method: 'GET'
+    method: 'GET',
   };
 
   return request(url, options);

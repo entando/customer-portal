@@ -11,8 +11,8 @@ class ManageUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
-    }
+      loading: true,
+    };
     this.userFunctionality = [
       {
         label: (
@@ -22,7 +22,7 @@ class ManageUser extends Component {
           </div>
         ),
         content: <AssignUser serviceUrl={this.props.serviceUrl} />,
-        open: true
+        open: true,
       },
       {
         label: (
@@ -32,8 +32,8 @@ class ManageUser extends Component {
           </div>
         ),
         content: <DeleteUser serviceUrl={this.props.serviceUrl} />,
-        open: false
-      }
+        open: false,
+      },
     ];
   }
 
@@ -43,8 +43,8 @@ class ManageUser extends Component {
 
     if (authenticated) {
       this.setState({
-        loading: false
-      })
+        loading: false,
+      });
     }
   }
 
@@ -56,7 +56,7 @@ class ManageUser extends Component {
 
     if (authenticated && changedAuth) {
       this.setState({
-        loading: false
+        loading: false,
       });
     }
   }
@@ -77,16 +77,16 @@ class ManageUser extends Component {
               </Accordion>
             </div>
           </div>
-        )
+        );
       }
       // Unauthorized
       else {
-        return(<p>{i18n.t('userMessages.unauthorized')}</p>)
+        return <p>{i18n.t('userMessages.unauthorized')}</p>;
       }
     }
     // Loading
     else {
-      return(null)
+      return null;
     }
   }
 }

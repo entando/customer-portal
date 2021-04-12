@@ -1,22 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import DeleteUser from '../components/Admin/ManageUser/DeleteUser';
-import '../index.scss'
-import './dashboard.css'
+import '../index.scss';
+import './dashboard.css';
 
 import KeycloakContext from '../auth/KeycloakContext';
 
-import {
-  subscribeToWidgetEvent
-} from '../helpers/widgetEvents';
-import {
-  KEYCLOAK_EVENT_TYPE,
-} from '../custom-elements/widgetEventTypes';
+import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
+import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
 
 const getKeycloakInstance = () =>
-  (window &&
-    window.entando &&
-    window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
+  (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
     initialized: false,
   };
 
@@ -33,9 +27,7 @@ class DeleteUserElement extends HTMLElement {
 
   mountPoint;
 
-
   unsubscribeFromKeycloakEvent;
-
 
   keycloak = getKeycloakInstance();
 
@@ -43,7 +35,6 @@ class DeleteUserElement extends HTMLElement {
     this.mountPoint = document.createElement('div');
     this.keycloak = { ...getKeycloakInstance(), initialized: true };
 
-    
     this.unsubscribeFromKeycloakEvent = subscribeToWidgetEvent(KEYCLOAK_EVENT_TYPE, () => {
       this.keycloak = { ...getKeycloakInstance(), initialized: true };
       this.render();
@@ -57,7 +48,7 @@ class DeleteUserElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
-    
+
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
         <DeleteUser serviceUrl={serviceUrl} />
@@ -68,4 +59,3 @@ class DeleteUserElement extends HTMLElement {
 }
 
 customElements.define('delete-user-widget', DeleteUserElement);
-

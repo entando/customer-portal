@@ -1,22 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AssignUser from '../components/Admin/ManageUser/AssignUser';
-import '../index.scss'
-import './dashboard.css'
+import '../index.scss';
+import './dashboard.css';
 
 import KeycloakContext from '../auth/KeycloakContext';
 
-import {
-  subscribeToWidgetEvent
-} from '../helpers/widgetEvents';
-import {
-  KEYCLOAK_EVENT_TYPE,
-} from '../custom-elements/widgetEventTypes';
+import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
+import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
 
 const getKeycloakInstance = () =>
-  (window &&
-    window.entando &&
-    window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
+  (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
     initialized: false,
   };
 
@@ -25,7 +19,7 @@ const ATTRIBUTES = {
   locale: 'locale',
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
-  serviceUrl: 'service-url'
+  serviceUrl: 'service-url',
 };
 
 class AssignUserElement extends HTMLElement {
@@ -33,9 +27,7 @@ class AssignUserElement extends HTMLElement {
 
   mountPoint;
 
-
   unsubscribeFromKeycloakEvent;
-
 
   keycloak = getKeycloakInstance();
 
@@ -43,7 +35,6 @@ class AssignUserElement extends HTMLElement {
     this.mountPoint = document.createElement('div');
     this.keycloak = { ...getKeycloakInstance(), initialized: true };
 
-    
     this.unsubscribeFromKeycloakEvent = subscribeToWidgetEvent(KEYCLOAK_EVENT_TYPE, () => {
       this.keycloak = { ...getKeycloakInstance(), initialized: true };
       this.render();
@@ -57,7 +48,7 @@ class AssignUserElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
-    
+
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
         <AssignUser serviceUrl={serviceUrl} />
@@ -68,4 +59,3 @@ class AssignUserElement extends HTMLElement {
 }
 
 customElements.define('assign-user-widget', AssignUserElement);
-

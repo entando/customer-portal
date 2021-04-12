@@ -1,22 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ProductVersion from '../components/Admin/Configuration/ProductVersion';
-import '../index.scss'
-import './dashboard.css'
+import '../index.scss';
+import './dashboard.css';
 
 import KeycloakContext from '../auth/KeycloakContext';
 
-import {
-  subscribeToWidgetEvent
-} from '../helpers/widgetEvents';
-import {
-  KEYCLOAK_EVENT_TYPE,
-} from './widgetEventTypes';
+import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
+import { KEYCLOAK_EVENT_TYPE } from './widgetEventTypes';
 
 const getKeycloakInstance = () =>
-  (window &&
-    window.entando &&
-    window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
+  (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
     initialized: false,
   };
 
@@ -33,9 +27,7 @@ class ProductVersionElement extends HTMLElement {
 
   mountPoint;
 
-
   unsubscribeFromKeycloakEvent;
-
 
   keycloak = getKeycloakInstance();
 
@@ -43,7 +35,6 @@ class ProductVersionElement extends HTMLElement {
     this.mountPoint = document.createElement('div');
     this.keycloak = { ...getKeycloakInstance(), initialized: true };
 
-    
     this.unsubscribeFromKeycloakEvent = subscribeToWidgetEvent(KEYCLOAK_EVENT_TYPE, () => {
       this.keycloak = { ...getKeycloakInstance(), initialized: true };
       this.render();
@@ -60,7 +51,7 @@ class ProductVersionElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <ProductVersion serviceUrl={serviceUrl}/>
+        <ProductVersion serviceUrl={serviceUrl} />
       </KeycloakContext.Provider>,
       this.mountPoint
     );
@@ -68,4 +59,3 @@ class ProductVersionElement extends HTMLElement {
 }
 
 customElements.define('product-version-widget', ProductVersionElement);
-

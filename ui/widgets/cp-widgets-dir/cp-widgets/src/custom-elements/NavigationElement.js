@@ -2,19 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Navigation from '../components/Navigation/Navigation';
 import KeycloakContext from '../auth/KeycloakContext';
-import './dashboard.css'
+import './dashboard.css';
 
-import {
-  subscribeToWidgetEvent
-} from '../helpers/widgetEvents';
-import {
-  KEYCLOAK_EVENT_TYPE,
-} from '../custom-elements/widgetEventTypes';
+import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
+import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
 
 const getKeycloakInstance = () =>
-  (window &&
-    window.entando &&
-    window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
+  (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
     initialized: false,
   };
 
@@ -26,15 +20,12 @@ const ATTRIBUTES = {
   serviceUrl: 'service-url',
 };
 
-
 class NavigationElement extends HTMLElement {
   container;
 
   mountPoint;
 
-
   unsubscribeFromKeycloakEvent;
-
 
   keycloak = getKeycloakInstance();
 
@@ -42,7 +33,6 @@ class NavigationElement extends HTMLElement {
     this.mountPoint = document.createElement('div');
     this.keycloak = { ...getKeycloakInstance(), initialized: true };
 
-    
     this.unsubscribeFromKeycloakEvent = subscribeToWidgetEvent(KEYCLOAK_EVENT_TYPE, () => {
       this.keycloak = { ...getKeycloakInstance(), initialized: true };
       this.render();
@@ -59,7 +49,7 @@ class NavigationElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <Navigation serviceUrl={serviceUrl}/>
+        <Navigation serviceUrl={serviceUrl} />
       </KeycloakContext.Provider>,
       this.mountPoint
     );

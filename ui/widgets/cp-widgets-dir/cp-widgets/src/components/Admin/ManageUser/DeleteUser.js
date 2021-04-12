@@ -7,145 +7,150 @@ import { apiKeycloakUserGet } from '../../../api/keycloak';
 import i18n from '../../../i18n';
 
 class DeleteUser extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            portalUsers: new Map(),
-            keycloakUsers: new Map(),
-            displayUsers: [],
-            filterText: ''
-        };
-        this.headerData = [
-            {
-                header: i18n.t('manageUsers.delete.userName'),
-                key: 'username',
-            },
-            {
-                header: i18n.t('manageUsers.delete.userEmail'),
-                key: 'email',
-            },
-            {
-                header: i18n.t('manageUsers.delete.dateAdded'),
-                key: 'dateAdded',
-            },
-            {
-                header: i18n.t('manageUsers.delete.userAccess'),
-                key: 'userAccess',
-            }
-        ];
+  constructor(props) {
+    super(props);
+    this.state = {
+      portalUsers: new Map(),
+      keycloakUsers: new Map(),
+      displayUsers: [],
+      filterText: '',
+    };
+    this.headerData = [
+      {
+        header: i18n.t('manageUsers.delete.userName'),
+        key: 'username',
+      },
+      {
+        header: i18n.t('manageUsers.delete.userEmail'),
+        key: 'email',
+      },
+      {
+        header: i18n.t('manageUsers.delete.dateAdded'),
+        key: 'dateAdded',
+      },
+      {
+        header: i18n.t('manageUsers.delete.userAccess'),
+        key: 'userAccess',
+      },
+    ];
+  }
+
+  componentDidMount() {
+    const { t, keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
+
+    if (authenticated) {
+      this.fetchData(keycloak.authServerUrl);
     }
+  }
 
-    componentDidMount() {
-        const { t, keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
+  componentDidUpdate(prevProps) {
+    const { t, keycloak } = this.props;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
 
-        if (authenticated) {
-            this.fetchData(keycloak.authServerUrl);
-        }
+    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+
+    if (authenticated && changedAuth) {
+      this.fetchData(keycloak.authServerUrl);
     }
+  }
 
-    componentDidUpdate(prevProps) {
-        const { t, keycloak } = this.props;
-        const authenticated = keycloak.initialized && keycloak.authenticated;
+  async fetchData(keycloakUrl) {
+    const { keycloak } = this.props;
 
-        const changedAuth = prevProps.keycloak.authenticated !== authenticated;
+    const authenticated = keycloak.initialized && keycloak.authenticated;
+    if (authenticated) {
+      const portalUsers = this.handleMapFormatting((await apiUsersGet(this.props.serviceUrl)).data);
+      const keycloakUsers = this.handleMapFormatting((await apiKeycloakUserGet(keycloakUrl, keycloak.realm)).data);
 
-        if (authenticated && changedAuth) {
-            this.fetchData(keycloak.authServerUrl);
-        }
+      this.setState({
+        portalUsers,
+        keycloakUsers,
+      });
+
+      this.handleUserDisplay();
     }
+  }
 
-    async fetchData(keycloakUrl) {
-        const { keycloak } = this.props;
+  /**
+   * Turns the list of user objects into a map where the key is the unique username.
+   */
+  handleMapFormatting(users) {
+    return new Map(users.map(user => [user.username, user]));
+  }
 
-        const authenticated = keycloak.initialized && keycloak.authenticated;
-        if (authenticated) {
-            const portalUsers = this.handleMapFormatting((await apiUsersGet(this.props.serviceUrl)).data);
-            const keycloakUsers = this.handleMapFormatting((await apiKeycloakUserGet(keycloakUrl, keycloak.realm)).data);
+  handleUserDisplay() {
+    const { portalUsers, keycloakUsers } = this.state;
+    const portalUsernames = [...portalUsers.keys()];
+    const keycloakUserObjects = [...keycloakUsers.values()];
 
-            this.setState({
-                portalUsers,
-                keycloakUsers
-            });
+    const displayUsers = keycloakUserObjects.map(keycloakUser => ({
+      id: keycloakUser.username,
+      username: keycloakUser.username,
+      email: keycloakUser.email,
+      dateAdded: `${new Date(keycloakUser.createdTimestamp).toLocaleString('default', { month: 'long' })} ${new Date(
+        keycloakUser.createdTimestamp
+      ).getFullYear()}`,
+      userAccess: portalUsernames.includes(keycloakUser.username) ? (
+        <a onClick={event => this.handleRemoveUser(keycloakUser.username, event)} href="">
+          <SubtractAlt16 fill="red" />
+          {i18n.t('manageUsers.delete.removeUser')}
+        </a>
+      ) : (
+        ''
+      ),
+    }));
 
-            this.handleUserDisplay();
-        }
-    }
+    this.setState({
+      displayUsers,
+    });
+  }
 
-    /**
-     * Turns the list of user objects into a map where the key is the unique username.
-     */
-    handleMapFormatting(users) {
-        return new Map(users.map(user => [user.username, user]));
-    }
-
-    handleUserDisplay() {
-        const { portalUsers, keycloakUsers } = this.state;
-        const portalUsernames = [...portalUsers.keys()];
-        const keycloakUserObjects = [...keycloakUsers.values()];
-
-        const displayUsers = keycloakUserObjects.map(keycloakUser => (
-            {
-                id:  keycloakUser.username,
-                username: keycloakUser.username,
-                email: keycloakUser.email,
-                dateAdded: `${new Date(keycloakUser.createdTimestamp).toLocaleString('default', { month: 'long'})} ${new Date(keycloakUser.createdTimestamp).getFullYear()}`,
-                userAccess: portalUsernames.includes(keycloakUser.username) ? <a onClick={event => this.handleRemoveUser(keycloakUser.username, event)} href=""><SubtractAlt16 fill="red" />{i18n.t('manageUsers.delete.removeUser')}</a> : ''
-            }
-        ));
-
+  handleRemoveUser = (username, event) => {
+    event.preventDefault();
+    const userId = this.state.portalUsers.get(username).id;
+    apiUserDelete(this.props.serviceUrl, userId).then(res => {
+      if (res.status === 204) {
+        const updatedPortalUsers = this.state.portalUsers;
+        updatedPortalUsers.delete(username);
         this.setState({
-            displayUsers
+          portalUsers: updatedPortalUsers,
         });
-    }
+        this.handleUserDisplay();
+      } else {
+        // TODO: Error message
+      }
+    });
+  };
 
-    handleRemoveUser = (username, event) => {
-        event.preventDefault();
-        const userId = this.state.portalUsers.get(username).id;
-        apiUserDelete(this.props.serviceUrl, userId).then(res => {
-            if (res.status === 204) {
-                const updatedPortalUsers = this.state.portalUsers;
-                updatedPortalUsers.delete(username);
-                this.setState({
-                    portalUsers: updatedPortalUsers
-                });
-                this.handleUserDisplay();
-            } else {
-                // TODO: Error message
-            }
-        });
-    }
-
-    render() {
-        return (
-            <DataTable rows={this.state.displayUsers} headers={this.headerData}>
-                {({ rows, headers, getHeaderProps, getTableProps }) => (
-                    <TableContainer>
-                        <Table {...getTableProps()}>
-                            <TableHead>
-                                <TableRow>
-                                    {headers.map((header) => (
-                                        <TableHeader {...getHeaderProps({ header })}>
-                                            {header.header}
-                                        </TableHeader>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.id}>
-                                        {row.cells.map((cell) => (
-                                            <TableCell key={cell.id}>{cell.value}</TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                )}
-            </DataTable>
-        );
-    }
+  render() {
+    return (
+      <DataTable rows={this.state.displayUsers} headers={this.headerData}>
+        {({ rows, headers, getHeaderProps, getTableProps }) => (
+          <TableContainer>
+            <Table {...getTableProps()}>
+              <TableHead>
+                <TableRow>
+                  {headers.map(header => (
+                    <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map(row => (
+                  <TableRow key={row.id}>
+                    {row.cells.map(cell => (
+                      <TableCell key={cell.id}>{cell.value}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </DataTable>
+    );
+  }
 }
 
 export default withKeycloak(DeleteUser);

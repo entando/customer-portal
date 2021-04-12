@@ -1,23 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AddCustomerModal from '../components/Admin/AddCustomerModal';
-import '../index.scss'
-import './dashboard.css'
+import '../index.scss';
+import './dashboard.css';
 
 import KeycloakContext from '../auth/KeycloakContext';
 import App from '../components/App';
 
-import {
-  subscribeToWidgetEvent
-} from '../helpers/widgetEvents';
-import {
-  KEYCLOAK_EVENT_TYPE,
-} from '../custom-elements/widgetEventTypes';
+import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
+import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
 
 const getKeycloakInstance = () =>
-  (window &&
-    window.entando &&
-    window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
+  (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
     initialized: false,
   };
 
@@ -34,9 +28,7 @@ class AdminAddCustomerElement extends HTMLElement {
 
   mountPoint;
 
-
   unsubscribeFromKeycloakEvent;
-
 
   keycloak = getKeycloakInstance();
 
@@ -44,7 +36,6 @@ class AdminAddCustomerElement extends HTMLElement {
     this.mountPoint = document.createElement('div');
     this.keycloak = { ...getKeycloakInstance(), initialized: true };
 
-    
     this.unsubscribeFromKeycloakEvent = subscribeToWidgetEvent(KEYCLOAK_EVENT_TYPE, () => {
       this.keycloak = { ...getKeycloakInstance(), initialized: true };
       this.render();
@@ -61,7 +52,7 @@ class AdminAddCustomerElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <AddCustomerModal serviceUrl={serviceUrl}/>
+        <AddCustomerModal serviceUrl={serviceUrl} />
       </KeycloakContext.Provider>,
       this.mountPoint
     );
@@ -69,4 +60,3 @@ class AdminAddCustomerElement extends HTMLElement {
 }
 
 customElements.define('admin-add-customer-widget', AdminAddCustomerElement);
-

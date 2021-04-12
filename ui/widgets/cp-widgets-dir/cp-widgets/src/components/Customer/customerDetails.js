@@ -7,14 +7,14 @@ import withKeycloak from '../../auth/withKeycloak';
 const customerData = {
   name: 'Ford',
   id: '5564 4563 3345',
-  startDate: '01/01/2020'
+  startDate: '01/01/2020',
 };
 
 class CustomerDetails extends React.Component {
   constructor() {
     super();
     this.state = {
-      customer: {}
+      customer: {},
     };
   }
   componentDidMount() {
@@ -44,7 +44,7 @@ class CustomerDetails extends React.Component {
     if (authenticated) {
       const customer = await apiCustomerGet(this.props.serviceUrl, this.props.customerNumber);
       this.setState({
-        customer: customer.data
+        customer: customer.data,
       });
     }
   }

@@ -11,11 +11,8 @@ export const apiTicketDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-export const apiTicketsGet = async (serviceUrl ) => {
-
-  const url = getUrl(
-    `${serviceUrl}/${resource}`
-  );
+export const apiTicketsGet = async serviceUrl => {
+  const url = getUrl(`${serviceUrl}/${resource}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET',
@@ -33,7 +30,6 @@ export const apiTicketPost = async (serviceUrl, ticket) => {
   };
   return request(url, options);
 };
-
 
 const jiraResource = 'api/tickets/ticketingsystem';
 export const apiJiraTicketDelete = async (serviceUrl, id) => {

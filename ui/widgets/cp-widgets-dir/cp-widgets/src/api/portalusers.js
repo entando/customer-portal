@@ -21,10 +21,8 @@ export const apiUsersPut = async (serviceUrl, user) => {
   return await request(url, options);
 };
 
-export const apiUsersGet = async (serviceUrl) => {
-  const url = getUrl(
-    `${serviceUrl}/${resource}`
-  );
+export const apiUsersGet = async serviceUrl => {
+  const url = getUrl(`${serviceUrl}/${resource}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET',
@@ -34,9 +32,7 @@ export const apiUsersGet = async (serviceUrl) => {
 };
 
 export const apiUserGet = async (serviceUrl, userId) => {
-  const url = getUrl(
-    `${serviceUrl}/${resource}/${userId}`
-  );
+  const url = getUrl(`${serviceUrl}/${resource}/${userId}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET',
@@ -56,9 +52,7 @@ export const apiUserPost = async (serviceUrl, user) => {
 };
 
 export const apiUserGetByUsername = async (serviceUrl, username) => {
-  const url = getUrl(
-    `${serviceUrl}/${resource}/username/${username}`
-  );
+  const url = getUrl(`${serviceUrl}/${resource}/username/${username}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET',

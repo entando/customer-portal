@@ -54,7 +54,7 @@
           const silentCheckSsoRedirectUri = window.location.origin + '/silent-check-sso.html';
 
           window.entando.keycloak.init({ onLoad, silentCheckSsoRedirectUri }).success(onInit);
-          
+
         }
         return initKeycloak;
       })();
@@ -66,8 +66,8 @@
     <app-element service-url="%REACT_APP_SERVICE_URL%" locale="en" />
     <!--<manage-user-widget service-url="%REACT_APP_SERVICE_URL%" locale="en" />-->
     <!--<admin-configuration-widget service-url="%REACT_APP_SERVICE_URL%" locale="en"/>-->
-    <!--<subscription-form-widget service-url="%REACT_APP_SERVICE_URL%" locale="en" />-->
-    <!--<open-ticket-widget service-url="%REACT_APP_SERVICE_URL%" locale="en" />-->
+    <subscription-form-widget service-url="%REACT_APP_SERVICE_URL%" locale="en" />
+    <open-ticket-widget service-url="%REACT_APP_SERVICE_URL%" locale="en" />
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
