@@ -151,7 +151,7 @@ class OpenTicket extends Component {
                 }
             }
             else if (isPortalCustomerOrPartner()) {
-                var projects = await apiAdminProjectsGet(this.props.serviceUrl)
+                var projects = await apiMyProjectsGet(this.props.serviceUrl)
                 let search = window.location.search;
                 let params = new URLSearchParams(search);
                 let projectParam = params.get('project');
@@ -325,7 +325,7 @@ class OpenTicket extends Component {
             }
         }
         else {
-            return(null)
+            return null;
         }
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +39,6 @@ import com.mycompany.myapp.service.CustomerService;
 import com.mycompany.myapp.service.ProjectService;
 import com.mycompany.myapp.service.TicketService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
-import org.springframework.security.core.Authentication;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -61,7 +59,6 @@ public class ProjectResource {
     private String applicationName;
 
     private final ProjectService projectService;
-    private final TicketService ticketService;
 
     @Autowired
     SpringSecurityAuditorAware springSecurityAuditorAware;
@@ -69,9 +66,8 @@ public class ProjectResource {
     @Autowired
     private CustomerService customerService;
 
-    public ProjectResource(ProjectService projectService, TicketService ticketService) {
+    public ProjectResource(ProjectService projectService) {
         this.projectService = projectService;
-        this.ticketService = ticketService;
     }
 
     /**
@@ -186,7 +182,7 @@ public class ProjectResource {
     		log.error("Error occurred while fetching subscriptions for customer number : " + customerNumber, e);
     	}
 
-        return new ResponseEntity<List<SubscriptionListResponse>>(subscriptionList, HttpStatus.OK);
+        return new ResponseEntity<>(subscriptionList, HttpStatus.OK);
     }
 
     @GetMapping("/projects/subscriptions/detail")
@@ -211,7 +207,7 @@ public class ProjectResource {
     		subscriptionDetail.setPartner(project.getPartners().stream().findFirst().get().getName()); // assume there is only one partner per project
     	}
 
-    	return new ResponseEntity<SubscriptionDetailResponse>(subscriptionDetail, HttpStatus.OK);
+    	return new ResponseEntity<>(subscriptionDetail, HttpStatus.OK);
     }
 
 
@@ -408,7 +404,7 @@ public class ProjectResource {
             projectIdNameMap.put(project.getId(), project.getName());
         });
 
-        return new ResponseEntity<Map<Long, String>>(projectIdNameMap, HttpStatus.OK);
+        return new ResponseEntity<>(projectIdNameMap, HttpStatus.OK);
     }
 
     @GetMapping("/projects/myprojects/nameId")
@@ -427,7 +423,7 @@ public class ProjectResource {
             }
         });
 
-        return new ResponseEntity<Map<Long, String>>(projectIdNameMap, HttpStatus.OK);
+        return new ResponseEntity<>(projectIdNameMap, HttpStatus.OK);
     }
 
     /**
@@ -448,25 +444,23 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
      */
     @GetMapping("/projects/myprojects")
-    @PreAuthorize(AuthoritiesConstants.HAS_CUSTOMER_OR_PARTNER)
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public List<Project> getMyProjects() {
         log.debug("REST request to get user's Projects");
 
         String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
         List<Project> projects = projectService.findAll();
-        Set<Project> toAdd = new HashSet<>();
-        List<Project> myProjects = new ArrayList<>();
+        Set<Project> result = new HashSet<>();
         for(Project project : projects) {
             Set<PortalUser> users = projectService.getProjectUsers(project.getId());
             for(PortalUser user : users) {
                 if (currentUser.equals(user.getUsername())) {
-                    toAdd.add(project);
+                    result.add(project);
                     break;
                 }
             }
         }
-        myProjects.addAll(toAdd);
-        return myProjects;
+        return new ArrayList<>(result);
     }
 
     /**
