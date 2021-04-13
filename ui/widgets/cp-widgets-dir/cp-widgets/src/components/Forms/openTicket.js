@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import i18n from '../../i18n';
-import { Form, Select, SelectItem, Button, TextArea } from 'carbon-components-react';
+import { Form, Select, SelectItem, Button, TextArea, TextInput } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiAdminProjectsGet, apiMyProjectsGet, apiGetProjectSubscriptions } from '../../api/projects';
 import { apiJiraTicketPost } from '../../api/tickets';
@@ -185,6 +185,7 @@ class OpenTicket extends Component {
       const ticket = {
         systemId: this.state.project.systemId,
         type: this.state.type,
+        summary: this.state.summary,
         description: this.state.description,
         priority: this.state.priority,
         status: 'To Do',
@@ -308,6 +309,19 @@ class OpenTicket extends Component {
                           </SelectItem>
                         ))}
                       </Select>
+                    </div>
+                  </div>
+                  <div className="bx--row">
+                    <div className="bx--col">
+                      <TextInput
+                        labelText={i18n.t('supportTicketForm.ticketSummary') + ' *'}
+                        placeholder={i18n.t('supportTicketForm.addticketSummary')}
+                        name="summary"
+                        value={this.state.summary}
+                        onChange={this.handleChanges}
+                        invalidText={i18n.t('validation.invalid.required')}
+                        invalid={this.state.invalid['summary']}
+                      />
                     </div>
                   </div>
                   <div className="bx--row">

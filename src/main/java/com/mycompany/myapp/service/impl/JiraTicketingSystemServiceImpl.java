@@ -330,8 +330,9 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                     "       {\n" +
                     "          \"key\": \"" + systemId + "\"\n" +
                     "       },\n" +
-                    "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
-                    "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
+                    "       \"summary\": \"" + ticket.getSummary() + "\",\n" +
+                    "       \"description\": \"" + ticket.getDescription() + "\",\n" +
+//TODO: Add configuration for this customfield id - mapping to organization list. Similar for Subscription Level
                     "       \"customfield_10002\": " + orgList + ",\n" +
                     "       \"issuetype\": {\n" +
                     "          \"name\": \"" + ticket.getType() + "\"\n" +
