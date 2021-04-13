@@ -32,8 +32,8 @@ class TicketList extends Component {
         key: 'issue',
       },
       {
-        header: i18n.t('ticketDetails.description'),
-        key: 'description',
+        header: i18n.t('ticketDetails.summary'),
+        key: 'summary',
       },
       {
         header: i18n.t('ticketDetails.status'),
@@ -129,8 +129,7 @@ class TicketList extends Component {
                   <a
                     href={
                       this.state.currentTicketingSystem.url.substr(0, this.state.currentTicketingSystem.url.indexOf('/rest')) +
-                      '/browse/' +
-                      this.state.tickets.data[0].systemId +
+                      '/issues/' +
                       '?jql=Organizations=' +
                       this.state.project.data.systemId
                     }
@@ -162,7 +161,7 @@ class TicketList extends Component {
                         return (
                           <TableRow key={ticket.id}>
                             <TableCell key={ticket.id}>{ticket.systemId}</TableCell>
-                            <TableCell key={ticket.id}>{ticket.description}</TableCell>
+                            <TableCell key={ticket.id}>{ticket.summary}</TableCell>
                             <TableCell key={ticket.id}>{ticket.status}</TableCell>
                             <TableCell key={ticket.id}>{ticket.type}</TableCell>
                             <TableCell key={ticket.id}>{ticket.priority}</TableCell>
