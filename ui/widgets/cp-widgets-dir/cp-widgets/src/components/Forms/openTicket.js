@@ -23,7 +23,7 @@ class OpenTicket extends Component {
       project: {},
       projects: [],
       systemId: '',
-      type: 'Bug',
+      type: 'Support',
       description: '',
       priority: 'Medium',
       status: 'To Do',
@@ -34,8 +34,8 @@ class OpenTicket extends Component {
       submitMsg: '',
       submitColour: 'black',
     };
-    this.types = ['Bug', 'Task'];
-    this.priorities = ['Highest', 'High', 'Medium', 'Low', 'Lowest'];
+    this.types = ['Support', 'Feature Request'];
+    this.priorities = ['Critical', 'High', 'Medium', 'Low'];
   }
 
   handleValidation() {
