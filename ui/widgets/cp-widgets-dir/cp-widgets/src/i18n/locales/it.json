@@ -105,6 +105,8 @@
 		"ticketOpenedBy": "Ticket Opened By:",
 		"priority": "Priorità",
 		"partnerName": "Partner Name",
+    "ticketSummary": "Riepiliogo del biglietto",
+    "addticketSummary": "Aggiungi il riepilogo del biglietto",
 		"ticketDescription": "Descrizione del biglietto",
 		"addticketDescription": "Aggiungi una descrizione del biglietto"
 	},
@@ -138,6 +140,7 @@
     	"tickets": "Biglietti",
 		"issue": "Problema",
 		"project": "Progetto",
+    "summary": "Sommario",
 		"description": "Descrizione",
 		"type": "Genere",
 		"status":"Stato",

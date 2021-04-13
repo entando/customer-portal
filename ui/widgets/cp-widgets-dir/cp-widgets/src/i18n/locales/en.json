@@ -115,6 +115,7 @@
     "tickets": "Tickets",
     "issue": "Issue",
     "project": "Project",
+    "summary": "Summary",
     "description": "Description",
     "type": "Type",
     "status": "Status",
@@ -138,6 +139,8 @@
     "ticketOpenedBy": "Ticket Opened By:",
     "priority": "Priority",
     "partnerName": "Partner Name",
+    "ticketSummary": "Ticket Summary",
+    "addticketSummary": "Add Ticket Summary",
     "ticketDescription": "Ticket Description",
     "addticketDescription": "Add Ticket Description"
   },

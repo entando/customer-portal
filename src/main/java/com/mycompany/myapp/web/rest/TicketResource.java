@@ -394,7 +394,8 @@ public class TicketResource {
         Ticket ticketToCreate = new Ticket();
         JSONObject response = new JSONObject(ticketingSystemService.fetchSingleJiraTicketBySystemId(key, url,
             serviceAccount, serviceAccountSecret));
-        ticketToCreate.setDescription((String) response.getJSONObject("fields").get("summary"));
+        ticketToCreate.setSummary((String) response.getJSONObject("fields").get("summary"));
+        ticketToCreate.setDescription((String) response.getJSONObject("fields").get("description"));
         ticketToCreate.setSystemId(key);
         ticketToCreate.setType((String) response.getJSONObject("fields").getJSONObject("issuetype").get("name"));
         ticketToCreate.setStatus((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
