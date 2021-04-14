@@ -220,25 +220,6 @@ public class TicketResourceIT {
 
     @Test
     @Transactional
-    public void checkDescriptionIsRequired() throws Exception {
-        int databaseSizeBeforeTest = ticketRepository.findAll().size();
-        // set the field null
-        ticket.setDescription(null);
-
-        // Create the Ticket, which fails.
-
-
-        restTicketMockMvc.perform(post("/api/tickets").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(ticket)))
-            .andExpect(status().isBadRequest());
-
-        List<Ticket> ticketList = ticketRepository.findAll();
-        assertThat(ticketList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void checkCreateDateIsRequired() throws Exception {
         int databaseSizeBeforeTest = ticketRepository.findAll().size();
         // set the field null

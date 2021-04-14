@@ -24,10 +24,7 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldType": "String"
     },
     {
       "fieldName": "priority",
