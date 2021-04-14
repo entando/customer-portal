@@ -15,7 +15,7 @@ Install the bundle using the App Builder.
   * Service URL, e.g. https://<YOUR_ACCOUNT>.atlassian.net/rest/api/latest/
   * Service account email and password (or preferably API token)
   * Project name key, e.g. ENT
-  * Custom field ids for organizations (default TODO), subscription level (default TODO)
+  * Custom field ids for organizations (default 10002), subscription level (default 10038). See https://developer.atlassian.com/cloud/jira/service-desk/rest/intro/#fieldformats for documentation on field mapping and formats.
   * By default the Customer Portal uses issue types Support and Feature Request
   * The Affects Version field is used to map to the EntandoVersion and the text of the versions must match
 * Keycloak

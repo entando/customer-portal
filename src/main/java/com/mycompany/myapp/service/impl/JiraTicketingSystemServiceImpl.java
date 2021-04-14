@@ -29,7 +29,6 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
@@ -151,7 +150,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             return responseObject.toString();
         }
         catch(Exception e) {
-            e.printStackTrace();
+            log.error("Fetch failure {}", systemId, e);
         }
         return null;
     }
@@ -187,7 +186,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             return responseObject.toString();
         }
         catch(Exception e) {
-            e.printStackTrace();
+            log.error("Fetch failure {}", searchQuery, e);
         }
         return null;
     }
@@ -231,7 +230,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             return responseObject.toString();
         }
         catch(Exception e) {
-            e.printStackTrace();
+            log.error("Fetch failure {}", systemId, e);
         }
         return null;
     }
@@ -297,7 +296,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             return responseObject.toString();
         }
         catch(Exception e) {
-            e.printStackTrace();
+            log.error("Create failure {}", systemId, e);
         }
         return null;
     }
@@ -306,17 +305,14 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
     public String createJiraTicketInOrg(String systemId, String organization, String baseUrl,
                                         String serviceAccount, String serviceAccountSecret,
                                         Ticket ticket, EntandoVersion version, SubscriptionLevel level) {
-        String user = serviceAccount;
-        String password = serviceAccountSecret;
-        List<Integer> orgList = new ArrayList<>();
-        orgList.add(Integer.parseInt(organization));
 
+        String jsonInputString = null;
         try {
             URL url = new URL(baseUrl + "issue");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
 
-            String auth = user + ":" + password;
+            String auth = serviceAccount + ":" + serviceAccountSecret;
             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
             String authHeaderValue = "Basic " + new String(encodedAuth);
             con.setRequestProperty("Authorization", authHeaderValue);
@@ -325,58 +321,46 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
             String signedInUser = getJiraAccountIdOfSignedInUser(baseUrl, serviceAccount, serviceAccountSecret);
 
-//            JSONObject json = new JSONObject();
-//            json.put("fields", fields);
-//
-//
-            //TODO: rework this to use a JSON util which guarantees valid JSON
-            String  jsonInputString = "{\n" +
-                    "    \"fields\": {\n" +
-                    "       \"project\":\n" +
-                    "       {\n" +
-                    "          \"key\": \"" + systemId + "\"\n" +
-                    "       },\n" +
-                    "       \"summary\": \"" + ticket.getSummary() + "\",\n" +
-                    "       \"description\": \"" + ticket.getDescription() + "\",\n" +
-                    //TODO: add versions
-                    //TODO: Add configuration for these customfield ids
-                    //organization list
-                    "       \"customfield_10002\": " + orgList + ",\n" +
-                    //subscription level
-                    "       \"customfield_10038\": {\n" +
-                    "          \"value\": \"" + level.name() + "\"\n" +
-                    "       },\n" +
-                    "       \"issuetype\": {\n" +
-                    "          \"name\": \"" + ticket.getType() + "\"\n" +
-                    "       },\n" +
-                    "       \"priority\":\n" +
-                    "       {\n" +
-                    "          \"name\": \"" + ticket.getPriority() + "\"\n" +
-                    "       }\n";
-            if (signedInUser != null &&  !signedInUser.equals("")) {
-                jsonInputString +=
-                    ",\"reporter\":\n" +
-                    "       {\n" +
-                    "          \"accountId\": \"" + signedInUser + "\"\n" +
-                    "       }\n";
-            }
-            jsonInputString +=
-                    "   }\n" +
-                    "}";
+            JSONObject root = new JSONObject();
+            JSONObject fields = new JSONObject();
+            root.put("fields", fields);
 
+            fields.put("project", new JSONObject().put("key", systemId));
+            fields.put("summary", ticket.getSummary());
+            fields.putOpt("description", ticket.getDescription());
+            fields.put("issuetype", new JSONObject().put("name", ticket.getType()));
+            fields.put("priority", new JSONObject().put("name", ticket.getPriority()));
+            fields.put("versions", new JSONArray().put(new JSONObject().put("name", version.getName())));
+
+            //// Custom fields
+            //TODO: CP-53 Add config options for the customfield identifiers
+            //Organization
+            fields.put("customfield_10002", new int[]{Integer.parseInt(organization)});
+            //Subscription Level
+            fields.put("customfield_10038", new JSONObject().put("value", level.name()));
+
+            //// User information
+            if (signedInUser != null &&  !signedInUser.equals("")) {
+                fields.put("reporter", new JSONObject().put("accountId", signedInUser));
+            }
+
+            jsonInputString = root.toString();
             if (log.isDebugEnabled()) {
                 log.debug("jsonInputString: {}", jsonInputString);
             }
 
             try(OutputStream os = con.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes("utf-8");
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 
             int status = con.getResponseCode();
+            if (log.isDebugEnabled()) {
+                log.debug("status {}. message {}", status, con.getResponseMessage());
+            }
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
-            StringBuffer content = new StringBuffer();
+            StringBuilder content = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
@@ -387,7 +371,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             return responseObject.toString();
         }
         catch(Exception e) {
-            e.printStackTrace();
+            log.error("Ticket creation failed for project id {} and json {}", systemId, jsonInputString, e);
         }
         return null;
     }
@@ -432,7 +416,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                 "   }\n" +
                 "}";
             try(OutputStream os = con.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes("utf-8");
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 
@@ -445,12 +429,11 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             }
             in.close();
             con.disconnect();
-            //JSONObject responseObject = new JSONObject(content.toString());
 
             return String.valueOf(status);
         }
         catch(Exception e) {
-            e.printStackTrace();
+            log.error("Update failure {}", systemId, e);
         }
         return null;
     }
@@ -489,7 +472,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             return String.valueOf(status);
         }
         catch(Exception e) {
-            e.printStackTrace();
+            log.error("Delete failure {}", systemId, e);
         }
         return null;
     }
@@ -542,7 +525,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             return responseObject.getJSONObject(0).getString("accountId");
         }
         catch(Exception e) {
-            e.printStackTrace();
+            log.error("Account lookup failure {}", signedInUser, e);
         }
         return null;
     }
