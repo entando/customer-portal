@@ -205,6 +205,7 @@ class CustomTable extends Component {
                             </TableRow>
                           );
                         } else {
+                          //Note: this uses the last subscription which isn't necessarily the current active one
                           var sub = project.projectSubscriptions[project.projectSubscriptions.length - 1];
                           return (
                             <TableRow key={index}>

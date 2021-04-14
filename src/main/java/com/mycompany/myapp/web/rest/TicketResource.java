@@ -1,14 +1,12 @@
 package com.mycompany.myapp.web.rest;
 
-import com.mycompany.myapp.domain.Ticket;
-import com.mycompany.myapp.domain.TicketingSystem;
+import com.mycompany.myapp.domain.*;
+import com.mycompany.myapp.domain.enumeration.SubscriptionLevel;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.service.JiraTicketingSystemService;
 import com.mycompany.myapp.service.ProjectService;
 import com.mycompany.myapp.service.TicketService;
-import com.mycompany.myapp.service.TicketingSystemService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.json.JSONArray;
@@ -16,7 +14,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Example;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -303,9 +297,21 @@ public class TicketResource {
         // find ticketing system for this systemId
         TicketingSystem ts = ticketingSystemService.findTicketingSystemBySystemId(jiraProjectCode);
 
+        Project project = projectService.getProjectBySystemId(organizationNumber);
+        List<ProjectSubscription> subscriptions = project.getProjectSubscriptions();
+        if (subscriptions.isEmpty()) {
+            log.warn("Ticket creation attempted without subscription for project: {}", project.getName());
+            return null;
+        }
+
+        //Note: this uses the last subscription which may not be the current active one
+        ProjectSubscription subscription = subscriptions.get(subscriptions.size() - 1);
+        EntandoVersion version = subscription.getEntandoVersion();
+        SubscriptionLevel level = subscription.getLevel();
+
         // create ticket in Jira
         JSONObject response = new JSONObject(ticketingSystemService.createJiraTicketInOrg(jiraProjectCode, organizationNumber, ts.getUrl(),
-            ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket));
+            ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket, version, level));
         String key = response.getString("key");
 
         // prepare Ticket from JSON response
@@ -332,21 +338,6 @@ public class TicketResource {
         ticketingSystemService.updateJiraTicket(ticket.getSystemId(), ts.getUrl(),
             ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket);
 
-        // create ticket in Jira
-        /*
-
-        JSONObject response = new JSONObject(ticketingSystemService.updateJiraTicket(ticket.getSystemId(), ts.getUrl(),
-            ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket));
-        String key = response.getString("key");
-
-
-        // prepare Ticket from JSON response
-        Ticket ticketToCreate = prepareTicketToCreate(ticket.getSystemId(), ts.getUrl(), ts.getServiceAccount(),
-            ts.getServiceAccountSecret());
-
-         */
-
-        // return created Ticket
         return updateTicket(ticket);
     }
 
