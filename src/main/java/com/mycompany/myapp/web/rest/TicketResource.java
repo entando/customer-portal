@@ -366,11 +366,12 @@ public class TicketResource {
         Ticket ticketToCreate = new Ticket();
         JSONObject response = new JSONObject(ticketingSystemService.fetchSingleJiraTicketBySystemId(key, url,
             serviceAccount, serviceAccountSecret));
-        ticketToCreate.setDescription((String) response.getJSONObject("fields").get("summary"));
+        JSONObject fields = response.getJSONObject("fields");
+        ticketToCreate.setDescription(getField(fields, "summary", null));
         ticketToCreate.setSystemId(key);
-        ticketToCreate.setType((String) response.getJSONObject("fields").getJSONObject("issuetype").get("name"));
-        ticketToCreate.setStatus((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
-        ticketToCreate.setPriority((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
+        ticketToCreate.setType(response.getJSONObject("fields").getJSONObject("issuetype").getString("name"));
+        ticketToCreate.setStatus(response.getJSONObject("fields").getJSONObject("priority").getString("name"));
+        ticketToCreate.setPriority(response.getJSONObject("fields").getJSONObject("priority").getString("name"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
         String createdDate = response.getJSONObject("fields").getString("created");
         ticketToCreate.setCreateDate(ZonedDateTime.parse(createdDate, formatter));
@@ -385,20 +386,35 @@ public class TicketResource {
         Ticket ticketToCreate = new Ticket();
         JSONObject response = new JSONObject(ticketingSystemService.fetchSingleJiraTicketBySystemId(key, url,
             serviceAccount, serviceAccountSecret));
-        ticketToCreate.setSummary((String) response.getJSONObject("fields").get("summary"));
-        ticketToCreate.setDescription((String) response.getJSONObject("fields").get("description"));
+        JSONObject fields = response.getJSONObject("fields");
+        ticketToCreate.setSummary(getField(fields, "summary", null));
+        ticketToCreate.setDescription(getField(fields, "description", null));
         ticketToCreate.setSystemId(key);
-        ticketToCreate.setType((String) response.getJSONObject("fields").getJSONObject("issuetype").get("name"));
-        ticketToCreate.setStatus((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
-        ticketToCreate.setPriority((String) response.getJSONObject("fields").getJSONObject("priority").get("name"));
+        ticketToCreate.setType(getField(fields, "issuetype", "name"));
+        ticketToCreate.setStatus(getField(fields, "priority", "name"));
+        ticketToCreate.setPriority(getField(fields,"priority", "name"));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        String createdDate = response.getJSONObject("fields").getString("created");
+        String createdDate = fields.getString("created");
         ticketToCreate.setCreateDate(ZonedDateTime.parse(createdDate, formatter));
 
-        String updatedDate = response.getJSONObject("fields").getString("updated");
+        String updatedDate = fields.getString("updated");
         ticketToCreate.setUpdateDate(ZonedDateTime.parse(updatedDate, formatter));
         ticketToCreate.setProject(projectService.getProjectBySystemId(organization));
         return ticketToCreate;
+    }
+
+    private String getField(JSONObject jsonObject, String key, String childKey) {
+        if (jsonObject == null) {
+            return null;
+        }
+        if (!jsonObject.has(key)) {
+            return null;
+        }
+        if (childKey == null) {
+            return (!jsonObject.isNull(key)) ? jsonObject.getString(key) : null;
+        }
+        JSONObject child = jsonObject.getJSONObject(key);
+        return getField(child, childKey, null);
     }
 }
