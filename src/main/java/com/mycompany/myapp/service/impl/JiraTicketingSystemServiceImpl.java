@@ -1,8 +1,9 @@
 package com.mycompany.myapp.service.impl;
 
+import com.mycompany.myapp.domain.EntandoVersion;
+import com.mycompany.myapp.domain.enumeration.SubscriptionLevel;
 import com.mycompany.myapp.security.SpringSecurityAuditorAware;
 import com.mycompany.myapp.service.JiraTicketingSystemService;
-import com.mycompany.myapp.service.TicketingSystemService;
 import com.mycompany.myapp.domain.TicketingSystem;
 import com.mycompany.myapp.domain.Ticket;
 import com.mycompany.myapp.repository.TicketingSystemRepository;
@@ -302,7 +303,9 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
     }
 
     @Override
-    public String createJiraTicketInOrg(String systemId, String organization, String baseUrl, String serviceAccount, String serviceAccountSecret, Ticket ticket) {
+    public String createJiraTicketInOrg(String systemId, String organization, String baseUrl,
+                                        String serviceAccount, String serviceAccountSecret,
+                                        Ticket ticket, EntandoVersion version, SubscriptionLevel level) {
         String user = serviceAccount;
         String password = serviceAccountSecret;
         List<Integer> orgList = new ArrayList<>();
@@ -320,11 +323,14 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             con.setRequestProperty("Content-Type", "application/json; charset=utf8");
             con.setDoOutput(true);
 
-            String jsonInputString;
             String signedInUser = getJiraAccountIdOfSignedInUser(baseUrl, serviceAccount, serviceAccountSecret);
 
-            if (signedInUser == null || signedInUser.equals("")) {
-                jsonInputString = "{\n" +
+//            JSONObject json = new JSONObject();
+//            json.put("fields", fields);
+//
+//
+            //TODO: rework this to use a JSON util which guarantees valid JSON
+            String  jsonInputString = "{\n" +
                     "    \"fields\": {\n" +
                     "       \"project\":\n" +
                     "       {\n" +
@@ -332,42 +338,36 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                     "       },\n" +
                     "       \"summary\": \"" + ticket.getSummary() + "\",\n" +
                     "       \"description\": \"" + ticket.getDescription() + "\",\n" +
-//TODO: Add configuration for this customfield id - mapping to organization list. Similar for Subscription Level
+                    //TODO: add versions
+                    //TODO: Add configuration for these customfield ids
+                    //organization list
                     "       \"customfield_10002\": " + orgList + ",\n" +
+                    //subscription level
+                    "       \"customfield_10038\": {\n" +
+                    "          \"value\": \"" + level.name() + "\"\n" +
+                    "       },\n" +
                     "       \"issuetype\": {\n" +
                     "          \"name\": \"" + ticket.getType() + "\"\n" +
                     "       },\n" +
                     "       \"priority\":\n" +
                     "       {\n" +
                     "          \"name\": \"" + ticket.getPriority() + "\"\n" +
-                    "       }\n" +
-                    "   }\n" +
-                    "}";
-            }
-            else {
-                jsonInputString = "{\n" +
-                    "    \"fields\": {\n" +
-                    "       \"project\":\n" +
-                    "       {\n" +
-                    "          \"key\": \"" + systemId + "\"\n" +
-                    "       },\n" +
-                    "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
-                    "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
-                    "       \"customfield_10002\": " + orgList + ",\n" +
-                    "       \"issuetype\": {\n" +
-                    "          \"name\": \"" + ticket.getType() + "\"\n" +
-                    "       },\n" +
-                    "       \"priority\":\n" +
-                    "       {\n" +
-                    "          \"name\": \"" + ticket.getPriority() + "\"\n" +
-                    "       },\n" +
-                    "       \"reporter\":\n" +
+                    "       }\n";
+            if (signedInUser != null &&  !signedInUser.equals("")) {
+                jsonInputString +=
+                    ",\"reporter\":\n" +
                     "       {\n" +
                     "          \"accountId\": \"" + signedInUser + "\"\n" +
-                    "       }\n" +
+                    "       }\n";
+            }
+            jsonInputString +=
                     "   }\n" +
                     "}";
+
+            if (log.isDebugEnabled()) {
+                log.debug("jsonInputString: {}", jsonInputString);
             }
+
             try(OutputStream os = con.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes("utf-8");
                 os.write(input, 0, input.length);

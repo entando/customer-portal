@@ -1,8 +1,9 @@
 package com.mycompany.myapp.service;
 
+import com.mycompany.myapp.domain.EntandoVersion;
 import com.mycompany.myapp.domain.TicketingSystem;
 import com.mycompany.myapp.domain.Ticket;
-import org.json.JSONObject;
+import com.mycompany.myapp.domain.enumeration.SubscriptionLevel;
 
 import java.util.List;
 import java.util.Optional;
@@ -91,7 +92,7 @@ public interface JiraTicketingSystemService {
      * @return the JSON response
      */
     String createJiraTicketInOrg(String systemId, String organization, String url, String serviceAccount, String serviceAccountSecret,
-                            Ticket ticket);
+                                 Ticket ticket, EntandoVersion version, SubscriptionLevel level);
 
     /**
      * Updating a Jira ticket.
