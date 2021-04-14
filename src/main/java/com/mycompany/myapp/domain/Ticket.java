@@ -37,8 +37,7 @@ public class Ticket implements Serializable {
     @Column(name = "summary", nullable = false)
     private String summary;
 
-    @NotNull
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
 
     @Column(name = "priority")

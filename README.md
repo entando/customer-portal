@@ -10,6 +10,31 @@ With this configuration, you can use the ent cli (https://dev.entando.org/v6.3/d
 
 Install the bundle using the App Builder.
 
+# Prerequisites
+* JIRA Service Management instance
+  * Service URL, e.g. https://<YOUR_ACCOUNT>.atlassian.net/rest/api/latest/
+  * Service account email and password (or preferably API token)
+  * Project name key, e.g. ENT
+  * Custom field ids for organizations (default TODO), subscription level (default TODO)
+  * By default the Customer Portal uses issue types Support and Feature Request
+  * The Affects Version field is used to map to the EntandoVersion and the text of the versions must match
+* Keycloak
+  * cp-admin
+  * cp-support
+  * cp-partner
+  * cp-customer
+  * The built-in mapper for email must be enabled on the server client so that user accounts can be retrieved from Jira and tickets created used that account information.
+* Email 
+  
+# Development tips
+* The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. For example, the UI code will be reformatted and functional changes may not be useful at this point.
+* You can use `mvn clean` to reload the fake dataset from src/main/resources/config/liquibase/fake-data.
+* Restarting the keycloak container will re-initialize the realm from src/main/docker/realm-config.
+
+---
+Standard Blueprint documentation follows...
+
+---
 
 # Spring Boot/microservice application - custportApp
 

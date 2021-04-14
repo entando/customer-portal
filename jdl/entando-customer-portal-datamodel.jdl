@@ -62,7 +62,7 @@ entity Ticket {
     systemId String required //The ticketing system identifer, e.g. SUP-1
     type String required //Support or Feature Request
     summary String required
-    description String required
+    description String
     priority String //Don't use an enum for priority since it could vary by ticketing system
     status String //Don't use an enum for status since it could vary by ticketing system
     createDate ZonedDateTime required
