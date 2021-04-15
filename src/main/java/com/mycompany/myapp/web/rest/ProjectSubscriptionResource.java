@@ -120,6 +120,7 @@ public class ProjectSubscriptionResource {
         boolean hasUserRole = authentication.getAuthorities().stream()
                   .anyMatch(r -> r.getAuthority().equals(AuthoritiesConstants.CUSTOMER));
 
+        //TODO: remove or clean up
         /*
         if (hasUserRole) {
             String from = "jordengerovac@gmail.com"; // email required
