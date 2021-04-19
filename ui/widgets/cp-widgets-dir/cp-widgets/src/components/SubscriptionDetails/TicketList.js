@@ -138,7 +138,7 @@ class TicketList extends Component {
                   {i18n.t('buttons.viewTickets')}
                 </a>
                 ) : (
-                  <a>{i18n.t('ticketDetails.tickets')}</a>
+                  <div>{i18n.t('ticketDetails.tickets')}</div>
                 )
               }
             >
@@ -205,7 +205,7 @@ const rowData = [
     project: 'Leonardo',
     entandoVersion: 6.2,
     creationDate: 'October, 2019',
-    openTicket: <a href="">Open Ticket</a>,
+    openTicket: 'Open Ticket',
   },
   {
     id: 'a',
@@ -213,7 +213,7 @@ const rowData = [
     project: 'Leonardo',
     entandoVersion: 6.2,
     creationDate: 'October, 2019',
-    openTicket: <a href="">Open Ticket</a>,
+    openTicket: 'Open Ticket',
   },
   {
     id: 'a',
@@ -221,7 +221,7 @@ const rowData = [
     project: 'Leonardo',
     entandoVersion: 6.2,
     creationDate: 'October, 2019',
-    openTicket: <a href="">Open Ticket</a>,
+    openTicket: 'Open Ticket',
   },
 ];
 

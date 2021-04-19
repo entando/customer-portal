@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AccordionItem, Button } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomerGet, apiCustomerDelete, apiGetCustomersProjects, apiGetMyCustomersProjects } from '../../api/customers';
-import CustomTable from './customDataTable';
+import CustomerDataTable from './customerDataTable';
 import CustomerDetails from './customerDetails';
 import { isPortalAdminOrSupport, isPortalAdmin, isPortalCustomer } from '../../api/helpers';
 import EditCustomerModal from '../Admin/EditCustomerModal';
@@ -40,7 +40,7 @@ class CustomerAccordian extends React.Component {
   }
 
   async getCustomersProjects(id) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const customer = await apiCustomerGet(this.props.serviceUrl, id);
@@ -67,18 +67,15 @@ class CustomerAccordian extends React.Component {
     return await apiCustomerDelete(this.props.serviceUrl, this.state.customer.id);
   }
 
-  handleDelete(e) {
+  handleDelete() {
     if (window.confirm('Are you sure you want to delete this customer?')) {
-      this.deleteCustomer().then(result => {
+      this.deleteCustomer().then(() => {
         this.props.updateCustomerList();
       });
     }
   }
 
   render() {
-    var { t, keycloak } = this.props;
-    var authenticated = keycloak.initialized && keycloak.authenticated;
-
     return (
       <div>
         <div>
@@ -105,7 +102,7 @@ class CustomerAccordian extends React.Component {
                 </div>
               ) : null}
             </div>
-            <CustomTable
+            <CustomerDataTable
               key={new Date().getTime()}
               serviceUrl={this.props.serviceUrl}
               customerNumber={this.props.customerNumber}

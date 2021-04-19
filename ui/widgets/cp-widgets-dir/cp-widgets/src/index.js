@@ -1,10 +1,9 @@
 import './index.scss';
-//import './custom-elements/dashboard.css'
 
 import './custom-elements/AdminDashboardElement';
 import './custom-elements/AdminAddCustomerElement';
 import './custom-elements/AdminRoleCheckElement';
-import './custom-elements/CustomDataTableElement';
+import './custom-elements/CustomerDataTableElement';
 import './custom-elements/CustomerDetailsElement';
 import './custom-elements/SubscriptionElement';
 import './custom-elements/FormsOpenTicketElement';

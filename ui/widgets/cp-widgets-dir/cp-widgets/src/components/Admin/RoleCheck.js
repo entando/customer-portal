@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Select, SelectItem } from 'carbon-components-react';
 import CustomerDetails from '../Customer/customerDetails';
-import CustomTable from '../Customer/customDataTable';
 import AdminDashboard from './AdminDashboard';
 import '../../index.scss';
 

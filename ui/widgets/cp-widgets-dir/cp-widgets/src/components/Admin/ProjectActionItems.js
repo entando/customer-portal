@@ -33,10 +33,6 @@ class ProjectActionItems extends React.Component {
   };
 
   render() {
-    let search = window.location.search;
-    let params = new URLSearchParams(search);
-    let projectParam = params.get('project');
-
     if (!this.props.hasSubscription) {
       return (
         <div>
@@ -139,7 +135,7 @@ class ProjectActionItems extends React.Component {
                   this.props.ticketingSystem.url.substr(0, this.props.ticketingSystem.url.indexOf('/rest')) +
                   '/issues/?jql=Organizations=' + this.props.project.systemId}
                 style={{ textDecoration: 'none' }}
-                target="_blank"
+                target="_blank" rel="noreferrer"
               >
                 <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="View Tickets">
                   {i18n.t('buttons.viewTickets')}

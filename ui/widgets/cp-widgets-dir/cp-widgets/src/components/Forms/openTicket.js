@@ -71,7 +71,7 @@ class OpenTicket extends Component {
     const name = input.name;
     const value = input.value;
 
-    if (name === 'project' && value != '' && value != 'project-list') {
+    if (name === 'project' && value !== '' && value !== 'project-list') {
       this.setState({
         project: JSON.parse(value),
       });
@@ -92,13 +92,13 @@ class OpenTicket extends Component {
           // if project has subscription, create ticket
           if (result.data.length > 0) {
             this.createTicket()
-              .then(res => {
+              .then(() => {
                 this.setState({
                   submitMsg: i18n.t('submitMessages.created'),
                   submitColour: '#24a148',
                 });
               })
-              .catch(err => {
+              .catch(() => {
                 this.setState({
                   submitMsg: i18n.t('submitMessages.ticketError'),
                   submitColour: '#da1e28',
@@ -113,7 +113,7 @@ class OpenTicket extends Component {
             });
           }
         })
-        .catch(error => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',
@@ -127,12 +127,12 @@ class OpenTicket extends Component {
   }
 
   async fetchProjects() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     var authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
       if (isPortalAdminOrSupport()) {
-        var projects = await apiAdminProjectsGet(this.props.serviceUrl);
+        let projects = await apiAdminProjectsGet(this.props.serviceUrl);
         let search = window.location.search;
         let params = new URLSearchParams(search);
         let projectParam = params.get('project');
@@ -178,7 +178,7 @@ class OpenTicket extends Component {
   }
 
   async createTicket() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     var authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
@@ -209,7 +209,7 @@ class OpenTicket extends Component {
   }
 
   componentDidMount() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
@@ -222,7 +222,7 @@ class OpenTicket extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;
