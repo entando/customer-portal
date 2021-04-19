@@ -253,7 +253,7 @@ class SubscriptionForm extends Component {
 
   setupFormComponents() {
     const projectIdsNames = this.state.projects;
-    let projectList = null;
+    let projectList;
 
     if (projectIdsNames != null && Object.keys(projectIdsNames).length > 0) {
       projectList = Object.keys(projectIdsNames).map((projectId, i) => (

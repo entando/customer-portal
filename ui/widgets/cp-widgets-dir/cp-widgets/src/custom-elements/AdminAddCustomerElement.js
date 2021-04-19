@@ -5,7 +5,6 @@ import '../index.scss';
 import './dashboard.css';
 
 import KeycloakContext from '../auth/KeycloakContext';
-import App from '../components/App';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
 import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
