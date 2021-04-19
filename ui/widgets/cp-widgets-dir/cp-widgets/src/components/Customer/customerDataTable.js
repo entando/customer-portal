@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
-import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, Button } from 'carbon-components-react';
+import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
 import '../../index.scss';
 import { apiGetCustomersProjects, apiGetMyCustomersProjects, apiDeleteProjectFromCustomer } from '../../api/customers';
-import { AuthenticatedView, UnauthenticatedView } from '../../auth/KeycloakViews';
 import withKeycloak from '../../auth/withKeycloak';
-import { Link, HashRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import i18n from '../../i18n';
-import EditProjectModal from '../Admin/EditProjectModal';
 import { isPortalAdminOrSupport } from '../../api/helpers';
-import { apiProjectsDelete } from '../../api/projects';
 import {apiCurrentTicketingSystemGet} from "../../api/ticketingsystem";
 import ProjectActionItems from '../Admin/ProjectActionItems';
 
-class CustomTable extends Component {
+class CustomerDataTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,7 +59,7 @@ class CustomTable extends Component {
   }
 
   async fetchData() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
@@ -116,7 +113,7 @@ class CustomTable extends Component {
   };
 
   async deleteProject(id) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       return await apiDeleteProjectFromCustomer(this.props.serviceUrl, this.props.customerNumber, id);
@@ -127,14 +124,14 @@ class CustomTable extends Component {
     e.preventDefault();
     if (window.confirm('Are you sure you want to delete this project?')) {
       this.deleteProject(id)
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.deleted'),
             submitColour: '#24a148',
           });
           this.props.updateCustomerList();
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',
@@ -274,7 +271,7 @@ class CustomTable extends Component {
 const rowData = [
   {
     id: 'a',
-    projectName: <a href="">Supplier Portal</a>,
+    projectName: 'Supplier Portal',
     partnerName: 'Leonardo',
     entandoVersion: 5.2,
     startDate: 'October, 2019',
@@ -283,7 +280,7 @@ const rowData = [
   },
   {
     id: 'b',
-    projectName: <a href="">Task Manager</a>,
+    projectName: 'Supplier Portal',
     partnerName: 'Veriday',
     entandoVersion: 5.2,
     startDate: 'July, 2019',
@@ -292,7 +289,7 @@ const rowData = [
   },
   {
     id: 'c',
-    projectName: <a href="">Sales Coordination App</a>,
+    projectName: 'Supplier Portal',
     partnerName: 'Accenture',
     entandoVersion: 6.2,
     startDate: 'September, 2019',
@@ -301,7 +298,7 @@ const rowData = [
   },
   {
     id: 'd',
-    projectName: <a href="">Website</a>,
+    projectName: 'Supplier Portal',
     partnerName: 'Veriday',
     entandoVersion: 5.2,
     startDate: 'October, 2019',
@@ -310,4 +307,4 @@ const rowData = [
   },
 ];
 
-export default withKeycloak(CustomTable);
+export default withKeycloak(CustomerDataTable);

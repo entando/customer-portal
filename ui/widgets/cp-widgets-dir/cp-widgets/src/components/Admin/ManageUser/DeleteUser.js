@@ -36,7 +36,7 @@ class DeleteUser extends Component {
   }
 
   componentDidMount() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
@@ -45,7 +45,7 @@ class DeleteUser extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;
@@ -92,7 +92,7 @@ class DeleteUser extends Component {
         keycloakUser.createdTimestamp
       ).getFullYear()}`,
       userAccess: portalUsernames.includes(keycloakUser.username) ? (
-        <a onClick={event => this.handleRemoveUser(keycloakUser.username, event)} href="">
+        <a onClick={event => this.handleRemoveUser(keycloakUser.username, event)}>
           <SubtractAlt16 fill="red" />
           {i18n.t('manageUsers.delete.removeUser')}
         </a>

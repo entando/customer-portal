@@ -4,12 +4,6 @@ import { Tile } from 'carbon-components-react';
 import { apiCustomerGet } from '../../api/customers';
 import withKeycloak from '../../auth/withKeycloak';
 
-const customerData = {
-  name: 'Ford',
-  id: '5564 4563 3345',
-  startDate: '01/01/2020',
-};
-
 class CustomerDetails extends React.Component {
   constructor() {
     super();
@@ -50,7 +44,6 @@ class CustomerDetails extends React.Component {
   }
 
   render() {
-    const { name, id, startDate } = customerData; //destructuring
     return (
       <div className="customer-details">
         <Tile>

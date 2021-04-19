@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CustomDataTable from '../components/Customer/customDataTable';
+import CustomerDataTable from '../components/Customer/customerDataTable';
 import KeycloakContext from '../auth/KeycloakContext';
 import '../index.scss';
 import './dashboard.css';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
-import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
+import { KEYCLOAK_EVENT_TYPE } from './widgetEventTypes';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
@@ -21,7 +21,7 @@ const ATTRIBUTES = {
   serviceUrl: 'service-url',
 };
 
-class CustomDataTableElement extends HTMLElement {
+class CustomerDataTableElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -50,11 +50,11 @@ class CustomDataTableElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <CustomDataTable serviceUrl={serviceUrl} />
+        <CustomerDataTable serviceUrl={serviceUrl} />
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('custom-datatable-widget', CustomDataTableElement);
+customElements.define('customer-datatable-widget', CustomerDataTableElement);

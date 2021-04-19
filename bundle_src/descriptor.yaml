@@ -9,7 +9,7 @@ components:
     - ui/widgets/cp-widgets-dir/cp-widgets/admin-dashboard-widget-descriptor.yaml
     - ui/widgets/cp-widgets-dir/cp-widgets/admin-add-customer-widget-descriptor.yaml
     - ui/widgets/cp-widgets-dir/cp-widgets/admin-rolecheck-widget-descriptor.yaml
-    - ui/widgets/cp-widgets-dir/cp-widgets/custom-datatable-widget-descriptor.yaml
+    - ui/widgets/cp-widgets-dir/cp-widgets/customer-datatable-widget-descriptor.yaml
     - ui/widgets/cp-widgets-dir/cp-widgets/customer-dashboard-widget-descriptor.yaml
     - ui/widgets/cp-widgets-dir/cp-widgets/customer-details-widget-descriptor.yaml
     - ui/widgets/cp-widgets-dir/cp-widgets/forms-enhancement-request-widget-descriptor.yaml

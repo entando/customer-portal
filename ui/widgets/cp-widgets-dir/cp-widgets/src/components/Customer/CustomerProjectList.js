@@ -1,6 +1,5 @@
 import React from 'react';
 import { Tile } from 'carbon-components-react';
-import CustomTable from './customDataTable';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiAdminCustomerGet, apiGetCustomersProjects } from '../../api/customers';
 import { isPortalAdminOrSupport } from '../../api/helpers';
