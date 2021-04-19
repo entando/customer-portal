@@ -63,7 +63,7 @@ class TicketList extends Component {
   }
 
   async fetchData() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     var authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
@@ -133,7 +133,7 @@ class TicketList extends Component {
                     this.state.project.data.systemId
                   }
                   style={{ textDecoration: 'none' }}
-                  target="_blank"
+                  target="_blank" rel="noreferrer"
                 >
                   {i18n.t('buttons.viewTickets')}
                 </a>
@@ -173,7 +173,7 @@ class TicketList extends Component {
                                   '/browse/' +
                                   ticket.systemId
                                 }
-                                target="_blank"
+                                target="_blank" rel="noreferrer"
                               >
                                 {i18n.t('ticketDetails.viewTicket')}
                               </a>

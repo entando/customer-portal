@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import retargetEvents from 'react-shadow-dom-retarget-events';
 import '../index.scss';
 import './dashboard.css';
 import * as Locale from '../i18n';
@@ -9,7 +8,7 @@ import KeycloakContext from '../auth/KeycloakContext';
 import App from '../components/App';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
-import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
+import { KEYCLOAK_EVENT_TYPE } from './widgetEventTypes';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {

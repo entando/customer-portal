@@ -97,7 +97,7 @@ class EditSubscriptionModal extends Component {
   };
 
   componentDidMount() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
@@ -112,7 +112,7 @@ class EditSubscriptionModal extends Component {
   };
 
   async getSubscriptionDetails() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const subscription = await apiSubscriptionGet(this.props.serviceUrl, this.props.subscription.id);
@@ -128,7 +128,7 @@ class EditSubscriptionModal extends Component {
   }
 
   async subscriptionPut(subscription) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       return await apiProjectSubscriptionPut(this.props.serviceUrl, subscription);

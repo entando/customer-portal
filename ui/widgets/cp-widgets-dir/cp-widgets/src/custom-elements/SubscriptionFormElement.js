@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SubsciptionForm from '../components/Forms/SubscriptionForm';
+import SubscriptionForm from '../components/Forms/SubscriptionForm';
 import '../index.scss';
 import './dashboard.css';
 import * as Locale from '../i18n';
@@ -8,7 +8,7 @@ import * as Locale from '../i18n';
 import KeycloakContext from '../auth/KeycloakContext';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
-import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
+import { KEYCLOAK_EVENT_TYPE } from './widgetEventTypes';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
@@ -20,11 +20,10 @@ const ATTRIBUTES = {
   locale: 'locale',
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
-  serviceUrl: 'service-url',
-  locale: 'locale',
+  serviceUrl: 'service-url'
 };
 
-class SubsciptionFormElement extends HTMLElement {
+class SubscriptionFormElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -55,11 +54,11 @@ class SubsciptionFormElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <SubsciptionForm serviceUrl={serviceUrl} />
+        <SubscriptionForm serviceUrl={serviceUrl} />
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('subscription-form-widget', SubsciptionFormElement);
+customElements.define('subscription-form-widget', SubscriptionFormElement);

@@ -33,22 +33,21 @@ class Subscription extends React.Component {
   }
 
   async getSubscription() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       try {
-        var subscription;
-        var users = '';
+        let subscription;
+        let users = '';
+        let project = '';
         if (isPortalAdminOrSupport()) {
           subscription = await apiSubscriptionGet(this.props.serviceUrl, this.props.match.params.id);
-          var project = '';
           if (subscription.data.project) {
             project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id);
             users = await apiGetProjectsUsers(this.props.serviceUrl, project.data.id);
           }
         } else if (isPortalCustomerOrPartner()) {
           subscription = await apiGetMySubscription(this.props.serviceUrl, this.props.match.params.id);
-          var project = '';
           if (subscription.data.project) {
             project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id);
           }
@@ -88,7 +87,7 @@ class Subscription extends React.Component {
   }
 
   render() {
-    const { description, commitment, type, quantityRequest, components, level, startDate, endDate, license } = subscriptionData;
+    const { type, license } = subscriptionData;
 
     if (!this.state.loading) {
       if (isPortalUser()) {
@@ -118,7 +117,7 @@ class Subscription extends React.Component {
                               ))}
                             </>
                           ) : (
-                            <> None </>
+                            <> {i18n.t('userMessages.none')} </>
                           )}
                         </p>
                         <p>
@@ -165,7 +164,7 @@ class Subscription extends React.Component {
                                   ))}
                                 </>
                               ) : (
-                                <> None </>
+                                <> {i18n.t('userMessages.none')} </>
                               )}
                             </p>
                           </>
