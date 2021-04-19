@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
-import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
-import { SubtractAlt16 } from '@carbon/icons-react';
+import {
+  DataTable,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableHeader,
+  TableBody,
+  TableCell,
+  Button
+} from 'carbon-components-react';
 import { apiUsersGet, apiUserDelete } from '../../../api/portalusers';
 import withKeycloak from '../../../auth/withKeycloak';
 import { apiKeycloakUserGet } from '../../../api/keycloak';
@@ -92,10 +101,13 @@ class DeleteUser extends Component {
         keycloakUser.createdTimestamp
       ).getFullYear()}`,
       userAccess: portalUsernames.includes(keycloakUser.username) ? (
-        <a onClick={event => this.handleRemoveUser(keycloakUser.username, event)}>
-          <SubtractAlt16 fill="red" />
+        <Button
+          kind="ghost"
+          onClick={event => this.handleRemoveUser(keycloakUser.username, event)}
+          style={{ display: 'flex', width: '100%', color: 'red' }}
+        >
           {i18n.t('manageUsers.delete.removeUser')}
-        </a>
+        </Button>
       ) : (
         ''
       ),

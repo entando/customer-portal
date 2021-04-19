@@ -9,9 +9,8 @@ import {
   TableHeader,
   TableBody,
   TableCell,
-  ToggleSmall,
+  ToggleSmall, Button,
 } from 'carbon-components-react';
-import { SubtractAlt16 } from '@carbon/icons-react';
 import { apiProductVersionDelete, apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
 import withKeycloak from '../../../auth/withKeycloak';
 import AddProductVersionModal from '../AddProductVersionModal';
@@ -131,14 +130,13 @@ class ProductVersion extends Component {
                                   serviceUrl={this.props.serviceUrl}
                                   updateProductVersions={this.updateProductVersions}
                                 />
-                                <a
+                                <Button
+                                  kind="ghost"
                                   onClick={e => this.handleDeleteVersion(e, productVersion.id)}
-                                  href=""
-                                  style={{ display: 'flex', marginTop: '12px' }}
+                                  style={{ display: 'flex', width: '100%', color: 'red' }}
                                 >
-                                  <SubtractAlt16 fill="red" style={{ marginTop: '4px' }} />
-                                  <p>{i18n.t('buttons.delete')}</p>
-                                </a>
+                                  {i18n.t('buttons.delete')}
+                                </Button>
                               </div>
                             </TableCell>
                           </TableRow>
