@@ -146,15 +146,13 @@ Desktop.ini
 ######################
 .eslintcache
 
+## Local DB settings
+/src/main/docker/keycloak-db/
+/src/main/docker/postgresql-db/
+
 ######################
 # Entando bundles
 ######################
-/bundle/
-
-########
-.ent/ent-state
-
-
 ####
 /bundle/
 

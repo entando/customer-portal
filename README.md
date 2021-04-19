@@ -24,7 +24,13 @@ Install the bundle using the App Builder.
   * cp-partner
   * cp-customer
   * The built-in mapper for email must be enabled on the server client so that user accounts can be retrieved from Jira and tickets created used that account information.
+* Pages
+  * Some features are delivered using dedicated pages within Entando.
+    * open_service_ticket.page
+    * new_or_renew_subscription.page
+    * manage_users.page
 * Email 
+  * TODO configuration for email server
   
 # Development tips
 * The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. For example, the UI code will be reformatted and functional changes may not be useful at this point.

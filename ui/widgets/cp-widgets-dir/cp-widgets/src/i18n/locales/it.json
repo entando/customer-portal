@@ -6,20 +6,25 @@
 		"support": "Supporto"
 	},
 
-	"buttons":{
-		"submit": "Invia",
-		"cancel": "Annulla",
-		"delete": "Elimina",
-		"save": "Salva",
-		"edit": "modificare",
-		"addCustomer": "Aggiungi un cliente +",
-		"addProject": "Aggiungi un progetto +",
-		"addPartner": "Aggiungi un partner +",
-		"addProductVersion": "Aggiungi la versione del prodotto +",
-    	"viewDetails": "Visualizza dettagli"
-	},
+  "buttons":{
+    "addCustomer": "Aggiungi un cliente +",
+    "addPartner": "Aggiungi un partner +",
+    "addProject": "Aggiungi un progetto +",
+    "addProductVersion": "Aggiungi la versione del prodotto +",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "edit": "Modificare",
+    "manageUsers": "Gestisci utenti",
+    "openTicket": "Apri un ticket",
+    "save": "Salva",
+    "submit": "Invia",
+    "subscriptionRequest" : "Richiesta di abbonamento",
+    "view": "Visualizza",
+    "viewTickets": "Visualizzare i biglietti",
+    "viewDetails": "Visualizza dettagli"
+  },
 
-  	"customerDashboard":{
+  "customerDashboard":{
 		"title": "Benvenuto nel Portale Clienti Entando",
 		"customerName": "Nome del cliente",
 		"customerId": "Identificativo del cliente",

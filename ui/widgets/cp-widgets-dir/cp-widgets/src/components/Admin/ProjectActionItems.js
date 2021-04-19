@@ -3,7 +3,7 @@ import i18n from '../../i18n';
 import withKeycloak from '../../auth/withKeycloak';
 import { Button } from 'carbon-components-react';
 import EditProjectModal from '../Admin/EditProjectModal';
-import { hasKeycloakClientRole } from '../../api/helpers';
+import { isPortalAdmin } from '../../api/helpers';
 import { Link } from 'react-router-dom';
 
 class ProjectActionItems extends React.Component {
@@ -52,7 +52,7 @@ class ProjectActionItems extends React.Component {
               }}
             >
               <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {hasKeycloakClientRole('ROLE_ADMIN') ? (
+              {isPortalAdmin() ? (
                 <div>
                   <EditProjectModal
                     key={this.props.project.id}
@@ -69,18 +69,18 @@ class ProjectActionItems extends React.Component {
                 style={{ textDecoration: 'none' }}
               >
                 <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="Subscription Request">
-                  Subscription Request
+                  {i18n.t('buttons.subscriptionRequest')}
                 </Button>
               </a>
               <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {hasKeycloakClientRole('ROLE_ADMIN') ? (
+              {isPortalAdmin() ? (
                 <div>
                   <Button
                     kind="ghost"
                     onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
                     style={{ display: 'block', width: '100%', color: 'red' }}
                   >
-                    Delete
+                    {i18n.t('buttons.delete')}
                   </Button>
                   <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
                 </div>
@@ -103,13 +103,15 @@ class ProjectActionItems extends React.Component {
                 this.node = node;
               }}
             >
+              {/*View Project Subscription*/}
               <Link to={`/subscription-details/${this.props.sub.id}`} style={{ textDecoration: 'none' }}>
                 <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="View">
-                  View
+                  {i18n.t('buttons.view')}
                 </Button>
               </Link>
               <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {hasKeycloakClientRole('ROLE_ADMIN') ? (
+              {/*Edit Project Subscription*/}
+              {isPortalAdmin() ? (
                 <div>
                   <EditProjectModal
                     key={this.props.project.id}
@@ -121,41 +123,58 @@ class ProjectActionItems extends React.Component {
                   <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
                 </div>
               ) : null}
+              {/*Open Ticket*/}
               <a
                 href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.props.project.id}`}
                 style={{ textDecoration: 'none' }}
               >
                 <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="Open Ticket">
-                  Open Ticket
+                  {i18n.t('buttons.openTicket')}
                 </Button>
               </a>
               <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
+              {/*View Tickets*/}
               <a
-                href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page.page?project=${this.props.project.id}`}
+                href={
+                  this.props.ticketingSystem.url.substr(0, this.props.ticketingSystem.url.indexOf('/rest')) +
+                  '/issues/?jql=Organizations=' + this.props.project.systemId}
+                style={{ textDecoration: 'none' }}
+                target="_blank"
+              >
+                <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="View Tickets">
+                  {i18n.t('buttons.viewTickets')}
+                </Button>
+              </a>
+              <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
+              {/*New/Renew Subscription*/}
+              <a
+                href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.props.project.id}`}
                 style={{ textDecoration: 'none' }}
               >
                 <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="Subscription Request">
-                  Subscription Request
+                  {i18n.t('buttons.subscriptionRequest')}
                 </Button>
               </a>
               <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {hasKeycloakClientRole('ROLE_ADMIN') ? (
+              {/*Manage Users*/}
+              {isPortalAdmin() ? (
                 <div>
                   <a
                     href={`/entando-de-app/${this.props.locale}/manage_users.page?project=${this.props.project.id}`}
                     style={{ textDecoration: 'none' }}
                   >
                     <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="Manage Users">
-                      Manage Users
+                      {i18n.t('buttons.manageUsers')}
                     </Button>
                   </a>
                   <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
+                  {/*Delete Project*/}
                   <Button
                     kind="ghost"
                     onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
                     style={{ display: 'block', width: '100%', color: 'red' }}
                   >
-                    Delete
+                    {i18n.t('buttons.delete')}
                   </Button>
                   <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
                 </div>
