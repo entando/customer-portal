@@ -48,7 +48,7 @@ class EditCustomerModal extends Component {
         !(
           lastAtPos < lastDotPos &&
           lastAtPos > 0 &&
-          this.state.contactEmail.indexOf('@@') == -1 &&
+          this.state.contactEmail.indexOf('@@') === -1 &&
           lastDotPos > 2 &&
           this.state.contactEmail.length - lastDotPos > 2
         )
@@ -70,7 +70,7 @@ class EditCustomerModal extends Component {
   };
 
   async updateCustomer(customer) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       return await apiCustomerPut(this.props.serviceUrl, customer);
@@ -82,7 +82,7 @@ class EditCustomerModal extends Component {
   };
 
   async getCustomer(customerId) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const customer = await apiCustomerGet(this.props.serviceUrl, customerId);
@@ -99,7 +99,7 @@ class EditCustomerModal extends Component {
     }
   }
 
-  handleFormSubmit = e => {
+  handleFormSubmit = () => {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
@@ -113,7 +113,7 @@ class EditCustomerModal extends Component {
         notes: this.state.notes,
       };
       this.updateCustomer(customer)
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.updated'),
             submitColour: '#24a148',
@@ -121,7 +121,7 @@ class EditCustomerModal extends Component {
           this.props.updateCustomerList();
           this.getCustomerDetails(this.props.customer.id);
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',
@@ -149,7 +149,7 @@ class EditCustomerModal extends Component {
   };
 
   componentDidMount() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
@@ -160,7 +160,7 @@ class EditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;

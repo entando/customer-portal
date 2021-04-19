@@ -57,7 +57,7 @@ class AddProjectModal extends Component {
         !(
           lastAtPos < lastDotPos &&
           lastAtPos > 0 &&
-          this.state.contactEmail.indexOf('@@') == -1 &&
+          this.state.contactEmail.indexOf('@@') === -1 &&
           lastDotPos > 2 &&
           this.state.contactEmail.length - lastDotPos > 2
         )
@@ -98,7 +98,7 @@ class AddProjectModal extends Component {
   };
 
   async getCustomers() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const customers = await apiCustomersGet(this.props.serviceUrl);
@@ -107,7 +107,7 @@ class AddProjectModal extends Component {
   }
 
   async projectPost(project) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const result = await apiProjectPost(this.props.serviceUrl, project);
@@ -115,7 +115,7 @@ class AddProjectModal extends Component {
     }
   }
 
-  handleFormSubmit = e => {
+  handleFormSubmit = () => {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
@@ -135,7 +135,7 @@ class AddProjectModal extends Component {
         }
       }
       this.projectPost(project)
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.added'),
             submitColour: '#24a148',
@@ -143,7 +143,7 @@ class AddProjectModal extends Component {
           this.props.updateCustomerList();
           this.getAllProjects();
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',
@@ -178,7 +178,6 @@ class AddProjectModal extends Component {
   }
 
   render() {
-    const customerList = ['Customer1', 'Customer2', 'Customer3'];
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProject')}
@@ -192,10 +191,8 @@ class AddProjectModal extends Component {
         modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
         <div className="form-container">
-          {/*<p> {i18n.t('adminDashboard.addProject.desc')} </p>*/}
           <Form onSubmit={this.handleFormSubmit}>
             <Select
-              defaultValue="customer-list"
               name="customerId"
               labelText={i18n.t('adminDashboard.addProject.customerList') + ' *'}
               defaultValue={{ label: 'Select Dept', value: 0 }}

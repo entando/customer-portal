@@ -57,26 +57,26 @@ class AddProductVersionModal extends Component {
   };
 
   async addProductVersion() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       return await apiProductVersionPost(this.props.serviceUrl, this.state);
     }
   }
 
-  handleFormSubmit = e => {
+  handleFormSubmit = () => {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
       this.addProductVersion()
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.added'),
             submitColour: '#24a148',
           });
           this.props.updateProductVersions();
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',

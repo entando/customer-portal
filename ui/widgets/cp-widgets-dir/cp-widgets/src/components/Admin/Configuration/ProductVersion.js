@@ -10,9 +10,6 @@ import {
   TableBody,
   TableCell,
   ToggleSmall,
-  Button,
-  AccordionItem,
-  Accordion,
 } from 'carbon-components-react';
 import { SubtractAlt16 } from '@carbon/icons-react';
 import { apiProductVersionDelete, apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
@@ -49,7 +46,7 @@ class ProductVersion extends Component {
   }
 
   async getProductVersions() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
@@ -61,7 +58,7 @@ class ProductVersion extends Component {
   }
 
   async deleteVersion(id) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       return await apiProductVersionDelete(this.props.serviceUrl, id);
@@ -72,14 +69,14 @@ class ProductVersion extends Component {
     e.preventDefault();
     if (window.confirm('Are you sure you want to delete this Entando version?')) {
       this.deleteVersion(id)
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.deleted'),
             submitColour: '#24a148',
           });
           this.updateProductVersions();
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',
@@ -121,7 +118,7 @@ class ProductVersion extends Component {
                                 onClick={() => this.handleToggleChange(productVersion.id)}
                                 aria-label="toggle button"
                                 id={productVersion.id}
-                                defaultToggled={productVersion.status ? true : false}
+                                defaultToggled={productVersion.status}
                               />
                             </TableCell>
                             <TableCell>{productVersion.startDate}</TableCell>

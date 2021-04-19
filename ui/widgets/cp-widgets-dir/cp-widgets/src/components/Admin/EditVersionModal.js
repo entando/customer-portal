@@ -80,7 +80,7 @@ class EditProjectModal extends Component {
   };
 
   async getVersionDetails() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const version = await apiProductVersionGet(this.props.serviceUrl, this.props.version.id);
@@ -95,14 +95,14 @@ class EditProjectModal extends Component {
   }
 
   async versionPut(version) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       return await apiProductVersionPut(this.props.serviceUrl, version);
     }
   }
 
-  handleFormSubmit = e => {
+  handleFormSubmit = () => {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
@@ -113,14 +113,14 @@ class EditProjectModal extends Component {
         endDate: moment(this.state.endDate).format(),
       };
       this.versionPut(version)
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.updated'),
             submitColour: '#24a148',
           });
           this.props.updateProductVersions();
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',

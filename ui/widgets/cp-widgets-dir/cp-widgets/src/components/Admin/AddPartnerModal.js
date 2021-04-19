@@ -3,7 +3,7 @@ import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiPartnerPost } from '../../api/partners';
-import { apiProjectPost, apiProjectsGet, apiAddPartnerToProject } from '../../api/projects';
+import { apiProjectsGet, apiAddPartnerToProject } from '../../api/projects';
 
 class AddPartnerModal extends Component {
   constructor(props) {
@@ -64,7 +64,7 @@ class AddPartnerModal extends Component {
   };
 
   async getProjects() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const projects = await apiProjectsGet(this.props.serviceUrl);
@@ -73,7 +73,7 @@ class AddPartnerModal extends Component {
   }
 
   async partnerPost(partner) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const result = await apiPartnerPost(this.props.serviceUrl, partner);
@@ -81,7 +81,7 @@ class AddPartnerModal extends Component {
     }
   }
 
-  handleFormSubmit = e => {
+  handleFormSubmit = () => {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
@@ -91,14 +91,14 @@ class AddPartnerModal extends Component {
         notes: this.state.notes,
       };
       this.partnerPost(partner)
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.added'),
             submitColour: '#24a148',
           });
           this.props.updateCustomerList();
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',

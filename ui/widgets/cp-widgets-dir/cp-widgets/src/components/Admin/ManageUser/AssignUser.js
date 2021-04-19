@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, TextInput, Select, SelectItem, Button } from 'carbon-components-react';
+import { Form, Select, SelectItem, Button } from 'carbon-components-react';
 import * as portalUserApi from '../../../api/portalusers';
 import { apiAddUserToProject, apiGetProjectIdNames } from '../../../api/projects';
 import withKeycloak from '../../../auth/withKeycloak';
@@ -20,7 +20,7 @@ class AssignUser extends Component {
   }
 
   componentDidMount() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
 
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
@@ -29,7 +29,7 @@ class AssignUser extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;
@@ -48,7 +48,7 @@ class AssignUser extends Component {
     let projectParam = params.get('project');
 
     if (projectParam) {
-      Object.keys(projects).map((id, value) => {
+      Object.keys(projects).forEach((id) => {
         if (id !== projectParam) {
           delete projects[id];
         }
@@ -149,8 +149,8 @@ class AssignUser extends Component {
   setupFormComponents() {
     const users = this.state.users;
     const projectIdsNames = this.state.projects;
-    let userList,
-      projectList = (userList = null);
+    let userList = null;
+    let projectList = null;
 
     if (users.size > 0) {
       userList = [...users.keys()].map((assignUser, i) => (

@@ -1,4 +1,4 @@
-import { getDefaultOptions, request, getUrl } from './helpers';
+import { getDefaultOptions, request } from './helpers';
 
 const resource = 'api/entando-versions';
 
