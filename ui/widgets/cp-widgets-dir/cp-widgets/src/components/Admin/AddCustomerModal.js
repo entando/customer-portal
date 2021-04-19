@@ -45,7 +45,7 @@ class AddCustomerModal extends Component {
         !(
           lastAtPos < lastDotPos &&
           lastAtPos > 0 &&
-          this.state.contactEmail.indexOf('@@') == -1 &&
+          this.state.contactEmail.indexOf('@@') === -1 &&
           lastDotPos > 2 &&
           this.state.contactEmail.length - lastDotPos > 2
         )
@@ -67,14 +67,14 @@ class AddCustomerModal extends Component {
   };
 
   async customerPost(customer) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       return await apiCustomerPost(this.props.serviceUrl, customer);
     }
   }
 
-  handleFormSubmit = e => {
+  handleFormSubmit = () => {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
@@ -88,14 +88,14 @@ class AddCustomerModal extends Component {
       };
 
       this.customerPost(customer)
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.added'),
             submitColour: '#24a148',
           });
           this.props.updateCustomerList();
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',

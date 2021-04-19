@@ -88,7 +88,7 @@ class SubscriptionForm extends Component {
     let projectParam = params.get('project');
 
     if (projectParam) {
-      Object.keys(projects).map((id, value) => {
+      Object.keys(projects).forEach((id) => {
         if (id !== projectParam) {
           delete projects[id];
         }

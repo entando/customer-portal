@@ -161,13 +161,15 @@ class CustomerDataTable extends Component {
                 <TableHead>
                   <TableRow>
                     {headers.map(header => {
+                      let result;
                       if (header.header === i18n.t('customerDetails.notes')) {
                         if (isPortalAdminOrSupport()) {
-                          return <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>;
+                          result = <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>;
                         }
                       } else {
-                        return <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>;
+                        result = <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>;
                       }
+                      return result;
                     })}
                   </TableRow>
                 </TableHead>

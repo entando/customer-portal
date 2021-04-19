@@ -68,7 +68,7 @@ class TicketingSystem extends Component {
   }
 
   componentDidMount() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
@@ -77,7 +77,7 @@ class TicketingSystem extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;
@@ -91,16 +91,16 @@ class TicketingSystem extends Component {
     return await apiTicketingSystemDelete(this.props.serviceUrl, this.state.ticketingSystem.id);
   }
 
-  handleDelete(e) {
+  handleDelete() {
     if (window.confirm('Are you sure you want to delete this ticketing system?')) {
       this.deleteTicketingSystem()
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.deleted'),
             submitColour: '#24a148',
           });
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',
@@ -113,13 +113,13 @@ class TicketingSystem extends Component {
     event.preventDefault();
     if (this.state.ticketingSystem === '') {
       this.createTicketingSystem()
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.created'),
             submitColour: '#24a148',
           });
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',
@@ -127,13 +127,13 @@ class TicketingSystem extends Component {
         });
     } else {
       this.updateTicketingSystem()
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.updated'),
             submitColour: '#24a148',
           });
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',

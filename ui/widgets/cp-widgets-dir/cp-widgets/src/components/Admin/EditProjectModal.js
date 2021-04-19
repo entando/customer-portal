@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import i18n from '../../i18n';
-import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
+import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
+import { apiCustomersGet } from '../../api/customers';
 import { apiProjectGet, apiProjectPut, apiProjectsGet } from '../../api/projects';
 
 class EditProjectModal extends Component {
@@ -53,7 +53,7 @@ class EditProjectModal extends Component {
         !(
           lastAtPos < lastDotPos &&
           lastAtPos > 0 &&
-          this.state.contactEmail.indexOf('@@') == -1 &&
+          this.state.contactEmail.indexOf('@@') === -1 &&
           lastDotPos > 2 &&
           this.state.contactEmail.length - lastDotPos > 2
         )
@@ -88,7 +88,7 @@ class EditProjectModal extends Component {
   };
 
   async getCustomers() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const customers = await apiCustomersGet(this.props.serviceUrl);
@@ -97,7 +97,7 @@ class EditProjectModal extends Component {
   }
 
   async getProjectDetails() {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       const project = await apiProjectGet(this.props.serviceUrl, this.props.project.id);
@@ -123,14 +123,14 @@ class EditProjectModal extends Component {
   }
 
   async projectPut(project) {
-    const { t, keycloak } = this.props;
+    const { keycloak } = this.props;
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
       return await apiProjectPut(this.props.serviceUrl, project);
     }
   }
 
-  handleFormSubmit = e => {
+  handleFormSubmit = () => {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
@@ -156,14 +156,14 @@ class EditProjectModal extends Component {
         }
       }
       this.projectPut(project)
-        .then(result => {
+        .then(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.updated'),
             submitColour: '#24a148',
           });
           this.props.updateProjectList();
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',
