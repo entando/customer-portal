@@ -9,6 +9,7 @@ import i18n from '../../i18n';
 import EditProjectModal from '../Admin/EditProjectModal';
 import { isPortalAdminOrSupport } from '../../api/helpers';
 import { apiProjectsDelete } from '../../api/projects';
+import {apiCurrentTicketingSystemGet} from "../../api/ticketingsystem";
 import ProjectActionItems from '../Admin/ProjectActionItems';
 
 class CustomTable extends Component {
@@ -16,6 +17,7 @@ class CustomTable extends Component {
     super(props);
     this.state = {
       projects: {},
+      ticketingSystem: {},
       action: 'Edit',
       showMenu: {},
     };
@@ -72,8 +74,11 @@ class CustomTable extends Component {
           projects = await apiGetMyCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
         }
 
+        const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
+
         this.setState({
           projects: projects,
+          ticketingSystem: ticketingSystem,
         });
       } catch (error) {
         console.log(error);
@@ -194,6 +199,7 @@ class CustomTable extends Component {
                               <TableCell>
                                 <ProjectActionItems
                                   serviceUrl={this.props.serviceUrl}
+                                  ticketingSystem={this.state.ticketingSystem}
                                   locale={this.props.locale}
                                   hasSubscription={false}
                                   project={project}
@@ -240,6 +246,7 @@ class CustomTable extends Component {
                               <TableCell>
                                 <ProjectActionItems
                                   serviceUrl={this.props.serviceUrl}
+                                  ticketingSystem={this.state.ticketingSystem}
                                   locale={this.props.locale}
                                   sub={sub}
                                   hasSubscription={true}

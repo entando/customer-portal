@@ -11,7 +11,7 @@ import {
   PaginationNav,
 } from 'carbon-components-react';
 import { apiJiraTicketsGet } from '../../api/tickets';
-import { apiTicketingSystemsGet } from '../../api/ticketingsystem';
+import { apiCurrentTicketingSystemGet } from '../../api/ticketingsystem';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProjectGet, apiAddTicketToProject } from '../../api/projects';
 import { isPortalUser } from '../../api/helpers';
@@ -69,8 +69,7 @@ class TicketList extends Component {
     if (authenticated) {
       try {
         const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
-        const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
-        const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length - 1];
+        const currentTicketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
         var tickets = await apiJiraTicketsGet(this.props.serviceUrl, currentTicketingSystem.systemId, project.data.systemId);
         for (var i = 0; i < tickets.data.length; i++) {
           apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id);
@@ -126,18 +125,18 @@ class TicketList extends Component {
               title={i18n.t('ticketDetails.listOfTickets')}
               description={
                 Object.keys(this.state.tickets).length !== 0 && Object.keys(this.state.project).length !== 0 ? (
-                  <a
-                    href={
-                      this.state.currentTicketingSystem.url.substr(0, this.state.currentTicketingSystem.url.indexOf('/rest')) +
-                      '/issues/' +
-                      '?jql=Organizations=' +
-                      this.state.project.data.systemId
-                    }
-                    style={{ textDecoration: 'none' }}
-                    target="_blank"
-                  >
-                    {i18n.t('ticketDetails.tickets')}
-                  </a>
+                <a
+                  href={
+                    this.state.currentTicketingSystem.url.substr(0, this.state.currentTicketingSystem.url.indexOf('/rest')) +
+                    '/issues/' +
+                    '?jql=Organizations=' +
+                    this.state.project.data.systemId
+                  }
+                  style={{ textDecoration: 'none' }}
+                  target="_blank"
+                >
+                  {i18n.t('buttons.viewTickets')}
+                </a>
                 ) : (
                   <a>{i18n.t('ticketDetails.tickets')}</a>
                 )

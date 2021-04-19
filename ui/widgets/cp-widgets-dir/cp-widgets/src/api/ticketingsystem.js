@@ -11,6 +11,12 @@ export const apiTicketingSystemDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
+export const apiCurrentTicketingSystemGet = async serviceUrl => {
+  const ticketingSystems = await apiTicketingSystemsGet(serviceUrl);
+  //Simplifying assumption to take the latest ticketing system as the current config
+  return ticketingSystems.data[ticketingSystems.data.length - 1];
+}
+
 export const apiTicketingSystemsGet = async serviceUrl => {
   const url = getUrl(`${serviceUrl}/${resource}`);
   const options = {
