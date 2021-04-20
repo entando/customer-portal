@@ -86,7 +86,6 @@
 		},
 		"addProductVersion":{
 			"title": "Aggiungi una nuova versione del prodotto",
-			"desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis.",
 			"productVersion": "Versione del prodotto",
 			"productVersionStartDate": "Data di inizio della versione del prodotto",
 			"productVersionEndDate": "Data di fine della versione del prodotto"
@@ -205,7 +204,7 @@
 		},
 		"manageProductVersion": {
 			"title": "Gestisci versione prodotto",
-			"desc": "Ciò consente di gestire le versioni del prodotto entando",
+			"desc": "Ciò consente di gestire le versioni del prodotto Entando",
 			"entandoVersion": "Versione Entando",
 			"status": "Stato *",
 			"startDate": "data d'inizio",

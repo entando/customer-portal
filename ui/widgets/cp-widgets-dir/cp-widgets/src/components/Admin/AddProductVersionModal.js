@@ -110,6 +110,11 @@ class AddProductVersionModal extends Component {
   }
 
   render() {
+    const modalConfirmation = (
+      <div className="bx--modal-header">
+        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+      </div>
+    )
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProductVersion')}
@@ -118,12 +123,12 @@ class AddProductVersionModal extends Component {
         className="modal-form"
         id="modal-form-product-version"
         handleSubmit={this.handleFormSubmit}
-        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
+        {modalConfirmation}
         <div className="form-container">
-          <p> {i18n.t('adminDashboard.addProductVersion.desc')} </p>
           <Form onSubmit={this.handleFormSubmit}>
             <TextInput
+              id="name"
               name="name"
               labelText={i18n.t('adminDashboard.addProductVersion.productVersion')}
               value={this.state.name}
@@ -133,6 +138,7 @@ class AddProductVersionModal extends Component {
             />
             <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
               <DatePickerInput
+                id="startDate"
                 name="startDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('adminDashboard.addProductVersion.productVersionStartDate')}
@@ -145,11 +151,11 @@ class AddProductVersionModal extends Component {
             </DatePicker>
             <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleEndDateChange}>
               <DatePickerInput
+                id="endDate"
                 name="endDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('adminDashboard.addProductVersion.productVersionEndDate')}
                 value={this.state.endDate}
-                //onChange={this.handleChanges}
                 type="text"
                 invalidText={i18n.t('validation.invalid.date')}
                 invalid={this.state.invalid['endDate']}
@@ -157,6 +163,7 @@ class AddProductVersionModal extends Component {
             </DatePicker>
           </Form>
         </div>
+        {modalConfirmation}
       </ModalWrapper>
     );
   }
