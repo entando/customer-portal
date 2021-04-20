@@ -130,6 +130,11 @@ class AddPartnerModal extends Component {
   }
 
   render() {
+    const modalConfirmation = (
+      <div className="bx--modal-header">
+        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+      </div>
+    )
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addPartner')}
@@ -140,13 +145,12 @@ class AddPartnerModal extends Component {
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
-        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
+        {modalConfirmation}
         <div className="form-container">
-          {/*<p> {i18n.t('adminDashboard.addPartner.desc')}</p>*/}
           <Form onSubmit={this.handleFormSubmit}>
             <Select
-              defaultValue="project-list"
+              id="projectId"
               name="projectId"
               labelText={i18n.t('adminDashboard.addPartner.projectList') + ' *'}
               value={this.state.projectId}
@@ -165,6 +169,7 @@ class AddPartnerModal extends Component {
             </Select>
 
             <TextInput
+              id="name"
               name="name"
               labelText={i18n.t('adminDashboard.addPartner.partnerName') + ' *'}
               value={this.state.name}
@@ -173,6 +178,7 @@ class AddPartnerModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
+              id="partnerNumber"
               name="partnerNumber"
               labelText={i18n.t('adminDashboard.addPartner.partnerNumber') + ' *'}
               value={this.state.partnerNumber}
@@ -188,6 +194,7 @@ class AddPartnerModal extends Component {
             />
           </Form>
         </div>
+        {modalConfirmation}
       </ModalWrapper>
     );
   }

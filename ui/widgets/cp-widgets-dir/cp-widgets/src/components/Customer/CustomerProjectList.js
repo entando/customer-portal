@@ -4,6 +4,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiAdminCustomerGet, apiGetCustomersProjects } from '../../api/customers';
 import { isPortalAdminOrSupport } from '../../api/helpers';
 import i18n from '../../i18n';
+import CustomerDataTable from "./customerDataTable";
 
 class CustomerProjectList extends React.Component {
   constructor(props) {
@@ -90,7 +91,7 @@ class CustomerProjectList extends React.Component {
                   </div>
                 </div>
               </Tile>
-              <CustomTable serviceUrl={this.props.serviceUrl} customerNumber={this.state.customer.id} locale={this.props.locale} />
+              <CustomerDataTable serviceUrl={this.props.serviceUrl} customerNumber={this.state.customer.id} locale={this.props.locale} />
             </div>
           );
         } else {
