@@ -206,9 +206,14 @@ class EditProjectModal extends Component {
   }
 
   render() {
+    const modalConfirmation = (
+      <div className="bx--modal-header">
+        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+      </div>
+    )
     const buttonClassName = 'dropdown-button-button bx--btn bx--btn--ghost edit-project-button-' + this.props.project.id;
     return (
-      <ModalWrapper
+    <ModalWrapper
         buttonTriggerText={i18n.t('buttons.edit')}
         modalHeading={i18n.t('adminDashboard.addProject.editTitle')}
         buttonTriggerClassName={buttonClassName}
@@ -217,12 +222,12 @@ class EditProjectModal extends Component {
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
-        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
+        {modalConfirmation}
         <div className="form-container">
-          {/*<p> {i18n.t('adminDashboard.addProject.desc')} </p>*/}
           <Form onSubmit={this.handleFormSubmit}>
             <TextInput
+              id="name"
               name="name"
               labelText={i18n.t('adminDashboard.addProject.projectName') + ' *'}
               value={this.state.name}
@@ -231,6 +236,7 @@ class EditProjectModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
+              id="description"
               name="description"
               labelText={i18n.t('adminDashboard.addProject.projectDesc') + ' *'}
               value={this.state.description}
@@ -239,24 +245,28 @@ class EditProjectModal extends Component {
               invalid={this.state.invalid['description']}
             />
             <TextInput
+              id="systemId"
               name="systemId"
               labelText={i18n.t('adminDashboard.addProject.systemId')}
               value={this.state.systemId}
               onChange={this.handleChanges}
             />
             <TextInput
+              id="contactName"
               name="contactName"
               labelText={i18n.t('adminDashboard.addProject.contactName')}
               value={this.state.contactName}
               onChange={this.handleChanges}
             />
             <TextInput
+              id="contactPhone"
               name="contactPhone"
               labelText={i18n.t('adminDashboard.addProject.contactPhone')}
               value={this.state.contactPhone}
               onChange={this.handleChanges}
             />
             <TextInput
+              id="contactEmail"
               name="contactEmail"
               labelText={i18n.t('adminDashboard.addProject.contactEmail') + ' *'}
               value={this.state.contactEmail}
@@ -272,7 +282,8 @@ class EditProjectModal extends Component {
             />
           </Form>
         </div>
-      </ModalWrapper>
+      {modalConfirmation}
+    </ModalWrapper>
     );
   }
 }
