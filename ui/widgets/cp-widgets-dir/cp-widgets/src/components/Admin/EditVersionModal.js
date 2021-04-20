@@ -147,7 +147,7 @@ class EditVersionModal extends Component {
       </div>
     )
     const buttonClassName = 'bx--btn bx--btn--ghost edit-version-button-' + this.props.version.id;
-    const inputSuffix = this.state.modalId
+    const modalId = this.state.modalId
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.edit')}
@@ -163,7 +163,7 @@ class EditVersionModal extends Component {
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <TextInput
-              id={"name" + inputSuffix}
+              id={"name" + modalId}
               name="name"
               labelText={i18n.t('adminDashboard.addProject.projectName') + ' *'}
               value={this.state.name}
@@ -173,7 +173,7 @@ class EditVersionModal extends Component {
             />
             <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange} value={this.state.startDate}>
               <DatePickerInput
-                id={"startDate" + inputSuffix}
+                id={"startDate" + modalId}
                 name="startDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('subscriptionDetails.startDate') + ' *'}
@@ -187,12 +187,12 @@ class EditVersionModal extends Component {
               dateFormat="m/d/Y"
               datePickerType="single"
               onChange={this.handleEndDateChange}
-              id={"endDate"+inputSuffix}
+              id={"endDate"+modalId}
               name="endDate"
               value={this.state.endDate}
             >
               <DatePickerInput
-                id={"endDate"+inputSuffix}
+                id={"endDate"+modalId}
                 name="endDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('subscriptionDetails.endDate') + ' *'}

@@ -261,6 +261,7 @@ class OpenTicket extends Component {
                   <div className="bx--row">
                     <div className="bx--col">
                       <Select
+                        id="project"
                         name="project"
                         labelText={i18n.t('supportTicketForm.selectProject') + ' *'}
                         value={JSON.stringify(this.state.project)}
@@ -282,6 +283,7 @@ class OpenTicket extends Component {
                           : null}
                       </Select>
                       <Select
+                        id="type"
                         name="type"
                         labelText={i18n.t('supportTicketForm.type') + ' *'}
                         value={this.state.type}
@@ -296,6 +298,7 @@ class OpenTicket extends Component {
                         ))}
                       </Select>
                       <Select
+                        id="priority"
                         name="priority"
                         labelText={i18n.t('supportTicketForm.priority') + ' *'}
                         value={this.state.priority}
@@ -316,6 +319,7 @@ class OpenTicket extends Component {
                       <TextInput
                         labelText={i18n.t('supportTicketForm.ticketSummary') + ' *'}
                         placeholder={i18n.t('supportTicketForm.addticketSummary')}
+                        id="summary"
                         name="summary"
                         value={this.state.summary}
                         onChange={this.handleChanges}

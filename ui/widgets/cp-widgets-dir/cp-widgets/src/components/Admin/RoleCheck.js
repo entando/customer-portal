@@ -23,6 +23,7 @@ export default class RoleCheck extends Component {
       <div className="role-check">
         <Select
           defaultValue="role-type"
+          id="roleType"
           name="roleType"
           labelText="Select Role(Testing)"
           value={this.state.roleType}

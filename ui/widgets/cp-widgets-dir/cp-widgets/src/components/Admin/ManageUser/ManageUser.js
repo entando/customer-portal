@@ -71,7 +71,7 @@ class ManageUser extends Component {
               <Accordion>
                 {this.userFunctionality.map((item, index) => (
                   <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description} open={item.open}>
-                    <p>{item.content}</p>
+                    {item.content}
                   </AccordionItem>
                 ))}
               </Accordion>

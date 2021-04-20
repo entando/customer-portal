@@ -49,7 +49,7 @@ class EditProjectForm extends Component {
         !(
           lastAtPos < lastDotPos &&
           lastAtPos > 0 &&
-          this.state.contactEmail.indexOf('@@') == -1 &&
+          this.state.contactEmail.indexOf('@@') === -1 &&
           lastDotPos > 2 &&
           this.state.contactEmail.length - lastDotPos > 2
         )
@@ -137,13 +137,14 @@ class EditProjectForm extends Component {
   }
 
   render() {
-    const customerList = ['Customer1', 'Customer2', 'Customer3'];
     return (
       <div className="form-container">
         <p> {i18n.t('adminDashboard.addProject.desc')} </p>
+        const suffix = "edit-project-form"
         <Form onSubmit={this.handleFormSubmit}>
           <Select
             defaultValue="customer-list"
+            id={"customerId" + suffix}
             name="customerId"
             labelText={i18n.t('adminDashboard.addProject.customerList')}
             value={this.state.customerId}
@@ -160,6 +161,7 @@ class EditProjectForm extends Component {
           </Select>
 
           <TextInput
+            id={"name"+suffix}
             name="name"
             labelText={i18n.t('adminDashboard.addProject.projectName')}
             value={this.state.name}
@@ -168,6 +170,7 @@ class EditProjectForm extends Component {
             invalid={this.state.invalid['name']}
           />
           <TextInput
+            id={"description"+suffix}
             name="description"
             labelText={i18n.t('adminDashboard.addProject.projectDesc')}
             value={this.state.description}
@@ -176,24 +179,28 @@ class EditProjectForm extends Component {
             invalid={this.state.invalid['description']}
           />
           <TextInput
+            id={"systemId"+suffix}
             name="systemId"
             labelText={i18n.t('adminDashboard.addProject.systemId')}
             value={this.state.systemId}
             onChange={this.handleChanges}
           />
           <TextInput
+            id={"contactName"+suffix}
             name="contactName"
             labelText={i18n.t('adminDashboard.addProject.contactName')}
             value={this.state.contactName}
             onChange={this.handleChanges}
           />
           <TextInput
+            id={"contactPhone"+suffix}
             name="contactPhone"
             labelText={i18n.t('adminDashboard.addProject.contactPhone')}
             value={this.state.contactPhone}
             onChange={this.handleChanges}
           />
           <TextInput
+            id={"contactEmail"+suffix}
             name="contactEmail"
             labelText={i18n.t('adminDashboard.addProject.contactEmail')}
             value={this.state.contactEmail}

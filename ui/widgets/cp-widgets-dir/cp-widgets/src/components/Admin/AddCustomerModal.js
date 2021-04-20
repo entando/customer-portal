@@ -122,13 +122,14 @@ class AddCustomerModal extends Component {
         <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
       </div>
     )
+    const modalId = "modal-form-customer"
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addCustomer')}
         modalHeading={i18n.t('adminDashboard.addCustomer.title')}
         buttonTriggerClassName="add-customer bx--btn bx--btn--tertiary add-customer-button"
         className="modal-form"
-        id="modal-form-customer"
+        id={modalId}
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
@@ -137,7 +138,7 @@ class AddCustomerModal extends Component {
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <TextInput
-              id="name"
+              id={"name" + modalId}
               name="name"
               labelText={i18n.t('adminDashboard.addCustomer.customerName') + ' *'}
               value={this.state.name}
@@ -146,7 +147,7 @@ class AddCustomerModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
-              id="customerNumber"
+              id={"customerNumber" + modalId}
               name="customerNumber"
               labelText={i18n.t('adminDashboard.addCustomer.customerNumber') + ' *'}
               value={this.state.customerNumber}
@@ -155,21 +156,21 @@ class AddCustomerModal extends Component {
               invalid={this.state.invalid['customerNumber']}
             />
             <TextInput
-              id="contactName"
+              id={"contactName" + modalId}
               name="contactName"
               labelText={i18n.t('adminDashboard.addCustomer.contactName')}
               value={this.state.contactName}
               onChange={this.handleChanges}
             />
             <TextInput
-              id="contactPhone"
+              id={"contactPhone" + modalId}
               name="contactPhone"
               labelText={i18n.t('adminDashboard.addCustomer.contactPhone')}
               value={this.state.contactPhone}
               onChange={this.handleChanges}
             />
             <TextInput
-              id="contactEmail"
+              id={"contactEmail" + modalId}
               name="contactEmail"
               labelText={i18n.t('adminDashboard.addCustomer.contactEmail') + ' *'}
               value={this.state.contactEmail}
@@ -178,7 +179,7 @@ class AddCustomerModal extends Component {
               invalid={this.state.invalid['contactEmail']}
             />
             <TextArea
-              id="notes"
+              id={"notes" + modalId}
               name="notes"
               labelText={i18n.t('adminDashboard.addCustomer.notes')}
               value={this.state.notes}

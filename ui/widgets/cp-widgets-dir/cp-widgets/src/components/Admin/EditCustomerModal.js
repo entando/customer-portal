@@ -171,6 +171,12 @@ class EditCustomerModal extends Component {
   }
 
   render() {
+    const modalConfirmation = (
+      <div className="bx--modal-header">
+        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+      </div>
+    )
+    const modalId = this.state.modalId
     const buttonClassName = 'bx--btn bx--btn--ghost edit-customer-button-' + this.props.customer.id;
     return (
       <ModalWrapper
@@ -178,15 +184,16 @@ class EditCustomerModal extends Component {
         modalHeading={i18n.t('adminDashboard.editCustomer.title')}
         buttonTriggerClassName={buttonClassName}
         className="modal-form"
-        id={this.state.modalId}
+        id={modalId}
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
-        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
+        {modalConfirmation}
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <TextInput
+              id={"name"+modalId}
               name="name"
               labelText={i18n.t('adminDashboard.addCustomer.customerName') + ' *'}
               value={this.state.name}
@@ -195,6 +202,7 @@ class EditCustomerModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
+              id={"customerNumber"+modalId}
               name="customerNumber"
               labelText={i18n.t('adminDashboard.addCustomer.customerNumber') + ' *'}
               value={this.state.customerNumber}
@@ -203,18 +211,21 @@ class EditCustomerModal extends Component {
               invalid={this.state.invalid['customerNumber']}
             />
             <TextInput
+              id={"contactName"+modalId}
               name="contactName"
               labelText={i18n.t('adminDashboard.addCustomer.contactName')}
               value={this.state.contactName}
               onChange={this.handleChanges}
             />
             <TextInput
+              id={"contactPhone"+modalId}
               name="contactPhone"
               labelText={i18n.t('adminDashboard.addCustomer.contactPhone')}
               value={this.state.contactPhone}
               onChange={this.handleChanges}
             />
             <TextInput
+              id={"contactEmail"+modalId}
               name="contactEmail"
               labelText={i18n.t('adminDashboard.addCustomer.contactEmail') + ' *'}
               value={this.state.contactEmail}
@@ -230,6 +241,7 @@ class EditCustomerModal extends Component {
             />
           </Form>
         </div>
+        {modalConfirmation}
       </ModalWrapper>
     );
   }
