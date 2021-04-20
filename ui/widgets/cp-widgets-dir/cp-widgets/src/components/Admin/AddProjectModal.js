@@ -178,6 +178,11 @@ class AddProjectModal extends Component {
   }
 
   render() {
+    const modalConfirmation = (
+      <div className="bx--modal-header">
+        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+      </div>
+    )
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProject')}
@@ -188,14 +193,14 @@ class AddProjectModal extends Component {
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
-        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
+        {modalConfirmation}
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <Select
+              id="customerId"
               name="customerId"
               labelText={i18n.t('adminDashboard.addProject.customerList') + ' *'}
-              defaultValue={{ label: 'Select Dept', value: 0 }}
               value={this.state.customerId}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}
@@ -212,6 +217,7 @@ class AddProjectModal extends Component {
             </Select>
 
             <TextInput
+              id="name"
               name="name"
               labelText={i18n.t('adminDashboard.addProject.projectName') + ' *'}
               value={this.state.name}
@@ -220,6 +226,7 @@ class AddProjectModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
+              id="description"
               name="description"
               labelText={i18n.t('adminDashboard.addProject.projectDesc') + ' *'}
               value={this.state.description}
@@ -228,24 +235,28 @@ class AddProjectModal extends Component {
               invalid={this.state.invalid['description']}
             />
             <TextInput
+              id="systemId"
               name="systemId"
               labelText={i18n.t('adminDashboard.addProject.systemId')}
               value={this.state.systemId}
               onChange={this.handleChanges}
             />
             <TextInput
+              id="contactName"
               name="contactName"
               labelText={i18n.t('adminDashboard.addProject.contactName')}
               value={this.state.contactName}
               onChange={this.handleChanges}
             />
             <TextInput
+              id="contactPhone"
               name="contactPhone"
               labelText={i18n.t('adminDashboard.addProject.contactPhone')}
               value={this.state.contactPhone}
               onChange={this.handleChanges}
             />
             <TextInput
+              id="contactEmail"
               name="contactEmail"
               labelText={i18n.t('adminDashboard.addProject.contactEmail') + ' *'}
               value={this.state.contactEmail}
@@ -254,6 +265,7 @@ class AddProjectModal extends Component {
               invalid={this.state.invalid['contactEmail']}
             />
             <TextArea
+              id="notes"
               name="notes"
               labelText={i18n.t('adminDashboard.addProject.notes')}
               value={this.state.notes}
@@ -261,6 +273,7 @@ class AddProjectModal extends Component {
             />
           </Form>
         </div>
+        {modalConfirmation}
       </ModalWrapper>
     );
   }
