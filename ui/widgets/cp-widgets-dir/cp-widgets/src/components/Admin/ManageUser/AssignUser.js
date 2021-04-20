@@ -190,6 +190,7 @@ class AssignUser extends Component {
             <div className="bx--row">
               <div className="bx--col">
                 <Select
+                  id="projectId"
                   name="projectId"
                   labelText={i18n.t('manageUsers.assign.projectName')}
                   value={this.state.projectId}
@@ -204,6 +205,7 @@ class AssignUser extends Component {
             <div className="bx--row">
               <div className="bx--col">
                 <Select
+                  id="assignUser"
                   name="assignUser"
                   labelText={i18n.t('manageUsers.assign.assignUser')}
                   value={this.state.assignUser}

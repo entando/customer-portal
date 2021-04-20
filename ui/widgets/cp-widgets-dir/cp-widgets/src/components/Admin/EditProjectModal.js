@@ -212,6 +212,7 @@ class EditProjectModal extends Component {
       </div>
     )
     const buttonClassName = 'dropdown-button-button bx--btn bx--btn--ghost edit-project-button-' + this.props.project.id;
+    const suffix = this.state.modalId;
     return (
     <ModalWrapper
         buttonTriggerText={i18n.t('buttons.edit')}
@@ -227,7 +228,7 @@ class EditProjectModal extends Component {
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <TextInput
-              id="name"
+              id={"name" + suffix}
               name="name"
               labelText={i18n.t('adminDashboard.addProject.projectName') + ' *'}
               value={this.state.name}
@@ -236,7 +237,7 @@ class EditProjectModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
-              id="description"
+              id={"description" + suffix}
               name="description"
               labelText={i18n.t('adminDashboard.addProject.projectDesc') + ' *'}
               value={this.state.description}
@@ -245,14 +246,14 @@ class EditProjectModal extends Component {
               invalid={this.state.invalid['description']}
             />
             <TextInput
-              id="systemId"
+              id={"systemId" + suffix}
               name="systemId"
               labelText={i18n.t('adminDashboard.addProject.systemId')}
               value={this.state.systemId}
               onChange={this.handleChanges}
             />
             <TextInput
-              id="contactName"
+              id={"contactName" + suffix}
               name="contactName"
               labelText={i18n.t('adminDashboard.addProject.contactName')}
               value={this.state.contactName}
@@ -266,7 +267,7 @@ class EditProjectModal extends Component {
               onChange={this.handleChanges}
             />
             <TextInput
-              id="contactEmail"
+              id={"contactEmail" + suffix}
               name="contactEmail"
               labelText={i18n.t('adminDashboard.addProject.contactEmail') + ' *'}
               value={this.state.contactEmail}

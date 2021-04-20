@@ -134,26 +134,31 @@ class EditSubscriptionModal extends Component {
       return await apiProjectSubscriptionPut(this.props.serviceUrl, subscription);
     }
   }
-
   render() {
     const levelList = ['GOLD', 'PLATINUM'];
     const statusList = ['REQUESTED', 'PENDING', 'ACTIVE', 'EXPIRED'];
+    const modalId = "modal-form-sub-edit"
+    const modalConfirmation = (
+      <div className="bx--modal-header">
+        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+      </div>
+    )
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.edit')}
         modalHeading={i18n.t('editSubscription.title')}
         buttonTriggerClassName="add-project bx--btn bx--btn--tertiary edit-sub-button"
         className="modal-form"
-        id="modal-form-sub-edit"
+        id= {modalId}
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
-        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
-        {/*<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis. </p>*/}
+        {modalConfirmation}
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <Select
+              id={"level"+modalId}
               name="level"
               labelText={i18n.t('subscriptionDetails.level') + ' *'}
               value={this.state.level}
@@ -169,6 +174,7 @@ class EditSubscriptionModal extends Component {
               ))}
             </Select>
             <Select
+              id={"status"+modalId}
               name="status"
               labelText={i18n.t('subscriptionDetails.status') + ' *'}
               value={this.state.status}
@@ -185,6 +191,7 @@ class EditSubscriptionModal extends Component {
             </Select>
             <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange} value={this.state.startDate}>
               <DatePickerInput
+                id={"startDate"+modalId}
                 name="startDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('subscriptionDetails.startDate') + ' *'}
@@ -195,6 +202,7 @@ class EditSubscriptionModal extends Component {
               />
             </DatePicker>
             <TextInput
+              id={"lengthInMonths"+modalId}
               name="lengthInMonths"
               labelText={i18n.t('subscriptionDetails.lengthInMonths') + ' *'}
               value={this.state.lengthInMonths}
@@ -203,6 +211,7 @@ class EditSubscriptionModal extends Component {
               invalid={this.state.invalid['lengthInMonths']}
             />
             <TextArea
+              id={"notes"+modalId}
               name="notes"
               labelText={i18n.t('adminDashboard.addProject.notes')}
               value={this.state.notes}
@@ -210,6 +219,7 @@ class EditSubscriptionModal extends Component {
             />
           </Form>
         </div>
+        {modalConfirmation}
       </ModalWrapper>
     );
   }

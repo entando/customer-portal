@@ -159,7 +159,7 @@ class CustomerDataTable extends Component {
             <TableContainer description={i18n.t('customerDashboard.tableDesc')}>
               <Table {...getTableProps()}>
                 <TableHead>
-                  <TableRow>
+                  <TableRow key="headerRow">
                     {headers.map(header => {
                       let result;
                       if (header.header === i18n.t('customerDetails.notes')) {

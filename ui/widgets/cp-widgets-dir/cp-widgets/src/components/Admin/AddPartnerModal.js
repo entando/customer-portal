@@ -135,13 +135,14 @@ class AddPartnerModal extends Component {
         <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
       </div>
     )
+    const modalId = "modal-form-partner";
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addPartner')}
         modalHeading={i18n.t('adminDashboard.addPartner.title')}
         buttonTriggerClassName="add-partner bx--btn bx--btn--tertiary add-partner-button"
         className="modal-form"
-        id="modal-form-partner"
+        id={modalId}
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
@@ -150,7 +151,7 @@ class AddPartnerModal extends Component {
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <Select
-              id="projectId"
+              id={"projectId" + modalId}
               name="projectId"
               labelText={i18n.t('adminDashboard.addPartner.projectList') + ' *'}
               value={this.state.projectId}
@@ -169,7 +170,7 @@ class AddPartnerModal extends Component {
             </Select>
 
             <TextInput
-              id="name"
+              id={"name" + modalId}
               name="name"
               labelText={i18n.t('adminDashboard.addPartner.partnerName') + ' *'}
               value={this.state.name}
@@ -178,7 +179,7 @@ class AddPartnerModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
-              id="partnerNumber"
+              id={"partnerNumber" + modalId}
               name="partnerNumber"
               labelText={i18n.t('adminDashboard.addPartner.partnerNumber') + ' *'}
               value={this.state.partnerNumber}
