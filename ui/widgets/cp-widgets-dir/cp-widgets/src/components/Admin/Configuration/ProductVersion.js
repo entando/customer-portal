@@ -9,7 +9,8 @@ import {
   TableHeader,
   TableBody,
   TableCell,
-  ToggleSmall, Button,
+  Toggle,
+  Button,
 } from 'carbon-components-react';
 import { apiProductVersionDelete, apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
 import withKeycloak from '../../../auth/withKeycloak';
@@ -113,10 +114,10 @@ class ProductVersion extends Component {
                           <TableRow key={index}>
                             <TableCell>{productVersion.name}</TableCell>
                             <TableCell>
-                              <ToggleSmall
+                              <Toggle size="sm"
                                 onClick={() => this.handleToggleChange(productVersion.id)}
                                 aria-label="toggle button"
-                                id={productVersion.id}
+                                id="toggle{productVersion.id}"
                                 defaultToggled={productVersion.status}
                               />
                             </TableCell>
@@ -184,21 +185,21 @@ const rowData = [
   {
     id: 'a',
     entVersion: '5.2',
-    status: <ToggleSmall aria-label="toggle button" defaultToggled id="status-1" />,
+    status: <Toggle size="sm" aria-label="toggle button" defaultToggled id="status-1" />,
     startDate: 'April, 2018',
     endDate: 'April, 2022',
   },
   {
     id: 'b',
     entVersion: '6.3',
-    status: <ToggleSmall aria-label="toggle button" id="status-2" />,
+    status: <Toggle size="sm"  aria-label="toggle button" id="status-2" />,
     startDate: 'Jile, 2019',
     endDate: 'April, 2023',
   },
   {
     id: 'c',
     entVersion: '6.2',
-    status: <ToggleSmall aria-label="toggle button" defaultToggled id="status-3" />,
+    status: <Toggle size="sm"  aria-label="toggle button" defaultToggled id="status-3" />,
     startDate: 'September, 2020',
     endDate: 'April, 2024',
   },
