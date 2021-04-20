@@ -15,9 +15,10 @@ class TicketingSystem extends Component {
     super(props);
     this.state = {
       ticketingSystem: '',
-      ticketingSystemType: '',
+      ticketingSystemType: 'Jira',
       url: '',
       serviceAccount: '',
+      serviceAccountSecret: '',
       systemId: '',
       submitMsg: '',
       submitColour: 'black',
@@ -143,7 +144,7 @@ class TicketingSystem extends Component {
   };
 
   render() {
-    const ticketingSystem = ['Jira', 'Other'];
+    const ticketingSystem = ['Jira'];
     if (isPortalAdmin()) {
       return (
         <div className="cp-form">
@@ -161,7 +162,7 @@ class TicketingSystem extends Component {
                   >
                     <SelectItem text={i18n.t('adminConfig.integrationTicketingSystem.select')} value="ticketing-system" />
                     {ticketingSystem.map((ticketingSystem, i) => (
-                      <SelectItem key={i} text={ticketingSystem} value={ticketingSystem.toLowerCase()}>
+                      <SelectItem key={i} text={ticketingSystem} value={ticketingSystem}>
                         {ticketingSystem}
                       </SelectItem>
                     ))}
