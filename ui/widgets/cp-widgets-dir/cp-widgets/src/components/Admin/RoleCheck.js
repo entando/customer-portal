@@ -3,6 +3,7 @@ import { Select, SelectItem } from 'carbon-components-react';
 import CustomerDetails from '../Customer/customerDetails';
 import AdminDashboard from './AdminDashboard';
 import '../../index.scss';
+import CustomerDataTable from "../Customer/customerDataTable";
 
 export default class RoleCheck extends Component {
   state = {
@@ -46,7 +47,7 @@ export default class RoleCheck extends Component {
         <div>
           <h3 className="pageTitle">Welcome to Entando Customer Portal</h3>
           <CustomerDetails />
-          <CustomTable />
+          <CustomerDataTable />
         </div>
       );
     if (this.state.roleType === 'admin')
