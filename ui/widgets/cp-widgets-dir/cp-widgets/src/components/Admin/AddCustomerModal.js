@@ -102,8 +102,6 @@ class AddCustomerModal extends Component {
           });
         });
     }
-    //this.props.testFunction();
-    //super.componentDidMount();
   };
 
   clearValues = () => {
@@ -119,6 +117,11 @@ class AddCustomerModal extends Component {
   }
 
   render() {
+    const modalConfirmation = (
+      <div className="bx--modal-header">
+        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+      </div>
+    )
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addCustomer')}
@@ -129,11 +132,12 @@ class AddCustomerModal extends Component {
         handleSubmit={this.handleFormSubmit}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
-        modalLabel={<p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>}
       >
+        {modalConfirmation}
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <TextInput
+              id="name"
               name="name"
               labelText={i18n.t('adminDashboard.addCustomer.customerName') + ' *'}
               value={this.state.name}
@@ -142,6 +146,7 @@ class AddCustomerModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
+              id="customerNumber"
               name="customerNumber"
               labelText={i18n.t('adminDashboard.addCustomer.customerNumber') + ' *'}
               value={this.state.customerNumber}
@@ -150,18 +155,21 @@ class AddCustomerModal extends Component {
               invalid={this.state.invalid['customerNumber']}
             />
             <TextInput
+              id="contactName"
               name="contactName"
               labelText={i18n.t('adminDashboard.addCustomer.contactName')}
               value={this.state.contactName}
               onChange={this.handleChanges}
             />
             <TextInput
+              id="contactPhone"
               name="contactPhone"
               labelText={i18n.t('adminDashboard.addCustomer.contactPhone')}
               value={this.state.contactPhone}
               onChange={this.handleChanges}
             />
             <TextInput
+              id="contactEmail"
               name="contactEmail"
               labelText={i18n.t('adminDashboard.addCustomer.contactEmail') + ' *'}
               value={this.state.contactEmail}
@@ -170,6 +178,7 @@ class AddCustomerModal extends Component {
               invalid={this.state.invalid['contactEmail']}
             />
             <TextArea
+              id="notes"
               name="notes"
               labelText={i18n.t('adminDashboard.addCustomer.notes')}
               value={this.state.notes}
@@ -177,6 +186,7 @@ class AddCustomerModal extends Component {
             />
           </Form>
         </div>
+        {modalConfirmation}
       </ModalWrapper>
     );
   }
