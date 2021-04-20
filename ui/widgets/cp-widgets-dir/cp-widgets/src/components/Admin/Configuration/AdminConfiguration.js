@@ -73,7 +73,7 @@ class AdminConfiguration extends React.Component {
               <Accordion>
                 {this.adminConfig.map((item, index) => (
                   <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description}>
-                    <p>{item.content}</p>
+                    <div>{item.content}</div>
                   </AccordionItem>
                 ))}
               </Accordion>

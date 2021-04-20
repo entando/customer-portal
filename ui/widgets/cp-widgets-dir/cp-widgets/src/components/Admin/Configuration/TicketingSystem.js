@@ -153,7 +153,7 @@ class TicketingSystem extends Component {
               <div className="bx--row">
                 <div className="bx--col">
                   <Select
-                    defaultValue="ticketing-system"
+                    id="ticketingSystemType"
                     name="ticketingSystemType"
                     labelText={i18n.t('adminConfig.integrationTicketingSystem.selectBackendTicketingSystem')}
                     value={this.state.ticketingSystemType}
@@ -167,12 +167,14 @@ class TicketingSystem extends Component {
                     ))}
                   </Select>
                   <TextInput
+                    id="serviceAccount"
                     name="serviceAccount"
                     labelText={i18n.t('adminConfig.integrationTicketingSystem.userName')}
                     value={this.state.serviceAccount}
                     onChange={this.handleChanges}
                   />
                   <TextInput
+                    id="systemId"
                     name="systemId"
                     labelText={i18n.t('adminConfig.integrationTicketingSystem.projectName')}
                     value={this.state.systemId}
@@ -181,12 +183,14 @@ class TicketingSystem extends Component {
                 </div>
                 <div className="bx--col">
                   <TextInput
+                    id="url"
                     name="url"
                     labelText={i18n.t('adminConfig.integrationTicketingSystem.url')}
                     value={this.state.url}
                     onChange={this.handleChanges}
                   />
                   <TextInput
+                    id="serviceAccountSecret"
                     name="serviceAccountSecret"
                     type="password"
                     labelText={i18n.t('adminConfig.integrationTicketingSystem.password')}

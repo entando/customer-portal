@@ -191,7 +191,7 @@ class AdminDashboard extends React.Component {
                 })
               : null}
           </Accordion>
-          <PaginationNav {...props()} cssClass="pagination-right" />
+          <PaginationNav {...props()} className="pagination-right" />
         </div>
       </div>
     );
