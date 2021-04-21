@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import i18n from '../../i18n';
-import { Form, TextInput, Select, SelectItem, Button, DatePicker, DatePickerInput } from 'carbon-components-react';
-import { apiGetProjectIdNames, apiGetMyProjectIdNames } from '../../api/projects';
+import {Form, TextInput, Select, SelectItem, Button, DatePicker, DatePickerInput} from 'carbon-components-react';
+import {apiGetProjectIdsAndNames, apiGetMyProjectIdNames} from '../../api/projects';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProjectSubscriptionPost, apiRenewSubscription } from '../../api/subscriptions';
 import { apiProductVersionsGet } from '../../api/productVersion';
@@ -75,13 +75,14 @@ class SubscriptionForm extends Component {
   }
 
   async fetchData() {
+    const serviceUrl = this.props.serviceUrl;
     var projects = '';
     if (isPortalAdminOrSupport()) {
-      projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
+      projects = (await apiGetProjectIdsAndNames(serviceUrl)).data;
     } else {
-      projects = (await apiGetMyProjectIdNames(this.props.serviceUrl)).data;
+      projects = (await apiGetMyProjectIdNames(serviceUrl)).data;
     }
-    const productVersions = (await apiProductVersionsGet(this.props.serviceUrl)).data;
+    const productVersions = (await apiProductVersionsGet(serviceUrl)).data;
 
     let search = window.location.search;
     let params = new URLSearchParams(search);

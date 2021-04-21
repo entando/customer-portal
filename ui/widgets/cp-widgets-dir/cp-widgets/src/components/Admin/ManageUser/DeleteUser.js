@@ -10,19 +10,17 @@ import {
   TableCell,
   Button
 } from 'carbon-components-react';
-import { apiUsersGet, apiUserDelete } from '../../../api/portalusers';
 import withKeycloak from '../../../auth/withKeycloak';
-import { apiKeycloakUserGet } from '../../../api/keycloak';
 import i18n from '../../../i18n';
+import {apiGetProjectUsers, apiDeleteUserFromProject} from "../../../api/projects";
 
 class DeleteUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      portalUsers: new Map(),
-      keycloakUsers: new Map(),
+      users: [],
       displayUsers: [],
-      filterText: '',
+      projectId: '',
     };
     this.headerData = [
       {
@@ -32,10 +30,6 @@ class DeleteUser extends Component {
       {
         header: i18n.t('manageUsers.delete.userEmail'),
         key: 'email',
-      },
-      {
-        header: i18n.t('manageUsers.delete.dateAdded'),
-        key: 'dateAdded',
       },
       {
         header: i18n.t('manageUsers.delete.userAccess'),
@@ -49,7 +43,7 @@ class DeleteUser extends Component {
     const authenticated = keycloak.initialized && keycloak.authenticated;
 
     if (authenticated) {
-      this.fetchData(keycloak.authServerUrl);
+      this.fetchData();
     }
   }
 
@@ -60,56 +54,48 @@ class DeleteUser extends Component {
     const changedAuth = prevProps.keycloak.authenticated !== authenticated;
 
     if (authenticated && changedAuth) {
-      this.fetchData(keycloak.authServerUrl);
+      this.fetchData();
     }
   }
 
-  async fetchData(keycloakUrl) {
-    const { keycloak } = this.props;
+  async fetchData() {
+    const {keycloak} = this.props;
 
     const authenticated = keycloak.initialized && keycloak.authenticated;
     if (authenticated) {
-      const portalUsers = this.handleMapFormatting((await apiUsersGet(this.props.serviceUrl)).data);
-      const keycloakUsers = this.handleMapFormatting((await apiKeycloakUserGet(keycloakUrl, keycloak.realm)).data);
+      let search = window.location.search;
+      const params = new URLSearchParams(search);
+      const projectId = params.get('project');
+      let users = [];
+      if (projectId != null) {
+        users = ((await apiGetProjectUsers(this.props.serviceUrl, projectId)).data);
+      }
 
       this.setState({
-        portalUsers,
-        keycloakUsers,
+        users,
+        projectId
       });
 
       this.handleUserDisplay();
     }
   }
 
-  /**
-   * Turns the list of user objects into a map where the key is the unique username.
-   */
-  handleMapFormatting(users) {
-    return new Map(users.map(user => [user.username, user]));
-  }
-
   handleUserDisplay() {
-    const { portalUsers, keycloakUsers } = this.state;
-    const portalUsernames = [...portalUsers.keys()];
-    const keycloakUserObjects = [...keycloakUsers.values()];
+    const users = this.state.users;
+    const projectId = this.state.projectId;
 
-    const displayUsers = keycloakUserObjects.map(keycloakUser => ({
-      id: keycloakUser.username,
-      username: keycloakUser.username,
-      email: keycloakUser.email,
-      dateAdded: `${new Date(keycloakUser.createdTimestamp).toLocaleString('default', { month: 'long' })} ${new Date(
-        keycloakUser.createdTimestamp
-      ).getFullYear()}`,
-      userAccess: portalUsernames.includes(keycloakUser.username) ? (
+    const displayUsers = users.map(user => ({
+      id: user.username,
+      username: user.username,
+      email: user.email,
+      userAccess: (
         <Button
           kind="ghost"
-          onClick={event => this.handleRemoveUser(keycloakUser.username, event)}
-          style={{ display: 'flex', width: '100%', color: 'red' }}
+          onClick={event => this.handleRemoveUser(user.id, projectId, event)}
+          style={{display: 'flex', width: '100%', color: 'red'}}
         >
           {i18n.t('manageUsers.delete.removeUser')}
         </Button>
-      ) : (
-        ''
       ),
     }));
 
@@ -118,19 +104,14 @@ class DeleteUser extends Component {
     });
   }
 
-  handleRemoveUser = (username, event) => {
+  handleRemoveUser = (userId, projectId, event) => {
     event.preventDefault();
-    const userId = this.state.portalUsers.get(username).id;
-    apiUserDelete(this.props.serviceUrl, userId).then(res => {
-      if (res.status === 204) {
-        const updatedPortalUsers = this.state.portalUsers;
-        updatedPortalUsers.delete(username);
-        this.setState({
-          portalUsers: updatedPortalUsers,
-        });
-        this.handleUserDisplay();
+
+    apiDeleteUserFromProject(this.props.serviceUrl, projectId, userId).then(res => {
+      if (res.status === 201) {
+        this.fetchData();
       } else {
-        // TODO: Error message
+        console.warn("Failed to delete user", res);
       }
     });
   };

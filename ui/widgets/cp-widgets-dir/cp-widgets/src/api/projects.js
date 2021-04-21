@@ -88,6 +88,15 @@ export const apiAddUserToProject = async (serviceUrl, projectId, userId) => {
   return request(url, options);
 };
 
+export const apiDeleteUserFromProject = async (serviceUrl, projectId, userId) => {
+  const url = `${serviceUrl}/${resource}/${projectId}/users/${userId}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'DELETE',
+  };
+  return request(url, options);
+};
+
 export const apiAddPartnerToProject = async (serviceUrl, projectId, partnerId) => {
   const url = `${serviceUrl}/${resource}/${projectId}/partners/${partnerId}`;
   const options = {
@@ -97,7 +106,7 @@ export const apiAddPartnerToProject = async (serviceUrl, projectId, partnerId) =
   return request(url, options);
 };
 
-export const apiGetProjectsUsers = async (serviceUrl, projectId) => {
+export const apiGetProjectUsers = async (serviceUrl, projectId) => {
   const url = `${serviceUrl}/${resource}/${projectId}/users/`;
   const options = {
     ...getDefaultOptions(),
@@ -124,8 +133,17 @@ export const apiGetProjectSubscriptions = async (serviceUrl, projectId) => {
   return request(url, options);
 };
 
-export const apiGetProjectIdNames = async serviceUrl => {
+export const apiGetProjectIdsAndNames = async serviceUrl => {
   const url = `${serviceUrl}/${resource}/nameId/`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+  return request(url, options);
+};
+
+export const apiGetMyProject = async (serviceUrl, projectId) => {
+  const url = `${serviceUrl}/${resource}/myproject/${projectId}/`;
   const options = {
     ...getDefaultOptions(),
     method: 'GET',
