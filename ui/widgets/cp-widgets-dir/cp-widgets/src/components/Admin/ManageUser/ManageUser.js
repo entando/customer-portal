@@ -17,23 +17,23 @@ class ManageUser extends Component {
       {
         label: (
           <div>
-            <p className="title">{i18n.t('manageUsers.assign.title')}</p>
-            <p className="desc">{i18n.t('manageUsers.assign.desc')}</p>
+            <p className="title">{i18n.t('manageUsers.manage.title')}</p>
+            <p className="desc">{i18n.t('manageUsers.manage.desc')}</p>
           </div>
         ),
-        content: <AssignUser serviceUrl={this.props.serviceUrl} />,
+        content: <DeleteUser serviceUrl={this.props.serviceUrl}/>,
         open: true,
       },
       {
         label: (
           <div>
-            <p className="title">{i18n.t('manageUsers.manage.title')}</p>
-            <p className="desc">{i18n.t('manageUsers.manage.desc')}</p>
+            <p className="title">{i18n.t('manageUsers.assign.title')}</p>
+            <p className="desc">{i18n.t('manageUsers.assign.desc')}</p>
           </div>
         ),
-        content: <DeleteUser serviceUrl={this.props.serviceUrl} />,
-        open: false,
-      },
+        content: <AssignUser serviceUrl={this.props.serviceUrl}/>,
+        open: true,
+      }
     ];
   }
 

@@ -3,8 +3,8 @@ import TicketList from './TicketList';
 import { Tile } from 'carbon-components-react';
 import { apiSubscriptionGet, apiGetMySubscription } from '../../api/subscriptions';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiGetProjectsUsers, apiProjectGet } from '../../api/projects';
-import { isPortalAdminOrSupport, isPortalCustomerOrPartner, isPortalUser, isPortalAdmin } from '../../api/helpers';
+import {apiGetProjectUsers, apiProjectGet} from '../../api/projects';
+import {isPortalAdminOrSupport, isPortalCustomerOrPartner, isPortalUser, isPortalAdmin} from '../../api/helpers';
 import EditSubscriptionModal from '../Admin/EditSubscriptionModal';
 import i18n from '../../i18n';
 
@@ -44,7 +44,7 @@ class Subscription extends React.Component {
           subscription = await apiSubscriptionGet(this.props.serviceUrl, this.props.match.params.id);
           if (subscription.data.project) {
             project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id);
-            users = await apiGetProjectsUsers(this.props.serviceUrl, project.data.id);
+            users = await apiGetProjectUsers(this.props.serviceUrl, project.data.id);
           }
         } else if (isPortalCustomerOrPartner()) {
           subscription = await apiGetMySubscription(this.props.serviceUrl, this.props.match.params.id);

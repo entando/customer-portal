@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Select, SelectItem, Button } from 'carbon-components-react';
 import * as portalUserApi from '../../../api/portalusers';
-import { apiAddUserToProject, apiGetProjectIdNames } from '../../../api/projects';
+import {apiAddUserToProject, apiProjectGet} from '../../../api/projects';
 import withKeycloak from '../../../auth/withKeycloak';
 import { apiKeycloakUserGet } from '../../../api/keycloak';
 import i18n from '../../../i18n';
@@ -9,10 +9,10 @@ class AssignUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      project: null,
       projectId: '',
       assignUser: '',
       users: new Map(),
-      projects: {},
       invalid: {},
       submitMsg: '',
       submitColour: 'black',
@@ -40,29 +40,20 @@ class AssignUser extends Component {
   }
 
   async fetchData(keycloakUrl) {
-    const { keycloak } = this.props;
+    const {keycloak} = this.props;
     const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(keycloakUrl, keycloak.realm)).data);
-    var projects = (await apiGetProjectIdNames(this.props.serviceUrl)).data;
-    let search = window.location.search;
-    let params = new URLSearchParams(search);
-    let projectParam = params.get('project');
-
-    if (projectParam) {
-      Object.keys(projects).forEach((id) => {
-        if (id !== projectParam) {
-          delete projects[id];
-        }
-      });
-      if (Object.keys(projects).length === 1) {
-        this.setState({
-          projectId: Object.keys(projects)[0],
-        });
-      }
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    const projectId = params.get('project');
+    let project = null;
+    if (projectId != null) {
+      project = (await apiProjectGet(this.props.serviceUrl, projectId)).data;
     }
 
     this.setState({
-      users,
-      projects,
+      projectId: projectId,
+      project: project,
+      users: users
     });
   }
 
@@ -148,7 +139,7 @@ class AssignUser extends Component {
 
   setupFormComponents() {
     const users = this.state.users;
-    const projectIdsNames = this.state.projects;
+    const project = this.state.project;
     let userList = null;
     let projectList = null;
 
@@ -158,25 +149,18 @@ class AssignUser extends Component {
           {assignUser}
         </SelectItem>
       ));
-      userList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.userList')} value="" />);
+      userList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.userList')} value=""/>);
     } else {
-      userList = <SelectItem text={i18n.t('manageUsers.assign.noUsers')} value="" />;
+      userList = <SelectItem text={i18n.t('manageUsers.assign.noUsers')} value=""/>;
     }
 
-    if (projectIdsNames != null && Object.keys(projectIdsNames).length > 0) {
-      projectList = Object.keys(projectIdsNames).map((projectId, i) => (
-        <SelectItem key={i} text={projectIdsNames[projectId]} value={projectId}>
-          test
-        </SelectItem>
-      ));
-      if (Object.keys(projectIdsNames).length > 1) {
-        projectList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.projectList')} value="" />);
-      }
+    if (project != null) {
+      projectList = <SelectItem key={project.id} text={project.name} value={project.id}/>;
     } else {
-      projectList = <SelectItem text={i18n.t('manageUsers.assign.noProjects')} value="" />;
+      projectList = <SelectItem text={i18n.t('manageUsers.assign.noProjects')} value=""/>;
     }
 
-    return { userList, projectList };
+    return {userList, projectList};
   }
 
   render() {
