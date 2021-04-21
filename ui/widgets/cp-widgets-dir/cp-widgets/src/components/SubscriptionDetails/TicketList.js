@@ -10,11 +10,11 @@ import {
   TableCell,
   PaginationNav,
 } from 'carbon-components-react';
-import { apiJiraTicketsGet } from '../../api/tickets';
-import { apiCurrentTicketingSystemGet } from '../../api/ticketingsystem';
+import {apiJiraTicketsGet} from '../../api/tickets';
+import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiProjectGet, apiAddTicketToProject } from '../../api/projects';
-import { isPortalUser } from '../../api/helpers';
+import {apiProjectGet, apiAddTicketToProject, apiGetMyProject} from '../../api/projects';
+import {isPortalAdminOrSupport, isPortalUser} from '../../api/helpers';
 import i18n from '../../i18n';
 
 class TicketList extends Component {
@@ -68,7 +68,12 @@ class TicketList extends Component {
 
     if (authenticated) {
       try {
-        const project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
+        let project;
+        if (isPortalAdminOrSupport()) {
+          project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
+        } else {
+          project = await apiGetMyProject(this.props.serviceUrl, this.props.projectId);
+        }
         const currentTicketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
         var tickets = await apiJiraTicketsGet(this.props.serviceUrl, currentTicketingSystem.systemId, project.data.systemId);
         for (var i = 0; i < tickets.data.length; i++) {
@@ -114,26 +119,28 @@ class TicketList extends Component {
       page: Number(this.state.currentPage),
       totalItems: Number(numberOfPages),
       itemsShown: Number(1),
-      onChange: event => this.setState({ currentPage: event }),
+      onChange: event => this.setState({currentPage: event}),
     });
+    const ticketSystemUrl = this.state.currentTicketingSystem.url;
+    const ticketingSystemBaseUrl = (ticketSystemUrl != null) ?
+      ticketSystemUrl.substr(0, ticketSystemUrl.indexOf('/rest'))
+      : null;
 
     return (
       <div>
         <DataTable rows={rowData} headers={this.headerData}>
-          {({ rows, headers, getHeaderProps, getTableProps }) => (
+          {({rows, headers, getHeaderProps, getTableProps}) => (
             <TableContainer
               title={i18n.t('ticketDetails.listOfTickets')}
               description={
                 Object.keys(this.state.tickets).length !== 0 && Object.keys(this.state.project).length !== 0 ? (
-                <a
-                  href={
-                    this.state.currentTicketingSystem.url.substr(0, this.state.currentTicketingSystem.url.indexOf('/rest')) +
-                    '/issues/' +
+                  <a
+                    href={ticketingSystemBaseUrl + '/issues/' +
                     '?jql=Organizations=' +
                     this.state.project.data.systemId
-                  }
-                  style={{ textDecoration: 'none' }}
-                  target="_blank" rel="noreferrer"
+                    }
+                    style={{textDecoration: 'none'}}
+                    target="_blank" rel="noreferrer"
                 >
                   {i18n.t('buttons.viewTickets')}
                 </a>
@@ -153,13 +160,19 @@ class TicketList extends Component {
                 <TableBody>
                   {Object.keys(this.state.tickets).length !== 0 ? (
                     this.state.tickets.data.map((ticket, index) => {
-                      var indexOfLastItem = (this.state.currentPage + 1) * 10 - 1;
-                      var firstIndexOfCurrentPage = this.state.currentPage * 10;
+                      const indexOfLastItem = (this.state.currentPage + 1) * 10 - 1;
+                      const firstIndexOfCurrentPage = this.state.currentPage * 10;
+                      const ticketUrl = ticketingSystemBaseUrl +
+                        '/browse/' + ticket.systemId;
 
                       if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
                         return (
                           <TableRow key={ticket.id}>
-                            <TableCell key={ticket.id}>{ticket.systemId}</TableCell>
+                            <TableCell key={ticket.id}>
+                              <a href={ticketUrl} target="_blank" rel="noreferrer">
+                                {ticket.systemId}
+                              </a>
+                            </TableCell>
                             <TableCell key={ticket.id}>{ticket.summary}</TableCell>
                             <TableCell key={ticket.id}>{ticket.status}</TableCell>
                             <TableCell key={ticket.id}>{ticket.type}</TableCell>
@@ -167,14 +180,7 @@ class TicketList extends Component {
                             <TableCell key={ticket.id}>{new Date(ticket.createDate).toDateString()}</TableCell>
                             <TableCell key={ticket.id}>{new Date(ticket.updateDate).toDateString()}</TableCell>
                             <TableCell key={ticket.id}>
-                              <a
-                                href={
-                                  this.state.currentTicketingSystem.url.substr(0, this.state.currentTicketingSystem.url.indexOf('/rest')) +
-                                  '/browse/' +
-                                  ticket.systemId
-                                }
-                                target="_blank" rel="noreferrer"
-                              >
+                              <a href={ticketUrl} target="_blank" rel="noreferrer">
                                 {i18n.t('ticketDetails.viewTicket')}
                               </a>
                             </TableCell>

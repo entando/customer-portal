@@ -75,8 +75,8 @@ public class ProjectResource {
      *
      * @param project the project to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
-     *         body the new project, or with status {@code 400 (Bad Request)} if the
-     *         project has already an ID.
+     * body the new project, or with status {@code 400 (Bad Request)} if the
+     * project has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects")
@@ -96,9 +96,9 @@ public class ProjectResource {
         }
         Project result = projectService.save(project);
         return ResponseEntity
-                .created(new URI("/api/projects/" + result.getId())).headers(HeaderUtil
-                        .createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
-                .body(result);
+            .created(new URI("/api/projects/" + result.getId())).headers(HeaderUtil
+                .createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     /**
@@ -106,10 +106,10 @@ public class ProjectResource {
      *
      * @param project the project to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the updated project, or with status {@code 400 (Bad Request)} if the
-     *         project is not valid, or with status
-     *         {@code 500 (Internal Server Error)} if the project couldn't be
-     *         updated.
+     * the updated project, or with status {@code 400 (Bad Request)} if the
+     * project is not valid, or with status
+     * {@code 500 (Internal Server Error)} if the project couldn't be
+     * updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/projects")
@@ -130,57 +130,57 @@ public class ProjectResource {
         }
         Project result = projectService.save(project);
         return ResponseEntity.ok().headers(
-                HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, project.getId().toString()))
-                .body(result);
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, project.getId().toString()))
+            .body(result);
     }
 
-	@GetMapping("/projects")
+    @GetMapping("/projects")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-	public List<Project> getAllProjects() {
-		log.debug("REST request to get all Projects");
-		return projectService.findAll();
-	}
+    public List<Project> getAllProjects() {
+        log.debug("REST request to get all Projects");
+        return projectService.findAll();
+    }
 
-	@GetMapping("/projects/subscriptions/customer/{customerNumber}")
+    @GetMapping("/projects/subscriptions/customer/{customerNumber}")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<List<SubscriptionListResponse>> getSubscriptionsForCustomer(@PathVariable String customerNumber) {
-		List<SubscriptionListResponse> subscriptionList = new ArrayList<>();
+        List<SubscriptionListResponse> subscriptionList = new ArrayList<>();
 
-		try {
-	    	Optional<Customer> customer = customerService.findByCustomerNumber(customerNumber);
+        try {
+            Optional<Customer> customer = customerService.findByCustomerNumber(customerNumber);
 
-	        if (customer.isPresent()) {
-	        	SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT);
-	        	Set<Project> projects = customer.get().getProjects();
+            if (customer.isPresent()) {
+                SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT);
+                Set<Project> projects = customer.get().getProjects();
 
-	        	for (Project project: projects) {
-	        		SubscriptionListResponse subscription = new SubscriptionListResponse();
+                for (Project project : projects) {
+                    SubscriptionListResponse subscription = new SubscriptionListResponse();
 
-	        		subscription.setProjectName(project.getName());
-	        		if (!project.getPartners().isEmpty()) {
-	        			List<String> partners = new ArrayList<>();
-	        			project.getPartners().stream().forEachOrdered(partner -> partners.add(partner.getName()));
-	        			subscription.setPartners(partners);
-	        		}
-	        		// need to review
-	        		if (project.getProjectSubscriptions().stream().findFirst().isPresent()) {
-	        			ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get();
-	        			subscription.setSubscriptionId(projectSubscription.getId());
-	        			subscription.setStartDate(sdf.format(Date.from(projectSubscription.getStartDate().toInstant())));
-        				subscription.setEndDate(sdf.format(Date.from(projectSubscription.getStartDate().plusMonths(projectSubscription.getLengthInMonths()).toInstant())));
+                    subscription.setProjectName(project.getName());
+                    if (!project.getPartners().isEmpty()) {
+                        List<String> partners = new ArrayList<>();
+                        project.getPartners().stream().forEachOrdered(partner -> partners.add(partner.getName()));
+                        subscription.setPartners(partners);
+                    }
+                    // need to review
+                    if (project.getProjectSubscriptions().stream().findFirst().isPresent()) {
+                        ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get();
+                        subscription.setSubscriptionId(projectSubscription.getId());
+                        subscription.setStartDate(sdf.format(Date.from(projectSubscription.getStartDate().toInstant())));
+                        subscription.setEndDate(sdf.format(Date.from(projectSubscription.getStartDate().plusMonths(projectSubscription.getLengthInMonths()).toInstant())));
 
-	        			if(projectSubscription.getEntandoVersion() != null) {
-	        				subscription.setEntandoVersion(projectSubscription.getEntandoVersion().getName());
-	        			}
-	        		}
-	        		subscription.setTickets(project.getTickets().size());
+                        if (projectSubscription.getEntandoVersion() != null) {
+                            subscription.setEntandoVersion(projectSubscription.getEntandoVersion().getName());
+                        }
+                    }
+                    subscription.setTickets(project.getTickets().size());
 
-	        		subscriptionList.add(subscription);
-	        	}
-	        }
-    	} catch(Exception e) {
-    		log.error("Error occurred while fetching subscriptions for customer number : " + customerNumber, e);
-    	}
+                    subscriptionList.add(subscription);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while fetching subscriptions for customer number : " + customerNumber, e);
+        }
 
         return new ResponseEntity<>(subscriptionList, HttpStatus.OK);
     }
@@ -188,26 +188,26 @@ public class ProjectResource {
     @GetMapping("/projects/subscriptions/detail")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(
-            @RequestParam(value = "projectId") Long projectId) {
+        @RequestParam(value = "projectId") Long projectId) {
 
-    	SubscriptionDetailResponse subscriptionDetail = new SubscriptionDetailResponse();
-    	SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
+        SubscriptionDetailResponse subscriptionDetail = new SubscriptionDetailResponse();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
 
-    	Optional<Project> returnedProject = projectService.findOne(projectId);
+        Optional<Project> returnedProject = projectService.findOne(projectId);
 
-    	if (returnedProject.isPresent()) {
-    		Project project = returnedProject.get();
+        if (returnedProject.isPresent()) {
+            Project project = returnedProject.get();
 
-    		subscriptionDetail.setProjectName(project.getName());
-    		subscriptionDetail.setDescription(project.getDescription());
-    		ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get(); // assume there is only one subscription per project
-    		subscriptionDetail.setLevel(projectSubscription.getLevel().name());
-    		subscriptionDetail.setStartDate(sdf.format(projectSubscription.getStartDate()));
-    		//response.setEndDate(); // there is no endDate field in the entity yet.
-    		subscriptionDetail.setPartner(project.getPartners().stream().findFirst().get().getName()); // assume there is only one partner per project
-    	}
+            subscriptionDetail.setProjectName(project.getName());
+            subscriptionDetail.setDescription(project.getDescription());
+            ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get(); // assume there is only one subscription per project
+            subscriptionDetail.setLevel(projectSubscription.getLevel().name());
+            subscriptionDetail.setStartDate(sdf.format(projectSubscription.getStartDate()));
+            //response.setEndDate(); // there is no endDate field in the entity yet.
+            subscriptionDetail.setPartner(project.getPartners().stream().findFirst().get().getName()); // assume there is only one partner per project
+        }
 
-    	return new ResponseEntity<>(subscriptionDetail, HttpStatus.OK);
+        return new ResponseEntity<>(subscriptionDetail, HttpStatus.OK);
     }
 
 
@@ -216,7 +216,7 @@ public class ProjectResource {
      *
      * @param id the id of the project to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the project, or with status {@code 404 (Not Found)}.
+     * the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{id}")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
@@ -239,18 +239,18 @@ public class ProjectResource {
 
         projectService.delete(id);
         return ResponseEntity.noContent()
-                .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
-                .build();
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 
     /**
      * {@code POST  /projects/:projectId/tickets/:ticketId} : Add a ticket to a project.
      *
      * @param projectId the project id.
-     * @param ticketId the ticket id.
+     * @param ticketId  the ticket id.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
-     *         body the new project, or with status {@code 400 (Bad Request)} if the
-     *         project has already an ID.
+     * body the new project, or with status {@code 400 (Bad Request)} if the
+     * project has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects/{projectId}/tickets/{ticketId}")
@@ -270,7 +270,7 @@ public class ProjectResource {
      *
      * @param projectId the id of the project.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the project, or with status {@code 404 (Not Found)}.
+     * the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{projectId}/tickets")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
@@ -284,11 +284,11 @@ public class ProjectResource {
     /**
      * {@code POST  /projects/:projectId/subscriptions/:subscriptionId} : Add a subscription to a project.
      *
-     * @param projectId the project id.
+     * @param projectId      the project id.
      * @param subscriptionId the subscription id.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
-     *         body the new project, or with status {@code 400 (Bad Request)} if the
-     *         project has already an ID.
+     * body the new project, or with status {@code 400 (Bad Request)} if the
+     * project has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects/{projectId}/subscriptions/{subscriptionId}")
@@ -308,7 +308,7 @@ public class ProjectResource {
      *
      * @param projectId the id of the project.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the project, or with status {@code 404 (Not Found)}.
+     * the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{projectId}/subscriptions")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
@@ -325,8 +325,8 @@ public class ProjectResource {
      * @param projectId the project id.
      * @param partnerId the partner id.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
-     *         body the new project, or with status {@code 400 (Bad Request)} if the
-     *         project has already an ID.
+     * body the new project, or with status {@code 400 (Bad Request)} if the
+     * project has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects/{projectId}/partners/{partnerId}")
@@ -346,7 +346,7 @@ public class ProjectResource {
      *
      * @param projectId the id of the project.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the project, or with status {@code 404 (Not Found)}.
+     * the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{projectId}/partners")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
@@ -361,10 +361,10 @@ public class ProjectResource {
      * {@code POST  /projects/:projectId/users/:userId} : Add a user to a project.
      *
      * @param projectId the project id.
-     * @param userId the user id.
+     * @param userId    the user id.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
-     *         body the new project, or with status {@code 400 (Bad Request)} if the
-     *         project has already an ID.
+     * body the new project, or with status {@code 400 (Bad Request)} if the
+     * project has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects/{projectId}/users/{userId}")
@@ -383,10 +383,10 @@ public class ProjectResource {
      * {@code DELETE /projects/:projectId/users/:userId} : Delete a user from a project.
      *
      * @param projectId the project id.
-     * @param userId the portal user id.
+     * @param userId    the portal user id.
      * @return the {@link ResponseEntity} with status {@code 201 (Deleted)} and with
-     *         body the new project, or with status {@code 400 (Bad Request)} if the
-     *         project was not found
+     * body the new project, or with status {@code 400 (Bad Request)} if the
+     * project was not found
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @DeleteMapping("/projects/{projectId}/users/{userId}")
@@ -406,7 +406,7 @@ public class ProjectResource {
      *
      * @param projectId the id of the project.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the project, or with status {@code 404 (Not Found)}.
+     * the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{projectId}/users")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
@@ -437,7 +437,7 @@ public class ProjectResource {
         Map<Long, String> projectIdNameMap = new HashMap<>();
         projects.forEach(project -> {
             Set<PortalUser> users = projectService.getProjectUsers(project.getId());
-            for(PortalUser user : users) {
+            for (PortalUser user : users) {
                 if (currentUser.equals(user.getUsername())) {
                     projectIdNameMap.put(project.getId(), project.getName());
                     break;
@@ -473,9 +473,9 @@ public class ProjectResource {
         String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
         List<Project> projects = projectService.findAll();
         Set<Project> result = new HashSet<>();
-        for(Project project : projects) {
+        for (Project project : projects) {
             Set<PortalUser> users = projectService.getProjectUsers(project.getId());
-            for(PortalUser user : users) {
+            for (PortalUser user : users) {
                 if (currentUser.equals(user.getUsername())) {
                     result.add(project);
                     break;
@@ -499,11 +499,28 @@ public class ProjectResource {
 
         String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
         Set<PortalUser> projectUsers = projectService.getProjectUsers(project.get().getId());
-        for(PortalUser user : projectUsers) {
+        for (PortalUser user : projectUsers) {
             if (user.getUsername().equals(currentUser)) {
                 return ResponseUtil.wrapOrNotFound(project);
             }
         }
         return null;
+    }
+
+    /**
+     * {@code GET  /projects/myproject/:id} : get the users for my project.
+     *
+     * @param id the id of the project to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the project, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/projects/myproject/{id}/users")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
+    public ResponseEntity<Set<PortalUser>> getMyProjectUsers(@PathVariable Long id) {
+        log.debug("REST request to get my Project users: {}", id);
+        ResponseEntity<Project> project = getMyProject(id);
+        if (!project.getStatusCode().is2xxSuccessful()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return getProjectUsers(id);
     }
 }
