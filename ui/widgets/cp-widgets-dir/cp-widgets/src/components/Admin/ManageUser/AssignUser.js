@@ -44,10 +44,12 @@ class AssignUser extends Component {
     const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(keycloakUrl, keycloak.realm)).data);
     const search = window.location.search;
     const params = new URLSearchParams(search);
-    const projectId = params.get('project');
+    let projectId = params.get('project');
     let project = null;
     if (projectId != null) {
       project = (await apiProjectGet(this.props.serviceUrl, projectId)).data;
+    } else {
+      projectId = '';
     }
 
     this.setState({

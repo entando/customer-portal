@@ -3,7 +3,7 @@ import TicketList from './TicketList';
 import { Tile } from 'carbon-components-react';
 import { apiSubscriptionGet, apiGetMySubscription } from '../../api/subscriptions';
 import withKeycloak from '../../auth/withKeycloak';
-import {apiGetProjectUsers, apiProjectGet} from '../../api/projects';
+import {apiGetProjectUsers, apiProjectGet, apiGetMyProject, apiGetMyProjectUsers} from '../../api/projects';
 import {isPortalAdminOrSupport, isPortalCustomerOrPartner, isPortalUser, isPortalAdmin} from '../../api/helpers';
 import EditSubscriptionModal from '../Admin/EditSubscriptionModal';
 import i18n from '../../i18n';
@@ -49,7 +49,8 @@ class Subscription extends React.Component {
         } else if (isPortalCustomerOrPartner()) {
           subscription = await apiGetMySubscription(this.props.serviceUrl, this.props.match.params.id);
           if (subscription.data.project) {
-            project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id);
+            project = await apiGetMyProject(this.props.serviceUrl, subscription.data.project.id);
+            users = await apiGetMyProjectUsers(this.props.serviceUrl, project.data.id);
           }
         }
         this.setState({
@@ -153,22 +154,18 @@ class Subscription extends React.Component {
                         <p>
                           <strong>{i18n.t('subscriptionDetails.license')}:</strong> {license}
                         </p>
-                        {isPortalAdminOrSupport() ? (
-                          <>
-                            <p>
-                              <strong>{i18n.t('subscriptionDetails.assignedUsers')}:</strong>
-                              {this.state.project.data !== '' && Object.keys(this.state.users.data).length !== 0 ? (
-                                <>
-                                  {this.state.users.data.map((user, index) => (
-                                    <> {index === this.state.users.data.length - 1 ? user.username : user.username + ', '} </>
-                                  ))}
-                                </>
-                              ) : (
-                                <> {i18n.t('userMessages.none')} </>
-                              )}
-                            </p>
-                          </>
-                        ) : null}
+                        <p>
+                          <strong>{i18n.t('subscriptionDetails.assignedUsers')}:</strong>
+                          {this.state.project.data !== '' && Object.keys(this.state.users.data).length !== 0 ? (
+                            <>
+                              {this.state.users.data.map((user, index) => (
+                                <> {index === this.state.users.data.length - 1 ? user.username : user.username + ', '} </>
+                              ))}
+                            </>
+                          ) : (
+                            <> {i18n.t('userMessages.none')} </>
+                          )}
+                        </p>
                       </div>
                     </div>
                   </div>
