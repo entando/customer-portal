@@ -110,6 +110,15 @@ public interface ProjectService {
     Project addUserToProject(Long projectId, Long userId);
 
     /**
+     * Delete user from a project.
+     *
+     * @param projectId the project id.
+     * @param userId the user id.
+     * @return the persisted entity.
+     */
+    Project deleteUserFromProject(Long projectId, Long userId);
+
+    /**
      * Get project users by id.
      *
      * @param id the id of the entity.

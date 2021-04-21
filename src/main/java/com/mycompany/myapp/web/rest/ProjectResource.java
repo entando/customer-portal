@@ -219,7 +219,7 @@ public class ProjectResource {
      *         the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Project> getProject(@PathVariable Long id) {
         log.debug("REST request to get Project : {}", id);
         Optional<Project> project = projectService.findOne(id);
@@ -376,6 +376,28 @@ public class ProjectResource {
         return ResponseEntity
             .created(new URI("/api/projects/" + result.getId())).headers(HeaderUtil
                 .createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code DELETE /projects/:projectId/users/:userId} : Delete a user from a project.
+     *
+     * @param projectId the project id.
+     * @param userId the portal user id.
+     * @return the {@link ResponseEntity} with status {@code 201 (Deleted)} and with
+     *         body the new project, or with status {@code 400 (Bad Request)} if the
+     *         project was not found
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @DeleteMapping("/projects/{projectId}/users/{userId}")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    public ResponseEntity<Project> deleteUserFromProject(@PathVariable Long projectId, @PathVariable Long userId) throws URISyntaxException {
+        log.debug("REST request to delete user {} from Project {}", userId, projectId);
+        Project result = projectService.deleteUserFromProject(projectId, userId);
+
+        return ResponseEntity
+            .created(new URI("/api/projects/" + result.getId())).headers(HeaderUtil
+                .createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
