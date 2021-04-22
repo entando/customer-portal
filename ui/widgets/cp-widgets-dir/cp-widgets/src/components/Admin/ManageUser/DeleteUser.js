@@ -36,6 +36,9 @@ class DeleteUser extends Component {
         key: 'userAccess',
       },
     ];
+    window.addEventListener("cp-user-assigned", (event) => {
+      this.fetchData();
+    });
   }
 
   componentDidMount() {
