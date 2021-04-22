@@ -133,7 +133,7 @@ class TicketList extends Component {
             <TableContainer
               title={i18n.t('ticketDetails.listOfTickets')}
               description={
-                Object.keys(this.state.tickets).length !== 0 && Object.keys(this.state.project).length !== 0 ? (
+                this.state.project.data != null ? (
                   <a
                     href={ticketingSystemBaseUrl + '/issues/' +
                     '?jql=Organizations=' +
@@ -141,9 +141,9 @@ class TicketList extends Component {
                     }
                     style={{textDecoration: 'none'}}
                     target="_blank" rel="noreferrer"
-                >
-                  {i18n.t('buttons.viewTickets')}
-                </a>
+                  >
+                    {i18n.t('buttons.viewAllTickets')}
+                  </a>
                 ) : (
                   <div>{i18n.t('ticketDetails.tickets')}</div>
                 )
@@ -168,18 +168,18 @@ class TicketList extends Component {
                       if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
                         return (
                           <TableRow key={ticket.id}>
-                            <TableCell key={ticket.id}>
+                            <TableCell>
                               <a href={ticketUrl} target="_blank" rel="noreferrer">
                                 {ticket.systemId}
                               </a>
                             </TableCell>
-                            <TableCell key={ticket.id}>{ticket.summary}</TableCell>
-                            <TableCell key={ticket.id}>{ticket.status}</TableCell>
-                            <TableCell key={ticket.id}>{ticket.type}</TableCell>
-                            <TableCell key={ticket.id}>{ticket.priority}</TableCell>
-                            <TableCell key={ticket.id}>{new Date(ticket.createDate).toDateString()}</TableCell>
-                            <TableCell key={ticket.id}>{new Date(ticket.updateDate).toDateString()}</TableCell>
-                            <TableCell key={ticket.id}>
+                            <TableCell>{ticket.summary}</TableCell>
+                            <TableCell>{ticket.status}</TableCell>
+                            <TableCell>{ticket.type}</TableCell>
+                            <TableCell>{ticket.priority}</TableCell>
+                            <TableCell>{new Date(ticket.createDate).toDateString()}</TableCell>
+                            <TableCell>{new Date(ticket.updateDate).toDateString()}</TableCell>
+                            <TableCell>
                               <a href={ticketUrl} target="_blank" rel="noreferrer">
                                 {i18n.t('ticketDetails.viewTicket')}
                               </a>
@@ -191,14 +191,14 @@ class TicketList extends Component {
                       }
                     })
                   ) : (
-                    <p></p>
+                    <TableRow/>
                   )}
                 </TableBody>
               </Table>
             </TableContainer>
           )}
         </DataTable>
-        <PaginationNav {...paginationProps()} cssClass="pagination-right" />
+        <PaginationNav {...paginationProps()} className="pagination-right"/>
       </div>
     );
   }

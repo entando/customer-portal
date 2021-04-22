@@ -18,8 +18,9 @@
     "openTicket": "Apri un ticket",
     "save": "Salva",
     "submit": "Invia",
-    "subscriptionRequest" : "Richiesta di abbonamento",
+    "subscriptionRequest": "Richiesta di abbonamento",
     "view": "Visualizza",
+    "viewAllTickets": "Visualizza tutti i biglietti",
     "viewTickets": "Visualizzare i biglietti",
     "viewDetails": "Visualizza dettagli"
   },

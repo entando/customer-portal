@@ -129,19 +129,19 @@ class ProjectActionItems extends React.Component {
                 </Button>
               </a>
               <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {/*View Tickets*/}
+              {/*View All Tickets*/}
               <a
                 href={
                   this.props.ticketingSystem.url.substr(0, this.props.ticketingSystem.url.indexOf('/rest')) +
                   '/issues/?jql=Organizations=' + this.props.project.systemId}
-                style={{ textDecoration: 'none' }}
+                style={{textDecoration: 'none'}}
                 target="_blank" rel="noreferrer"
               >
-                <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="View Tickets">
-                  {i18n.t('buttons.viewTickets')}
+                <Button kind="ghost" style={{display: 'block', width: '100%'}} value="View All Tickets">
+                  {i18n.t('buttons.viewAllTickets')}
                 </Button>
               </a>
-              <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
+              <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
               {/*New/Renew Subscription*/}
               <a
                 href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.props.project.id}`}
