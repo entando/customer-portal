@@ -88,6 +88,15 @@ export const apiAddUserToProject = async (serviceUrl, projectId, userId) => {
   return request(url, options);
 };
 
+export const apiDeletePartnerFromProject = async (serviceUrl, projectId, partnerId) => {
+  const url = `${serviceUrl}/${resource}/${projectId}/partners/${partnerId}`;
+  const options = {
+    ...getDefaultOptions(),
+    method: 'DELETE',
+  };
+  return request(url, options);
+};
+
 export const apiDeleteUserFromProject = async (serviceUrl, projectId, userId) => {
   const url = `${serviceUrl}/${resource}/${projectId}/users/${userId}`;
   const options = {

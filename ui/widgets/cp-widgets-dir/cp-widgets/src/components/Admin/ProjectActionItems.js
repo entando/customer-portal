@@ -3,7 +3,8 @@ import i18n from '../../i18n';
 import withKeycloak from '../../auth/withKeycloak';
 import { Button } from 'carbon-components-react';
 import EditProjectModal from '../Admin/EditProjectModal';
-import { isPortalAdmin } from '../../api/helpers';
+import ManagePartnersModal from '../Admin/ManagePartnersModal';
+import {isPortalAdmin} from '../../api/helpers';
 import { Link } from 'react-router-dom';
 
 class ProjectActionItems extends React.Component {
@@ -152,27 +153,35 @@ class ProjectActionItems extends React.Component {
                 </Button>
               </a>
               <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {/*Manage Users*/}
               {isPortalAdmin() ? (
                 <div>
+                  {/*Manage Users*/}
                   <a
                     href={`/entando-de-app/${this.props.locale}/manage_users.page?project=${this.props.project.id}`}
-                    style={{ textDecoration: 'none' }}
+                    style={{textDecoration: 'none'}}
                   >
-                    <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="Manage Users">
+                    <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Users">
                       {i18n.t('buttons.manageUsers')}
                     </Button>
                   </a>
-                  <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
+                  <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
+                  {/*Manage Partners*/}
+                  <ManagePartnersModal
+                    key={this.props.project.id}
+                    project={this.props.project}
+                    serviceUrl={this.props.serviceUrl}
+                    updateProjectList={this.props.updateProjectList}
+                  />
+                  <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
                   {/*Delete Project*/}
                   <Button
                     kind="ghost"
                     onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
-                    style={{ display: 'block', width: '100%', color: 'red' }}
+                    style={{display: 'block', width: '100%', color: 'red'}}
                   >
                     {i18n.t('buttons.delete')}
                   </Button>
-                  <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
+                  <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
                 </div>
               ) : null}
             </div>

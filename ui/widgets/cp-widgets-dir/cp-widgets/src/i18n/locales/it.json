@@ -14,6 +14,7 @@
     "cancel": "Annulla",
     "delete": "Elimina",
     "edit": "Modificare",
+    "managePartners": "Gestire i partner",
     "manageUsers": "Gestisci utenti",
     "openTicket": "Apri un ticket",
     "save": "Salva",
@@ -84,28 +85,30 @@
 			"partnerName": "Nome partner",
 			"partnerNumber": "Numero partner",
 			"notes": "Appunti"
-		},
-		"addProductVersion":{
-			"title": "Aggiungi una nuova versione del prodotto",
-			"productVersion": "Versione del prodotto",
-			"productVersionStartDate": "Data di inizio della versione del prodotto",
-			"productVersionEndDate": "Data di fine della versione del prodotto"
-		},
-		"editCustomer":{
-			"title": "Modifica cliente",
-			"desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis."
-		}
-	},
-
-	"supportTicketForm": {
-		"title": "Entando Visualizza dell'Amministratore",
-		"formTitle": "Creare un nuovo biglietto di supporto",
-		"desc": "Creare un nuovo biglietto di supporto per un progetto esistente.",
-		"select": "Seleziona",
-		"type": "Genere",
-		"selectProject": "Seleziona progetto",
-		"ticketNumber": "Ticket Number",
-		"customerName": "Customer Name",
+    },
+    "addProductVersion": {
+      "title": "Aggiungi una nuova versione del prodotto",
+      "productVersion": "Versione del prodotto",
+      "productVersionStartDate": "Data di inizio della versione del prodotto",
+      "productVersionEndDate": "Data di fine della versione del prodotto"
+    },
+    "editCustomer": {
+      "title": "Modifica cliente",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis."
+    },
+    "managePartners": {
+      "title": "Gestire i partner"
+    }
+  },
+  "supportTicketForm": {
+    "title": "Entando Visualizza dell'Amministratore",
+    "formTitle": "Creare un nuovo biglietto di supporto",
+    "desc": "Creare un nuovo biglietto di supporto per un progetto esistente.",
+    "select": "Seleziona",
+    "type": "Genere",
+    "selectProject": "Seleziona progetto",
+    "ticketNumber": "Ticket Number",
+    "customerName": "Customer Name",
 		"projectName": "ProjectName",
 		"ticketOpenedBy": "Ticket Opened By:",
 		"priority": "Priorità",
@@ -204,29 +207,28 @@
 			"projectName": "Nome del progetto"
 		},
 		"manageProductVersion": {
-			"title": "Gestisci versione prodotto",
-			"desc": "Ciò consente di gestire le versioni del prodotto Entando",
-			"entandoVersion": "Versione Entando",
-			"status": "Stato *",
-			"startDate": "data d'inizio",
-			"supportEndDate": "Data di fine del supporto"
-		}
-	},
-
-	"modalText": {
-		"save": "Salva",
-		"cancel": "Annulla"
-	  },
-
-	"manageUsers":{
-		"title": "Entando Visualizza dell'Amministratore",
-		"assign":{
-			"title": "Assegna un nuovo utente",
-			"desc": "Assegnare un utente a un progetto esistente.",
-			"projectName": "Nome del progetto",
-			"projectList": "Elenco dei progetti",
-      		"userList": "Elenco degli utenti",
-			"assignUser": "Assegna utente",
+      "title": "Gestisci versione prodotto",
+      "desc": "Ciò consente di gestire le versioni del prodotto Entando",
+      "entandoVersion": "Versione Entando",
+      "status": "Stato *",
+      "startDate": "data d'inizio",
+      "supportEndDate": "Data di fine del supporto"
+    }
+    },
+  "modalText": {
+    "cancel": "Annulla",
+    "done": "Finito",
+    "save": "Salva"
+  },
+  "manageUsers": {
+    "title": "Entando Visualizza dell'Amministratore",
+    "assign": {
+      "title": "Assegna un nuovo utente",
+      "desc": "Assegnare un utente a un progetto esistente.",
+      "projectName": "Nome del progetto",
+      "projectList": "Elenco dei progetti",
+      "userList": "Elenco degli utenti",
+      "assignUser": "Assegna utente",
 			"selectRole": "Seleziona ruolo"
 		},
 		"manage":{
