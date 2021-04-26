@@ -191,10 +191,25 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
+     * Delete partner from a project.
+     *
+     * @param projectId the project id.
+     * @param partnerId the user id.
+     * @return the persisted entity.
+     */
+    @Override
+    public Project deletePartnerFromProject(Long projectId, Long partnerId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        Optional<Partner> partner = partnerRepository.findById(partnerId);
+        project.get().removePartner(partner.get());
+        return projectRepository.save(project.get());
+    }
+
+    /**
      * Delete user from a project.
      *
      * @param projectId the project id.
-     * @param userId the user id.
+     * @param userId    the user id.
      * @return the persisted entity.
      */
     @Override
