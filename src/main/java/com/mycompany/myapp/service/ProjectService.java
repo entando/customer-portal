@@ -104,16 +104,25 @@ public interface ProjectService {
      * Add a portal user to a project.
      *
      * @param projectId the project id.
-     * @param userId the partner id.
+     * @param userId    the partner id.
      * @return the persisted entity.
      */
     Project addUserToProject(Long projectId, Long userId);
 
     /**
+     * Delete partner from a project.
+     *
+     * @param projectId the project id.
+     * @param partnerId the user id.
+     * @return the persisted entity.
+     */
+    Project deletePartnerFromProject(Long projectId, Long partnerId);
+
+    /**
      * Delete user from a project.
      *
      * @param projectId the project id.
-     * @param userId the user id.
+     * @param userId    the user id.
      * @return the persisted entity.
      */
     Project deleteUserFromProject(Long projectId, Long userId);
