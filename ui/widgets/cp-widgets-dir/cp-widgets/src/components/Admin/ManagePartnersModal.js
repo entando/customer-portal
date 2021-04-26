@@ -31,6 +31,10 @@ class ManagePartnersModal extends Component {
         key: 'partnerNumber',
       },
       {
+        header: i18n.t('adminDashboard.addPartner.notes'),
+        key: 'notes',
+      },
+      {
         header: i18n.t('customerDashboard.action'),
         key: 'action',
       },
@@ -107,6 +111,9 @@ class ManagePartnersModal extends Component {
                           </TableCell>
                           <TableCell>
                             {partner.partnerNumber}
+                          </TableCell>
+                          <TableCell>
+                            {partner.notes}
                           </TableCell>
                           <TableCell>
                             <div>
