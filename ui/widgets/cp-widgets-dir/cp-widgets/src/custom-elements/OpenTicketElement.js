@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import OpenTicket from '../components/Forms/openTicket';
 import '../index.scss';
-import './dashboard.css';
 import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';

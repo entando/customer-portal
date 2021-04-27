@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Subscription from '../components/SubscriptionDetails/subscription';
 import KeycloakContext from '../auth/KeycloakContext';
-import './dashboard.css';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
 import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';

@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TicketList from '../components/SubscriptionDetails/TicketList';
 import '../index.scss';
+import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';
+import LocalApp from '../local/LocalApp';
 
-import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
-import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
+import {subscribeToWidgetEvent} from '../helpers/widgetEvents';
+import {KEYCLOAK_EVENT_TYPE} from '../custom-elements/widgetEventTypes';
 
 const getKeycloakInstance = () =>
-  (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
+  (window && window.entando && window.entando.keycloak && {...window.entando.keycloak, initialized: true}) || {
     initialized: false,
   };
 
@@ -21,7 +22,7 @@ const ATTRIBUTES = {
   serviceUrl: 'service-url',
 };
 
-class TicketListCustomerElement extends HTMLElement {
+class LocalAppElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -32,10 +33,10 @@ class TicketListCustomerElement extends HTMLElement {
 
   connectedCallback() {
     this.mountPoint = document.createElement('div');
-    this.keycloak = { ...getKeycloakInstance(), initialized: true };
+    this.keycloak = {...getKeycloakInstance(), initialized: true};
 
     this.unsubscribeFromKeycloakEvent = subscribeToWidgetEvent(KEYCLOAK_EVENT_TYPE, () => {
-      this.keycloak = { ...getKeycloakInstance(), initialized: true };
+      this.keycloak = {...getKeycloakInstance(), initialized: true};
       this.render();
     });
 
@@ -47,14 +48,16 @@ class TicketListCustomerElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
+    const locale = this.getAttribute(ATTRIBUTES.locale) || '';
+    Locale.setLocale(locale);
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <TicketList serviceUrl={serviceUrl} />
+        <LocalApp serviceUrl={serviceUrl} locale={locale}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('ticket-list-widget', TicketListCustomerElement);
+customElements.define('local-app-element', LocalAppElement);

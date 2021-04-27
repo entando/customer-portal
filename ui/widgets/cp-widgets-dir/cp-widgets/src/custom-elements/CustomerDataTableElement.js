@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import CustomerDataTable from '../components/Customer/customerDataTable';
 import KeycloakContext from '../auth/KeycloakContext';
 import '../index.scss';
-import './dashboard.css';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
 import { KEYCLOAK_EVENT_TYPE } from './widgetEventTypes';

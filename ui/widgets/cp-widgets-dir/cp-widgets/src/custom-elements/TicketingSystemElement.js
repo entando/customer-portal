@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TicketingSystem from '../components/Admin/Configuration/TicketingSystem';
 import '../index.scss';
-import './dashboard.css';
 
 import KeycloakContext from '../auth/KeycloakContext';
 

@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AssignUser from '../components/Admin/ManageUser/AssignUser';
 import '../index.scss';
-import './dashboard.css';
 
 import KeycloakContext from '../auth/KeycloakContext';
 
