@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ManageUser from '../components/Admin/ManageUser/ManageUser';
 import '../index.scss';
-import './dashboard.css';
 import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';
