@@ -34,102 +34,102 @@ class ProjectActionItems extends React.Component {
   };
 
   render() {
+    const actionDivider = (
+      <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
+    );
+    const topButton = (
+      <Button onClick={this.handleClick} style={{padding: '10px 20px'}} kind="tertiary">
+        +
+      </Button>
+    );
+    const editProjectSubscription = (
+      <div>
+        <EditProjectModal
+          key={this.props.project.id}
+          allProjects={this.props.allProjects}
+          project={this.props.project}
+          serviceUrl={this.props.serviceUrl}
+          updateProjectList={this.props.updateProjectList}
+        />
+        {actionDivider}
+      </div>
+    )
+    const newOrRenewSubscription = (
+      <div>
+        <a
+          href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page.page?project=${this.props.project.id}`}
+          style={{textDecoration: 'none'}}
+        >
+          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Subscription Request">
+            {i18n.t('buttons.subscriptionRequest')}
+          </Button>
+        </a>
+        {actionDivider}
+      </div>
+    );
+    const deleteProject = (
+      <div>
+        <Button
+          kind="ghost"
+          onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
+          style={{display: 'block', width: '100%', color: 'red'}}
+        >
+          {i18n.t('buttons.delete')}
+        </Button>
+        {actionDivider}
+      </div>
+    );
     if (!this.props.hasSubscription) {
       return (
         <div>
-          <Button onClick={this.handleClick} style={{ padding: '10px 20px' }} kind="tertiary">
-            +
-          </Button>
-          {this.state.showMenu ? (
+          {topButton}
+          {this.state.showMenu && (
             <div
               className="menu"
-              style={{ zIndex: '100', position: 'absolute', backgroundColor: 'white' }}
+              style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}}
               ref={node => {
                 this.node = node;
               }}
             >
-              <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {isPortalAdmin() ? (
-                <div>
-                  <EditProjectModal
-                    key={this.props.project.id}
-                    allProjects={this.props.allProjects}
-                    project={this.props.project}
-                    serviceUrl={this.props.serviceUrl}
-                    updateProjectList={this.props.updateProjectList}
-                  />
-                  <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-                </div>
-              ) : null}
-              <a
-                href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page.page?project=${this.props.project.id}`}
-                style={{ textDecoration: 'none' }}
-              >
-                <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="Subscription Request">
-                  {i18n.t('buttons.subscriptionRequest')}
-                </Button>
-              </a>
-              <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {isPortalAdmin() ? (
-                <div>
-                  <Button
-                    kind="ghost"
-                    onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
-                    style={{ display: 'block', width: '100%', color: 'red' }}
-                  >
-                    {i18n.t('buttons.delete')}
-                  </Button>
-                  <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-                </div>
-              ) : null}
+              {actionDivider}
+              {isPortalAdmin() && editProjectSubscription}
+              {newOrRenewSubscription}
+              {isPortalAdmin() && deleteProject}
             </div>
-          ) : null}
+          )}
         </div>
       );
     } else {
       return (
         <div>
-          <Button onClick={this.handleClick} style={{ padding: '10px 20px' }} kind="tertiary">
-            +
-          </Button>
-          {this.state.showMenu ? (
+          {topButton}
+          {this.state.showMenu && (
             <div
               className="menu"
-              style={{ zIndex: '100', position: 'absolute', backgroundColor: 'white' }}
+              style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}}
               ref={node => {
                 this.node = node;
               }}
             >
+              {actionDivider}
               {/*View Project Subscription*/}
-              <Link to={`/subscription-details/${this.props.sub.id}`} style={{ textDecoration: 'none' }}>
-                <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="View">
+              <Link to={`/subscription-details/${this.props.sub.id}`} style={{textDecoration: 'none'}}>
+                <Button kind="ghost" style={{display: 'block', width: '100%'}} value="View">
                   {i18n.t('buttons.view')}
                 </Button>
               </Link>
-              <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {/*Edit Project Subscription*/}
-              {isPortalAdmin() ? (
-                <div>
-                  <EditProjectModal
-                    key={this.props.project.id}
-                    allProjects={this.props.allProjects}
-                    project={this.props.project}
-                    serviceUrl={this.props.serviceUrl}
-                    updateProjectList={this.props.updateProjectList}
-                  />
-                  <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-                </div>
-              ) : null}
+              {actionDivider}
+              {isPortalAdmin() && editProjectSubscription}
               {/*Open Ticket*/}
               <a
                 href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.props.project.id}`}
-                style={{ textDecoration: 'none' }}
+                style={{textDecoration: 'none'}}
               >
-                <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="Open Ticket">
+                <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
                   {i18n.t('buttons.openTicket')}
                 </Button>
               </a>
-              <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
+              {actionDivider}
               {/*View All Tickets*/}
               <a
                 href={
@@ -142,19 +142,18 @@ class ProjectActionItems extends React.Component {
                   {i18n.t('buttons.viewAllTickets')}
                 </Button>
               </a>
-              <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
-              {/*New/Renew Subscription*/}
-              <a
-                href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.props.project.id}`}
-                style={{ textDecoration: 'none' }}
-              >
-                <Button kind="ghost" style={{ display: 'block', width: '100%' }} value="Subscription Request">
-                  {i18n.t('buttons.subscriptionRequest')}
-                </Button>
-              </a>
-              <hr style={{ margin: '0', border: 'none', borderTop: '1px solid lightgrey' }} />
-              {isPortalAdmin() ? (
+              {actionDivider}
+              {newOrRenewSubscription}
+              {isPortalAdmin() && (
                 <div>
+                  {/*Manage Partners*/}
+                  <ManagePartnersModal
+                    key={this.props.project.id}
+                    project={this.props.project}
+                    serviceUrl={this.props.serviceUrl}
+                    updateProjectList={this.props.updateProjectList}
+                  />
+                  {actionDivider}
                   {/*Manage Users*/}
                   <a
                     href={`/entando-de-app/${this.props.locale}/manage_users.page?project=${this.props.project.id}`}
@@ -164,15 +163,7 @@ class ProjectActionItems extends React.Component {
                       {i18n.t('buttons.manageUsers')}
                     </Button>
                   </a>
-                  <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
-                  {/*Manage Partners*/}
-                  <ManagePartnersModal
-                    key={this.props.project.id}
-                    project={this.props.project}
-                    serviceUrl={this.props.serviceUrl}
-                    updateProjectList={this.props.updateProjectList}
-                  />
-                  <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
+                  {actionDivider}
                   {/*Delete Project*/}
                   <Button
                     kind="ghost"
@@ -181,11 +172,11 @@ class ProjectActionItems extends React.Component {
                   >
                     {i18n.t('buttons.delete')}
                   </Button>
-                  <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
+                  {actionDivider}
                 </div>
-              ) : null}
+              )}
             </div>
-          ) : null}
+          )}
         </div>
       );
     }
