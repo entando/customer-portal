@@ -1,7 +1,7 @@
 import React from 'react';
 import TicketList from './TicketList';
-import { Tile } from 'carbon-components-react';
-import { apiSubscriptionGet, apiGetMySubscription } from '../../api/subscriptions';
+import {Tile} from 'carbon-components-react';
+import {apiSubscriptionGet, apiGetMySubscription, formatStartDate, formatEndDate} from '../../api/subscriptions';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiGetProjectUsers, apiProjectGet, apiGetMyProject, apiGetMyProjectUsers} from '../../api/projects';
 import {isPortalAdminOrSupport, isPortalCustomerOrPartner, isPortalUser, isPortalAdmin} from '../../api/helpers';
@@ -139,17 +139,11 @@ class Subscription extends React.Component {
                         </p>
                         <p>
                           <strong>{i18n.t('subscriptionDetails.startDate')}:</strong>{' '}
-                          {String(new Date(this.state.subscription.data.startDate).toDateString())}
+                          {formatStartDate(this.state.subscription.data.startDate)}
                         </p>
                         <p>
                           <strong>{i18n.t('subscriptionDetails.endDate')}:</strong>{' '}
-                          {String(
-                            new Date(
-                              new Date(this.state.subscription.data.startDate).setMonth(
-                                new Date(this.state.subscription.data.startDate).getMonth() + this.state.subscription.data.lengthInMonths
-                              )
-                            ).toDateString()
-                          )}
+                          {formatEndDate(this.state.subscription.data.startDate, this.state.subscription.data.lengthInMonths)}
                         </p>
                         <p>
                           <strong>{i18n.t('subscriptionDetails.license')}:</strong> {license}

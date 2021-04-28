@@ -8,6 +8,7 @@ import i18n from '../../i18n';
 import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
 import {apiCurrentTicketingSystemGet} from "../../api/ticketingsystem";
 import ProjectActionItems from '../Admin/ProjectActionItems';
+import {formatEndDate, formatStartDate} from "../../api/subscriptions";
 
 class CustomerDataTable extends Component {
   constructor(props) {
@@ -220,16 +221,11 @@ class CustomerDataTable extends Component {
                                 <TableCell>{i18n.t('userMessages.none')}</TableCell>
                               )}
                               <TableCell>{sub.status}</TableCell>
-                              <TableCell>{String(new Date(sub.startDate).toDateString())}</TableCell>
-                              <TableCell>
-                                {String(
-                                  new Date(
-                                    new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + sub.lengthInMonths)
-                                  ).toDateString()
-                                )}
-                              </TableCell>
+                              <TableCell>{formatStartDate(sub.startDate)}</TableCell>
+                              <TableCell>{formatEndDate(sub.startDate, sub.lengthInMonths)}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
-                              {isPortalAdminOrSupport() ? <TableCell style={{ width: '250px' }}>{project.notes}</TableCell> : null}
+                              {isPortalAdminOrSupport() ?
+                                <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                               <TableCell>
                                 <ProjectActionItems
                                   serviceUrl={this.props.serviceUrl}

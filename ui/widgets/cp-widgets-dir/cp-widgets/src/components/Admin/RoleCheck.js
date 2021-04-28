@@ -3,7 +3,7 @@ import { Select, SelectItem } from 'carbon-components-react';
 import CustomerDetails from '../Customer/customerDetails';
 import AdminDashboard from './AdminDashboard';
 import '../../index.scss';
-import CustomerDataTable from "../Customer/customerDataTable";
+import CustomerDataTable from "../Customer/CustomerDataTable";
 
 export default class RoleCheck extends Component {
   state = {

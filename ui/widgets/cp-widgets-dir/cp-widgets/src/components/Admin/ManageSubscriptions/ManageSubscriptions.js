@@ -13,27 +13,46 @@ import {
 import withKeycloak from '../../../auth/withKeycloak';
 import i18n from '../../../i18n';
 import {isAuthenticated, authenticationChanged} from "../../../api/helpers";
-
-// import {apiGetProjectUsers, apiDeleteUserFromProject} from "../../../api/projects";
+import {apiGetProjectSubscriptions, apiProjectGet} from "../../../api/projects";
+import {formatEndDate, formatStartDate} from "../../../api/subscriptions";
 
 class ManageSubscriptions extends Component {
   constructor(props) {
     super(props);
     this.state = {
       projectId: '',
-    };
+      project: {},
+      subscriptions: []
+    }
+    ;
     this.headerData = [
       {
-        header: i18n.t('manageUsers.delete.userName'),
-        key: 'username',
+        header: i18n.t('projectDetails.id'),
+        key: 'id',
       },
       {
-        header: i18n.t('manageUsers.delete.userEmail'),
-        key: 'email',
+        header: i18n.t('projectDetails.status'),
+        key: 'status',
       },
       {
-        header: i18n.t('manageUsers.delete.userAccess'),
-        key: 'userAccess',
+        header: i18n.t('projectDetails.entandoVersion'),
+        key: 'entandoVersion',
+      },
+      {
+        header: i18n.t('projectDetails.level'),
+        key: 'level',
+      },
+      {
+        header: i18n.t('projectDetails.startDate'),
+        key: 'startDate',
+      },
+      {
+        header: i18n.t('projectDetails.endDate'),
+        key: 'endDate',
+      },
+      {
+        header: i18n.t('customerDashboard.action'),
+        key: 'action',
       },
     ];
   }
@@ -56,44 +75,19 @@ class ManageSubscriptions extends Component {
       const params = new URLSearchParams(search);
       const projectId = params.get('project');
 
-      // let users = [];
-      // if (projectId != null) {
-      //   users = ((await apiGetProjectUsers(this.props.serviceUrl, projectId)).data);
-      // }
+      let project = {};
+      let subscriptions = {};
+      if (projectId != null) {
+        project = ((await apiProjectGet(this.props.serviceUrl, projectId)).data);
+        subscriptions = ((await apiGetProjectSubscriptions(this.props.serviceUrl, projectId)).data);
+      }
 
       this.setState({
-        //subscriptions,
-        projectId: projectId
+        projectId: projectId,
+        project: project,
+        subscriptions: subscriptions
       });
-
-
-      // this.handleUserDisplay();
     }
-  }
-
-  handleDisplay() {
-    //TODO
-    // const users = this.state.users;
-    // const projectId = this.state.projectId;
-    //
-    // const displayUsers = users.map(user => ({
-    //   id: user.username,
-    //   username: user.username,
-    //   email: user.email,
-    //   userAccess: (
-    //     <Button
-    //       kind="ghost"
-    //       onClick={event => this.handleRemoveUser(user.id, projectId, event)}
-    //       style={{display: 'flex', width: '100%', color: 'red'}}
-    //     >
-    //       {i18n.t('manageUsers.delete.removeUser')}
-    //     </Button>
-    //   ),
-    // }));
-    //
-    // this.setState({
-    //   displayUsers,
-    // });
   }
 
   // handleRemoveUser = (userId, projectId, event) => {
@@ -110,30 +104,38 @@ class ManageSubscriptions extends Component {
 
   render() {
     return (
-      <DataTable rows={[{id: "1"}]} headers={this.headerData}>
-        {({rows, headers, getHeaderProps, getTableProps}) => (
-          <TableContainer>
-            <Table {...getTableProps()}>
-              <TableHead>
-                <TableRow>
-                  {headers.map(header => (
-                    <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map(row => (
-                  <TableRow key={row.id}>
-                    {row.cells.map(cell => (
-                      <TableCell key={cell.id}>{cell.value}</TableCell>
+      <div>
+        <h5>{(this.state.project !== null) && this.state.project.name}</h5>
+        <DataTable rows={[{id: "1"}]} headers={this.headerData}>
+          {({headers, getHeaderProps, getTableProps}) => (
+            <TableContainer>
+              <Table {...getTableProps()}>
+                <TableHead>
+                  <TableRow>
+                    {headers.map(header => (
+                      <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>
                     ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-      </DataTable>
+                </TableHead>
+                <TableBody>
+                  {(Object.keys(this.state.subscriptions).length !== 0) &&
+                  this.state.subscriptions.map((subscription, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{subscription.id}</TableCell>
+                      <TableCell>{subscription.status}</TableCell>
+                      <TableCell>{subscription.entandoVersion.name}</TableCell>
+                      <TableCell>{subscription.level}</TableCell>
+                      <TableCell>{formatStartDate(subscription.startDate)}</TableCell>
+                      <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
+                      <TableCell>Edit Delete</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </DataTable>
+      </div>
     );
   }
 }
