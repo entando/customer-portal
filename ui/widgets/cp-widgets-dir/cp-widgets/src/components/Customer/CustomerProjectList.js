@@ -4,7 +4,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiAdminCustomerGet, apiGetCustomersProjects } from '../../api/customers';
 import { isPortalAdminOrSupport } from '../../api/helpers';
 import i18n from '../../i18n';
-import CustomerDataTable from "./customerDataTable";
+import CustomerDataTable from "./CustomerDataTable";
 
 class CustomerProjectList extends React.Component {
   constructor(props) {

@@ -1,11 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { AccordionItem, Button } from 'carbon-components-react';
+import {Link} from 'react-router-dom';
+import {AccordionItem, Button} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomerGet, apiCustomerDelete, apiGetCustomersProjects, apiGetMyCustomersProjects } from '../../api/customers';
-import CustomerDataTable from './customerDataTable';
-import CustomerDetails from './customerDetails';
-import { isPortalAdminOrSupport, isPortalAdmin, isPortalCustomer } from '../../api/helpers';
+import {
+  apiCustomerGet,
+  apiCustomerDelete,
+  apiGetCustomersProjects,
+  apiGetMyCustomersProjects
+} from '../../api/customers';
+import CustomerDataTable from './CustomerDataTable';
+import CustomerDetails from './CustomerDetails';
+import {isPortalAdminOrSupport, isPortalAdmin, isPortalCustomer} from '../../api/helpers';
 import EditCustomerModal from '../Admin/EditCustomerModal';
 import i18n from '../../i18n';
 

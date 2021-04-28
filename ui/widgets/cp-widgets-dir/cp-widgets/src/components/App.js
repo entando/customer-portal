@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import AdminDashboard from './Admin/AdminDashboard';
-import Subscription from './SubscriptionDetails/subscription';
+import Subscription from './SubscriptionDetails/Subscription';
 import withKeycloak from '../auth/withKeycloak';
 import { AuthenticatedView, UnauthenticatedView } from '../auth/KeycloakViews';
 import { isPortalUser } from '../api/helpers';

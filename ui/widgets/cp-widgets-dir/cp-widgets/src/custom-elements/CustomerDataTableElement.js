@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CustomerDataTable from '../components/Customer/customerDataTable';
+import CustomerDataTable from '../components/Customer/CustomerDataTable';
 import KeycloakContext from '../auth/KeycloakContext';
 import '../index.scss';
 

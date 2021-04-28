@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Subscription from '../components/SubscriptionDetails/subscription';
+import Subscription from '../components/SubscriptionDetails/Subscription';
 import KeycloakContext from '../auth/KeycloakContext';
 
-import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
-import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
+import {subscribeToWidgetEvent} from '../helpers/widgetEvents';
+import {KEYCLOAK_EVENT_TYPE} from './widgetEventTypes';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {

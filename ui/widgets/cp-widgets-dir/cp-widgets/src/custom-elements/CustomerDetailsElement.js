@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CustomerDetails from '../components/Customer/customerDetails';
+import CustomerDetails from '../components/Customer/CustomerDetails';
 import KeycloakContext from '../auth/KeycloakContext';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
