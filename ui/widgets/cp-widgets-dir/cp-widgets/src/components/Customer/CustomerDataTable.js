@@ -5,7 +5,7 @@ import { apiGetCustomersProjects, apiGetMyCustomersProjects, apiDeleteProjectFro
 import withKeycloak from '../../auth/withKeycloak';
 import { Link } from 'react-router-dom';
 import i18n from '../../i18n';
-import { isPortalAdminOrSupport } from '../../api/helpers';
+import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
 import {apiCurrentTicketingSystemGet} from "../../api/ticketingsystem";
 import ProjectActionItems from '../Admin/ProjectActionItems';
 
@@ -59,10 +59,7 @@ class CustomerDataTable extends Component {
   }
 
   async fetchData() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       try {
         var projects;
         if (isPortalAdminOrSupport()) {
@@ -85,10 +82,7 @@ class CustomerDataTable extends Component {
   }
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       this.fetchData();
     }
   }
@@ -103,7 +97,6 @@ class CustomerDataTable extends Component {
     this.setState({
       showMenu: showMenu,
     });
-    //document.addEventListener('mousedown', this.closeMenu);
   };
 
   closeMenu = () => {
@@ -141,12 +134,7 @@ class CustomerDataTable extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.fetchData();
     }
   }
@@ -270,43 +258,6 @@ class CustomerDataTable extends Component {
   }
 }
 
-const rowData = [
-  {
-    id: 'a',
-    projectName: 'Supplier Portal',
-    partnerName: 'Leonardo',
-    entandoVersion: 5.2,
-    startDate: 'October, 2019',
-    endDate: 'October, 2022',
-    openTickets: '5',
-  },
-  {
-    id: 'b',
-    projectName: 'Supplier Portal',
-    partnerName: 'Veriday',
-    entandoVersion: 5.2,
-    startDate: 'July, 2019',
-    endDate: 'July, 2022',
-    openTickets: '2',
-  },
-  {
-    id: 'c',
-    projectName: 'Supplier Portal',
-    partnerName: 'Accenture',
-    entandoVersion: 6.2,
-    startDate: 'September, 2019',
-    endDate: 'September, 2022',
-    openTickets: '2',
-  },
-  {
-    id: 'd',
-    projectName: 'Supplier Portal',
-    partnerName: 'Veriday',
-    entandoVersion: 5.2,
-    startDate: 'October, 2019',
-    endDate: 'October, 2022',
-    openTickets: '1',
-  },
-];
+const rowData = [{id: 'a'}];
 
 export default withKeycloak(CustomerDataTable);

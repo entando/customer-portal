@@ -154,6 +154,16 @@ class ProjectActionItems extends React.Component {
                     updateProjectList={this.props.updateProjectList}
                   />
                   {actionDivider}
+                  {/*Manage Subscriptions*/}
+                  <a
+                    href={`/entando-de-app/${this.props.locale}/manage_subscriptions.page?project=${this.props.project.id}`}
+                    style={{textDecoration: 'none'}}
+                  >
+                    <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Subscriptions">
+                      {i18n.t('buttons.manageSubscriptions')}
+                    </Button>
+                  </a>
+                  {actionDivider}
                   {/*Manage Users*/}
                   <a
                     href={`/entando-de-app/${this.props.locale}/manage_users.page?project=${this.props.project.id}`}
