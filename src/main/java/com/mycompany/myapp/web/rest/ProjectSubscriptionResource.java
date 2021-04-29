@@ -204,6 +204,8 @@ public class ProjectSubscriptionResource {
             throw new BadRequestAlertException("Invalid Project Subscription id", ENTITY_NAME, "projectSubscriptionIdNull");
         }
 
+        //TODO: rework
+
         // projectId and entandoVersioId are currently excluded for this update. commented out for null exception.
         /*
         else if (subscriptionCreationRequest.getEntandoVersionId() == null) {

@@ -178,7 +178,7 @@ class ProjectActionItems extends React.Component {
                   <Button
                     kind="ghost"
                     onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
-                    style={{display: 'block', width: '100%', color: 'red'}}
+                    className="button-warning"
                   >
                     {i18n.t('buttons.delete')}
                   </Button>
