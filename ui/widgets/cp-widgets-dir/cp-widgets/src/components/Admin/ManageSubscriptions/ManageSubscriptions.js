@@ -10,10 +10,11 @@ import {
   TableCell,
   Button
 } from 'carbon-components-react';
+import '../../../index.scss';
 import withKeycloak from '../../../auth/withKeycloak';
 import i18n from '../../../i18n';
 import {isAuthenticated, authenticationChanged} from "../../../api/helpers";
-import {apiGetProjectSubscriptions, apiProjectGet} from "../../../api/projects";
+import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProjectGet} from "../../../api/projects";
 import {formatEndDate, formatStartDate} from "../../../api/subscriptions";
 
 class ManageSubscriptions extends Component {
@@ -90,17 +91,32 @@ class ManageSubscriptions extends Component {
     }
   }
 
-  // handleRemoveUser = (userId, projectId, event) => {
-  //   event.preventDefault();
-  //
-  //   apiDeleteUserFromProject(this.props.serviceUrl, projectId, userId).then(res => {
-  //     if (res.status === 201) {
-  //       this.fetchData();
-  //     } else {
-  //       console.warn("Failed to delete user", res);
-  //     }
-  //   });
-  // };
+  async deleteSubscription(subscriptionId) {
+    if (isAuthenticated(this.props)) {
+      return await apiDeleteSubscriptionFromProject(this.props.serviceUrl, this.state.projectId, subscriptionId);
+    }
+  }
+
+  handleDeleteSubscription = (e, id) => {
+    e.preventDefault();
+    if (window.confirm(i18n.t('submitMessages.confirmDelete'))) {
+      console.log("confirmed to delete", id);
+      this.deleteSubscription(id)
+        .then(() => {
+          this.setState({
+            submitMsg: i18n.t('submitMessages.deleted'),
+            submitColour: '#24a148',
+          });
+          this.fetchData();
+        })
+        .catch(() => {
+          this.setState({
+            submitMsg: i18n.t('submitMessages.error'),
+            submitColour: '#da1e28',
+          });
+        });
+    }
+  };
 
   render() {
     return (
@@ -127,7 +143,14 @@ class ManageSubscriptions extends Component {
                       <TableCell>{subscription.level}</TableCell>
                       <TableCell>{formatStartDate(subscription.startDate)}</TableCell>
                       <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
-                      <TableCell>Edit Delete</TableCell>
+                      <TableCell>Edit
+                        <Button
+                          kind="ghost"
+                          onClick={(event) => this.handleDeleteSubscription(event, subscription.id)}
+                          className="button-warning">
+                          {i18n.t('buttons.delete')}
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -139,14 +162,5 @@ class ManageSubscriptions extends Component {
     );
   }
 }
-
-const rowData = [
-  {
-    id: 'a',
-    entandoVersion: 5.2,
-    startDate: 'October, 2019',
-    endDate: 'October, 2022',
-  }
-];
 
 export default withKeycloak(ManageSubscriptions);

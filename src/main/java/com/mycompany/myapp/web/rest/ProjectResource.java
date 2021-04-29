@@ -401,6 +401,29 @@ public class ProjectResource {
             .body(result);
     }
 
+
+    /**
+     * {@code DELETE /projects/:projectId/subscriptions/:subscriptionId} : Delete a subscription from a project.
+     *
+     * @param projectId      the project id.
+     * @param subscriptionId the subscription id.
+     * @return the {@link ResponseEntity} with status {@code 201 (Deleted)} and with
+     * body the new project, or with status {@code 400 (Bad Request)} if the
+     * project was not found
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @DeleteMapping("/projects/{projectId}/subscriptions/{subscriptionId}")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    public ResponseEntity<Project> deleteSubscriptionFromProject(@PathVariable Long projectId, @PathVariable Long subscriptionId) throws URISyntaxException {
+        log.debug("REST request to delete subscription {} from Project {}", subscriptionId, projectId);
+        Project result = projectService.deleteSubscriptionFromProject(projectId, subscriptionId);
+
+        return ResponseEntity
+            .created(new URI("/api/projects/" + result.getId())).headers(HeaderUtil
+                .createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
     /**
      * {@code DELETE /projects/:projectId/users/:userId} : Delete a user from a project.
      *

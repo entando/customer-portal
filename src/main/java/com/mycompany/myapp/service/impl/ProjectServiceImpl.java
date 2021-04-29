@@ -206,6 +206,25 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
+     * Delete subscription from a project.
+     *
+     * @param projectId      the project id.
+     * @param subscriptionId the subscription id.
+     * @return the persisted entity.
+     */
+    @Override
+    public Project deleteSubscriptionFromProject(Long projectId, Long subscriptionId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        Optional<ProjectSubscription> subscription = projectSubscriptionRepository.findById(subscriptionId);
+        if (project.isPresent() && subscription.isPresent()) {
+            Project theProject = project.get();
+            theProject.removeProjectSubscription(subscription.get());
+            return projectRepository.save(theProject);
+        }
+        return null;
+    }
+
+    /**
      * Delete user from a project.
      *
      * @param projectId the project id.

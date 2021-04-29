@@ -195,7 +195,7 @@ public class ProjectSubscriptionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/project-subscriptions")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<ProjectSubscription> updateProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException {
         ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
         log.debug("REST request to update ProjectSubscription : {}", projectSubscription);
@@ -240,7 +240,7 @@ public class ProjectSubscriptionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projectSubscriptions in body.
      */
     @GetMapping("/project-subscriptions")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public List<ProjectSubscription> getAllProjectSubscriptions() {
         log.debug("REST request to get all ProjectSubscriptions");
         return projectSubscriptionService.findAll();
@@ -267,7 +267,7 @@ public class ProjectSubscriptionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/project-subscriptions/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Void> deleteProjectSubscription(@PathVariable Long id) {
         log.debug("REST request to delete ProjectSubscription : {}", id);
 
