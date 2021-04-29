@@ -118,6 +118,16 @@ public interface ProjectService {
      */
     Project deletePartnerFromProject(Long projectId, Long partnerId);
 
+
+    /**
+     * Delete subscription from a project.
+     *
+     * @param projectId      the project id.
+     * @param subscriptionId the subscription id.
+     * @return the persisted entity.
+     */
+    Project deleteSubscriptionFromProject(Long projectId, Long subscriptionId);
+
     /**
      * Delete user from a project.
      *

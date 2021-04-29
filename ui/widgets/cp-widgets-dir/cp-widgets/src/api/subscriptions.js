@@ -1,5 +1,4 @@
 import {getDefaultOptions, request} from './helpers';
-import React from "react";
 
 const resource = 'api/project-subscriptions';
 
@@ -14,15 +13,6 @@ export const formatEndDate = (startDate, lengthInMonths) => {
 
 export const apiSubscriptionGet = async (serviceUrl, id) => {
   const url = `${serviceUrl}/${resource}/${id}`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-  return request(url, options);
-};
-
-export const apiSubscriptionGetAll = async serviceUrl => {
-  const url = `${serviceUrl}/${resource}`;
   const options = {
     ...getDefaultOptions(),
     method: 'GET',

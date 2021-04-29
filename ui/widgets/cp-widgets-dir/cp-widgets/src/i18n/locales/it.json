@@ -272,14 +272,15 @@
 	},
 
 	"submitMessages": {
-		"subscriptionRequired": "A subscription is required to create tickets for this project",
-		"created": "Creato con successo",
-		"updated": "Aggiornato con successo",
-		"added": "Aggiunto con successo",
-		"deleted": "Cancellato con successo",
-		"error": "Si è verificato un errore",
-		"ticketError": "Si è verificato un errore. Assicurarsi che questo progetto abbia un'organizzazione corrispondente a Jira."
-	  },
+    "subscriptionRequired": "A subscription is required to create tickets for this project",
+    "created": "Creato con successo",
+    "updated": "Aggiornato con successo",
+    "added": "Aggiunto con successo",
+    "confirmDelete": "Sei sicuro di voler eliminare questo articolo?",
+    "deleted": "Cancellato con successo",
+    "error": "Si è verificato un errore",
+    "ticketError": "Si è verificato un errore. Assicurarsi che questo progetto abbia un'organizzazione corrispondente a Jira."
+  },
 
 	"userMessages": {
 		"unauthorized": "Non autorizzato",

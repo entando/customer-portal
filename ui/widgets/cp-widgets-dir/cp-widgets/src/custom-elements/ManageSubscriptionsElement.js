@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ManageSubscriptions from "../components/Admin/ManageSubscriptions/ManageSubscriptions";
-import '../index.scss';
 import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';

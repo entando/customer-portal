@@ -28,7 +28,7 @@ class SubscriptionForm extends Component {
     super(props);
     this.state = {
       loading: true,
-      subscriptionType: '',
+      subscriptionType: 'new',
       projectId: '',
       startDate: '',
       subscriptionLevel: '',
