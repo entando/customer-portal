@@ -1,17 +1,22 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import i18n from '../../i18n';
 import {Form, TextInput, Select, SelectItem, Button, DatePicker, DatePickerInput} from 'carbon-components-react';
-import {apiGetProjectIdsAndNames, apiGetMyProjectIdNames} from '../../api/projects';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiProjectSubscriptionPost, apiRenewSubscription } from '../../api/subscriptions';
-import { apiProductVersionsGet } from '../../api/productVersion';
-import { isPortalAdmin, isPortalAdminOrSupport, isPortalCustomer, isPortalPartner, isPortalSupport, isPortalUser } from '../../api/helpers';
-import { apiAddSubscriptionToProject } from '../../api/projects';
-import moment from 'moment';
+import {apiProjectGet} from '../../api/projects';
+import {apiProjectSubscriptionPost, apiRenewSubscription, apiSubscriptionGet, stripTime} from '../../api/subscriptions';
+import {apiProductVersionsGet} from '../../api/productVersion';
+import {
+  authenticationChanged,
+  isAuthenticated,
+  isPortalAdmin,
+  isPortalUser
+} from '../../api/helpers';
+import {apiAddSubscriptionToProject} from '../../api/projects';
+import moment from "moment";
 
 const subscriptionLevel = {
-  GOLD: 'Gold',
-  PLATINUM: 'Platinum',
+  GOLD: 'GOLD',
+  PLATINUM: 'PLATINUM',
 };
 
 const subscriptionStatus = {
@@ -21,23 +26,22 @@ const subscriptionStatus = {
   expired: 'EXPIRED',
 };
 
-const subscriptionTypes = ['New', 'Existing'];
-
 class SubscriptionForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      subscriptionType: 'new',
+      project: {},
       projectId: '',
+      subscription: {},
       startDate: '',
-      subscriptionLevel: '',
-      subscriptionLength: '',
+      level: 'PLATINUM',
+      lengthInMonths: '',
       entandoVersionId: '',
+      status: '',
+      formType: 'new',
       invalid: {},
-      projects: {},
       productVersions: [],
-      selectedProjectId: '',
       submitSuccess: false,
       submitError: false,
       submitColour: 'black',
@@ -45,13 +49,8 @@ class SubscriptionForm extends Component {
   }
 
   componentDidMount() {
-    const { keycloak } = this.props;
-
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
-      if (isPortalUser()) {
-        this.fetchData();
-      }
+    if (isAuthenticated(this.props)) {
+      this.fetchData();
       this.setState({
         loading: false,
       });
@@ -59,15 +58,8 @@ class SubscriptionForm extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
-      if (isPortalUser()) {
-        this.fetchData();
-      }
+    if (authenticationChanged(this.props, prevProps)) {
+      this.fetchData();
       this.setState({
         loading: false,
       });
@@ -75,81 +67,78 @@ class SubscriptionForm extends Component {
   }
 
   async fetchData() {
-    const serviceUrl = this.props.serviceUrl;
-    var projects = '';
-    if (isPortalAdminOrSupport()) {
-      projects = (await apiGetProjectIdsAndNames(serviceUrl)).data;
-    } else {
-      projects = (await apiGetMyProjectIdNames(serviceUrl)).data;
+    if (!isPortalUser()) {
+      return;
     }
+
+    const serviceUrl = this.props.serviceUrl;
+
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+
+    const subscriptionId = params.get('subscription');
+    let projectId = params.get('project');
+
+    let subscription = {};
+    let project = {};
+    let formType = 'new';
+    let status = '';
+    const isAdmin = isPortalAdmin();
+
+    if (subscriptionId !== null) {
+      subscription = (await apiSubscriptionGet(serviceUrl, subscriptionId)).data;
+      status = subscription.status;
+      formType = isAdmin ? 'edit' : 'existing';
+      project = subscription.project;
+    } else if (projectId !== null) {
+      project = (await apiProjectGet(serviceUrl, projectId)).data;
+      status = isAdmin ? subscriptionStatus.pending : subscriptionStatus.requested;
+    } else {
+      console.log("Unable to load project and/or subscription");
+      return;
+    }
+
     const productVersions = (await apiProductVersionsGet(serviceUrl)).data;
 
-    let search = window.location.search;
-    let params = new URLSearchParams(search);
-    let projectParam = params.get('project');
-
-    if (projectParam) {
-      Object.keys(projects).forEach((id) => {
-        if (id !== projectParam) {
-          delete projects[id];
-        }
-      });
-      if (Object.keys(projects).length === 1) {
-        this.setState({
-          projectId: Object.keys(projects)[0],
-        });
-      }
-    }
-
     this.setState({
-      projects,
-      productVersions,
+      subscription: subscription,
+      level: subscription.level,
+      entandoVersionId: (subscription.entandoVersion) ? subscription.entandoVersion.id : '',
+      startDate: stripTime(subscription.startDate),
+      lengthInMonths: subscription.lengthInMonths,
+      status: status,
+      formType: formType,
+      project: project,
+      projectId: projectId,
+      productVersions: productVersions
     });
   }
 
   isNumeric(str) {
-    if (typeof str != 'string') return false;
-    return !isNaN(str) && !isNaN(parseFloat(str));
+    return !isNaN(str) && !isNaN(parseInt(str));
   }
 
   handleValidation() {
     let invalid = {};
-    let formIsValid = true;
 
-    if (this.state.subscriptionType === '') {
-      formIsValid = false;
-      invalid['subscriptionType'] = true;
+    if (!this.state.startDate || !this.state.startDate.match(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/)) {
+      invalid['startDate'] = true;
     }
 
-    if (this.state.projectId === '') {
-      formIsValid = false;
-      invalid['projectId'] = true;
+    if (!this.state.lengthInMonths || !this.isNumeric(this.state.lengthInMonths)) {
+      invalid['lengthInMonths'] = true;
     }
 
-    if (typeof this.state.startDate !== 'undefined') {
-      if (!this.state.startDate.match(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/)) {
-        formIsValid = false;
-        invalid['startDate'] = true;
-      }
-    }
-
-    if (this.state.subscriptionLength === '' || !this.isNumeric(this.state.subscriptionLength)) {
-      formIsValid = false;
-      invalid['subscriptionLength'] = true;
-    }
-
-    if (this.state.subscriptionLevel === '') {
-      formIsValid = false;
+    if (!this.state.level) {
       invalid['level'] = true;
     }
 
     if (this.state.entandoVersionId === '') {
-      formIsValid = false;
       invalid['entandoVersionId'] = true;
     }
 
     this.setState({ invalid: invalid });
-    return formIsValid;
+    return (Object.keys(invalid).length === 0);
   }
 
   handleChanges = e => {
@@ -164,11 +153,13 @@ class SubscriptionForm extends Component {
   };
 
   handleStartDateChange = date => {
-    if (date !== '') {
-      this.setState({
-        startDate: moment(date[0].toISOString()).format('MM/DD/YYYY'),
-      });
+    let formatted = '';
+    if (date && date[0]) {
+      formatted = moment(date[0].toISOString()).format('MM/DD/YYYY');
     }
+    this.setState({
+      startDate: formatted
+    });
   };
 
   handleFormSubmit = event => {
@@ -179,9 +170,14 @@ class SubscriptionForm extends Component {
     });
     const formIsValid = this.handleValidation();
 
+    //TODO: Refactor success/error states
     if (formIsValid) {
-      if (this.state.subscriptionType === 'new') {
-        this.newSubscription()
+      const formType = this.state.formType;
+      const subscriptionRequest = this.stateToSubscription();
+      if (formType === 'edit') {
+        alert("No op");
+      } else if (formType === 'new') {
+        this.newSubscription(subscriptionRequest)
           .then(res => {
             apiAddSubscriptionToProject(this.props.serviceUrl, this.state.projectId, res.data.id);
             this.setState({
@@ -190,15 +186,15 @@ class SubscriptionForm extends Component {
               submitColour: '#24a148',
             });
           })
-          .catch(err => {
+          .catch(() => {
             this.setState({
               submitSuccess: false,
               submitError: true,
               submitColour: '#da1e28',
             });
           });
-      } else if (this.state.subscriptionType === 'existing') {
-        this.renewSubscription()
+      } else if (formType === 'renewal') {
+        this.renewSubscription(subscriptionRequest)
           .then(res => {
             apiAddSubscriptionToProject(this.props.serviceUrl, this.state.projectId, res.data.id);
             this.setState({
@@ -207,7 +203,7 @@ class SubscriptionForm extends Component {
               submitColour: '#24a148',
             });
           })
-          .catch(err => {
+          .catch(() => {
             this.setState({
               submitSuccess: false,
               submitError: true,
@@ -218,63 +214,34 @@ class SubscriptionForm extends Component {
     }
   };
 
-  async newSubscription() {
-    const subscriptionRequest = {
+  stateToSubscription() {
+    return {
       entandoVersionId: this.state.entandoVersionId,
       projectId: this.state.projectId,
       projectSubscription: {
         startDate: new Date(this.state.startDate),
-        lengthInMonths: this.state.subscriptionLength,
-        level: this.state.subscriptionLevel,
-        status: this.subscriptionStatus(),
+        lengthInMonths: this.state.lengthInMonths,
+        level: this.state.level,
+        status: this.state.status.toUpperCase(),
       },
     };
+  };
 
-    return await apiProjectSubscriptionPost(this.props.serviceUrl, subscriptionRequest);
+  async newSubscription(request) {
+    return await apiProjectSubscriptionPost(this.props.serviceUrl, request);
   }
 
-  async renewSubscription() {
-    const subscriptionRequest = {
-      entandoVersionId: this.state.entandoVersionId,
-      projectId: this.state.projectId,
-      projectSubscription: {
-        startDate: new Date(this.state.startDate),
-        lengthInMonths: this.state.subscriptionLength,
-        level: this.state.subscriptionLevel,
-        status: this.subscriptionStatus(),
-      },
-    };
-
-    return await apiRenewSubscription(this.props.serviceUrl, subscriptionRequest);
-  }
-
-  subscriptionStatus() {
-    return isPortalAdmin() ? subscriptionStatus.active : subscriptionStatus.requested;
+  async renewSubscription(request) {
+    return await apiRenewSubscription(this.props.serviceUrl, request);
   }
 
   setupFormComponents() {
-    const projectIdsNames = this.state.projects;
-    let projectList;
-
-    if (projectIdsNames != null && Object.keys(projectIdsNames).length > 0) {
-      projectList = Object.keys(projectIdsNames).map((projectId, i) => (
-        <SelectItem key={i} text={projectIdsNames[projectId]} value={projectId}>
-          {projectIdsNames[projectId]}
-        </SelectItem>
-      ));
-      if (Object.keys(projectIdsNames).length > 1) {
-        projectList.unshift(<SelectItem key="-1" text={i18n.t('manageUsers.assign.projectList')} value="" />);
-      }
-    } else {
-      projectList = <SelectItem text={i18n.t('manageUsers.assign.noProjects')} value="" />;
-    }
-
     const subscriptionLevelList = Object.entries(subscriptionLevel).map(([key, value]) => (
       <SelectItem key={key} text={value} value={key}>
         {value}
       </SelectItem>
     ));
-    subscriptionLevelList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseLevel')} value="" />);
+    subscriptionLevelList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseLevel')} value=""/>);
 
     const versionList = this.state.productVersions.map(version => {
       // only allow the user to choose from active entando versions
@@ -288,159 +255,87 @@ class SubscriptionForm extends Component {
         return null;
       }
     });
-    versionList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseVersion')} value="" />);
+    versionList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseVersion')} value=""/>);
 
-    return { projectList, subscriptionLevelList, versionList };
+    const statusList = Object.entries(subscriptionStatus).map(([key, value]) => (
+      <SelectItem key={key} text={value} value={key}>
+        {value}
+      </SelectItem>
+    ));
+
+    return {subscriptionLevelList, versionList, statusList};
   }
 
   renderForm() {
-    const formComponents = this.setupFormComponents();
-    const { projectList, subscriptionLevelList, versionList } = formComponents;
-    let formInputs;
-
-    if (this.state.subscriptionType === 'new') {
-      formInputs = (
-        <div>
-          <p>
-            <strong>{i18n.t('subscriptionForm.newSubscription')}</strong>
-          </p>
-          <br />
-          <div className="bx--row">
-            <div className="bx--col">
-              <Select
-                id="projectId"
-                name="projectId"
-                labelText={i18n.t('subscriptionForm.projectName')}
-                value={this.state.projectId}
-                onChange={this.handleChanges}
-                invalidText={i18n.t('validation.invalid.required')}
-                invalid={this.state.invalid['projectId']}
-              >
-                {projectList}
-              </Select>
-              <Select
-                id="subscriptionLevel"
-                name="subscriptionLevel"
-                labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel') + ' *'}
-                value={this.state.subscriptionLevel}
-                onChange={this.handleChanges}
-                invalidText={i18n.t('validation.invalid.required')}
-                invalid={this.state.invalid['level']}
-              >
-                {subscriptionLevelList}
-              </Select>
-              <Select
-                id="entandoVersionId"
-                name="entandoVersionId"
-                labelText={i18n.t('subscriptionForm.entandoVersion') + ' *'}
-                value={this.state.entandoVersionId}
-                onChange={this.handleChanges}
-                invalidText={i18n.t('validation.invalid.required')}
-                invalid={this.state.invalid['entandoVersionId']}
-              >
-                {versionList}
-              </Select>
+    const {subscriptionLevelList, versionList, statusList} = this.setupFormComponents();
+    return (
+      <div>
+        <div className="bx--row">
+          <div className="bx--col">
+            <div>
+              <span>{i18n.t('subscriptionForm.projectName')}:</span> {this.state.project.name}
             </div>
-            <div className="bx--col">
-              <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
-                <DatePickerInput
-                  id="startDate"
-                  name="startDate"
-                  placeholder="mm/dd/yyyy"
-                  labelText={i18n.t('subscriptionForm.desiredSubscriptionStartDate')}
-                  value={this.state.startDate}
-                  //onChange={this.handleChanges}
-                  type="text"
-                  invalidText={i18n.t('validation.invalid.date')}
-                  invalid={this.state.invalid['startDate']}
-                />
-              </DatePicker>
-              <TextInput
-                id="subscriptionLength"
-                name="subscriptionLength"
-                labelText={i18n.t('subscriptionForm.desiredSubscriptionLength') + ' *'}
-                value={this.state.subscriptionLength}
-                onChange={this.handleChanges}
-                invalidText={i18n.t('validation.invalid.number')}
-                invalid={this.state.invalid['subscriptionLength']}
+            <Select
+              id="status"
+              name="status"
+              labelText={i18n.t('subscriptionForm.subscriptionStatus')}
+              value={this.state.status}
+              onChange={this.handleChanges}
+              invalidText={i18n.t('validation.invalid.required')}
+              invalid={this.state.invalid['status']}
+              disabled={!isPortalAdmin()}
+            >
+              {statusList}
+            </Select>
+            <Select
+              id="level"
+              name="level"
+              labelText={i18n.t('subscriptionForm.subscriptionLevel') + ' *'}
+              value={this.state.level || ''}
+              onChange={this.handleChanges}
+              invalidText={i18n.t('validation.invalid.required')}
+              invalid={this.state.invalid['level']}
+            >
+              {subscriptionLevelList}
+            </Select>
+            <Select
+              id="entandoVersionId"
+              name="entandoVersionId"
+              labelText={i18n.t('subscriptionForm.entandoVersion') + ' *'}
+              value={this.state.entandoVersionId}
+              onChange={this.handleChanges}
+              invalidText={i18n.t('validation.invalid.required')}
+              invalid={this.state.invalid['entandoVersionId']}
+            >
+              {versionList}
+            </Select>
+          </div>
+          <div className="bx--col">
+            <DatePicker dateFormat="m/d/Y" datePickerType="single" value={this.state.startDate}
+                        onChange={this.handleStartDateChange}>
+              <DatePickerInput
+                id="startDate"
+                name="startDate"
+                placeholder="mm/dd/yyyy"
+                labelText={i18n.t('subscriptionForm.subscriptionStartDate')}
+                type="text"
+                invalidText={i18n.t('validation.invalid.date')}
+                invalid={this.state.invalid['startDate']}
               />
-            </div>
+            </DatePicker>
+            <TextInput
+              id="lengthInMonths"
+              name="lengthInMonths"
+              labelText={i18n.t('subscriptionForm.subscriptionLength') + ' *'}
+              value={this.state.lengthInMonths}
+              onChange={this.handleChanges}
+              invalidText={i18n.t('validation.invalid.number')}
+              invalid={this.state.invalid['lengthInMonths']}
+            />
           </div>
         </div>
-      );
-    } else if (this.state.subscriptionType === 'existing') {
-      formInputs = (
-        <div>
-          <p>
-            <strong>{i18n.t('subscriptionForm.renewSubscription')}</strong>
-          </p>
-          <br />
-          <div className="bx--row">
-            <div className="bx--col">
-              <Select
-                id="projectId"
-                name="projectId"
-                labelText={i18n.t('subscriptionForm.projectName')}
-                value={this.state.projectId}
-                onChange={this.handleChanges}
-                invalidText={i18n.t('validation.invalid.required')}
-                invalid={this.state.invalid['projectId']}
-              >
-                {projectList}
-              </Select>
-              <Select
-                id="subscriptionLevel"
-                name="subscriptionLevel"
-                labelText={i18n.t('subscriptionForm.desiredSubscriptionLevel') + ' *'}
-                value={this.state.subscriptionLevel}
-                onChange={this.handleChanges}
-                invalidText={i18n.t('validation.invalid.required')}
-                invalid={this.state.invalid['level']}
-              >
-                {subscriptionLevelList}
-              </Select>
-              <Select
-                id="entandoVersionId"
-                name="entandoVersionId"
-                labelText={i18n.t('subscriptionForm.entandoVersion') + ' *'}
-                value={this.state.entandoVersionId}
-                onChange={this.handleChanges}
-                invalidText={i18n.t('validation.invalid.required')}
-                invalid={this.state.invalid['entandoVersionId']}
-              >
-                {versionList}
-              </Select>
-            </div>
-            <div className="bx--col">
-              <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
-                <DatePickerInput
-                  id="startDate"
-                  name="startDate"
-                  placeholder="mm/dd/yyyy"
-                  labelText={i18n.t('subscriptionForm.desiredSubscriptionStartDate')}
-                  value={this.state.startDate}
-                  //onChange={this.handleChanges}
-                  type="text"
-                  invalidText={i18n.t('validation.invalid.date')}
-                  invalid={this.state.invalid['startDate']}
-                />
-              </DatePicker>
-              <TextInput
-                id="subscriptionLength"
-                name="subscriptionLength"
-                labelText={i18n.t('subscriptionForm.desiredSubscriptionLength') + ' *'}
-                value={this.state.subscriptionLength}
-                onChange={this.handleChanges}
-                invalidText={i18n.t('validation.invalid.number')}
-                invalid={this.state.invalid['subscriptionLength']}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    return formInputs;
+      </div>
+    );
   }
 
   successErrorMessage() {
@@ -467,64 +362,38 @@ class SubscriptionForm extends Component {
   }
 
   render() {
-    if (!this.state.loading) {
-      if (isPortalUser()) {
-        return (
-          <div>
-            {isPortalAdmin() ? (
-              <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
-            ) : isPortalSupport() ? (
-              <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3>
-            ) : isPortalCustomer() ? (
-              <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3>
-            ) : isPortalPartner() ? (
-              <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3>
-            ) : null}
-            <div className="form-container">
-              {this.successErrorMessage()}
-              <Form onSubmit={this.handleFormSubmit}>
-                <div className="form-desc">
-                  <h4>{i18n.t('subscriptionForm.formTitle')}</h4>
-                </div>
-                <div className="bx--grid">
-                  <div className="bx--row">
-                    <div className="bx--col">
-                      <Select
-                        id="subscriptionType"
-                        name="subscriptionType"
-                        labelText={i18n.t('subscriptionForm.subscriptionType')}
-                        required
-                        value={this.state.subscriptionType}
-                        onChange={this.handleChanges}
-                      >
-                        <SelectItem text={i18n.t('subscriptionForm.selectType')} value="" />
-                        {subscriptionTypes.map((subscriptionType, i) => (
-                          <SelectItem key={i} text={subscriptionType} required value={subscriptionType.toLowerCase()}>
-                            {subscriptionType}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                    </div>
+    const titleKey = isPortalAdmin() ? "subscriptionForm.adminTitle" : "subscriptionForm.formTitle";
+    const formType = this.state.formType;
+    let formLabelKey = "subscriptionForm.newSubscription";
+    if (formType !== 'new') {
+      formLabelKey = isPortalAdmin() ? "subscriptionForm.editSubscription" : "subscriptionForm.renewSubscription";
+    }
+
+    if (!this.state.loading && isPortalUser()) {
+      return (
+        <div>
+          <h3 className="pageTitle">{i18n.t(titleKey)}</h3>
+          <div className="form-container">
+            {this.successErrorMessage()}
+            <Form onSubmit={this.handleFormSubmit}>
+              <div className="bx--grid">
+                <div className="bx--row">
+                  <div className="bx--col">
+                    <strong>{i18n.t(formLabelKey)}</strong>
                   </div>
-                  {this.renderForm()}
-                  {this.state.subscriptionType ? (
-                    <Button kind="primary" tabIndex={0} type="submit">
-                      {' '}
-                      {i18n.t('buttons.submit')}
-                    </Button>
-                  ) : (
-                    ''
-                  )}
                 </div>
-              </Form>
-            </div>
+                {this.renderForm()}
+                <Button kind="primary" tabIndex={0} type="submit">
+                  {' '}
+                  {i18n.t('buttons.submit')}
+                </Button>
+              </div>
+            </Form>
           </div>
-        );
-      } else {
-        return <p>{i18n.t('userMessages.unauthorized')}</p>;
-      }
+        </div>
+      );
     } else {
-      return null;
+      return <p>{i18n.t('userMessages.unauthorized')}</p>;
     }
   }
 }

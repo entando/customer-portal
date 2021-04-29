@@ -1,6 +1,8 @@
 import {getDefaultOptions, request} from './helpers';
+import moment from "moment";
 
 const resource = 'api/project-subscriptions';
+
 
 export const formatStartDate = (startDate) => {
   return String(new Date(startDate).toDateString());
@@ -9,6 +11,10 @@ export const formatStartDate = (startDate) => {
 export const formatEndDate = (startDate, lengthInMonths) => {
   const endDate = new Date(startDate).setMonth(new Date(startDate).getMonth() + lengthInMonths);
   return String(new Date(endDate).toDateString());
+}
+
+export const stripTime = (date) => {
+  return moment(date).format('MM/DD/YYYY');
 }
 
 export const apiSubscriptionGet = async (serviceUrl, id) => {

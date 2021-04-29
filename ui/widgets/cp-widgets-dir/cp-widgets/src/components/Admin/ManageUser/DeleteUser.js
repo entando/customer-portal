@@ -95,7 +95,7 @@ class DeleteUser extends Component {
         <Button
           kind="ghost"
           onClick={event => this.handleRemoveUser(user.id, projectId, event)}
-          style={{display: 'flex', width: '100%', color: 'red'}}
+          className="button-warning"
         >
           {i18n.t('manageUsers.delete.removeUser')}
         </Button>

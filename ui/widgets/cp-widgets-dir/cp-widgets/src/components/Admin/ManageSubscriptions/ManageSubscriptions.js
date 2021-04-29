@@ -16,6 +16,7 @@ import i18n from '../../../i18n';
 import {isAuthenticated, authenticationChanged} from "../../../api/helpers";
 import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProjectGet} from "../../../api/projects";
 import {formatEndDate, formatStartDate} from "../../../api/subscriptions";
+import {Link} from "react-router-dom";
 
 class ManageSubscriptions extends Component {
   constructor(props) {
@@ -50,6 +51,10 @@ class ManageSubscriptions extends Component {
       {
         header: i18n.t('projectDetails.endDate'),
         key: 'endDate',
+      },
+      {
+        header: i18n.t('projectDetails.lengthInMonths'),
+        key: 'lengthInMonths',
       },
       {
         header: i18n.t('customerDashboard.action'),
@@ -143,7 +148,15 @@ class ManageSubscriptions extends Component {
                       <TableCell>{subscription.level}</TableCell>
                       <TableCell>{formatStartDate(subscription.startDate)}</TableCell>
                       <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
-                      <TableCell>Edit
+                      <TableCell>{subscription.lengthInMonths}</TableCell>
+                      <TableCell>
+                        <Link
+                          to={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page.page?project=${this.state.projectId}&subscription=${subscription.id}`}
+                          style={{textDecoration: 'none'}}>
+                          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Edit">
+                            {i18n.t('buttons.edit')}
+                          </Button>
+                        </Link>
                         <Button
                           kind="ghost"
                           onClick={(event) => this.handleDeleteSubscription(event, subscription.id)}
