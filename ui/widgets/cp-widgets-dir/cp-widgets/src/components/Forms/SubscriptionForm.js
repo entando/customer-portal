@@ -3,7 +3,13 @@ import i18n from '../../i18n';
 import {Form, TextInput, Select, SelectItem, Button, DatePicker, DatePickerInput} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiProjectGet} from '../../api/projects';
-import {apiProjectSubscriptionPost, apiRenewSubscription, apiSubscriptionGet, stripTime} from '../../api/subscriptions';
+import {
+  apiProjectSubscriptionPost,
+  apiProjectSubscriptionPut,
+  apiRenewSubscription,
+  apiSubscriptionGet,
+  stripTime
+} from '../../api/subscriptions';
 import {apiProductVersionsGet} from '../../api/productVersion';
 import {
   authenticationChanged,
@@ -162,6 +168,22 @@ class SubscriptionForm extends Component {
     });
   };
 
+  updateStateForSuccess(success) {
+    if (success) {
+      this.setState({
+        submitSuccess: true,
+        submitError: false,
+        submitColour: '#24a148',
+      })
+    } else {
+      this.setState({
+        submitSuccess: false,
+        submitError: true,
+        submitColour: '#da1e28',
+      });
+    }
+  }
+
   handleFormSubmit = event => {
     event.preventDefault();
     this.setState({
@@ -170,45 +192,36 @@ class SubscriptionForm extends Component {
     });
     const formIsValid = this.handleValidation();
 
-    //TODO: Refactor success/error states
     if (formIsValid) {
       const formType = this.state.formType;
+      const serviceUrl = this.props.serviceUrl;
       const subscriptionRequest = this.stateToSubscription();
+
       if (formType === 'edit') {
-        alert("No op");
+        apiProjectSubscriptionPut(serviceUrl, subscriptionRequest)
+          .then(() => {
+            this.updateStateForSuccess(true);
+          })
+          .catch(() => {
+            this.updateStateForSuccess(false);
+          });
       } else if (formType === 'new') {
         this.newSubscription(subscriptionRequest)
           .then(res => {
-            apiAddSubscriptionToProject(this.props.serviceUrl, this.state.projectId, res.data.id);
-            this.setState({
-              submitSuccess: true,
-              submitError: false,
-              submitColour: '#24a148',
-            });
+            apiAddSubscriptionToProject(serviceUrl, this.state.projectId, res.data.id);
+            this.updateStateForSuccess(true);
           })
           .catch(() => {
-            this.setState({
-              submitSuccess: false,
-              submitError: true,
-              submitColour: '#da1e28',
-            });
+            this.updateStateForSuccess(false);
           });
       } else if (formType === 'renewal') {
         this.renewSubscription(subscriptionRequest)
           .then(res => {
-            apiAddSubscriptionToProject(this.props.serviceUrl, this.state.projectId, res.data.id);
-            this.setState({
-              submitSuccess: true,
-              submitError: false,
-              submitColour: '#24a148',
-            });
+            apiAddSubscriptionToProject(serviceUrl, this.state.projectId, res.data.id);
+            this.updateStateForSuccess(true);
           })
           .catch(() => {
-            this.setState({
-              submitSuccess: false,
-              submitError: true,
-              submitColour: '#da1e28',
-            });
+            this.updateStateForSuccess(false);
           });
       }
     }
@@ -219,6 +232,7 @@ class SubscriptionForm extends Component {
       entandoVersionId: this.state.entandoVersionId,
       projectId: this.state.projectId,
       projectSubscription: {
+        id: this.state.subscription.id,
         startDate: new Date(this.state.startDate),
         lengthInMonths: this.state.lengthInMonths,
         level: this.state.level,
@@ -258,7 +272,7 @@ class SubscriptionForm extends Component {
     versionList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseVersion')} value=""/>);
 
     const statusList = Object.entries(subscriptionStatus).map(([key, value]) => (
-      <SelectItem key={key} text={value} value={key}>
+      <SelectItem key={key} text={value} value={value}>
         {value}
       </SelectItem>
     ));
@@ -342,6 +356,7 @@ class SubscriptionForm extends Component {
     const isAdmin = isPortalAdmin();
     const { subscriptionType, submitSuccess, submitError } = this.state;
 
+    //TODO: rework messages?
     if (subscriptionType === 'new') {
       if (submitSuccess) {
         return isAdmin ? this.createFormMessage('adminSubmitNewSuccess') : this.createFormMessage('customerSubmitSuccess');

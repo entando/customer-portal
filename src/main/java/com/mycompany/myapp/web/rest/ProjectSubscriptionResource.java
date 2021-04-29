@@ -188,7 +188,7 @@ public class ProjectSubscriptionResource {
     /**
      * {@code PUT  /project-subscriptions} : Updates an existing projectSubscription.
      *
-     * @param subscriptionCreationRequest the projectSubscription to update.
+     * @param request the projectSubscription to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated projectSubscription,
      * or with status {@code 400 (Bad Request)} if the projectSubscription is not valid,
      * or with status {@code 500 (Internal Server Error)} if the projectSubscription couldn't be updated.
@@ -196,39 +196,35 @@ public class ProjectSubscriptionResource {
      */
     @PutMapping("/project-subscriptions")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<ProjectSubscription> updateProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException {
-        ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
+    public ResponseEntity<ProjectSubscription> updateProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest request) throws URISyntaxException {
+        ProjectSubscription projectSubscription = request.getProjectSubscription();
         log.debug("REST request to update ProjectSubscription : {}", projectSubscription);
 
         if (projectSubscription == null || projectSubscription.getId() == null || !projectSubscriptionService.findOne(projectSubscription.getId()).isPresent()) {
             throw new BadRequestAlertException("Invalid Project Subscription id", ENTITY_NAME, "projectSubscriptionIdNull");
         }
 
-        //TODO: rework
-
-        // projectId and entandoVersioId are currently excluded for this update. commented out for null exception.
-        /*
-        else if (subscriptionCreationRequest.getEntandoVersionId() == null) {
-            throw new BadRequestAlertException("Missing entando version id", ENTITY_NAME, "missingEntandoVersionId");
-        } else if (subscriptionCreationRequest.getProjectId() == null) {
+        Long projectId = request.getProjectId();
+        if (projectId == null) {
             throw new BadRequestAlertException("Missing project id ", ENTITY_NAME, "missingProjectId");
         }
-
-        // projectId and entandoVersioId are currently excluded for this update. commented out for null exception.
-
-        Optional<Project> associatedProjectOpt = projectService.findOne(subscriptionCreationRequest.getProjectId());
+        Optional<Project> associatedProjectOpt = projectService.findOne(projectId);
         if (!associatedProjectOpt.isPresent()) {
             throw new BadRequestAlertException("There was no project found with that id", ENTITY_NAME, "projectNotFound");
         }
 
-        Optional<EntandoVersion> entandoVersionOpt = entandoVersionService.findOne(subscriptionCreationRequest.getEntandoVersionId());
+        Long entandoVersionId = request.getEntandoVersionId();
+        if (entandoVersionId == null) {
+            throw new BadRequestAlertException("Missing entando version id", ENTITY_NAME, "missingEntandoVersionId");
+        }
+
+        Optional<EntandoVersion> entandoVersionOpt = entandoVersionService.findOne(entandoVersionId);
         if (!entandoVersionOpt.isPresent()) {
             throw new BadRequestAlertException("There was no entando version found with that id", ENTITY_NAME, "entandoVersionNotFound");
         }
 
-        associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));
-        entandoVersionOpt.ifPresent(entandoVersion -> projectSubscription.setEntandoVersion(entandoVersion));
-        */
+        associatedProjectOpt.ifPresent(projectSubscription::setProject);
+        entandoVersionOpt.ifPresent(projectSubscription::setEntandoVersion);
 
         ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
         return ResponseEntity.ok()
