@@ -1,22 +1,20 @@
 import React from 'react';
 import TicketList from './TicketList';
 import {Tile} from 'carbon-components-react';
-import {apiSubscriptionGet, apiGetMySubscription, formatStartDate, formatEndDate} from '../../api/subscriptions';
+import {apiSubscriptionGet, formatStartDate, formatEndDate} from '../../api/subscriptions';
 import withKeycloak from '../../auth/withKeycloak';
-import {apiGetProjectUsers, apiProjectGet, apiGetMyProject, apiGetMyProjectUsers} from '../../api/projects';
-import {isPortalAdminOrSupport, isPortalCustomerOrPartner, isPortalUser, isPortalAdmin} from '../../api/helpers';
+import {apiGetProjectUsers, apiProjectGet} from '../../api/projects';
+import {
+  isPortalAdminOrSupport,
+  isPortalUser,
+  isPortalAdmin,
+  authenticationChanged,
+} from '../../api/helpers';
 import EditSubscriptionModal from '../Admin/EditSubscriptionModal';
 import i18n from '../../i18n';
 
 const subscriptionData = {
-  description: 'Entando Product Support Subscription Suplier Portal',
-  commitment: 'Leonardo',
   type: 'Product Support Subscription Entando Platform',
-  quantityRequest: '1(8 Core)',
-  components: '',
-  level: 'Gold',
-  startDate: 'May 2019',
-  endDate: 'May 2020',
   license: 'Free Commercial Open Source',
 };
 
@@ -32,26 +30,15 @@ class Subscription extends React.Component {
     };
   }
 
-  async getSubscription() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+  async fetchData() {
+    if (isPortalUser()) {
       try {
-        let subscription;
-        let users = '';
-        let project = '';
-        if (isPortalAdminOrSupport()) {
-          subscription = await apiSubscriptionGet(this.props.serviceUrl, this.props.match.params.id);
-          if (subscription.data.project) {
-            project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id);
-            users = await apiGetProjectUsers(this.props.serviceUrl, project.data.id);
-          }
-        } else if (isPortalCustomerOrPartner()) {
-          subscription = await apiGetMySubscription(this.props.serviceUrl, this.props.match.params.id);
-          if (subscription.data.project) {
-            project = await apiGetMyProject(this.props.serviceUrl, subscription.data.project.id);
-            users = await apiGetMyProjectUsers(this.props.serviceUrl, project.data.id);
-          }
+        let users = {};
+        let project = {};
+        const subscription = await apiSubscriptionGet(this.props.serviceUrl, this.props.match.params.id);
+        if (subscription.data.project) {
+          project = await apiProjectGet(this.props.serviceUrl, subscription.data.project.id);
+          users = await apiGetProjectUsers(this.props.serviceUrl, project.data.id);
         }
         this.setState({
           subscription: subscription,
@@ -67,23 +54,18 @@ class Subscription extends React.Component {
   }
 
   updateSubscription = () => {
-    this.getSubscription();
+    this.fetchData();
   };
 
   componentDidMount() {
     if (isPortalUser()) {
-      this.getSubscription();
+      this.fetchData();
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth && isPortalUser()) {
-      this.getSubscription();
+    if (authenticationChanged(this.props, prevProps) && isPortalUser()) {
+      this.fetchData();
     }
   }
 

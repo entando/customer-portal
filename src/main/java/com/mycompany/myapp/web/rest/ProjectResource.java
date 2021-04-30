@@ -162,7 +162,7 @@ public class ProjectResource {
                         project.getPartners().stream().forEachOrdered(partner -> partners.add(partner.getName()));
                         subscription.setPartners(partners);
                     }
-                    // need to review
+
                     if (project.getProjectSubscriptions().stream().findFirst().isPresent()) {
                         ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get();
                         subscription.setSubscriptionId(projectSubscription.getId());
@@ -190,6 +190,7 @@ public class ProjectResource {
     public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(
         @RequestParam(value = "projectId") Long projectId) {
 
+        //TODO
         SubscriptionDetailResponse subscriptionDetail = new SubscriptionDetailResponse();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
 
@@ -203,7 +204,6 @@ public class ProjectResource {
             ProjectSubscription projectSubscription = project.getProjectSubscriptions().stream().findFirst().get(); // assume there is only one subscription per project
             subscriptionDetail.setLevel(projectSubscription.getLevel().name());
             subscriptionDetail.setStartDate(sdf.format(projectSubscription.getStartDate()));
-            //response.setEndDate(); // there is no endDate field in the entity yet.
             subscriptionDetail.setPartner(project.getPartners().stream().findFirst().get().getName()); // assume there is only one partner per project
         }
 
@@ -219,10 +219,13 @@ public class ProjectResource {
      * the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<Project> getProject(@PathVariable Long id) {
         log.debug("REST request to get Project : {}", id);
-        Optional<Project> project = projectService.findOne(id);
+        Optional<Project> project = Optional.empty();
+        if (projectService.hasProjectAccess(id)) {
+            project = projectService.findOne(id);
+        }
         return ResponseUtil.wrapOrNotFound(project);
     }
 
@@ -257,6 +260,7 @@ public class ProjectResource {
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<Project> addTicketToProject(@PathVariable Long projectId, @PathVariable Long ticketId) throws URISyntaxException {
         log.debug("REST request to add Ticket to Project : {}", projectId);
+        //TODO:
         Project result = projectService.addTicketToProject(projectId, ticketId);
 
         return ResponseEntity
@@ -275,6 +279,7 @@ public class ProjectResource {
     @GetMapping("/projects/{projectId}/tickets")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<Set<Ticket>> getProjectTickets(@PathVariable Long projectId) {
+        //TODO
         Set<Ticket> tickets = projectService.getProjectTickets(projectId);
         return ResponseEntity.ok().headers(
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, projectId.toString()))

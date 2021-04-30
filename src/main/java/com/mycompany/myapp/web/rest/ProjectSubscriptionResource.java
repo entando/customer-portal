@@ -57,7 +57,7 @@ public class ProjectSubscriptionResource {
 
     private final Logger log = LoggerFactory.getLogger(ProjectSubscriptionResource.class);
 
-    private static final String ENTITY_NAME = "custportAppProjectSubscription";
+    private static final String ENTITY_NAME = "projectSubscription";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -66,7 +66,7 @@ public class ProjectSubscriptionResource {
     SpringSecurityAuditorAware springSecurityAuditorAware;
 
     @Autowired
-    private JavaMailSender javaMailSender;
+//    private JavaMailSender javaMailSender;
 
     private final ProjectSubscriptionService projectSubscriptionService;
     private final ProjectService projectService;
@@ -92,13 +92,15 @@ public class ProjectSubscriptionResource {
         log.debug("REST request to save ProjectSubscription : {}", subscriptionCreationRequest);
         ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
 
+        Long projectId = subscriptionCreationRequest.getProjectId();
         if (projectSubscription == null || projectSubscription.getId() != null) {
             throw new BadRequestAlertException("A new projectSubscription cannot already have an ID", ENTITY_NAME, "idexists");
         } else if (subscriptionCreationRequest.getEntandoVersionId() == null) {
             throw new BadRequestAlertException("Missing entando version id", ENTITY_NAME, "missingEntandoVersionId");
-        } else if (subscriptionCreationRequest.getProjectId() == null) {
+        } else if (projectId == null) {
             throw new BadRequestAlertException("Missing project id ", ENTITY_NAME, "missingProjectId");
         }
+        projectService.checkProjectAccess(projectId);
 
         Optional<Project> associatedProjectOpt = projectService.findOne(subscriptionCreationRequest.getProjectId());
         if (!associatedProjectOpt.isPresent()) {
@@ -110,15 +112,16 @@ public class ProjectSubscriptionResource {
             throw new BadRequestAlertException("There was no entando version found with that id", ENTITY_NAME, "entandoVersionNotFound");
         }
 
-        associatedProjectOpt.ifPresent(project -> projectSubscription.setProject(project));
-        entandoVersionOpt.ifPresent(entandoVersion -> projectSubscription.setEntandoVersion(entandoVersion));
+        associatedProjectOpt.ifPresent(projectSubscription::setProject);
+        entandoVersionOpt.ifPresent(projectSubscription::setEntandoVersion);
 
         ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
 
         //send an email to entando team only when this request is from customers
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //TODO: change so email is sent for either customer or partner
         boolean hasUserRole = authentication.getAuthorities().stream()
-                  .anyMatch(r -> r.getAuthority().equals(AuthoritiesConstants.CUSTOMER));
+            .anyMatch(r -> r.getAuthority().equals(AuthoritiesConstants.CUSTOMER));
 
         //TODO: remove or clean up
         /*
@@ -205,9 +208,8 @@ public class ProjectSubscriptionResource {
         }
 
         Long projectId = request.getProjectId();
-        if (projectId == null) {
-            throw new BadRequestAlertException("Missing project id ", ENTITY_NAME, "missingProjectId");
-        }
+        projectService.checkProjectAccess(projectId);
+
         Optional<Project> associatedProjectOpt = projectService.findOne(projectId);
         if (!associatedProjectOpt.isPresent()) {
             throw new BadRequestAlertException("There was no project found with that id", ENTITY_NAME, "projectNotFound");
@@ -251,10 +253,12 @@ public class ProjectSubscriptionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the projectSubscription, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/project-subscriptions/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<ProjectSubscription> getProjectSubscription(@PathVariable Long id) {
         log.debug("REST request to get ProjectSubscription : {}", id);
         Optional<ProjectSubscription> projectSubscription = projectSubscriptionService.findOne(id);
+        projectSubscription.ifPresent(subscription -> projectService.checkProjectAccess(subscription.getProject().getId()));
+
         return ResponseUtil.wrapOrNotFound(projectSubscription);
     }
 
@@ -273,38 +277,15 @@ public class ProjectSubscriptionResource {
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * {@code GET  /project-subscriptions/:id} : get the "id" projectSubscription.
-     *
-     * @param id the id of the projectSubscription to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the projectSubscription, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/project-subscriptions/mysubscription/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
-    public ResponseEntity<ProjectSubscription> getMyProjectSubscription(@PathVariable Long id) {
-        log.debug("REST request to get ProjectSubscription : {}", id);
-        Optional<ProjectSubscription> projectSubscription = projectSubscriptionService.findOne(id);
-
-        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
-        Project project = projectSubscription.get().getProject();
-        Set<PortalUser> projectUsers = projectService.getProjectUsers(project.getId());
-        for(PortalUser user : projectUsers) {
-            if (user.getUsername().equals(currentUser)) {
-                return ResponseUtil.wrapOrNotFound(projectSubscription);
-            }
-        }
-        return null;
-    }
-
-    @PutMapping("project-subscriptions/renew")
+    @PutMapping("/project-subscriptions/renew")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<ProjectSubscription> renewProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest) throws URISyntaxException {
-        //ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
         long entandoVersionId = subscriptionCreationRequest.getEntandoVersionId();
         long projectId = subscriptionCreationRequest.getProjectId();
-        ProjectSubscription renewSubscription = subscriptionCreationRequest.getProjectSubscription();
-
         log.debug("REST request to renew a subscription : entandoVersionId {}. projectVersionId {}", entandoVersionId, projectId);
+        projectService.checkProjectAccess(projectId);
+
+        ProjectSubscription renewSubscription = subscriptionCreationRequest.getProjectSubscription();
 
         Optional<ProjectSubscription> subscriptionToRenewOpt = projectSubscriptionService.findLatestExpiredSubscription(entandoVersionId, projectId);
         if (!subscriptionToRenewOpt.isPresent()) {
@@ -321,4 +302,5 @@ public class ProjectSubscriptionResource {
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+
 }

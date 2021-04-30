@@ -34,6 +34,7 @@ class ProjectActionItems extends React.Component {
   };
 
   render() {
+    const isAdmin = isPortalAdmin();
     const actionDivider = (
       <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
     );
@@ -54,14 +55,28 @@ class ProjectActionItems extends React.Component {
         {actionDivider}
       </div>
     )
+    const subscriptionParam = this.props.subscription ? '&subscription=' + this.props.subscription.id : '';
     const newOrRenewSubscription = (
       <div>
         <a
-          href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page.page?project=${this.props.project.id}`}
+          href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.props.project.id}${subscriptionParam}`}
           style={{textDecoration: 'none'}}
         >
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Subscription Request">
             {i18n.t('buttons.subscriptionRequest')}
+          </Button>
+        </a>
+        {actionDivider}
+      </div>
+    );
+    const manageUsers = (
+      <div>
+        <a
+          href={`/entando-de-app/${this.props.locale}/manage_users.page?project=${this.props.project.id}`}
+          style={{textDecoration: 'none'}}
+        >
+          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Users">
+            {i18n.t('buttons.manageUsers')}
           </Button>
         </a>
         {actionDivider}
@@ -92,9 +107,10 @@ class ProjectActionItems extends React.Component {
               }}
             >
               {actionDivider}
-              {isPortalAdmin() && editProjectSubscription}
+              {isAdmin && editProjectSubscription}
               {newOrRenewSubscription}
-              {isPortalAdmin() && deleteProject}
+              {isAdmin && manageUsers}
+              {isAdmin && deleteProject}
             </div>
           )}
         </div>
@@ -113,13 +129,13 @@ class ProjectActionItems extends React.Component {
             >
               {actionDivider}
               {/*View Project Subscription*/}
-              <Link to={`/subscription-details/${this.props.sub.id}`} style={{textDecoration: 'none'}}>
+              <Link to={`/subscription-details/${this.props.subscription.id}`} style={{textDecoration: 'none'}}>
                 <Button kind="ghost" style={{display: 'block', width: '100%'}} value="View">
                   {i18n.t('buttons.view')}
                 </Button>
               </Link>
               {actionDivider}
-              {isPortalAdmin() && editProjectSubscription}
+              {isAdmin && editProjectSubscription}
               {/*Open Ticket*/}
               <a
                 href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.props.project.id}`}
@@ -144,7 +160,7 @@ class ProjectActionItems extends React.Component {
               </a>
               {actionDivider}
               {newOrRenewSubscription}
-              {isPortalAdmin() && (
+              {isAdmin && (
                 <div>
                   {/*Manage Partners*/}
                   <ManagePartnersModal
@@ -164,16 +180,7 @@ class ProjectActionItems extends React.Component {
                     </Button>
                   </a>
                   {actionDivider}
-                  {/*Manage Users*/}
-                  <a
-                    href={`/entando-de-app/${this.props.locale}/manage_users.page?project=${this.props.project.id}`}
-                    style={{textDecoration: 'none'}}
-                  >
-                    <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Users">
-                      {i18n.t('buttons.manageUsers')}
-                    </Button>
-                  </a>
-                  {actionDivider}
+                  {manageUsers}
                   {/*Delete Project*/}
                   <Button
                     kind="ghost"
