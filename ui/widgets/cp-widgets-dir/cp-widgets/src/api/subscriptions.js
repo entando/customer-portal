@@ -56,7 +56,6 @@ export const apiProjectSubscriptionPut = async (serviceUrl, projectSubscriptionC
 
 // Same format as {projectSubscriptionCreation}
 export const apiRenewSubscription = async (serviceUrl, projectSubscriptionRenew) => {
-  console.log("Attempt renew");
   const url = `${serviceUrl}/${resource}/renew`;
 
   const options = {
