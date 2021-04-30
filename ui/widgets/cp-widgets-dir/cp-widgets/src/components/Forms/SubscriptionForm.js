@@ -248,7 +248,6 @@ class SubscriptionForm extends Component {
   }
 
   async renewSubscription(request) {
-    console.log("Attempt renew");
     return await apiRenewSubscription(this.props.serviceUrl, request);
   }
 
