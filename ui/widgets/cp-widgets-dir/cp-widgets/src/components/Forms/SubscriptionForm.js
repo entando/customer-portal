@@ -94,7 +94,7 @@ class SubscriptionForm extends Component {
     if (subscriptionId !== null) {
       subscription = (await apiSubscriptionGet(serviceUrl, subscriptionId)).data;
       status = subscription.status;
-      formType = isAdmin ? 'edit' : 'existing';
+      formType = isAdmin ? 'edit' : 'renewal';
       project = subscription.project;
     } else if (projectId !== null) {
       project = (await apiProjectGet(serviceUrl, projectId)).data;
@@ -223,6 +223,8 @@ class SubscriptionForm extends Component {
           .catch(() => {
             this.updateStateForSuccess(false);
           });
+      } else {
+        console.log("Illegal operation");
       }
     }
   };
@@ -246,6 +248,7 @@ class SubscriptionForm extends Component {
   }
 
   async renewSubscription(request) {
+    console.log("Attempt renew");
     return await apiRenewSubscription(this.props.serviceUrl, request);
   }
 

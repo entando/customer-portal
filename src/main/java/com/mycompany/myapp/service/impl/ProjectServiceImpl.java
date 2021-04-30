@@ -1,13 +1,18 @@
 package com.mycompany.myapp.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import com.mycompany.myapp.domain.*;
 import com.mycompany.myapp.repository.*;
+import com.mycompany.myapp.security.AuthoritiesUtil;
+import com.mycompany.myapp.security.SpringSecurityAuditorAware;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +32,9 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectSubscriptionRepository projectSubscriptionRepository;
     private final PartnerRepository partnerRepository;
     private final PortalUserRepository portalUserRepository;
+
+    @Autowired
+    SpringSecurityAuditorAware springSecurityAuditorAware;
 
     public ProjectServiceImpl(ProjectRepository projectRepository, TicketRepository ticketRepository,
                               ProjectSubscriptionRepository projectSubscriptionRepository,
@@ -92,7 +100,7 @@ public class ProjectServiceImpl implements ProjectService {
         log.debug("Request to get Project by name : {}", name);
         List<Project> foundProjects = projectRepository.findByName(name);
 
-        return foundProjects.isEmpty() ? Optional.ofNullable(null) : Optional.ofNullable(foundProjects.get(0));
+        return foundProjects.isEmpty() ? Optional.empty() : Optional.ofNullable(foundProjects.get(0));
 
     }
 
@@ -247,7 +255,8 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public Set<PortalUser> getProjectUsers(Long id) {
-        return projectRepository.findById(id).get().getPortalUsers();
+        Optional<Project> project = findOne(id);
+        return project.isPresent() ? project.get().getPortalUsers() : new HashSet<>();
     }
 
     /**
@@ -256,7 +265,44 @@ public class ProjectServiceImpl implements ProjectService {
      * @param systemId the systemId of the entity.
      * @return the entity.
      */
+    @Override
     public Project getProjectBySystemId(String systemId) {
         return projectRepository.findProjectBySystemId(systemId);
+    }
+
+    /**
+     * Check if the current user has access to a project via admin role or direct assignment
+     */
+    @Override
+    public boolean hasProjectAccess(Long projectId) {
+        if (AuthoritiesUtil.isCurrentUserAdminOrSupport()) {
+            return true;
+        }
+
+        Optional<String> username = springSecurityAuditorAware.getCurrentUserLogin();
+        if (!username.isPresent()) {
+            return false;
+        }
+
+        //Note: could probably optimize this with a join query if needed
+        Optional<PortalUser> user = portalUserRepository.findByUsername(username.get());
+        if (user.isPresent()) {
+            Set<PortalUser> projectUsers = getProjectUsers(projectId);
+            return projectUsers.contains(user.get());
+        }
+        return false;
+    }
+
+    /**
+     * Check if the current user has access to the project
+     *
+     * @param projectId the project id
+     * @throws BadRequestAlertException if the user doesn't have access
+     */
+    @Override
+    public void checkProjectAccess(Long projectId) throws BadRequestAlertException {
+        if (!hasProjectAccess(projectId)) {
+            throw new BadRequestAlertException("Project forbidden ", "project", "projectForbidden");
+        }
     }
 }

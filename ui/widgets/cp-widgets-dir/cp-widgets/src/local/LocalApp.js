@@ -7,6 +7,7 @@ import AdminConfiguration from "../components/Admin/Configuration/AdminConfigura
 import OpenTicket from "../components/Forms/openTicket";
 import ManageUser from "../components/Admin/ManageUser/ManageUser";
 import ManageSubscriptions from "../components/Admin/ManageSubscriptions/ManageSubscriptions";
+import {isPortalAdminOrSupport} from "../api/helpers";
 
 class LocalApp extends Component {
   constructor(props) {
@@ -44,13 +45,15 @@ class LocalApp extends Component {
     if (!this.state.loading) {
       return (
         <div>
-          <BrowserRouter>
+          <BrowserRouter forceRefresh={true}>
             {/*Simple Menu for switching to page-based elements*/}
             <div>
               <ul>
                 <li><Link to={'/'}>Home</Link></li>
                 {/*TODO: rework the entando-de-app-based paths so the application name and locale are more general*/}
+                {isPortalAdminOrSupport() &&
                 <li><Link to={'/entando-de-app/en/admin.page'}>Admin</Link></li>
+                }
               </ul>
             </div>
             <Switch>
@@ -63,7 +66,7 @@ class LocalApp extends Component {
               <Route path="/entando-de-app/en/manage_users.page">
                 <ManageUser serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
-              <Route path="/entando-de-app/en/new_or_renew_subscription.page.page">
+              <Route path="/entando-de-app/en/new_or_renew_subscription.page">
                 <SubscriptionForm serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
               <Route path="/entando-de-app/en/open_service_ticket.page">

@@ -199,7 +199,7 @@ class CustomerDataTable extends Component {
                             </TableRow>
                           );
                         } else {
-                          //Note: this uses the last subscription which isn't necessarily the current active one
+                          //TODO: CP-67 this uses the last subscription which isn't necessarily the current active one
                           var sub = project.projectSubscriptions[project.projectSubscriptions.length - 1];
                           return (
                             <TableRow key={index}>
@@ -225,13 +225,14 @@ class CustomerDataTable extends Component {
                               <TableCell>{formatEndDate(sub.startDate, sub.lengthInMonths)}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
                               {isPortalAdminOrSupport() ?
-                                <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
+                                <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null
+                              }
                               <TableCell>
                                 <ProjectActionItems
                                   serviceUrl={this.props.serviceUrl}
                                   ticketingSystem={this.state.ticketingSystem}
                                   locale={this.props.locale}
-                                  sub={sub}
+                                  subscription={sub}
                                   hasSubscription={true}
                                   project={project}
                                   allProjects={this.state.projects.data}

@@ -151,7 +151,7 @@ class ManageSubscriptions extends Component {
                       <TableCell>{subscription.lengthInMonths}</TableCell>
                       <TableCell>
                         <Link
-                          to={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page.page?project=${this.state.projectId}&subscription=${subscription.id}`}
+                          to={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.state.projectId}&subscription=${subscription.id}`}
                           style={{textDecoration: 'none'}}>
                           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Edit">
                             {i18n.t('buttons.edit')}

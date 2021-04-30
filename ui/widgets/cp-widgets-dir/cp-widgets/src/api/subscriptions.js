@@ -3,7 +3,6 @@ import moment from "moment";
 
 const resource = 'api/project-subscriptions';
 
-
 export const formatStartDate = (startDate) => {
   return String(new Date(startDate).toDateString());
 }
@@ -55,19 +54,9 @@ export const apiProjectSubscriptionPut = async (serviceUrl, projectSubscriptionC
   return request(url, options);
 };
 
-const myResource = 'api/project-subscriptions/mysubscription';
-export const apiGetMySubscription = async (serviceUrl, customerId) => {
-  const url = `${serviceUrl}/${myResource}/${customerId}`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-
-  return request(url, options);
-};
-
 // Same format as {projectSubscriptionCreation}
 export const apiRenewSubscription = async (serviceUrl, projectSubscriptionRenew) => {
+  console.log("Attempt renew");
   const url = `${serviceUrl}/${resource}/renew`;
 
   const options = {
