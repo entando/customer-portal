@@ -16,7 +16,7 @@ import i18n from '../../../i18n';
 import {isAuthenticated, authenticationChanged} from "../../../api/helpers";
 import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProjectGet} from "../../../api/projects";
 import {formatEndDate, formatStartDate} from "../../../api/subscriptions";
-import {Link} from "react-router-dom";
+import {BrowserRouter, Link} from "react-router-dom";
 
 class ManageSubscriptions extends Component {
   constructor(props) {
@@ -125,7 +125,7 @@ class ManageSubscriptions extends Component {
 
   render() {
     return (
-      <div>
+      <BrowserRouter>
         <h5>{(this.state.project !== null) && this.state.project.name}</h5>
         <DataTable rows={[{id: "1"}]} headers={this.headerData}>
           {({headers, getHeaderProps, getTableProps}) => (
@@ -171,7 +171,7 @@ class ManageSubscriptions extends Component {
             </TableContainer>
           )}
         </DataTable>
-      </div>
+      </BrowserRouter>
     );
   }
 }

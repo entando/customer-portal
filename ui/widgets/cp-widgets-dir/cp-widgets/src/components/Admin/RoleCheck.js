@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Select, SelectItem } from 'carbon-components-react';
-import CustomerDetails from '../Customer/customerDetails';
+import {Select, SelectItem} from 'carbon-components-react';
+import CustomerDetails from '../Customer/CustomerDetails';
 import AdminDashboard from './AdminDashboard';
 import '../../index.scss';
 import CustomerDataTable from "../Customer/CustomerDataTable";
