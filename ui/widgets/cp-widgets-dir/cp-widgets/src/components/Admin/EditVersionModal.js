@@ -4,6 +4,7 @@ import { ModalWrapper, Form, TextInput, DatePicker, DatePickerInput } from 'carb
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProductVersionGet, apiProductVersionPut } from '../../api/productVersion';
 import moment from 'moment';
+import {authenticationChanged} from "../../api/helpers";
 
 class EditVersionModal extends Component {
   constructor(props) {
@@ -50,12 +51,7 @@ class EditVersionModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.getVersionDetails();
     }
   }

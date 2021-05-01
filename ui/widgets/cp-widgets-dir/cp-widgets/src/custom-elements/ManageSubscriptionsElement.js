@@ -52,7 +52,7 @@ class ManageSubscriptionsElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <ManageSubscriptions serviceUrl={serviceUrl}/>
+        <ManageSubscriptions serviceUrl={serviceUrl} locale={locale}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );

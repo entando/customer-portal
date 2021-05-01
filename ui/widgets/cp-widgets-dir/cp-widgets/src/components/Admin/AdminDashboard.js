@@ -7,8 +7,17 @@ import AddProjectModal from './AddProjectModal';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiAdminCustomersGet, apiMyCustomersGet } from '../../api/customers';
 import CustomerAccordian from '../Customer/CustomerAccordian';
-import { isPortalAdmin, isPortalSupport, isPortalPartner, isPortalCustomer, isPortalAdminOrSupport, isPortalUser } from '../../api/helpers';
-import { apiProjectsGet, apiMyProjectsGet } from '../../api/projects';
+import {
+  authenticationChanged,
+  isPortalAdmin,
+  isPortalSupport,
+  isPortalPartner,
+  isPortalCustomer,
+  isPortalAdminOrSupport,
+  isPortalUser,
+  isAuthenticated
+} from '../../api/helpers';
+import {apiProjectsGet, apiMyProjectsGet} from '../../api/projects';
 
 class AdminDashboard extends React.Component {
   constructor() {
@@ -30,21 +39,14 @@ class AdminDashboard extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.getCustomers();
       this.getProjects();
     }
   }
 
   async getProjects() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       var projects = '';
       if (isPortalAdminOrSupport()) {
         projects = await apiProjectsGet(this.props.serviceUrl);
@@ -58,9 +60,7 @@ class AdminDashboard extends React.Component {
   }
 
   async getCustomers() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       var customers;
       if (isPortalAdminOrSupport()) {
         customers = await apiAdminCustomersGet(this.props.serviceUrl);

@@ -53,7 +53,7 @@ class ManageUserElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <ManageUser serviceUrl={serviceUrl} />
+        <ManageUser serviceUrl={serviceUrl} locale={locale}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );

@@ -6,7 +6,8 @@ import '../index.scss';
 import KeycloakContext from '../auth/KeycloakContext';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
-import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
+import {KEYCLOAK_EVENT_TYPE} from '../custom-elements/widgetEventTypes';
+import * as Locale from "../i18n";
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
@@ -47,10 +48,12 @@ class AdminDashboardElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
+    const locale = this.getAttribute(ATTRIBUTES.locale) || '';
+    Locale.setLocale(locale);
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <AdminDashboard serviceUrl={serviceUrl} />
+        <AdminDashboard serviceUrl={serviceUrl} locale={locale}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );

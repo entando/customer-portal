@@ -53,7 +53,7 @@ class OpenTicketElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <OpenTicket serviceUrl={serviceUrl} />
+        <OpenTicket serviceUrl={serviceUrl} locale={locale}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
