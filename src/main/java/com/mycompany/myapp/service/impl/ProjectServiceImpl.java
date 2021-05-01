@@ -300,9 +300,9 @@ public class ProjectServiceImpl implements ProjectService {
      * @throws BadRequestAlertException if the user doesn't have access
      */
     @Override
-    public void checkProjectAccess(Long projectId) throws BadRequestAlertException {
+    public void checkProjectAccess(Long projectId) throws RuntimeException {
         if (!hasProjectAccess(projectId)) {
-            throw new BadRequestAlertException("Project forbidden ", "project", "projectForbidden");
+            throw new RuntimeException("Project forbidden ");
         }
     }
 }
