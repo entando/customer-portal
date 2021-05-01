@@ -165,5 +165,5 @@ public interface ProjectService {
      * @param projectId
      * @throws BadRequestAlertException if the user doesn't have access
      */
-    void checkProjectAccess(Long projectId) throws BadRequestAlertException;
+    void checkProjectAccess(Long projectId) throws RuntimeException;
 }
