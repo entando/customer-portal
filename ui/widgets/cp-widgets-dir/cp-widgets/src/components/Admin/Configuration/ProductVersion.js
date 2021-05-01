@@ -15,14 +15,14 @@ import {
 import { apiProductVersionDelete, apiProductVersionsGet, apiUpdateProductVersionsStatus } from '../../../api/productVersion';
 import withKeycloak from '../../../auth/withKeycloak';
 import AddProductVersionModal from '../AddProductVersionModal';
-import { isPortalAdminOrSupport } from '../../../api/helpers';
+import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from '../../../api/helpers';
 import EditVersionModal from '../EditVersionModal';
 
 class ProductVersion extends Component {
   constructor() {
     super();
     this.state = {
-      data: '',
+      versions: '',
     };
   }
 
@@ -33,12 +33,7 @@ class ProductVersion extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       if (isPortalAdminOrSupport()) {
         this.getProductVersions();
       }
@@ -46,21 +41,17 @@ class ProductVersion extends Component {
   }
 
   async getProductVersions() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
 
       this.setState({
-        data: productVersions,
+        versions: productVersions.data,
       });
     }
   }
 
   async deleteVersion(id) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       return await apiProductVersionDelete(this.props.serviceUrl, id);
     }
   }
@@ -90,7 +81,7 @@ class ProductVersion extends Component {
   };
 
   async handleToggleChange(id) {
-    await apiUpdateProductVersionsStatus(this.props.serviceUrl, id);
+    return (await apiUpdateProductVersionsStatus(this.props.serviceUrl, id));
   }
 
   render() {
@@ -98,29 +89,29 @@ class ProductVersion extends Component {
       return (
         <div>
           <DataTable rows={rowData} headers={headerData}>
-            {({ rows, headers, getHeaderProps, getTableProps }) => (
+            {({rows, headers, getHeaderProps, getTableProps}) => (
               <TableContainer>
                 <Table {...getTableProps()}>
                   <TableHead>
                     <TableRow>
                       {headers.map(header => (
-                        <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
+                        <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>
                       ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {Object.keys(this.state.data).length !== 0
-                      ? this.state.data.data.map((productVersion, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{productVersion.name}</TableCell>
-                            <TableCell>
-                              <Toggle size="sm"
-                                onClick={() => this.handleToggleChange(productVersion.id)}
-                                aria-label="toggle button"
-                                id="toggle{productVersion.id}"
-                                defaultToggled={productVersion.status}
-                              />
-                            </TableCell>
+                    {Object.keys(this.state.versions).length !== 0
+                      ? this.state.versions.map((productVersion, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{productVersion.name}</TableCell>
+                          <TableCell>
+                            <Toggle size="sm"
+                                    onClick={() => this.handleToggleChange(productVersion.id)}
+                                    aria-label="toggle button"
+                                    id={'toggle' + productVersion.id}
+                                    defaultToggled={productVersion.status}
+                            />
+                          </TableCell>
                             <TableCell>{productVersion.startDate}</TableCell>
                             <TableCell>{productVersion.endDate}</TableCell>
                             <TableCell>
