@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.mycompany.myapp.domain.*;
-import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
 /**
  * Service Interface for managing {@link Project}.
@@ -163,7 +162,7 @@ public interface ProjectService {
      * Check if the current user has access to the project
      *
      * @param projectId
-     * @throws BadRequestAlertException if the user doesn't have access
+     * @throws RuntimeException if the user doesn't have access
      */
     void checkProjectAccess(Long projectId) throws RuntimeException;
 }
