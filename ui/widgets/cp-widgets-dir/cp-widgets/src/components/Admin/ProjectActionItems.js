@@ -159,7 +159,7 @@ class ProjectActionItems extends React.Component {
                 </Button>
               </a>
               {actionDivider}
-              {newOrRenewSubscription}
+              {!isAdmin && newOrRenewSubscription}
               {isAdmin && (
                 <div>
                   {/*Manage Partners*/}

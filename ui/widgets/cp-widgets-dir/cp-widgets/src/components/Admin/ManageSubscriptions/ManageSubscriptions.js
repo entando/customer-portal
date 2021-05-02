@@ -16,7 +16,6 @@ import i18n from '../../../i18n';
 import {isAuthenticated, authenticationChanged} from "../../../api/helpers";
 import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProjectGet} from "../../../api/projects";
 import {formatEndDate, formatStartDate} from "../../../api/subscriptions";
-import {BrowserRouter, Link} from "react-router-dom";
 
 class ManageSubscriptions extends Component {
   constructor(props) {
@@ -125,8 +124,17 @@ class ManageSubscriptions extends Component {
 
   render() {
     return (
-      <BrowserRouter>
+      <div>
         <h5>{(this.state.project !== null) && this.state.project.name}</h5>
+        <a
+          href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.state.projectId}`}
+          style={{textDecoration: 'none'}}
+        >
+          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Add Subscription">
+            {i18n.t('buttons.addSubscription')}
+          </Button>
+        </a>
+
         <DataTable rows={[{id: "1"}]} headers={this.headerData}>
           {({headers, getHeaderProps, getTableProps}) => (
             <TableContainer>
@@ -150,13 +158,13 @@ class ManageSubscriptions extends Component {
                       <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
                       <TableCell>{subscription.lengthInMonths}</TableCell>
                       <TableCell>
-                        <Link
-                          to={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.state.projectId}&subscription=${subscription.id}`}
+                        <a
+                          href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.state.projectId}&subscription=${subscription.id}`}
                           style={{textDecoration: 'none'}}>
                           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Edit">
                             {i18n.t('buttons.edit')}
                           </Button>
-                        </Link>
+                        </a>
                         <Button
                           kind="ghost"
                           onClick={(event) => this.handleDeleteSubscription(event, subscription.id)}
@@ -171,7 +179,7 @@ class ManageSubscriptions extends Component {
             </TableContainer>
           )}
         </DataTable>
-      </BrowserRouter>
+      </div>
     );
   }
 }
