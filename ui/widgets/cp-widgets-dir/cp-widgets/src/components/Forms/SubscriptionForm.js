@@ -386,32 +386,39 @@ class SubscriptionForm extends Component {
       formLabelKey = isPortalAdmin() ? "subscriptionForm.editSubscription" : "subscriptionForm.renewSubscription";
     }
 
-    if (!this.state.loading && isPortalUser()) {
-      return (
-        <div>
-          <h3 className="pageTitle">{i18n.t(titleKey)}</h3>
-          <div className="form-container">
-            {this.successErrorMessage()}
-            <Form onSubmit={this.handleFormSubmit}>
-              <div className="bx--grid">
-                <div className="bx--row">
-                  <div className="bx--col">
-                    <strong>{i18n.t(formLabelKey)}</strong>
+    if (!this.state.loading) {
+      if (isPortalUser()) {
+        return (
+          <div>
+            <h3 className="pageTitle">{i18n.t(titleKey)}</h3>
+            <div className="form-container">
+              {this.successErrorMessage()}
+              <Form onSubmit={this.handleFormSubmit}>
+                <div className="bx--grid">
+                  <div className="bx--row">
+                    <div className="bx--col">
+                      <strong>{i18n.t(formLabelKey)}</strong>
+                    </div>
                   </div>
+                  {this.renderForm()}
+                  <Button kind="primary" tabIndex={0} type="submit">
+                    {' '}
+                    {i18n.t('buttons.submit')}
+                  </Button>
                 </div>
-                {this.renderForm()}
-                <Button kind="primary" tabIndex={0} type="submit">
-                  {' '}
-                  {i18n.t('buttons.submit')}
-                </Button>
-              </div>
-            </Form>
+              </Form>
+            </div>
           </div>
-        </div>
-      );
-    } else {
-      return <p>{i18n.t('userMessages.unauthorized')}</p>;
+        );
+      } else {
+        return <p>{i18n.t('userMessages.unauthorized')}</p>;
+      }
     }
+    // Loading
+    else {
+      return null;
+    }
+
   }
 }
 
