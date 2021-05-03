@@ -30,7 +30,7 @@ function syncResources() {
     echo "- Copying bundle descriptor"
     syncFiles "$widgetFolder"/bundle/* bundle/"$widgetFolder"/
     if [ -d "$widgetFolder/build/static" ]; then
-        echo "- Copying bundle static resource"
+        echo "- Copying bundle static resources"
         syncFiles "$widgetFolder/build/static" bundle/resources 2>/dev/null
         syncFiles "$widgetFolder/build/static" "bundle/$widgetFolder/resources" 2>/dev/null
     else
@@ -82,7 +82,6 @@ function getServiceUrlFromDockerImage() {
 
     [ -z "$dockerImage" ] && echo ""
     echo "$dockerImage" | tr : / | sed 's:[^a-zA-Z0-9/]:-:g' | tr "[:upper:]" "[:lower:]" | sed 's:^:/:g'
-
 }
 
 function updateFTLTemplate() {
@@ -90,7 +89,6 @@ function updateFTLTemplate() {
     local dir="$1"
     local bundleCode="$2"
     local dockerImage="$3"
-
 
     widgetName=$(basename "$dir")
     ingressPath=$(getServiceUrlFromDockerImage "$dockerImage")
@@ -108,11 +106,10 @@ function updateFTLTemplate() {
         fi
 
         #For every JS file add a script reference in the widget FTL
-        for jspath in "$dir"/resources/static/js/*;
+        for jspath in "$dir"/resources/static/js/*.js;
         do
             # This moves the referenced file to the top level bundle/resources/static dir for correct processing when loaded
             jsfile=$(basename "$jspath")
-
 
             cp "$dir/resources/static/js/$jsfile" bundle/resources/static/js/
             resource="<script src=\"<@wp.resourceURL />${bundleCode}/static/js/${jsfile}\"></script>"
@@ -120,7 +117,7 @@ function updateFTLTemplate() {
         done
 
         # For every CSS file add a script reference in the widget FTL
-        for csspath in "$dir"/resources/static/css/*;
+        for csspath in "$dir"/resources/static/css/*.css;
         do
 
           # This moves the referenced file to the top level bundle/resources/static dir for correct processing when loaded
