@@ -107,9 +107,7 @@ class CustomerDataTable extends Component {
   };
 
   async deleteProject(id) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       return await apiDeleteProjectFromCustomer(this.props.serviceUrl, this.props.customerNumber, id);
     }
   }

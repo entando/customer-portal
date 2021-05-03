@@ -7,7 +7,7 @@ import AdminConfiguration from "../components/Admin/Configuration/AdminConfigura
 import OpenTicket from "../components/Forms/openTicket";
 import ManageUser from "../components/Admin/ManageUser/ManageUser";
 import ManageSubscriptions from "../components/Admin/ManageSubscriptions/ManageSubscriptions";
-import {isPortalAdminOrSupport} from "../api/helpers";
+import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from "../api/helpers";
 
 class LocalApp extends Component {
   constructor(props) {
@@ -18,10 +18,7 @@ class LocalApp extends Component {
   }
 
   componentDidMount() {
-    const {keycloak} = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       this.setState({
         loading: false,
       });
@@ -29,16 +26,15 @@ class LocalApp extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {keycloak} = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.setState({
         loading: false,
       });
     }
+  }
+
+  logout() {
+    window.entando.keycloak.logout();
   }
 
   render() {
@@ -54,6 +50,7 @@ class LocalApp extends Component {
                 {isPortalAdminOrSupport() &&
                 <li><Link to={'/entando-de-app/en/admin.page'}>Admin</Link></li>
                 }
+                <li><a href="/" onClick={this.logout}>Logout</a></li>
               </ul>
             </div>
             <Switch>

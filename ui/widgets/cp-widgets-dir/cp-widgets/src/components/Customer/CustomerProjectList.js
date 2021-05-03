@@ -1,8 +1,8 @@
 import React from 'react';
 import { Tile } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiAdminCustomerGet, apiGetCustomersProjects } from '../../api/customers';
-import { isPortalAdminOrSupport } from '../../api/helpers';
+import {apiAdminCustomerGet, apiGetCustomersProjects} from '../../api/customers';
+import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
 import i18n from '../../i18n';
 import CustomerDataTable from "./CustomerDataTable";
 
@@ -17,9 +17,7 @@ class CustomerProjectList extends React.Component {
   }
 
   async getCustomer() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       try {
         const customer = await apiAdminCustomerGet(this.props.serviceUrl, this.props.match.params.id);
         const projects = await apiGetCustomersProjects(this.props.serviceUrl, customer.data.id);
@@ -45,12 +43,7 @@ class CustomerProjectList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       if (isPortalAdminOrSupport()) {
         this.getCustomer();
       }

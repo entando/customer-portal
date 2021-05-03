@@ -3,8 +3,8 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 import AdminDashboard from './Admin/AdminDashboard';
 import Subscription from './SubscriptionDetails/Subscription';
 import withKeycloak from '../auth/withKeycloak';
-import { AuthenticatedView, UnauthenticatedView } from '../auth/KeycloakViews';
-import { isPortalUser } from '../api/helpers';
+import {AuthenticatedView, UnauthenticatedView} from '../auth/KeycloakViews';
+import {authenticationChanged, isAuthenticated, isPortalUser} from '../api/helpers';
 import CustomerProjectList from './Customer/CustomerProjectList';
 import i18n from '../i18n';
 
@@ -17,10 +17,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       this.setState({
         loading: false,
       });
@@ -28,12 +25,7 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.setState({
         loading: false,
       });
