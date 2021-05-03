@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import i18n from '../../i18n';
-import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
+import {Form, TextInput, Select, SelectItem, TextArea} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
-import { apiProjectPost, apiProjectsGet } from '../../api/projects';
+import {apiProjectPost, apiProjectsGet} from '../../api/projects';
+import {authenticationChanged, isAuthenticated} from "../../api/helpers";
 
 class EditProjectForm extends Component {
   constructor(props) {
@@ -71,12 +72,7 @@ class EditProjectForm extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.getCustomers();
       this.getAllProjects();
     }
@@ -90,18 +86,14 @@ class EditProjectForm extends Component {
   };
 
   async getCustomers() {
-    const { t, keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       const customers = await apiCustomersGet(this.props.serviceUrl);
-      this.setState({ customerList: customers });
+      this.setState({customerList: customers});
     }
   }
 
   async projectPost(project) {
-    const { t, keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       const result = await apiProjectPost(this.props.serviceUrl, project);
       await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id);
     }
@@ -140,17 +132,17 @@ class EditProjectForm extends Component {
     return (
       <div className="form-container">
         <p> {i18n.t('adminDashboard.addProject.desc')} </p>
-        const suffix = "edit-project-form"
+        const modalId = "edit-project-form";
         <Form onSubmit={this.handleFormSubmit}>
           <Select
             defaultValue="customer-list"
-            id={"customerId" + suffix}
+            id={"customerId" + modalId}
             name="customerId"
             labelText={i18n.t('adminDashboard.addProject.customerList')}
             value={this.state.customerId}
             onChange={this.handleChanges}
           >
-            <SelectItem text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list" />
+            <SelectItem text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list"/>
             {Object.keys(this.state.customerList).length !== 0
               ? this.state.customerList.data.map((customerList, i) => (
                   <SelectItem key={i} text={customerList.name} value={customerList.id}>
@@ -161,7 +153,7 @@ class EditProjectForm extends Component {
           </Select>
 
           <TextInput
-            id={"name"+suffix}
+            id={"name" + modalId}
             name="name"
             labelText={i18n.t('adminDashboard.addProject.projectName')}
             value={this.state.name}
@@ -170,7 +162,7 @@ class EditProjectForm extends Component {
             invalid={this.state.invalid['name']}
           />
           <TextInput
-            id={"description"+suffix}
+            id={"description" + modalId}
             name="description"
             labelText={i18n.t('adminDashboard.addProject.projectDesc')}
             value={this.state.description}
@@ -179,28 +171,28 @@ class EditProjectForm extends Component {
             invalid={this.state.invalid['description']}
           />
           <TextInput
-            id={"systemId"+suffix}
+            id={"systemId" + modalId}
             name="systemId"
             labelText={i18n.t('adminDashboard.addProject.systemId')}
             value={this.state.systemId}
             onChange={this.handleChanges}
           />
           <TextInput
-            id={"contactName"+suffix}
+            id={"contactName" + modalId}
             name="contactName"
             labelText={i18n.t('adminDashboard.addProject.contactName')}
             value={this.state.contactName}
             onChange={this.handleChanges}
           />
           <TextInput
-            id={"contactPhone"+suffix}
+            id={"contactPhone" + modalId}
             name="contactPhone"
             labelText={i18n.t('adminDashboard.addProject.contactPhone')}
             value={this.state.contactPhone}
             onChange={this.handleChanges}
           />
           <TextInput
-            id={"contactEmail"+suffix}
+            id={"contactEmail" + modalId}
             name="contactEmail"
             labelText={i18n.t('adminDashboard.addProject.contactEmail')}
             value={this.state.contactEmail}

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomerGet, apiCustomerPut } from '../../api/customers';
+import {apiCustomerGet, apiCustomerPut} from '../../api/customers';
+import {authenticationChanged, isAuthenticated} from "../../api/helpers";
 
 class EditCustomerModal extends Component {
   constructor(props) {
@@ -70,9 +71,7 @@ class EditCustomerModal extends Component {
   };
 
   async updateCustomer(customer) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       return await apiCustomerPut(this.props.serviceUrl, customer);
     }
   }
@@ -82,19 +81,17 @@ class EditCustomerModal extends Component {
   };
 
   async getCustomer(customerId) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
-      const customer = await apiCustomerGet(this.props.serviceUrl, customerId);
+    if (isAuthenticated(this.props)) {
+      const customer = (await apiCustomerGet(this.props.serviceUrl, customerId)).data;
       this.setState({
-        name: customer.data.name,
-        customerNumber: customer.data.customerNumber,
-        contactName: customer.data.contactName,
-        contactPhone: customer.data.contactPhone,
-        contactEmail: customer.data.contactEmail,
-        notes: customer.data.notes,
-        modalId: 'modal-form-customer-edit-' + customer.data.id,
-        buttonId: 'edit-customer-button-' + customer.data.id,
+        name: customer.name,
+        customerNumber: customer.customerNumber,
+        contactName: customer.contactName,
+        contactPhone: customer.contactPhone,
+        contactEmail: customer.contactEmail,
+        notes: customer.notes,
+        modalId: 'modal-form-customer-edit-' + customer.id,
+        buttonId: 'edit-customer-button-' + customer.id,
       });
     }
   }
@@ -149,10 +146,7 @@ class EditCustomerModal extends Component {
   };
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       if (this.props.customerId) {
         this.getCustomerDetails(this.props.customerId);
       }
@@ -160,12 +154,7 @@ class EditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.getCustomerDetails(this.props.customerId);
     }
   }
@@ -173,12 +162,12 @@ class EditCustomerModal extends Component {
   render() {
     const modalConfirmation = (
       <div className="bx--modal-header">
-        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+        <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
     )
-    const modalId = this.state.modalId
-    const buttonClassName = 'bx--btn bx--btn--ghost edit-customer-button-' + this.props.customer.id;
-    return (
+    const modalId = this.state.modalId;
+    const buttonClassName = 'bx--btn bx--btn--ghost edit-customer-button-' + this.props.customerId;
+    return (modalId &&
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.edit')}
         modalHeading={i18n.t('adminDashboard.editCustomer.title')}

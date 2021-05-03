@@ -63,6 +63,7 @@ class CustomerDataTable extends Component {
     if (isAuthenticated(this.props)) {
       try {
         var projects;
+        //TOOD: refactor
         if (isPortalAdminOrSupport()) {
           projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
         } else {
@@ -163,17 +164,23 @@ class CustomerDataTable extends Component {
                 <TableBody>
                   {Object.keys(this.state.projects).length !== 0
                     ? this.state.projects.data.map((project, index) => {
-                        if (project.projectSubscriptions.length === 0) {
-                          return (
-                            <TableRow key={index}>
-                              <TableCell>{project.name}</TableCell>
-                              {project.partners.length !== 0 ? (
-                                <TableCell>
-                                  {project.partners.map(partner => (
-                                    <p>{partner.name}</p>
-                                  ))}
-                                </TableCell>
-                              ) : (
+                      //Display the first ACTIVE subscription in the list. An admin can see and manage the full list at any time
+                      const subscription = project.projectSubscriptions.find(
+                        item => {
+                          return (item.status === "ACTIVE") ? item : null
+                        }
+                      )
+                      if (!subscription) {
+                        return (
+                          <TableRow key={index}>
+                            <TableCell>{project.name}</TableCell>
+                            {project.partners.length !== 0 ? (
+                              <TableCell>
+                                {project.partners.map(partner => (
+                                  <p>{partner.name}</p>
+                                ))}
+                              </TableCell>
+                            ) : (
                                 <TableCell>{i18n.t('userMessages.none')}</TableCell>
                               )}
                               <TableCell>{i18n.t('userMessages.none')}</TableCell>
@@ -187,7 +194,6 @@ class CustomerDataTable extends Component {
                                   serviceUrl={this.props.serviceUrl}
                                   ticketingSystem={this.state.ticketingSystem}
                                   locale={this.props.locale}
-                                  hasSubscription={false}
                                   project={project}
                                   allProjects={this.state.projects.data}
                                   handleDeleteProject={this.handleDeleteProject}
@@ -197,12 +203,10 @@ class CustomerDataTable extends Component {
                             </TableRow>
                           );
                         } else {
-                          //TODO: CP-67 this uses the last subscription which isn't necessarily the current active one
-                          var sub = project.projectSubscriptions[project.projectSubscriptions.length - 1];
                           return (
                             <TableRow key={index}>
                               <TableCell>
-                                <Link to={`/subscription-details/${sub.id}`}>{project.name}</Link>
+                                <Link to={`/subscription-details/${subscription.id}`}>{project.name}</Link>
                               </TableCell>
                               {project.partners.length !== 0 ? (
                                 <TableCell>
@@ -213,14 +217,14 @@ class CustomerDataTable extends Component {
                               ) : (
                                 <TableCell>{i18n.t('userMessages.none')}</TableCell>
                               )}
-                              {sub.entandoVersion ? (
-                                <TableCell>{sub.entandoVersion.name}</TableCell>
+                              {subscription.entandoVersion ? (
+                                <TableCell>{subscription.entandoVersion.name}</TableCell>
                               ) : (
                                 <TableCell>{i18n.t('userMessages.none')}</TableCell>
                               )}
-                              <TableCell>{sub.status}</TableCell>
-                              <TableCell>{formatStartDate(sub.startDate)}</TableCell>
-                              <TableCell>{formatEndDate(sub.startDate, sub.lengthInMonths)}</TableCell>
+                              <TableCell>{subscription.status}</TableCell>
+                              <TableCell>{formatStartDate(subscription.startDate)}</TableCell>
+                              <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
                               <TableCell>{project.tickets.length}</TableCell>
                               {isPortalAdminOrSupport() ?
                                 <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null
@@ -230,8 +234,7 @@ class CustomerDataTable extends Component {
                                   serviceUrl={this.props.serviceUrl}
                                   ticketingSystem={this.state.ticketingSystem}
                                   locale={this.props.locale}
-                                  subscription={sub}
-                                  hasSubscription={true}
+                                  subscription={subscription}
                                   project={project}
                                   allProjects={this.state.projects.data}
                                   handleDeleteProject={this.handleDeleteProject}

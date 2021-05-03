@@ -212,7 +212,7 @@ class EditProjectModal extends Component {
       </div>
     )
     const buttonClassName = 'dropdown-button-button bx--btn bx--btn--ghost edit-project-button-' + this.props.project.id;
-    const suffix = this.state.modalId;
+    const modalId = this.state.modalId;
     return (
     <ModalWrapper
         buttonTriggerText={i18n.t('buttons.edit')}
@@ -228,7 +228,7 @@ class EditProjectModal extends Component {
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <TextInput
-              id={"name" + suffix}
+              id={"name" + modalId}
               name="name"
               labelText={i18n.t('adminDashboard.addProject.projectName') + ' *'}
               value={this.state.name}
@@ -237,7 +237,7 @@ class EditProjectModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
-              id={"description" + suffix}
+              id={"description" + modalId}
               name="description"
               labelText={i18n.t('adminDashboard.addProject.projectDesc') + ' *'}
               value={this.state.description}
@@ -246,28 +246,28 @@ class EditProjectModal extends Component {
               invalid={this.state.invalid['description']}
             />
             <TextInput
-              id={"systemId" + suffix}
+              id={"systemId" + modalId}
               name="systemId"
               labelText={i18n.t('adminDashboard.addProject.systemId')}
               value={this.state.systemId}
               onChange={this.handleChanges}
             />
             <TextInput
-              id={"contactName" + suffix}
+              id={"contactName" + modalId}
               name="contactName"
               labelText={i18n.t('adminDashboard.addProject.contactName')}
               value={this.state.contactName}
               onChange={this.handleChanges}
             />
             <TextInput
-              id="contactPhone"
+              id={"contactPhone" + modalId}
               name="contactPhone"
               labelText={i18n.t('adminDashboard.addProject.contactPhone')}
               value={this.state.contactPhone}
               onChange={this.handleChanges}
             />
             <TextInput
-              id={"contactEmail" + suffix}
+              id={"contactEmail" + modalId}
               name="contactEmail"
               labelText={i18n.t('adminDashboard.addProject.contactEmail') + ' *'}
               value={this.state.contactEmail}

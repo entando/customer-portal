@@ -82,6 +82,18 @@ class ProjectActionItems extends React.Component {
         {actionDivider}
       </div>
     );
+    const manageSubscriptions = (
+      <div>
+        <a
+          href={`/entando-de-app/${this.props.locale}/manage_subscriptions.page?project=${this.props.project.id}`}
+          style={{textDecoration: 'none'}}>
+          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Subscriptions">
+            {i18n.t('buttons.manageSubscriptions')}
+          </Button>
+        </a>
+        {actionDivider}
+      </div>
+    );
     const deleteProject = (
       <div>
         <Button
@@ -94,7 +106,7 @@ class ProjectActionItems extends React.Component {
         {actionDivider}
       </div>
     );
-    if (!this.props.hasSubscription) {
+    if (!this.props.subscription) {
       return (
         <div>
           {topButton}
@@ -109,6 +121,7 @@ class ProjectActionItems extends React.Component {
               {actionDivider}
               {isAdmin && editProjectSubscription}
               {newOrRenewSubscription}
+              {isAdmin && manageSubscriptions}
               {isAdmin && manageUsers}
               {isAdmin && deleteProject}
             </div>
@@ -170,16 +183,7 @@ class ProjectActionItems extends React.Component {
                     updateProjectList={this.props.updateProjectList}
                   />
                   {actionDivider}
-                  {/*Manage Subscriptions*/}
-                  <a
-                    href={`/entando-de-app/${this.props.locale}/manage_subscriptions.page?project=${this.props.project.id}`}
-                    style={{textDecoration: 'none'}}
-                  >
-                    <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Subscriptions">
-                      {i18n.t('buttons.manageSubscriptions')}
-                    </Button>
-                  </a>
-                  {actionDivider}
+                  {manageSubscriptions}
                   {manageUsers}
                   {/*Delete Project*/}
                   <Button
