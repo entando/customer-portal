@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import i18n from '../../i18n';
-import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
+import {ModalWrapper, Form, TextInput, Select, SelectItem, TextArea} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiPartnerPost } from '../../api/partners';
-import { apiProjectsGet, apiAddPartnerToProject } from '../../api/projects';
+import {apiPartnerPost} from '../../api/partners';
+import {apiProjectsGet, apiAddPartnerToProject} from '../../api/projects';
+import {authenticationChanged, isAuthenticated} from "../../api/helpers";
+import {AuthenticatedView} from "../../auth/KeycloakViews";
 
 class AddPartnerModal extends Component {
   constructor(props) {
@@ -21,13 +23,18 @@ class AddPartnerModal extends Component {
     };
   }
 
+  componentDidMount() {
+    if (isAuthenticated(this.props)) {
+      this.getProjects();
+
+      const modalOpenButton = document.querySelector('.add-partner-button');
+      modalOpenButton.addEventListener('click', this.clearValues, false);
+    }
+  }
+
+
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.getProjects();
     }
   }
@@ -64,18 +71,16 @@ class AddPartnerModal extends Component {
   };
 
   async getProjects() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       const projects = await apiProjectsGet(this.props.serviceUrl);
-      this.setState({ projectList: projects });
+      this.setState({
+        projectList: projects.data
+      });
     }
   }
 
   async partnerPost(partner) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       const result = await apiPartnerPost(this.props.serviceUrl, partner);
       return await apiAddPartnerToProject(this.props.serviceUrl, this.state.projectId, result.data.id);
     }
@@ -122,81 +127,77 @@ class AddPartnerModal extends Component {
     }
   };
 
-  componentDidMount() {
-    this.getProjects();
-
-    const modalOpenButton = document.querySelector('.add-partner-button');
-    modalOpenButton.addEventListener('click', this.clearValues, false);
-  }
-
   render() {
     const modalConfirmation = (
       <div className="bx--modal-header">
-        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+        <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
     )
+    const {keycloak} = this.props;
     const modalId = "modal-form-partner";
     return (
-      <ModalWrapper
-        buttonTriggerText={i18n.t('buttons.addPartner')}
-        modalHeading={i18n.t('adminDashboard.addPartner.title')}
-        buttonTriggerClassName="add-partner bx--btn bx--btn--tertiary add-partner-button"
-        className="modal-form"
-        id={modalId}
-        handleSubmit={this.handleFormSubmit}
-        primaryButtonText={i18n.t('modalText.save')}
-        secondaryButtonText={i18n.t('modalText.cancel')}
-      >
-        {modalConfirmation}
-        <div className="form-container">
-          <Form onSubmit={this.handleFormSubmit}>
-            <Select
-              id={"projectId" + modalId}
-              name="projectId"
-              labelText={i18n.t('adminDashboard.addPartner.projectList') + ' *'}
-              value={this.state.projectId}
-              onChange={this.handleChanges}
-              invalidText={i18n.t('validation.invalid.required')}
-              invalid={this.state.invalid['projectId']}
-            >
-              <SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />
-              {Object.keys(this.props.allProjects).length !== 0
-                ? this.props.allProjects.map((projectList, i) => (
-                    <SelectItem key={i} text={projectList.name} value={projectList.id}>
-                      {projectList.name}
+      <AuthenticatedView keycloak={keycloak}>
+        <ModalWrapper
+          buttonTriggerText={i18n.t('buttons.addPartner')}
+          modalHeading={i18n.t('adminDashboard.addPartner.title')}
+          buttonTriggerClassName="add-partner bx--btn bx--btn--tertiary add-partner-button"
+          className="modal-form"
+          id={modalId}
+          handleSubmit={this.handleFormSubmit}
+          primaryButtonText={i18n.t('modalText.save')}
+          secondaryButtonText={i18n.t('modalText.cancel')}
+        >
+          {modalConfirmation}
+          <div className="form-container">
+            <Form onSubmit={this.handleFormSubmit}>
+              <Select
+                id={"projectId" + modalId}
+                name="projectId"
+                labelText={i18n.t('adminDashboard.addPartner.projectList') + ' *'}
+                value={this.state.projectId}
+                onChange={this.handleChanges}
+                invalidText={i18n.t('validation.invalid.required')}
+                invalid={this.state.invalid['projectId']}
+              >
+                <SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list"/>
+                {Object.keys(this.state.projectList).length !== 0
+                  ? this.state.projectList.map((project, i) => (
+                    <SelectItem key={i} text={project.name} value={project.id}>
+                      {project.name}
                     </SelectItem>
                   ))
-                : null}
-            </Select>
+                  : null}
+              </Select>
 
-            <TextInput
-              id={"name" + modalId}
-              name="name"
-              labelText={i18n.t('adminDashboard.addPartner.partnerName') + ' *'}
-              value={this.state.name}
-              onChange={this.handleChanges}
-              invalidText={i18n.t('validation.invalid.required')}
-              invalid={this.state.invalid['name']}
-            />
-            <TextInput
-              id={"partnerNumber" + modalId}
-              name="partnerNumber"
-              labelText={i18n.t('adminDashboard.addPartner.partnerNumber') + ' *'}
-              value={this.state.partnerNumber}
-              onChange={this.handleChanges}
-              invalidText={i18n.t('validation.invalid.required')}
-              invalid={this.state.invalid['partnerNumber']}
-            />
-            <TextArea
-              name="notes"
-              labelText={i18n.t('adminDashboard.addPartner.notes')}
-              value={this.state.notes}
-              onChange={this.handleChanges}
-            />
-          </Form>
-        </div>
-        {modalConfirmation}
-      </ModalWrapper>
+              <TextInput
+                id={"name" + modalId}
+                name="name"
+                labelText={i18n.t('adminDashboard.addPartner.partnerName') + ' *'}
+                value={this.state.name}
+                onChange={this.handleChanges}
+                invalidText={i18n.t('validation.invalid.required')}
+                invalid={this.state.invalid['name']}
+              />
+              <TextInput
+                id={"partnerNumber" + modalId}
+                name="partnerNumber"
+                labelText={i18n.t('adminDashboard.addPartner.partnerNumber') + ' *'}
+                value={this.state.partnerNumber}
+                onChange={this.handleChanges}
+                invalidText={i18n.t('validation.invalid.required')}
+                invalid={this.state.invalid['partnerNumber']}
+              />
+              <TextArea
+                name="notes"
+                labelText={i18n.t('adminDashboard.addPartner.notes')}
+                value={this.state.notes}
+                onChange={this.handleChanges}
+              />
+            </Form>
+          </div>
+          {modalConfirmation}
+        </ModalWrapper>
+      </AuthenticatedView>
     );
   }
 }

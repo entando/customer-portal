@@ -17,15 +17,12 @@ import {
   isPortalUser,
   isAuthenticated
 } from '../../api/helpers';
-import {apiProjectsGet, apiMyProjectsGet} from '../../api/projects';
 
 class AdminDashboard extends React.Component {
   constructor() {
     super();
     this.state = {
       customers: {},
-      projects: {},
-      customersProjects: {},
       role: '',
       filteredCustomers: {},
       currentPage: 0,
@@ -35,27 +32,11 @@ class AdminDashboard extends React.Component {
 
   componentDidMount() {
     this.getCustomers();
-    this.getProjects();
   }
 
   componentDidUpdate(prevProps) {
     if (authenticationChanged(this.props, prevProps)) {
       this.getCustomers();
-      this.getProjects();
-    }
-  }
-
-  async getProjects() {
-    if (isAuthenticated(this.props)) {
-      var projects = '';
-      if (isPortalAdminOrSupport()) {
-        projects = await apiProjectsGet(this.props.serviceUrl);
-      } else {
-        projects = await apiMyProjectsGet(this.props.serviceUrl);
-      }
-      this.setState({
-        projects: projects.data,
-      });
     }
   }
 
@@ -96,7 +77,6 @@ class AdminDashboard extends React.Component {
 
   updateCustomerList = () => {
     this.getCustomers();
-    this.getProjects();
   };
 
   render() {
@@ -145,7 +125,6 @@ class AdminDashboard extends React.Component {
                     <AddPartnerModal
                       serviceUrl={this.props.serviceUrl}
                       updateCustomerList={this.updateCustomerList}
-                      allProjects={this.state.projects}
                     />
                     <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
                     <AddProjectModal

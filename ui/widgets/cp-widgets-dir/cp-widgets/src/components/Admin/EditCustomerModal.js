@@ -191,9 +191,9 @@ class EditCustomerModal extends Component {
       >
         {modalConfirmation}
         <div className="form-container">
-          <Form onSubmit={this.handleFormSubmit}>
+          <Form onSubmit={this.handleFormSubmit} id={"form-" + modalId}>
             <TextInput
-              id={"name"+modalId}
+              id={"name" + modalId}
               name="name"
               labelText={i18n.t('adminDashboard.addCustomer.customerName') + ' *'}
               value={this.state.name}
