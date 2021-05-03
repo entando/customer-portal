@@ -93,7 +93,7 @@ class SubscriptionForm extends Component {
 
     if (subscriptionId !== null) {
       subscription = (await apiSubscriptionGet(serviceUrl, subscriptionId)).data;
-      status = subscription.status;
+      status = isAdmin ? subscription.status : subscriptionStatus.requested;
       formType = isAdmin ? 'edit' : 'renewal';
       project = subscription.project;
     } else if (projectId !== null) {
