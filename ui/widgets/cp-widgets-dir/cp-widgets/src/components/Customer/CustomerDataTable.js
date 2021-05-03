@@ -102,7 +102,9 @@ class CustomerDataTable extends Component {
   };
 
   closeMenu = () => {
-    this.setState({ showMenu: false }, () => {
+    this.setState({
+      showMenu: false
+    }, () => {
       document.removeEventListener('click', this.closeMenu);
     });
   };
@@ -176,8 +178,8 @@ class CustomerDataTable extends Component {
                             <TableCell>{project.name}</TableCell>
                             {project.partners.length !== 0 ? (
                               <TableCell>
-                                {project.partners.map(partner => (
-                                  <p>{partner.name}</p>
+                                {project.partners.map((partner, partnerIndex) => (
+                                  <div key={partnerIndex}>{partner.name}</div>
                                 ))}
                               </TableCell>
                             ) : (
@@ -210,8 +212,8 @@ class CustomerDataTable extends Component {
                               </TableCell>
                               {project.partners.length !== 0 ? (
                                 <TableCell>
-                                  {project.partners.map(partner => (
-                                    <p>{partner.name}</p>
+                                  {project.partners.map((partner, partnerIndex) => (
+                                    <div key={partnerIndex}>{partner.name}</div>
                                   ))}
                                 </TableCell>
                               ) : (
