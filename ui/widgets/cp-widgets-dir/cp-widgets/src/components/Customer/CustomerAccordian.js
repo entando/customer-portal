@@ -10,7 +10,13 @@ import {
 } from '../../api/customers';
 import CustomerDataTable from './CustomerDataTable';
 import CustomerDetails from './CustomerDetails';
-import {isPortalAdminOrSupport, isPortalAdmin, isPortalCustomer} from '../../api/helpers';
+import {
+  isPortalAdminOrSupport,
+  isPortalAdmin,
+  isPortalCustomer,
+  isAuthenticated,
+  authenticationChanged
+} from '../../api/helpers';
 import EditCustomerModal from '../Admin/EditCustomerModal';
 import i18n from '../../i18n';
 
@@ -25,29 +31,19 @@ class CustomerAccordian extends React.Component {
   }
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       this.getCustomersProjects(this.props.customerNumber);
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.getCustomersProjects(this.props.customerNumber);
     }
   }
 
   async getCustomersProjects(id) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       const customer = await apiCustomerGet(this.props.serviceUrl, id);
 
       var projects;
