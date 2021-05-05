@@ -82,66 +82,68 @@ class Subscription extends React.Component {
                   <div className="bx--grid">
                     <div className="bx--row">
                       <div className="bx--col">
-                        <p>
+                        <div>
                           <strong>{i18n.t('customerDashboard.customerName')}:</strong> {this.state.project.data.customer.name}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                           <strong>{i18n.t('customerDashboard.projectName')}:</strong> {this.state.project.data.name}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                           <strong>{i18n.t('subscriptionDetails.description')}:</strong> {this.state.subscription.data.project.description}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                           <strong>{i18n.t('subscriptionDetails.partners')}:</strong>
                           {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? (
                             <>
                               {this.state.project.data.partners.map((partner, index) => (
-                                <> {index === this.state.project.data.partners.length - 1 ? partner.name : partner.name + ', '} </>
+                                <div
+                                  key={index}> {index === this.state.project.data.partners.length - 1 ? partner.name : partner.name + ', '} </div>
                               ))}
                             </>
                           ) : (
                             <> {i18n.t('userMessages.none')} </>
                           )}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                           <strong>{i18n.t('subscriptionDetails.type')}:</strong> {type}
-                        </p>
+                        </div>
                         {isPortalAdminOrSupport() ? (
-                          <p>
+                          <div>
                             <strong>{i18n.t('subscriptionDetails.notes')}:</strong> {this.state.subscription.data.notes}
-                          </p>
+                          </div>
                         ) : null}
                       </div>
                       <div className="bx--col">
-                        <p>
+                        <div>
                           <strong>{i18n.t('subscriptionDetails.status')}:</strong> {this.state.subscription.data.status}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                           <strong>{i18n.t('subscriptionDetails.level')}:</strong> {this.state.subscription.data.level}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                           <strong>{i18n.t('subscriptionDetails.startDate')}:</strong>{' '}
                           {formatStartDate(this.state.subscription.data.startDate)}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                           <strong>{i18n.t('subscriptionDetails.endDate')}:</strong>{' '}
                           {formatEndDate(this.state.subscription.data.startDate, this.state.subscription.data.lengthInMonths)}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                           <strong>{i18n.t('subscriptionDetails.license')}:</strong> {license}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                           <strong>{i18n.t('subscriptionDetails.assignedUsers')}:</strong>
                           {this.state.project.data !== '' && Object.keys(this.state.users.data).length !== 0 ? (
                             <>
                               {this.state.users.data.map((user, index) => (
-                                <> {index === this.state.users.data.length - 1 ? user.username : user.username + ', '} </>
+                                <div
+                                  key={index}> {index === this.state.users.data.length - 1 ? user.username : user.username + ', '} </div>
                               ))}
                             </>
                           ) : (
                             <> {i18n.t('userMessages.none')} </>
                           )}
-                        </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -160,10 +162,10 @@ class Subscription extends React.Component {
             </div>
           );
         } else {
-          return <p>{i18n.t('userMessages.unauthorized')}</p>;
+          return <div>{i18n.t('userMessages.unauthorized')}</div>;
         }
       } else {
-        return <p>{i18n.t('userMessages.unauthorized')}</p>;
+        return <div>{i18n.t('userMessages.unauthorized')}</div>;
       }
     } else {
       return null;
