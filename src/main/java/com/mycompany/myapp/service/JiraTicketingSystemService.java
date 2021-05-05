@@ -28,7 +28,6 @@ public interface JiraTicketingSystemService {
      */
     List<TicketingSystem> findAll();
 
-
     /**
      * Get the "id" ticketingSystem.
      *
