@@ -4,7 +4,7 @@ import App from '../components/App';
 import withKeycloak from '../auth/withKeycloak';
 import SubscriptionForm from "../components/Forms/SubscriptionForm";
 import AdminConfiguration from "../components/Admin/Configuration/AdminConfiguration";
-import OpenTicket from "../components/Forms/openTicket";
+import OpenTicketForm from "../components/Forms/OpenTicketForm";
 import ManageUser from "../components/Admin/ManageUser/ManageUser";
 import ManageSubscriptions from "../components/Admin/ManageSubscriptions/ManageSubscriptions";
 import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from "../api/helpers";
@@ -67,7 +67,7 @@ class LocalApp extends Component {
                 <SubscriptionForm serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
               <Route path="/entando-de-app/en/open_service_ticket.page">
-                <OpenTicket serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
+                <OpenTicketForm serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
               <Route path="/" exact={true}>
                 <App serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>

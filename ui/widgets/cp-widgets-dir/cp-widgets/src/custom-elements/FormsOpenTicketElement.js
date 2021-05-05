@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import OpenTicket from '../components/Forms/openTicket';
+import OpenTicketForm from '../components/Forms/OpenTicketForm';
 import KeycloakContext from '../auth/KeycloakContext';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
@@ -51,7 +51,7 @@ class FormsOpenTicketElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <OpenTicket serviceUrl={serviceUrl} locale={locale}/>
+        <OpenTicketForm serviceUrl={serviceUrl} locale={locale}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
