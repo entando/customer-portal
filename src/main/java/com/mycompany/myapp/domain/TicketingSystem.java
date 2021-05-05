@@ -1,5 +1,6 @@
 package com.mycompany.myapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -33,6 +34,7 @@ public class TicketingSystem implements Serializable {
 
     @NotNull
     @Column(name = "service_account_secret", nullable = false)
+    @JsonIgnore
     private String serviceAccountSecret;
 
     @Column(name = "system_id")
@@ -123,7 +125,7 @@ public class TicketingSystem implements Serializable {
             "id=" + getId() +
             ", url='" + getUrl() + "'" +
             ", serviceAccount='" + getServiceAccount() + "'" +
-            ", serviceAccountSecret='" + getServiceAccountSecret() + "'" +
+//            ", serviceAccountSecret='" + getServiceAccountSecret() + "'" +
             ", systemId='" + getSystemId() + "'" +
             "}";
     }

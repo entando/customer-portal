@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import i18n from '../../../i18n';
 import { Form, TextInput, Select, SelectItem, Button } from 'carbon-components-react';
 import {
-  apiTicketingSystemPost,
-  apiTicketingSystemsGet,
-  apiTicketingSystemPut,
+  apiCurrentTicketingSystemGet,
   apiTicketingSystemDelete,
+  apiTicketingSystemPost,
+  apiTicketingSystemPut,
 } from '../../../api/ticketingsystem';
-import { isPortalAdmin } from '../../../api/helpers';
+import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class TicketingSystem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ticketingSystem: '',
+      ticketingSystem: {},
       ticketingSystemType: 'Jira',
       url: '',
       serviceAccount: '',
@@ -39,7 +39,10 @@ class TicketingSystem extends Component {
       serviceAccountSecret: this.state.serviceAccountSecret,
       systemId: this.state.systemId,
     };
-    return await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem);
+    const response = (await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem)).data;
+    this.setState({
+      ticketingSystem: response
+    })
   }
 
   async updateTicketingSystem() {
@@ -53,38 +56,26 @@ class TicketingSystem extends Component {
     return await apiTicketingSystemPut(this.props.serviceUrl, ticketingSystem);
   }
 
-  async getTicketingSystems() {
-    const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
-    if (ticketingSystems.data.length > 0) {
-      const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length - 1];
-
-      this.setState({
-        ticketingSystem: currentTicketingSystem,
-        url: currentTicketingSystem.url,
-        serviceAccount: currentTicketingSystem.serviceAccount,
-        serviceAccountSecret: currentTicketingSystem.serviceAccountSecret,
-        systemId: currentTicketingSystem.systemId,
-      });
-    }
+  async fetchData() {
+    const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
+    this.setState({
+      ticketingSystem: ticketingSystem,
+      url: (ticketingSystem) ? ticketingSystem.url : '',
+      serviceAccount: (ticketingSystem) ? ticketingSystem.serviceAccount : '',
+      //Secret needs to be entered each time
+      systemId: (ticketingSystem) ? ticketingSystem.systemId : '',
+    })
   }
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
-      this.getTicketingSystems();
+    if (isAuthenticated(this.props)) {
+      this.fetchData();
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
-      this.getTicketingSystems();
+    if (authenticationChanged(this.props, prevProps)) {
+      this.fetchData();
     }
   }
 
@@ -100,6 +91,7 @@ class TicketingSystem extends Component {
             submitMsg: i18n.t('submitMessages.deleted'),
             submitColour: '#24a148',
           });
+          this.fetchData();
         })
         .catch(() => {
           this.setState({
@@ -112,7 +104,7 @@ class TicketingSystem extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.ticketingSystem === '') {
+    if (!this.state.ticketingSystem) {
       this.createTicketingSystem()
         .then(() => {
           this.setState({
@@ -144,7 +136,7 @@ class TicketingSystem extends Component {
   };
 
   render() {
-    const ticketingSystem = ['Jira'];
+    const ticketingSystemTypes = ['Jira'];
     if (isPortalAdmin()) {
       return (
         <div className="cp-form">
@@ -160,10 +152,11 @@ class TicketingSystem extends Component {
                     value={this.state.ticketingSystemType}
                     onChange={this.handleChanges}
                   >
-                    <SelectItem text={i18n.t('adminConfig.integrationTicketingSystem.select')} value="ticketing-system" />
-                    {ticketingSystem.map((ticketingSystem, i) => (
-                      <SelectItem key={i} text={ticketingSystem} value={ticketingSystem}>
-                        {ticketingSystem}
+                    <SelectItem text={i18n.t('adminConfig.integrationTicketingSystem.select')}
+                                value="ticketing-system"/>
+                    {ticketingSystemTypes.map((type, i) => (
+                      <SelectItem key={i} text={type} value={type}>
+                        {type}
                       </SelectItem>
                     ))}
                   </Select>

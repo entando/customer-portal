@@ -13,6 +13,8 @@ public final class AuthoritiesConstants {
 
     public static final String SUPPORT = "cp-support";
 
+    public static final String HAS_ADMIN = "hasAnyAuthority('" + ADMIN + "')";
+
     public static final String HAS_ADMIN_OR_SUPPORT = "hasAnyAuthority('" + ADMIN + "', '" + SUPPORT + "')";
 
     public static final String HAS_CUSTOMER_OR_PARTNER = "hasAnyAuthority('" + CUSTOMER + "', '" + PARTNER + "')";

@@ -74,7 +74,6 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
         return ticketingSystemRepository.findAll();
     }
 
-
     /**
      * Get one ticketingSystem by id.
      *
@@ -260,6 +259,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             con.setRequestProperty("Authorization", authHeaderValue);
             con.setRequestProperty("Content-Type", "application/json; charset=utf8");
             con.setDoOutput(true);
+            //TODO: refactor to user JSONObject, etc.
             String jsonInputString = "{\n" +
                 "    \"fields\": {\n" +
                 "       \"project\":\n" +
