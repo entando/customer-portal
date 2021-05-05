@@ -121,7 +121,7 @@ class EditSubscriptionModal extends Component {
         status: subscription.data.status,
         lengthInMonths: subscription.data.lengthInMonths,
         startDate: moment(subscription.data.startDate).format('MM/DD/YYYY'),
-        notes: subscription.data.notes,
+        notes: subscription.data.notes ? subscription.data.notes : '',
         submitMsg: '',
       });
     }

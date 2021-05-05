@@ -62,7 +62,7 @@ class CustomerDataTable extends Component {
   async fetchData() {
     if (isAuthenticated(this.props)) {
       try {
-        var projects;
+        let projects;
         //TOOD: refactor
         if (isPortalAdminOrSupport()) {
           projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
