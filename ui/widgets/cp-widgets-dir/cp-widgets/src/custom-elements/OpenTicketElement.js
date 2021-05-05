@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import OpenTicket from '../components/Forms/openTicket';
+import OpenTicketForm from '../components/Forms/OpenTicketForm';
 import '../index.scss';
 import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';
 
-import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
-import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
+import {subscribeToWidgetEvent} from '../helpers/widgetEvents';
+import {KEYCLOAK_EVENT_TYPE} from './widgetEventTypes';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
@@ -53,7 +53,7 @@ class OpenTicketElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <OpenTicket serviceUrl={serviceUrl} locale={locale}/>
+        <OpenTicketForm serviceUrl={serviceUrl} locale={locale}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
