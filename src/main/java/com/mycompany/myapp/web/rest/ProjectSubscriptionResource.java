@@ -12,6 +12,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
+import com.mycompany.myapp.security.AuthoritiesUtil;
+import com.mycompany.myapp.service.TicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,17 +67,17 @@ public class ProjectSubscriptionResource {
     @Autowired
     SpringSecurityAuditorAware springSecurityAuditorAware;
 
-    @Autowired
-//    private JavaMailSender javaMailSender;
-
     private final ProjectSubscriptionService projectSubscriptionService;
     private final ProjectService projectService;
     private final EntandoVersionService entandoVersionService;
+    private final TicketService ticketService;
 
-    public ProjectSubscriptionResource(ProjectSubscriptionService projectSubscriptionService, ProjectService projectService, EntandoVersionService entandoVersionService) {
+    public ProjectSubscriptionResource(ProjectSubscriptionService projectSubscriptionService, ProjectService projectService,
+                                       EntandoVersionService entandoVersionService, TicketService ticketService) {
         this.projectSubscriptionService = projectSubscriptionService;
         this.projectService = projectService;
         this.entandoVersionService = entandoVersionService;
+        this.ticketService = ticketService;
     }
 
     /**
@@ -84,7 +86,6 @@ public class ProjectSubscriptionResource {
      * @param subscriptionCreationRequest the projectSubscription to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new projectSubscription, or with status {@code 400 (Bad Request)} if the projectSubscription has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
-     * @throws MessagingException
      */
     @PostMapping("/project-subscriptions")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
@@ -118,11 +119,10 @@ public class ProjectSubscriptionResource {
 
         ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
 
-        //send an email to entando team only when this request is from customers
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //TODO: change so email is sent for either customer or partner
-        boolean hasUserRole = authentication.getAuthorities().stream()
-            .anyMatch(r -> r.getAuthority().equals(AuthoritiesConstants.CUSTOMER));
+        //Create a ticket when the request isn't from an admin
+        if (!AuthoritiesUtil.isCurrentUserAdminOrSupport()) {
+            log.error("To be implemented...");
+        }
 
         //TODO: remove or clean up
         /*

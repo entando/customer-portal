@@ -259,7 +259,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             con.setRequestProperty("Authorization", authHeaderValue);
             con.setRequestProperty("Content-Type", "application/json; charset=utf8");
             con.setDoOutput(true);
-            //TODO: refactor to user JSONObject, etc.
+            //TODO: refactor to use JSONObject, etc.
             String jsonInputString = "{\n" +
                 "    \"fields\": {\n" +
                 "       \"project\":\n" +

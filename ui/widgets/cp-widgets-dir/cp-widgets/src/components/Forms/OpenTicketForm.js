@@ -1,68 +1,99 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import i18n from '../../i18n';
-import { Form, Select, SelectItem, Button, TextArea, TextInput } from 'carbon-components-react';
+import {Form, Select, SelectItem, Button, TextArea, TextInput} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiAdminProjectsGet, apiMyProjectsGet, apiGetProjectSubscriptions } from '../../api/projects';
-import { apiJiraTicketPost } from '../../api/tickets';
-import { apiTicketingSystemsGet } from '../../api/ticketingsystem';
+import {apiProjectGet} from '../../api/projects';
+import {apiJiraTicketPost} from '../../api/tickets';
 import {
-  isPortalAdmin,
-  isPortalAdminOrSupport,
-  isPortalCustomer,
-  isPortalCustomerOrPartner,
-  isPortalPartner,
-  isPortalSupport,
+  authenticationChanged, getActiveSubscription,
+  isAuthenticated,
   isPortalUser,
 } from '../../api/helpers';
 
-class OpenTicket extends Component {
+class OpenTicketForm extends Component {
   constructor() {
     super();
     this.state = {
       loading: true,
       project: {},
-      projects: [],
-      systemId: '',
-      type: 'Support',
-      description: '',
-      priority: 'Medium',
-      status: 'To Do',
-      createDate: '',
-      updateDate: '',
       role: '',
       invalid: {},
       submitMsg: '',
       submitColour: 'black',
+      //form fields
+      type: 'Support',
+      priority: 'Medium',
+      status: 'To Do',
+      summary: '',
+      description: '',
     };
     this.types = ['Support', 'Feature Request'];
     this.priorities = ['Critical', 'High', 'Medium', 'Low'];
+  }
+
+  componentDidMount() {
+    if (isAuthenticated(this.props)) {
+      this.fetchData();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (authenticationChanged(this.props, prevProps)) {
+      this.fetchData();
+    }
+  }
+
+  async fetchData() {
+    if (!isPortalUser()) {
+      return;
+    }
+
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
+    let projectId = params.get('project');
+    const project = (await apiProjectGet(this.props.serviceUrl, projectId)).data;
+
+    if (!project) {
+      console.error("Unable to retrieve projectId ", projectId)
+      this.setState({
+        projects: {},
+      });
+    }
+
+    this.setState({
+      project: project,
+      loading: false,
+    });
+    //TODO? this.render();
   }
 
   handleValidation() {
     let invalid = {};
     let formIsValid = true;
 
-    if (this.state.project.systemId === undefined || this.state.project.systemId === 'project-list') {
-      formIsValid = false;
-      invalid['project'] = true;
-    }
-
-    if (this.state.type === '' || this.state.type === 'Select') {
+    if (this.state.type === '') {
       formIsValid = false;
       invalid['type'] = true;
     }
 
-    if (this.state.description === '' || this.state.description === 'Select') {
+    if (this.state.summary === '') {
+      formIsValid = false;
+      invalid['summary'] = true;
+    }
+
+    if (this.state.description === '') {
       formIsValid = false;
       invalid['description'] = true;
     }
 
-    if (this.state.priority === '' || this.state.priority === 'Select') {
+    if (this.state.priority === '') {
       formIsValid = false;
       invalid['priority'] = true;
     }
 
-    this.setState({ invalid: invalid });
+    this.setState({
+      invalid: invalid
+    });
     return formIsValid;
   }
 
@@ -70,14 +101,10 @@ class OpenTicket extends Component {
     const input = e.target;
     const name = input.name;
     const value = input.value;
-
-    if (name === 'project' && value !== '' && value !== 'project-list') {
-      this.setState({
-        project: JSON.parse(value),
-      });
-    } else {
-      this.setState({ [name]: value });
-    }
+    this.setState({
+        [name]: value
+      }
+    );
   };
 
   handleFormSubmit = event => {
@@ -86,202 +113,76 @@ class OpenTicket extends Component {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
-      // check if project has subscription
-      this.fetchProjectSubscription(this.state.project.id)
-        .then(result => {
-          // if project has subscription, create ticket
-          if (result.data.length > 0) {
-            this.createTicket()
-              .then(() => {
-                this.setState({
-                  submitMsg: i18n.t('submitMessages.created'),
-                  submitColour: '#24a148',
-                });
-              })
-              .catch(() => {
-                this.setState({
-                  submitMsg: i18n.t('submitMessages.ticketError'),
-                  submitColour: '#da1e28',
-                });
-              });
-          }
-          // if no subscriptions, don't create ticket
-          else {
+      const subscription = getActiveSubscription(this.state.project);
+      if (subscription) {
+        this.createTicket()
+          .then(() => {
             this.setState({
-              submitMsg: i18n.t('submitMessages.subscriptionRequired'),
+              submitMsg: i18n.t('submitMessages.created'),
+              submitColour: '#24a148',
+            });
+          })
+          .catch(() => {
+            this.setState({
+              submitMsg: i18n.t('submitMessages.ticketError'),
               submitColour: '#da1e28',
             });
-          }
-        })
-        .catch(() => {
-          this.setState({
-            submitMsg: i18n.t('submitMessages.error'),
-            submitColour: '#da1e28',
           });
-        });
-    }
-  };
-
-  async fetchProjectSubscription(projectId) {
-    return await apiGetProjectSubscriptions(this.props.serviceUrl, projectId);
-  }
-
-  async fetchProjects() {
-    const { keycloak } = this.props;
-    var authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
-      if (isPortalAdminOrSupport()) {
-        let projects = await apiAdminProjectsGet(this.props.serviceUrl);
-        let search = window.location.search;
-        let params = new URLSearchParams(search);
-        let projectParam = params.get('project');
-        if (projectParam) {
-          projects.data.forEach(project => {
-            if (String(project.id) === projectParam) {
-              projects = project;
-              this.setState({
-                projects: [projects],
-                project: projects,
-              });
-            }
-          });
-        } else {
-          this.setState({
-            projects: projects.data,
-          });
-        }
-      } else if (isPortalCustomerOrPartner()) {
-        var projects = await apiMyProjectsGet(this.props.serviceUrl);
-        let search = window.location.search;
-        let params = new URLSearchParams(search);
-        let projectParam = params.get('project');
-        if (projectParam) {
-          projects.data.forEach(project => {
-            if (String(project.id) === projectParam) {
-              var foundProject = project;
-              this.setState({
-                projects: [foundProject],
-                project: foundProject,
-              });
-            }
-          });
-        } else {
-          this.setState({
-            projects: projects.data,
-          });
-        }
       }
+      // if no subscriptions, don't create ticket
+      else {
+        this.setState({
+          submitMsg: i18n.t('submitMessages.subscriptionRequired'),
+          submitColour: '#da1e28',
+        });
+      }
+    } else {
+      this.setState({
+        submitMsg: i18n.t('submitMessages.error'),
+        submitColour: '#da1e28',
+      });
     }
-
-    this.render();
   }
 
   async createTicket() {
-    const { keycloak } = this.props;
-    var authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isPortalUser()) {
       const ticket = {
-        systemId: this.state.project.systemId,
         type: this.state.type,
         summary: this.state.summary,
         description: this.state.description,
         priority: this.state.priority,
+        // these fields are just placeholders to validate the POST request (fields will be set in the backend)
+        systemId: '999',
         status: 'To Do',
-        // these dates are just placeholder to validate the POST request (date will be updated in the backend)
         createDate: '2021-02-22T14:14:09-05:00',
         updateDate: '2021-02-22T14:14:09-05:00',
       };
-      return await apiJiraTicketPost(this.props.serviceUrl, this.state.ticketingSystem.systemId, this.state.project.systemId, ticket);
-      //const addedTicket = await apiAddTicketToProject(this.props.serviceUrl, this.state.project.id, result.data.id);
-    }
-  }
-
-  async getTicketingSystem() {
-    if (isPortalUser()) {
-      const ticketingSystems = await apiTicketingSystemsGet(this.props.serviceUrl);
-      const currentTicketingSystem = ticketingSystems.data[ticketingSystems.data.length - 1];
-      this.setState({
-        ticketingSystem: currentTicketingSystem,
-      });
-    }
-  }
-
-  componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
-      this.fetchProjects();
-      this.getTicketingSystem();
-      this.setState({
-        loading: false,
-      });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
-      this.fetchProjects();
-      this.getTicketingSystem();
-      this.setState({
-        loading: false,
-      });
+      return await apiJiraTicketPost(this.props.serviceUrl, this.state.project.id, ticket);
     }
   }
 
   render() {
-    if (!this.state.loading && this.state.projects.length !== 0) {
+    if (!this.state.loading) {
       if (isPortalUser()) {
         return (
           <div>
-            {isPortalAdmin() ? (
-              <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
-            ) : isPortalSupport() ? (
-              <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3>
-            ) : isPortalCustomer() ? (
-              <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3>
-            ) : isPortalPartner() ? (
-              <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3>
-            ) : null}
             <div className="form-container">
-              <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+              <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
               <Form onSubmit={this.handleFormSubmit}>
-                <div className="form-desc">
-                  <h4>{i18n.t('supportTicketForm.formTitle')}</h4>
-                  <p>{i18n.t('supportTicketForm.desc')}</p>
-                </div>
                 <div className="bx--grid">
+                  <div className="bx--row" style={{padding: '1em 0'}}>
+                    <div className="bx--col">
+                      <div className="form-desc">
+                        <h4>{i18n.t('supportTicketForm.formTitle')}</h4>
+                        <div>{i18n.t('supportTicketForm.desc')}</div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="bx--row">
                     <div className="bx--col">
-                      <Select
-                        id="project"
-                        name="project"
-                        labelText={i18n.t('supportTicketForm.selectProject') + ' *'}
-                        value={JSON.stringify(this.state.project)}
-                        onChange={this.handleChanges}
-                        invalidText={i18n.t('validation.invalid.required')}
-                        invalid={this.state.invalid['project']}
-                      >
-                        {this.state.projects.length > 1 ? (
-                          <SelectItem text={i18n.t('adminDashboard.addPartner.selectProject')} value="project-list" />
-                        ) : null}
-                        {Object.keys(this.state.projects).length !== 0
-                          ? this.state.projects.map((project, i) => {
-                              return (
-                                <SelectItem key={i} text={project.name} value={JSON.stringify(project)}>
-                                  {project.name}
-                                </SelectItem>
-                              );
-                            })
-                          : null}
-                      </Select>
+                      <div>
+                        <strong>{i18n.t('projectDetails.project')}:</strong> {this.state.project.name}
+                      </div>
                       <Select
                         id="type"
                         name="type"
@@ -359,4 +260,4 @@ class OpenTicket extends Component {
   }
 }
 
-export default withKeycloak(OpenTicket);
+export default withKeycloak(OpenTicketForm);

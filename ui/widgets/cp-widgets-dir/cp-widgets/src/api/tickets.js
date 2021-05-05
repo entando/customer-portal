@@ -32,17 +32,9 @@ export const apiTicketPost = async (serviceUrl, ticket) => {
 };
 
 const jiraResource = 'api/tickets/ticketingsystem';
-export const apiJiraTicketDelete = async (serviceUrl, id) => {
-  const url = `${serviceUrl}/${jiraResource}/${id}`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'DELETE',
-  };
-  return request(url, options);
-};
 
-export const apiJiraTicketsGet = async (serviceUrl, projectName, organization) => {
-  const url = `${serviceUrl}/${jiraResource}/${projectName}/${organization}`;
+export const apiJiraTicketsGet = async (serviceUrl, projectId) => {
+  const url = `${serviceUrl}/${jiraResource}/${projectId}`;
   const options = {
     ...getDefaultOptions(),
     method: 'GET',
@@ -51,8 +43,8 @@ export const apiJiraTicketsGet = async (serviceUrl, projectName, organization) =
   return request(url, options);
 };
 
-export const apiJiraTicketPost = async (serviceUrl, projectName, organization, ticket) => {
-  const url = `${serviceUrl}/${jiraResource}/${projectName}/${organization}`;
+export const apiJiraTicketPost = async (serviceUrl, projectId, ticket) => {
+  const url = `${serviceUrl}/${jiraResource}/${projectId}`;
   const options = {
     ...getDefaultOptions(),
     method: 'POST',

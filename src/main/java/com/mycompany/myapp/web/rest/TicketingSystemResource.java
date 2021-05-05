@@ -90,7 +90,7 @@ public class TicketingSystemResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of ticketingSystems in body.
      */
     @GetMapping("/ticketing-systems")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public List<TicketingSystem> getAllTicketingSystems() {
         log.debug("REST request to get all TicketingSystems");
         return ticketingSystemService.findAll();

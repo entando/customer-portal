@@ -8,13 +8,13 @@ import {
   TableHeader,
   TableBody,
   TableCell,
-  PaginationNav,
+  PaginationNav, Button,
 } from 'carbon-components-react';
 import {apiJiraTicketsGet} from '../../api/tickets';
 import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
 import withKeycloak from '../../auth/withKeycloak';
-import {apiProjectGet, apiAddTicketToProject, apiGetMyProject} from '../../api/projects';
-import {isPortalAdminOrSupport, isPortalUser} from '../../api/helpers';
+import {apiProjectGet} from '../../api/projects';
+import {authenticationChanged, isAuthenticated, isPortalUser} from '../../api/helpers';
 import i18n from '../../i18n';
 
 class TicketList extends Component {
@@ -23,7 +23,7 @@ class TicketList extends Component {
     this.state = {
       tickets: {},
       project: {},
-      currentTicketingSystem: {},
+      ticketingSystem: {},
       currentPage: 0,
     };
     this.headerData = [
@@ -63,27 +63,15 @@ class TicketList extends Component {
   }
 
   async fetchData() {
-    const { keycloak } = this.props;
-    var authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isPortalUser()) {
       try {
-        let project;
-        if (isPortalAdminOrSupport()) {
-          project = await apiProjectGet(this.props.serviceUrl, this.props.projectId);
-        } else {
-          project = await apiGetMyProject(this.props.serviceUrl, this.props.projectId);
-        }
-        const currentTicketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
-        var tickets = await apiJiraTicketsGet(this.props.serviceUrl, currentTicketingSystem.systemId, project.data.systemId);
-        for (var i = 0; i < tickets.data.length; i++) {
-          apiAddTicketToProject(this.props.serviceUrl, this.props.projectId, tickets.data[i].id);
-        }
-
+        const project = (await apiProjectGet(this.props.serviceUrl, this.props.projectId)).data;
+        const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
+        const tickets = await apiJiraTicketsGet(this.props.serviceUrl, project.id);
         this.setState({
           tickets: tickets,
           project: project,
-          currentTicketingSystem: currentTicketingSystem,
+          ticketingSystem: ticketingSystem,
         });
       } catch (err) {
         console.log(err);
@@ -92,18 +80,13 @@ class TicketList extends Component {
   }
 
   componentDidMount() {
-    if (isPortalUser()) {
+    if (isAuthenticated(this.props)) {
       this.fetchData();
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth && isPortalUser()) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.fetchData();
     }
   }
@@ -121,39 +104,49 @@ class TicketList extends Component {
       itemsShown: Number(1),
       onChange: event => this.setState({currentPage: event}),
     });
-    const ticketSystemUrl = this.state.currentTicketingSystem.url;
+    const ticketSystemUrl = this.state.ticketingSystem.url;
     const ticketingSystemBaseUrl = (ticketSystemUrl != null) ?
       ticketSystemUrl.substr(0, ticketSystemUrl.indexOf('/rest'))
       : null;
 
     return (
       <div>
-        <DataTable rows={rowData} headers={this.headerData}>
+        {this.state.project.id && (
+          <div>
+            {/*View All Ticket*/}
+            <a
+              href={ticketingSystemBaseUrl + '/issues/' +
+              '?jql=Organizations=' +
+              this.state.project.systemId
+              }
+              style={{textDecoration: 'none'}}
+              target="_blank" rel="noreferrer"
+            >
+              <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
+                {i18n.t('buttons.viewAllTickets')}
+              </Button>
+            </a>
+            {/*Open Ticket*/}
+            <a
+              href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.state.project.id}`}
+              style={{textDecoration: 'none'}}
+            >
+              <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
+                {i18n.t('buttons.openTicket')}
+              </Button>
+            </a>
+          </div>
+        )}
+        <DataTable rows={[{id: '1'}]} headers={this.headerData}>
           {({rows, headers, getHeaderProps, getTableProps}) => (
             <TableContainer
               title={i18n.t('ticketDetails.listOfTickets')}
-              description={
-                this.state.project.data != null ? (
-                  <a
-                    href={ticketingSystemBaseUrl + '/issues/' +
-                    '?jql=Organizations=' +
-                    this.state.project.data.systemId
-                    }
-                    style={{textDecoration: 'none'}}
-                    target="_blank" rel="noreferrer"
-                  >
-                    {i18n.t('buttons.viewAllTickets')}
-                  </a>
-                ) : (
-                  <div>{i18n.t('ticketDetails.tickets')}</div>
-                )
-              }
             >
               <Table {...getTableProps()}>
                 <TableHead>
                   <TableRow>
                     {headers.map(header => (
-                      <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>
+                      <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>
                     ))}
                   </TableRow>
                 </TableHead>
@@ -203,32 +196,5 @@ class TicketList extends Component {
     );
   }
 }
-
-const rowData = [
-  {
-    id: 'a',
-    projectName: 'Ticket1',
-    project: 'Leonardo',
-    entandoVersion: 6.2,
-    creationDate: 'October, 2019',
-    openTicket: 'Open Ticket',
-  },
-  {
-    id: 'a',
-    projectName: 'Ticket1',
-    project: 'Leonardo',
-    entandoVersion: 6.2,
-    creationDate: 'October, 2019',
-    openTicket: 'Open Ticket',
-  },
-  {
-    id: 'a',
-    projectName: 'Ticket1',
-    project: 'Leonardo',
-    entandoVersion: 6.2,
-    creationDate: 'October, 2019',
-    openTicket: 'Open Ticket',
-  },
-];
 
 export default withKeycloak(TicketList);
