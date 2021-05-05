@@ -79,6 +79,16 @@ export const getDefaultKeycloakOptions = () => ({
   }),
 });
 
+export const getActiveSubscription = project => {
+  return (project &&
+    project.projectSubscriptions &&
+    project.projectSubscriptions.find(
+      item => {
+        return (item.status === "ACTIVE") ? item : null
+      })
+  );
+}
+
 export const getUrl = url => {
   return `${url}`;
 };
@@ -87,7 +97,7 @@ export const request = async (url, options) => {
   const response = await fetch(url, options);
 
   const headers = {
-    ...(response.headers.has('X-Total-Count') ? { 'X-Total-Count': parseInt(response.headers.get('X-Total-Count'), 10) } : {}),
+    ...(response.headers.has('X-Total-Count') ? {'X-Total-Count': parseInt(response.headers.get('X-Total-Count'), 10)} : {}),
   };
 
   if (response.status === 204) {

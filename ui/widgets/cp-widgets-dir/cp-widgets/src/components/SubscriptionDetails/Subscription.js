@@ -156,8 +156,10 @@ class Subscription extends React.Component {
                     />
                   ) : null}
                 </Tile>
-                <br />
-                <TicketList projectId={this.state.project.data.id} serviceUrl={this.props.serviceUrl} />
+                <br/>
+                <TicketList projectId={this.state.project.data.id}
+                            serviceUrl={this.props.serviceUrl}
+                            locale={this.props.locale}/>
               </div>
             </div>
           );

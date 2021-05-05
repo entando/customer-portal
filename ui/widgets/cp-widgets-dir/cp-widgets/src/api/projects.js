@@ -124,15 +124,6 @@ export const apiGetProjectUsers = async (serviceUrl, projectId) => {
   return request(url, options);
 };
 
-export const apiGetProjectsTickets = async (serviceUrl, projectId) => {
-  const url = `${serviceUrl}/${resource}/${projectId}/tickets/`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-  return request(url, options);
-};
-
 export const apiGetProjectSubscriptions = async (serviceUrl, projectId) => {
   const url = `${serviceUrl}/${resource}/${projectId}/subscriptions/`;
   const options = {
@@ -151,17 +142,9 @@ export const apiGetProjectIdsAndNames = async serviceUrl => {
   return request(url, options);
 };
 
+//TODO: remove the my and admin-specific functions
 export const apiGetMyProject = async (serviceUrl, projectId) => {
   const url = `${serviceUrl}/${resource}/myproject/${projectId}/`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-  return request(url, options);
-};
-
-export const apiGetMyProjectIdNames = async serviceUrl => {
-  const url = `${serviceUrl}/${resource}/myprojects/nameId/`;
   const options = {
     ...getDefaultOptions(),
     method: 'GET',

@@ -165,4 +165,10 @@ public interface ProjectService {
      * @throws RuntimeException if the user doesn't have access
      */
     void checkProjectAccess(Long projectId) throws RuntimeException;
+
+    /**
+     * Get the current active subscription for a project
+     */
+    public Optional<ProjectSubscription> getActiveSubscription(Project project);
+
 }

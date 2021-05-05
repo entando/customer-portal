@@ -5,7 +5,7 @@ import { apiGetCustomersProjects, apiGetMyCustomersProjects, apiDeleteProjectFro
 import withKeycloak from '../../auth/withKeycloak';
 import { Link } from 'react-router-dom';
 import i18n from '../../i18n';
-import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
+import {authenticationChanged, getActiveSubscription, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
 import {apiCurrentTicketingSystemGet} from "../../api/ticketingsystem";
 import ProjectActionItems from '../Admin/ProjectActionItems';
 import {formatEndDate, formatStartDate} from "../../api/subscriptions";
@@ -166,12 +166,7 @@ class CustomerDataTable extends Component {
                 <TableBody>
                   {Object.keys(this.state.projects).length !== 0
                     ? this.state.projects.data.map((project, index) => {
-                      //Display the first ACTIVE subscription in the list. An admin can see and manage the full list at any time
-                      const subscription = project.projectSubscriptions.find(
-                        item => {
-                          return (item.status === "ACTIVE") ? item : null
-                        }
-                      )
+                      const subscription = getActiveSubscription(project);
                       if (!subscription) {
                         return (
                           <TableRow key={index}>

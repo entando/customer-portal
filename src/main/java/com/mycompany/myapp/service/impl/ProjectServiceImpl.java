@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.mycompany.myapp.domain.*;
+import com.mycompany.myapp.domain.enumeration.Status;
 import com.mycompany.myapp.repository.*;
 import com.mycompany.myapp.security.AuthoritiesUtil;
 import com.mycompany.myapp.security.SpringSecurityAuditorAware;
@@ -91,7 +92,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Project : {}", id);
-
         projectRepository.deleteById(id);
     }
 
@@ -304,5 +304,21 @@ public class ProjectServiceImpl implements ProjectService {
         if (!hasProjectAccess(projectId)) {
             throw new RuntimeException("Project forbidden ");
         }
+    }
+
+    /**
+     * Get the current active subscription for a project
+     */
+    public Optional<ProjectSubscription> getActiveSubscription(Project project) {
+        Set<ProjectSubscription> subscriptions = project.getProjectSubscriptions();
+        Optional<ProjectSubscription> result = Optional.empty();
+        if (!subscriptions.isEmpty()) {
+            result = subscriptions.stream()
+                .filter(sub -> sub.getStatus() == Status.ACTIVE)
+                .reduce((a, b) -> {
+                    throw new IllegalStateException();
+                });
+        }
+        return result;
     }
 }
