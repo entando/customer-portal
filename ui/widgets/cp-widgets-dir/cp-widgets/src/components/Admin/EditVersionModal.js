@@ -157,7 +157,7 @@ class EditVersionModal extends Component {
       >
         {modalConfirmation}
         <div className="form-container">
-          <Form onSubmit={this.handleFormSubmit}>
+          <Form onSubmit={this.handleFormSubmit} id={"form" + modalId}>
             <TextInput
               id={"name" + modalId}
               name="name"
@@ -167,7 +167,8 @@ class EditVersionModal extends Component {
               invalidText={i18n.t('validation.invalid.required')}
               invalid={this.state.invalid['name']}
             />
-            <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange} value={this.state.startDate}>
+            <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}
+                        value={this.state.startDate}>
               <DatePickerInput
                 id={"startDate" + modalId}
                 name="startDate"
