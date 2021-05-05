@@ -1,6 +1,7 @@
 package com.mycompany.myapp.service.impl;
 
 import com.mycompany.myapp.domain.EntandoVersion;
+import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.domain.enumeration.SubscriptionLevel;
 import com.mycompany.myapp.security.SpringSecurityAuditorAware;
 import com.mycompany.myapp.service.JiraTicketingSystemService;
@@ -26,8 +27,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
+
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -551,6 +556,60 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                 return null;
             });
 
+    }
+
+    /**
+     * Get the default TicketingSystem
+     *
+     * @return
+     */
+    public Optional<TicketingSystem> getDefaultTicketingSystem() {
+        //Centralize this logic in case it needs to be refined
+        return findAll().stream().findFirst();
+    }
+
+    /**
+     * Retrieve a Jira ticket and use it to populate a new Portal Ticket
+     *
+     * @return A populated Ticket with the details from Jira
+     */
+    public Ticket jiraTicketToPortalTicket(TicketingSystem ts, String jiraKey, Project project) {
+        JSONObject json = new JSONObject(fetchSingleJiraTicketBySystemId(jiraKey,
+            ts.getUrl(), ts.getServiceAccount(), ts.getServiceAccountSecret()));
+
+        Ticket ticket = new Ticket();
+        ticket.setSystemId(jiraKey);
+
+        JSONObject fields = json.getJSONObject("fields");
+        ticket.setSummary(getField(fields, "summary", null));
+        ticket.setDescription(getField(fields, "description", null));
+        ticket.setType(getField(fields, "issuetype", "name"));
+        ticket.setStatus(getField(fields, "status", "name"));
+        ticket.setPriority(getField(fields, "priority", "name"));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        String createdDate = fields.getString("created");
+        ticket.setCreateDate(ZonedDateTime.parse(createdDate, formatter));
+
+        String updatedDate = fields.getString("updated");
+        ticket.setUpdateDate(ZonedDateTime.parse(updatedDate, formatter));
+
+        ticket.setProject(project);
+        return ticket;
+    }
+
+    private String getField(JSONObject jsonObject, String key, String childKey) {
+        if (jsonObject == null) {
+            return null;
+        }
+        if (!jsonObject.has(key)) {
+            return null;
+        }
+        if (childKey == null) {
+            return (!jsonObject.isNull(key)) ? jsonObject.getString(key) : null;
+        }
+        JSONObject child = jsonObject.getJSONObject(key);
+        return getField(child, childKey, null);
     }
 
 }
