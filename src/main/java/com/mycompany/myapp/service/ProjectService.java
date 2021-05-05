@@ -81,7 +81,7 @@ public interface ProjectService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    List<ProjectSubscription> getProjectSubscriptions(Long id);
+    Set<ProjectSubscription> getProjectSubscriptions(Long id);
 
     /**
      * Add a partner to a project.

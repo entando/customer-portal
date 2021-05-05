@@ -56,7 +56,7 @@ public class Project implements Serializable {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private List<ProjectSubscription> projectSubscriptions = new ArrayList<>();
+    private Set<ProjectSubscription> projectSubscriptions = new HashSet<>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -174,11 +174,11 @@ public class Project implements Serializable {
         this.notes = notes;
     }
 
-    public List<ProjectSubscription> getProjectSubscriptions() {
+    public Set<ProjectSubscription> getProjectSubscriptions() {
         return projectSubscriptions;
     }
 
-    public Project projectSubscriptions(List<ProjectSubscription> projectSubscriptions) {
+    public Project projectSubscriptions(Set<ProjectSubscription> projectSubscriptions) {
         this.projectSubscriptions = projectSubscriptions;
         return this;
     }
@@ -195,7 +195,7 @@ public class Project implements Serializable {
         return this;
     }
 
-    public void setProjectSubscriptions(List<ProjectSubscription> projectSubscriptions) {
+    public void setProjectSubscriptions(Set<ProjectSubscription> projectSubscriptions) {
         this.projectSubscriptions = projectSubscriptions;
     }
 
