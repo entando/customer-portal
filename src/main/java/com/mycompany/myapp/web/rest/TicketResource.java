@@ -1,7 +1,6 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.*;
-import com.mycompany.myapp.domain.enumeration.Status;
 import com.mycompany.myapp.domain.enumeration.SubscriptionLevel;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.service.JiraTicketingSystemService;
@@ -27,7 +26,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.Ticket}.
@@ -48,7 +46,8 @@ public class TicketResource {
     private final JiraTicketingSystemService ticketingSystemService;
     private final ProjectService projectService;
 
-    public TicketResource(TicketService ticketService, JiraTicketingSystemService ticketingSystemService,
+    public TicketResource(TicketService ticketService,
+                          JiraTicketingSystemService ticketingSystemService,
                           ProjectService projectService) {
         this.ticketService = ticketService;
         this.ticketingSystemService = ticketingSystemService;
@@ -161,7 +160,7 @@ public class TicketResource {
                 t.setDescription((String) jsonIssue.getJSONObject("fields").get("summary"));
                 t.setType((String) jsonIssue.getJSONObject("fields").getJSONObject("issuetype").get("name"));
                 t.setPriority((String) jsonIssue.getJSONObject("fields").getJSONObject("priority").get("name"));
-                t.setStatus((String) jsonIssue.getJSONObject("fields").getJSONObject("status").getString("name"));
+                t.setStatus(jsonIssue.getJSONObject("fields").getJSONObject("status").getString("name"));
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
                 // Create Date
                 String createdDate = jsonIssue.getJSONObject("fields").getString("created");
@@ -182,7 +181,7 @@ public class TicketResource {
             // else create a Ticket
             else {
                 log.debug("Creating ticket {}", jiraKey);
-                Ticket prepareTicketToCreate = prepareTicketFromJira(ts, jiraKey, project);
+                Ticket prepareTicketToCreate = ticketingSystemService.jiraTicketToPortalTicket(ts, jiraKey, project);
                 resultTickets.add(prepareTicketToCreate);
                 createTicket(prepareTicketToCreate);
             }
@@ -193,7 +192,6 @@ public class TicketResource {
 
     /**
      * {@code GET  /tickets/ticketingsystem/:projectId} : Creating a new jira ticket in a project.
-     *
      * @param projectId the projectId for the ticket
      * @return the JSON response
      */
@@ -201,6 +199,7 @@ public class TicketResource {
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<Ticket> createJiraTicketInProject(@PathVariable Long projectId, @Valid @RequestBody Ticket ticket)
         throws URISyntaxException {
+        log.debug("REST request to create Jira ticket in projectId: {}", projectId);
 
         Optional<Project> optionalProject = projectService.findOne(projectId);
         if (!optionalProject.isPresent()) {
@@ -225,53 +224,15 @@ public class TicketResource {
         JSONObject response = new JSONObject(ticketingSystemService.createJiraTicketInOrg(
             ts.getSystemId(), organizationId, ts.getUrl(),
             ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket, version, level));
-        String key = response.getString("key");
 
         // Create ticket in the portal
-        return createTicket(prepareTicketFromJira(ts, key, project));
-    }
-
-    Ticket prepareTicketFromJira(TicketingSystem ts, String jiraKey, Project project) {
-        JSONObject json = new JSONObject(ticketingSystemService.fetchSingleJiraTicketBySystemId(jiraKey,
-            ts.getUrl(), ts.getServiceAccount(), ts.getServiceAccountSecret()));
-
-        Ticket ticket = new Ticket();
-        ticket.setSystemId(jiraKey);
-
-        JSONObject fields = json.getJSONObject("fields");
-        ticket.setSummary(getField(fields, "summary", null));
-        ticket.setDescription(getField(fields, "description", null));
-        ticket.setType(getField(fields, "issuetype", "name"));
-        ticket.setStatus(getField(fields, "status", "name"));
-        ticket.setPriority(getField(fields, "priority", "name"));
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        String createdDate = fields.getString("created");
-        ticket.setCreateDate(ZonedDateTime.parse(createdDate, formatter));
-
-        String updatedDate = fields.getString("updated");
-        ticket.setUpdateDate(ZonedDateTime.parse(updatedDate, formatter));
-
-        ticket.setProject(project);
-        return ticket;
-    }
-
-    private String getField(JSONObject jsonObject, String key, String childKey) {
-        if (jsonObject == null) {
-            return null;
-        }
-        if (!jsonObject.has(key)) {
-            return null;
-        }
-        if (childKey == null) {
-            return (!jsonObject.isNull(key)) ? jsonObject.getString(key) : null;
-        }
-        JSONObject child = jsonObject.getJSONObject(key);
-        return getField(child, childKey, null);
+        String key = response.getString("key");
+        Ticket portalTicket = ticketingSystemService.jiraTicketToPortalTicket(ts, key, project);
+        return createTicket(portalTicket);
     }
 
     private TicketingSystem getTicketingSystem() {
-        Optional<TicketingSystem> optionalTicketingSystem = ticketingSystemService.findAll().stream().findFirst();
+        Optional<TicketingSystem> optionalTicketingSystem = ticketingSystemService.getDefaultTicketingSystem();
         if (!optionalTicketingSystem.isPresent()) {
             String msg = "No ticketing system is configured";
             log.warn(msg);

@@ -108,10 +108,10 @@ class SubscriptionForm extends Component {
 
     this.setState({
       subscription: subscription,
-      level: subscription.level,
+      level: (subscription.level) ? subscription.level : '',
       entandoVersionId: (subscription.entandoVersion) ? subscription.entandoVersion.id : '',
       startDate: stripTime(subscription.startDate),
-      lengthInMonths: subscription.lengthInMonths,
+      lengthInMonths: (subscription.lengthInMonths) ? subscription.lengthInMonths : '',
       status: status,
       formType: formType,
       project: project,
@@ -358,7 +358,6 @@ class SubscriptionForm extends Component {
     const isAdmin = isPortalAdmin();
     const { subscriptionType, submitSuccess, submitError } = this.state;
 
-    //TODO: rework messages?
     if (subscriptionType === 'new') {
       if (submitSuccess) {
         return isAdmin ? this.createFormMessage('adminSubmitNewSuccess') : this.createFormMessage('customerSubmitSuccess');

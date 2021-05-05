@@ -1,6 +1,7 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.EntandoVersion;
+import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.domain.TicketingSystem;
 import com.mycompany.myapp.domain.Ticket;
 import com.mycompany.myapp.domain.enumeration.SubscriptionLevel;
@@ -112,9 +113,22 @@ public interface JiraTicketingSystemService {
     /**
      * Getting accountId of a user from Jira.
      *
-     * @param serviceAccount the serviceAccount of the ticketing system
+     * @param serviceAccount       the serviceAccount of the ticketing system
      * @param serviceAccountSecret the serviceAccountSecret of the ticketing system
-     * @param baseUrl the baseUrl of the project
+     * @param baseUrl              the baseUrl of the project
      */
-     String getJiraAccountIdOfSignedInUser(String baseUrl, String serviceAccount, String serviceAccountSecret);
+    String getJiraAccountIdOfSignedInUser(String baseUrl, String serviceAccount, String serviceAccountSecret);
+
+    /**
+     * Get the default TicketingSystem
+     */
+    Optional<TicketingSystem> getDefaultTicketingSystem();
+
+    /**
+     * Retrieve a Jira ticket and use it to populate a new Portal Ticket
+     *
+     * @return A populated Ticket with the details from Jira
+     */
+    Ticket jiraTicketToPortalTicket(TicketingSystem ts, String jiraKey, Project project);
+
 }

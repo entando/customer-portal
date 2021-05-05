@@ -1,53 +1,28 @@
 package com.mycompany.myapp.web.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.validation.Valid;
-
+import com.mycompany.myapp.domain.*;
+import com.mycompany.myapp.request.SubscriptionCreationRequest;
+import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.AuthoritiesUtil;
-import com.mycompany.myapp.service.TicketService;
+import com.mycompany.myapp.security.SpringSecurityAuditorAware;
+import com.mycompany.myapp.service.*;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.mycompany.myapp.domain.EntandoVersion;
-import com.mycompany.myapp.domain.PortalUser;
-import com.mycompany.myapp.domain.Project;
-import com.mycompany.myapp.domain.ProjectSubscription;
-import com.mycompany.myapp.request.SubscriptionCreationRequest;
-import com.mycompany.myapp.security.AuthoritiesConstants;
-import com.mycompany.myapp.security.SpringSecurityAuditorAware;
-import com.mycompany.myapp.service.EntandoVersionService;
-import com.mycompany.myapp.service.ProjectService;
-import com.mycompany.myapp.service.ProjectSubscriptionService;
-import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.ProjectSubscription}.
@@ -71,13 +46,16 @@ public class ProjectSubscriptionResource {
     private final ProjectService projectService;
     private final EntandoVersionService entandoVersionService;
     private final TicketService ticketService;
+    private final JiraTicketingSystemService ticketingSystemService;
 
     public ProjectSubscriptionResource(ProjectSubscriptionService projectSubscriptionService, ProjectService projectService,
-                                       EntandoVersionService entandoVersionService, TicketService ticketService) {
+                                       EntandoVersionService entandoVersionService, TicketService ticketService,
+                                       JiraTicketingSystemService ticketingSystemService) {
         this.projectSubscriptionService = projectSubscriptionService;
         this.projectService = projectService;
         this.entandoVersionService = entandoVersionService;
         this.ticketService = ticketService;
+        this.ticketingSystemService = ticketingSystemService;
     }
 
     /**
@@ -90,7 +68,7 @@ public class ProjectSubscriptionResource {
     @PostMapping("/project-subscriptions")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<ProjectSubscription> createProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest)
-        throws URISyntaxException, MessagingException {
+        throws URISyntaxException {
         log.debug("REST request to save ProjectSubscription : {}", subscriptionCreationRequest);
         ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
 
@@ -104,86 +82,52 @@ public class ProjectSubscriptionResource {
         }
         projectService.checkProjectAccess(projectId);
 
-        Optional<Project> associatedProjectOpt = projectService.findOne(subscriptionCreationRequest.getProjectId());
-        if (!associatedProjectOpt.isPresent()) {
+        Optional<Project> optionalProject = projectService.findOne(projectId);
+        if (!optionalProject.isPresent()) {
             throw new BadRequestAlertException("There was no project found with that id", ENTITY_NAME, "projectNotFound");
         }
+        Project project = optionalProject.get();
+        projectSubscription.setProject(project);
 
-        Optional<EntandoVersion> entandoVersionOpt = entandoVersionService.findOne(subscriptionCreationRequest.getEntandoVersionId());
-        if (!entandoVersionOpt.isPresent()) {
+        Optional<EntandoVersion> optionalVersion = entandoVersionService.findOne(subscriptionCreationRequest.getEntandoVersionId());
+        if (!optionalVersion.isPresent()) {
             throw new BadRequestAlertException("There was no entando version found with that id", ENTITY_NAME, "entandoVersionNotFound");
         }
-
-        associatedProjectOpt.ifPresent(projectSubscription::setProject);
-        entandoVersionOpt.ifPresent(projectSubscription::setEntandoVersion);
+        projectSubscription.setEntandoVersion(optionalVersion.get());
 
         ProjectSubscription result = projectSubscriptionService.save(projectSubscription);
 
         //Create a ticket when the request isn't from an admin
-        if (!AuthoritiesUtil.isCurrentUserAdminOrSupport()) {
-            log.error("To be implemented...");
-        }
+        if (AuthoritiesUtil.isCurrentUserAdminOrSupport()) {
+            log.info("Skipping ticket creation since subscription {} for project {} was created by admin", result.getId(), projectId);
+        } else {
+            log.info("Creating ticket since subscription {} for project {} was created by user", result.getId(), projectId);
 
-        //TODO: remove or clean up
-        /*
-        if (hasUserRole) {
-            String from = "jordengerovac@gmail.com"; // email required
-            String to = "jordengerovac@gmail.com"; // email required
-            String password = "74ylOr96$j7";
+            Optional<TicketingSystem> optionalTicketingSystem = ticketingSystemService.getDefaultTicketingSystem();
+            if (!optionalTicketingSystem.isPresent()) {
+                log.warn("Unable to open subscription request");
+            } else {
+                TicketingSystem ts = optionalTicketingSystem.get();
+                //Prepare the ticket
+                Ticket ticket = new Ticket();
+                ticket.setSummary("New Subscription Request: " + project.getName());
+                ticket.setDescription(String.format("A new subscription has been requested for project %s (%s) to start on %s for %s months",
+                    project.getName(), project.getId(), result.getStartDate(), result.getLengthInMonths()));
+                ticket.setType("Support");
+                ticket.setPriority("High");
 
+                // Create ticket in Jira
+                String organizationId = project.getSystemId();
+                JSONObject response = new JSONObject(ticketingSystemService.createJiraTicketInOrg(
+                    ts.getSystemId(), organizationId, ts.getUrl(),
+                    ts.getServiceAccount(), ts.getServiceAccountSecret(), ticket, result.getEntandoVersion(), result.getLevel()));
+                String key = response.getString("key");
 
-            //JavaMailSenderImpl sender = new JavaMailSenderImpl();
-
-            //sender.setUsername("jordengerovac@gmail.com");
-            //sender.setPassword("74ylOr96$j7");
-            //sender.setHost("smtp.gmail.com");
-            //sender.setPort(587);
-
-
-            Properties props = new Properties();
-            props.put("mail.transport.protocol", "smtp");
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.starttls.enable", "true");
-            props.put("mail.debug", "true");
-            props.put("mail.smtp.host", "smtp.gmail.com");
-            props.put("mail.smtp.port", "587");
-            Session session = Session.getInstance(props,
-            new javax.mail.Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(from, password);
-                }
-            });
-
-            try {
-
-                Message message = new MimeMessage(session);
-                message.setFrom(new InternetAddress(from));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-                message.setSubject("Subscription Notification");
-                message.setText("<b>Hi</b>,<br><i>This is a notification for new subscription.</i>");
-
-                Transport.send(message);
-
-                System.out.println("Done");
-
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
+                // Create ticket in the portal
+                Ticket portalTicket = ticketingSystemService.jiraTicketToPortalTicket(ts, key, project);
+                ticketService.save(portalTicket);
             }
-
-            //
-            //MimeMessage message = sender.createMimeMessage();
-            //MimeMessageHelper helper = new MimeMessageHelper(message);
-            //helper.setSubject("Subscription Notification");
-            //helper.setFrom(from);
-            //helper.setTo(to);
-
-            // put HTML
-            //helper.setText("<b>Hi</b>,<br><i>This is a notification for new subscription.</i>", true);
-            //sender.send(message);
-            //
         }
-        */
-
         return ResponseEntity.created(new URI("/api/project-subscriptions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -196,11 +140,10 @@ public class ProjectSubscriptionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated projectSubscription,
      * or with status {@code 400 (Bad Request)} if the projectSubscription is not valid,
      * or with status {@code 500 (Internal Server Error)} if the projectSubscription couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/project-subscriptions")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<ProjectSubscription> updateProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest request) throws URISyntaxException {
+    public ResponseEntity<ProjectSubscription> updateProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest request) {
         ProjectSubscription projectSubscription = request.getProjectSubscription();
         log.debug("REST request to update ProjectSubscription : {}", projectSubscription);
 
@@ -281,7 +224,7 @@ public class ProjectSubscriptionResource {
     @PutMapping("/project-subscriptions/renew")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<ProjectSubscription> renewProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest)
-        throws URISyntaxException, MessagingException {
+        throws URISyntaxException {
         long entandoVersionId = subscriptionCreationRequest.getEntandoVersionId();
         long projectId = subscriptionCreationRequest.getProjectId();
         log.debug("REST request to renew a subscription : entandoVersionId {}. projectVersionId {}", entandoVersionId, projectId);
