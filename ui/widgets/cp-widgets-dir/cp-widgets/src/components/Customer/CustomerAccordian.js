@@ -69,7 +69,7 @@ class CustomerAccordian extends Component {
       <div>
         <div>
           {isPortalCustomer() && (
-            <CustomerDetails serviceUrl={this.props.serviceUrl} customerId={this.state.customer.id}/>
+            <CustomerDetails serviceUrl={this.props.serviceUrl} customer={this.state.customer}/>
           )}
           <AccordionItem title={this.props.title} open={this.props.accordionOpened}>
             <div style={{display: 'flex'}}>
