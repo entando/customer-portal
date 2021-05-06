@@ -31,16 +31,6 @@ export const apiCustomerGet = async (serviceUrl, id) => {
   return request(url, options);
 };
 
-export const apiCustomersGetForAdminDashboard = async serviceUrl => {
-  const url = `${serviceUrl}/${resource}/all`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-
-  return request(url, options);
-};
-
 export const apiCustomerPost = async (serviceUrl, customer) => {
   const url = `${serviceUrl}/${resource}`;
   const options = {
@@ -86,48 +76,5 @@ export const apiDeleteProjectFromCustomer = async (serviceUrl, customerId, proje
     ...getDefaultOptions(),
     method: 'DELETE',
   };
-  return request(url, options);
-};
-
-// Endpoints for backend security
-const adminResource = 'api/customers/admin';
-export const apiAdminCustomersGet = async serviceUrl => {
-  const url = getUrl(`${serviceUrl}/${adminResource}`);
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-
-  return request(url, options);
-};
-
-export const apiAdminCustomerGet = async (serviceUrl, customerId) => {
-  const url = getUrl(`${serviceUrl}/${adminResource}/${customerId}`);
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-
-  return request(url, options);
-};
-
-const myResource = 'api/customers/mycustomers';
-export const apiMyCustomersGet = async serviceUrl => {
-  const url = getUrl(`${serviceUrl}/${myResource}`);
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-
-  return request(url, options);
-};
-
-export const apiGetMyCustomersProjects = async (serviceUrl, customerId) => {
-  const url = `${serviceUrl}/${myResource}/${customerId}/projects`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-
   return request(url, options);
 };

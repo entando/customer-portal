@@ -25,7 +25,7 @@ class AddPartnerModal extends Component {
 
   componentDidMount() {
     if (isAuthenticated(this.props)) {
-      this.getProjects();
+      this.fetchData();
 
       const modalOpenButton = document.querySelector('.add-partner-button');
       modalOpenButton.addEventListener('click', this.clearValues, false);
@@ -35,7 +35,7 @@ class AddPartnerModal extends Component {
 
   componentDidUpdate(prevProps) {
     if (authenticationChanged(this.props, prevProps)) {
-      this.getProjects();
+      this.fetchData();
     }
   }
 
@@ -70,7 +70,7 @@ class AddPartnerModal extends Component {
     this.setState({ [name]: value });
   };
 
-  async getProjects() {
+  async fetchData() {
     if (isAuthenticated(this.props)) {
       const projects = await apiProjectsGet(this.props.serviceUrl);
       this.setState({

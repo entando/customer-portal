@@ -1,7 +1,16 @@
-import React, { Component } from 'react';
-import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
+import {Component} from 'react';
+import {
+  DataTable,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableHeader,
+  TableBody,
+  TableCell
+} from 'carbon-components-react';
 import '../../index.scss';
-import { apiGetCustomersProjects, apiGetMyCustomersProjects, apiDeleteProjectFromCustomer } from '../../api/customers';
+import {apiGetCustomersProjects, apiDeleteProjectFromCustomer} from '../../api/customers';
 import withKeycloak from '../../auth/withKeycloak';
 import { Link } from 'react-router-dom';
 import i18n from '../../i18n';
@@ -62,16 +71,8 @@ class CustomerDataTable extends Component {
   async fetchData() {
     if (isAuthenticated(this.props)) {
       try {
-        let projects;
-        //TOOD: refactor
-        if (isPortalAdminOrSupport()) {
-          projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
-        } else {
-          projects = await apiGetMyCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
-        }
-
+        const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerId);
         const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
-
         this.setState({
           projects: projects,
           ticketingSystem: ticketingSystem,
@@ -88,6 +89,13 @@ class CustomerDataTable extends Component {
       this.fetchData();
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (authenticationChanged(this.props, prevProps)) {
+      this.fetchData();
+    }
+  }
+
 
   updateProjectList = () => {
     this.fetchData();
@@ -111,7 +119,7 @@ class CustomerDataTable extends Component {
 
   async deleteProject(id) {
     if (isAuthenticated(this.props)) {
-      return await apiDeleteProjectFromCustomer(this.props.serviceUrl, this.props.customerNumber, id);
+      return await apiDeleteProjectFromCustomer(this.props.serviceUrl, this.props.customerId, id);
     }
   }
 
@@ -134,12 +142,6 @@ class CustomerDataTable extends Component {
         });
     }
   };
-
-  componentDidUpdate(prevProps) {
-    if (authenticationChanged(this.props, prevProps)) {
-      this.fetchData();
-    }
-  }
 
   render() {
     return (
@@ -183,8 +185,8 @@ class CustomerDataTable extends Component {
                               <TableCell>{i18n.t('userMessages.none')}</TableCell>
                               <TableCell>{i18n.t('userMessages.none')}</TableCell>
                               <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              <TableCell>{project.tickets.length}</TableCell>
+                            <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                            <TableCell>{project.tickets && project.tickets.length}</TableCell>
                               {isPortalAdminOrSupport() ? <TableCell style={{ width: '250px' }}>{project.notes}</TableCell> : null}
                               <TableCell>
                                 <ProjectActionItems
@@ -222,7 +224,7 @@ class CustomerDataTable extends Component {
                               <TableCell>{subscription.status}</TableCell>
                               <TableCell>{formatStartDate(subscription.startDate)}</TableCell>
                               <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
-                              <TableCell>{project.tickets.length}</TableCell>
+                              <TableCell>{project.tickets && project.tickets.length}</TableCell>
                               {isPortalAdminOrSupport() ?
                                 <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null
                               }
