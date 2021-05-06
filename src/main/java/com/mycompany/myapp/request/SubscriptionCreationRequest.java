@@ -7,9 +7,9 @@ public class SubscriptionCreationRequest {
 
     private ProjectSubscription projectSubscription;
 
-    // Would it be better to send in a full entandoVersion object or harder for the front end?
     private Long entandoVersionId;
     private Long projectId;
+    private boolean renewal;
 
     public ProjectSubscription getProjectSubscription() {
         return projectSubscription;
@@ -33,5 +33,13 @@ public class SubscriptionCreationRequest {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public boolean isRenewal() {
+        return renewal;
+    }
+
+    public void setRenewal(boolean renewal) {
+        this.renewal = renewal;
     }
 }

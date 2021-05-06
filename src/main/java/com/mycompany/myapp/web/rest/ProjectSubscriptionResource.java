@@ -61,21 +61,21 @@ public class ProjectSubscriptionResource {
     /**
      * {@code POST  /project-subscriptions} : Create a new projectSubscription.
      *
-     * @param subscriptionCreationRequest the projectSubscription to create.
+     * @param request the projectSubscription to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new projectSubscription, or with status {@code 400 (Bad Request)} if the projectSubscription has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/project-subscriptions")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
-    public ResponseEntity<ProjectSubscription> createProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest subscriptionCreationRequest)
+    public ResponseEntity<ProjectSubscription> createProjectSubscription(@Valid @RequestBody SubscriptionCreationRequest request)
         throws URISyntaxException {
-        log.debug("REST request to save ProjectSubscription : {}", subscriptionCreationRequest);
-        ProjectSubscription projectSubscription = subscriptionCreationRequest.getProjectSubscription();
+        log.debug("REST request to save ProjectSubscription : {}", request);
+        ProjectSubscription projectSubscription = request.getProjectSubscription();
 
-        Long projectId = subscriptionCreationRequest.getProjectId();
+        Long projectId = request.getProjectId();
         if (projectSubscription == null || projectSubscription.getId() != null) {
             throw new BadRequestAlertException("A new projectSubscription cannot already have an ID", ENTITY_NAME, "idexists");
-        } else if (subscriptionCreationRequest.getEntandoVersionId() == null) {
+        } else if (request.getEntandoVersionId() == null) {
             throw new BadRequestAlertException("Missing entando version id", ENTITY_NAME, "missingEntandoVersionId");
         } else if (projectId == null) {
             throw new BadRequestAlertException("Missing project id ", ENTITY_NAME, "missingProjectId");
@@ -89,7 +89,7 @@ public class ProjectSubscriptionResource {
         Project project = optionalProject.get();
         projectSubscription.setProject(project);
 
-        Optional<EntandoVersion> optionalVersion = entandoVersionService.findOne(subscriptionCreationRequest.getEntandoVersionId());
+        Optional<EntandoVersion> optionalVersion = entandoVersionService.findOne(request.getEntandoVersionId());
         if (!optionalVersion.isPresent()) {
             throw new BadRequestAlertException("There was no entando version found with that id", ENTITY_NAME, "entandoVersionNotFound");
         }
@@ -110,8 +110,9 @@ public class ProjectSubscriptionResource {
                 TicketingSystem ts = optionalTicketingSystem.get();
                 //Prepare the ticket
                 Ticket ticket = new Ticket();
-                ticket.setSummary("New Subscription Request: " + project.getName());
-                ticket.setDescription(String.format("A new subscription has been requested for project %s (%s) to start on %s for %s months",
+                String prefix = request.isRenewal() ? "Renewal" : "New";
+                ticket.setSummary(prefix + " Subscription Request: " + project.getName());
+                ticket.setDescription(String.format("A subscription has been requested for project %s (%s) to start on %s for %s months",
                     project.getName(), project.getId(), result.getStartDate(), result.getLengthInMonths()));
                 ticket.setType("Support");
                 ticket.setPriority("High");

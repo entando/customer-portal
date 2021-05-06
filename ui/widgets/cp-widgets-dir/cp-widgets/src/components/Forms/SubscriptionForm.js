@@ -20,12 +20,18 @@ import {
 import {apiAddSubscriptionToProject} from '../../api/projects';
 import moment from "moment";
 
-const subscriptionLevel = {
+const FORM_TYPE = {
+  new: 'new',
+  renewal: 'renewal',
+  edit: 'edit'
+}
+
+const SUBSCRIPTION_LEVEL = {
   GOLD: 'GOLD',
   PLATINUM: 'PLATINUM',
 };
 
-const subscriptionStatus = {
+const SUBSCRIPTION_STATUS = {
   requested: 'REQUESTED',
   pending: 'PENDING',
   active: 'ACTIVE',
@@ -87,18 +93,18 @@ class SubscriptionForm extends Component {
 
     let subscription = {};
     let project = {};
-    let formType = 'new';
+    let formType = FORM_TYPE.new;
     let status = '';
     const isAdmin = isPortalAdmin();
 
     if (subscriptionId !== null) {
       subscription = (await apiSubscriptionGet(serviceUrl, subscriptionId)).data;
-      status = isAdmin ? subscription.status : subscriptionStatus.requested;
-      formType = isAdmin ? 'edit' : 'renewal';
+      status = isAdmin ? subscription.status : SUBSCRIPTION_STATUS.requested;
+      formType = isAdmin ? FORM_TYPE.edit : FORM_TYPE.renewal;
       project = subscription.project;
     } else if (projectId !== null) {
       project = (await apiProjectGet(serviceUrl, projectId)).data;
-      status = isAdmin ? subscriptionStatus.pending : subscriptionStatus.requested;
+      status = isAdmin ? SUBSCRIPTION_STATUS.pending : SUBSCRIPTION_STATUS.requested;
     } else {
       console.log("Unable to load project and/or subscription");
       return;
@@ -197,7 +203,7 @@ class SubscriptionForm extends Component {
       const serviceUrl = this.props.serviceUrl;
       const subscriptionRequest = this.stateToSubscription();
 
-      if (formType === 'edit') {
+      if (formType === FORM_TYPE.edit) {
         apiProjectSubscriptionPut(serviceUrl, subscriptionRequest)
           .then(() => {
             this.updateStateForSuccess(true);
@@ -205,7 +211,7 @@ class SubscriptionForm extends Component {
           .catch(() => {
             this.updateStateForSuccess(false);
           });
-      } else if (formType === 'new') {
+      } else if (formType === FORM_TYPE.new) {
         this.newSubscription(subscriptionRequest)
           .then(res => {
             apiAddSubscriptionToProject(serviceUrl, this.state.projectId, res.data.id);
@@ -214,7 +220,7 @@ class SubscriptionForm extends Component {
           .catch(() => {
             this.updateStateForSuccess(false);
           });
-      } else if (formType === 'renewal') {
+      } else if (formType === FORM_TYPE.renewal) {
         this.renewSubscription(subscriptionRequest)
           .then(res => {
             apiAddSubscriptionToProject(serviceUrl, this.state.projectId, res.data.id);
@@ -233,6 +239,7 @@ class SubscriptionForm extends Component {
     return {
       entandoVersionId: this.state.entandoVersionId,
       projectId: this.state.projectId,
+      renewal: (this.state.formType === FORM_TYPE.renewal),
       projectSubscription: {
         id: this.state.subscription.id,
         startDate: new Date(this.state.startDate),
@@ -252,7 +259,7 @@ class SubscriptionForm extends Component {
   }
 
   setupFormComponents() {
-    const subscriptionLevelList = Object.entries(subscriptionLevel).map(([key, value]) => (
+    const subscriptionLevelList = Object.entries(SUBSCRIPTION_LEVEL).map(([key, value]) => (
       <SelectItem key={key} text={value} value={key}>
         {value}
       </SelectItem>
@@ -273,7 +280,7 @@ class SubscriptionForm extends Component {
     });
     versionList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseVersion')} value=""/>);
 
-    const statusList = Object.entries(subscriptionStatus).map(([key, value]) => (
+    const statusList = Object.entries(SUBSCRIPTION_STATUS).map(([key, value]) => (
       <SelectItem key={key} text={value} value={value}>
         {value}
       </SelectItem>

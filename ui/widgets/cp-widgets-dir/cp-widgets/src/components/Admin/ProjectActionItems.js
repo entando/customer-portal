@@ -94,6 +94,35 @@ class ProjectActionItems extends React.Component {
         {actionDivider}
       </div>
     );
+    const openTicket = (
+      <div>
+        <a
+          href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.props.project.id}`}
+          style={{textDecoration: 'none'}}
+        >
+          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
+            {i18n.t('buttons.openTicket')}
+          </Button>
+        </a>
+        {actionDivider}
+      </div>
+    );
+    const viewAllTickets = (
+      <div>
+        <a
+          href={
+            this.props.ticketingSystem.url.substr(0, this.props.ticketingSystem.url.indexOf('/rest')) +
+            '/issues/?jql=Organizations=' + this.props.project.systemId}
+          style={{textDecoration: 'none'}}
+          target="_blank" rel="noreferrer"
+        >
+          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="View All Tickets">
+            {i18n.t('buttons.viewAllTickets')}
+          </Button>
+        </a>
+        {actionDivider}
+      </div>
+    );
     const deleteProject = (
       <div>
         <Button
@@ -121,6 +150,8 @@ class ProjectActionItems extends React.Component {
               {actionDivider}
               {isAdmin && editProjectSubscription}
               {newOrRenewSubscription}
+              {isAdmin && openTicket}
+              {isAdmin && viewAllTickets}
               {isAdmin && manageSubscriptions}
               {isAdmin && manageUsers}
               {isAdmin && deleteProject}
@@ -149,29 +180,8 @@ class ProjectActionItems extends React.Component {
               </Link>
               {actionDivider}
               {isAdmin && editProjectSubscription}
-              {/*Open Ticket*/}
-              <a
-                href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.props.project.id}`}
-                style={{textDecoration: 'none'}}
-              >
-                <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
-                  {i18n.t('buttons.openTicket')}
-                </Button>
-              </a>
-              {actionDivider}
-              {/*View All Tickets*/}
-              <a
-                href={
-                  this.props.ticketingSystem.url.substr(0, this.props.ticketingSystem.url.indexOf('/rest')) +
-                  '/issues/?jql=Organizations=' + this.props.project.systemId}
-                style={{textDecoration: 'none'}}
-                target="_blank" rel="noreferrer"
-              >
-                <Button kind="ghost" style={{display: 'block', width: '100%'}} value="View All Tickets">
-                  {i18n.t('buttons.viewAllTickets')}
-                </Button>
-              </a>
-              {actionDivider}
+              {openTicket}
+              {viewAllTickets}
               {!isAdmin && newOrRenewSubscription}
               {isAdmin && (
                 <div>
