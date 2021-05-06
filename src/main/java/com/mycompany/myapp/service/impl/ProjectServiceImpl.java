@@ -260,17 +260,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     * Get project by systemId.
-     *
-     * @param systemId the systemId of the entity.
-     * @return the entity.
-     */
-    @Override
-    public Project getProjectBySystemId(String systemId) {
-        return projectRepository.findProjectBySystemId(systemId);
-    }
-
-    /**
      * Check if the current user has access to a project via admin role or direct assignment
      */
     @Override
@@ -284,7 +273,7 @@ public class ProjectServiceImpl implements ProjectService {
             return false;
         }
 
-        //Note: could probably optimize this with a join query if needed
+        //TODO: optimize this with a join query
         Optional<PortalUser> user = portalUserRepository.findByUsername(username.get());
         if (user.isPresent()) {
             Set<PortalUser> projectUsers = getProjectUsers(projectId);

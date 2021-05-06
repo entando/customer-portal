@@ -107,9 +107,14 @@ public class CustomerServiceImpl implements CustomerService {
     public Set<Project> getCustomerProjects(Long id) {
         return customerRepository.findById(id).get().getProjects();
     }
-    
+
     @Override
-	public Optional<Customer> findByCustomerNumber(String customerNumber) {
-		return customerRepository.findByCustomerNumber(customerNumber);
-	}
+    public Optional<Customer> findByCustomerNumber(String customerNumber) {
+        return customerRepository.findByCustomerNumber(customerNumber);
+    }
+
+    @Override
+    public List<Customer> findByPortalUserId(Long portalUserId) {
+        return customerRepository.findByPortalUserId(portalUserId);
+    }
 }

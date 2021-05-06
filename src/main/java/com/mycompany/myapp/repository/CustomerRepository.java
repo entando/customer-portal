@@ -1,5 +1,6 @@
 package com.mycompany.myapp.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,12 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    @Query("select c from Customer c " +
+        "join Project p on p.customer.id = c.id " +
+        "join PortalUser u on u.project.id = p.id " +
+        "where u.id = ?1")
+    List<Customer> findByPortalUserId(long userId);
+
     List<Customer> findByName(String name);
 
     Optional<Customer> findByCustomerNumber(String customerNumber);

@@ -16,9 +16,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    @Query("select project from Project project where project.systemId = ?1")
-    Project findProjectBySystemId(String systemId);
-
     Iterable<Project> findByCustomer(Customer customer);
     List<Project> findByName(String name);
 

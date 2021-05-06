@@ -146,14 +146,6 @@ public interface ProjectService {
     Set<PortalUser> getProjectUsers(Long id);
 
     /**
-     * Get project by systemId.
-     *
-     * @param systemId the systemId of the entity.
-     * @return the entity.
-     */
-    Project getProjectBySystemId(String systemId);
-
-    /**
      * Check if the current user has access to a project via admin role or direct assignment
      */
     boolean hasProjectAccess(Long projectId);

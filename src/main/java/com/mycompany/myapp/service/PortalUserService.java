@@ -43,9 +43,11 @@ public interface PortalUserService {
 
     /**
      * Finds a portal user by their username.
-     * 
+     *
      * @param username the username of the customer
      * @return the entity
      */
     Optional<PortalUser> findByUsername(String username);
+
+    Optional<Long> getCurrentPortalUserId();
 }

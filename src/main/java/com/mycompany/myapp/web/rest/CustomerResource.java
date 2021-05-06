@@ -120,28 +120,15 @@ public class CustomerResource {
     public List<Customer> getAllCustomers() {
         log.debug("REST request to get all Customers");
 
-        if(userHasAdminOrSupport()) {
+        if (userHasAdminOrSupport()) {
             return customerService.findAll();
-        }
-
-        SpringSecurityAuditorAware security = new SpringSecurityAuditorAware();
-        Optional<String> currentUser = security.getCurrentUserLogin();
-
-        //TODO: This and similar methods below won't scale and should eventually be refactored to use join on assigned users
-        List<Project> projects = projectService.findAll();
-        Set<Customer> toAdd = new HashSet<>();
-        List<Customer> customers = new ArrayList<>();
-        for(Project project : projects) {
-            Set<PortalUser> users = projectService.getProjectUsers(project.getId());
-            for(PortalUser user : users) {
-                if (currentUser.get().equals(user.getUsername())) {
-                    toAdd.add(project.getCustomer());
-                    break;
-                }
+        } else {
+            Optional<Long> userId = portalUserService.getCurrentPortalUserId();
+            if (userId.isPresent()) {
+                return customerService.findByPortalUserId(userId.get());
             }
         }
-        customers.addAll(toAdd);
-        return customers;
+        return new ArrayList<>();
     }
 
     /**
@@ -339,6 +326,7 @@ public class CustomerResource {
     public ResponseEntity<Set<Project>> getMyCustomerProjects(@PathVariable Long customerId) {
         Set<Project> projects = customerService.getCustomerProjects(customerId);
 
+        //TODO: remove in factor of query or checkAccess
         String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
         Optional<PortalUser> optional = portalUserService.findByUsername(currentUser);
         Set<Project> result = new HashSet<>();
