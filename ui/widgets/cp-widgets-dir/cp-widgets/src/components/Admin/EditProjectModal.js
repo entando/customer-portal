@@ -3,7 +3,8 @@ import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomersGet } from '../../api/customers';
-import { apiProjectGet, apiProjectPut, apiProjectsGet } from '../../api/projects';
+import {apiProjectGet, apiProjectPut, apiProjectsGet} from '../../api/projects';
+import {authenticationChanged, isAuthenticated} from "../../api/helpers";
 
 class EditProjectModal extends Component {
   constructor(props) {
@@ -68,12 +69,7 @@ class EditProjectModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.getCustomers();
       this.getAllProjects();
       this.getProjectDetails();
@@ -88,11 +84,9 @@ class EditProjectModal extends Component {
   };
 
   async getCustomers() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       const customers = await apiCustomersGet(this.props.serviceUrl);
-      this.setState({ customerList: customers });
+      this.setState({customerList: customers});
     }
   }
 
@@ -123,9 +117,7 @@ class EditProjectModal extends Component {
   }
 
   async projectPut(project) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       return await apiProjectPut(this.props.serviceUrl, project);
     }
   }

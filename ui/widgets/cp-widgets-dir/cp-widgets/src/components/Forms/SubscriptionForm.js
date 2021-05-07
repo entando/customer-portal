@@ -1,6 +1,15 @@
 import React, {Component} from 'react';
 import i18n from '../../i18n';
-import {Form, TextInput, Select, SelectItem, Button, DatePicker, DatePickerInput} from 'carbon-components-react';
+import {
+  Form,
+  TextInput,
+  Select,
+  SelectItem,
+  Button,
+  DatePicker,
+  DatePickerInput,
+  TextArea
+} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiProjectGet} from '../../api/projects';
 import {
@@ -44,6 +53,7 @@ class SubscriptionForm extends Component {
       startDate: '',
       level: 'PLATINUM',
       lengthInMonths: '',
+      notes: '',
       entandoVersionId: '',
       status: '',
       formType: 'new',
@@ -113,6 +123,7 @@ class SubscriptionForm extends Component {
       entandoVersionId: subscription.entandoVersion ? subscription.entandoVersion.id : '',
       startDate: stripTime(subscription.startDate),
       lengthInMonths: subscription.lengthInMonths ? subscription.lengthInMonths : '',
+      notes: subscription.ntes ? subscription.notes : '',
       status: status,
       formType: formType,
       project: project,
@@ -241,6 +252,7 @@ class SubscriptionForm extends Component {
         lengthInMonths: this.state.lengthInMonths,
         level: this.state.level,
         status: this.state.status.toUpperCase(),
+        notes: this.state.notes,
       },
     };
   }
@@ -350,6 +362,15 @@ class SubscriptionForm extends Component {
               invalidText={i18n.t('validation.invalid.number')}
               invalid={this.state.invalid['lengthInMonths']}
             />
+            {isPortalAdmin() && (
+              <TextArea
+                id={'notes'}
+                name="notes"
+                labelText={i18n.t('adminDashboard.addProject.notes')}
+                value={this.state.notes}
+                onChange={this.handleChanges}
+              />
+            )}
           </div>
         </div>
       </div>

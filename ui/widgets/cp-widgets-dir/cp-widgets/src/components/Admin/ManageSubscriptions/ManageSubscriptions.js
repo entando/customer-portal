@@ -31,7 +31,7 @@ class ManageSubscriptions extends Component {
         key: 'id',
       },
       {
-        header: i18n.t('projectDetails.status'),
+        header: i18n.t('subscriptionDetails.status'),
         key: 'status',
       },
       {
@@ -39,20 +39,24 @@ class ManageSubscriptions extends Component {
         key: 'entandoVersion',
       },
       {
-        header: i18n.t('projectDetails.level'),
+        header: i18n.t('subscriptionDetails.level'),
         key: 'level',
       },
       {
-        header: i18n.t('projectDetails.startDate'),
+        header: i18n.t('subscriptionDetails.startDate'),
         key: 'startDate',
       },
       {
-        header: i18n.t('projectDetails.endDate'),
+        header: i18n.t('subscriptionDetails.endDate'),
         key: 'endDate',
       },
       {
-        header: i18n.t('projectDetails.lengthInMonths'),
+        header: i18n.t('subscriptionDetails.lengthInMonths'),
         key: 'lengthInMonths',
+      },
+      {
+        header: i18n.t('subscriptionDetails.notes'),
+        key: 'notes',
       },
       {
         header: i18n.t('customerDashboard.action'),
@@ -156,6 +160,7 @@ class ManageSubscriptions extends Component {
                       <TableCell>{formatStartDate(subscription.startDate)}</TableCell>
                       <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
                       <TableCell>{subscription.lengthInMonths}</TableCell>
+                      <TableCell>{subscription.notes}</TableCell>
                       <TableCell>
                         <a
                           href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.state.projectId}&subscription=${subscription.id}`}
