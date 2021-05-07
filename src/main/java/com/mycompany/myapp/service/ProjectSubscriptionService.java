@@ -1,11 +1,9 @@
 package com.mycompany.myapp.service;
 
+import com.mycompany.myapp.domain.ProjectSubscription;
+
 import java.util.List;
 import java.util.Optional;
-
-import com.mycompany.myapp.domain.EntandoVersion;
-import com.mycompany.myapp.domain.Project;
-import com.mycompany.myapp.domain.ProjectSubscription;
 
 /**
  * Service Interface for managing {@link ProjectSubscription}.
@@ -27,6 +25,7 @@ public interface ProjectSubscriptionService {
      */
     List<ProjectSubscription> findAll();
 
+
     /**
      * Get the "id" projectSubscription.
      *
@@ -41,12 +40,4 @@ public interface ProjectSubscriptionService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-
-    /**
-     * 
-     * @param entandoVersionId
-     * @param projectId
-     * @return the latest 
-     */
-    Optional<ProjectSubscription> findLatestExpiredSubscription(Long entandoVersionId, Long projectId);
 }
