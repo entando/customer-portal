@@ -8,26 +8,35 @@ import com.mycompany.myapp.service.ProjectService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link ProjectResource} REST controller.
  */
-@SpringBootTest(classes = { CustportApp.class, TestSecurityConfiguration.class })
+@SpringBootTest(classes = {CustportApp.class, TestSecurityConfiguration.class})
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 public class ProjectResourceIT {
@@ -55,6 +64,12 @@ public class ProjectResourceIT {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Mock
+    private ProjectRepository projectRepositoryMock;
+
+    @Mock
+    private ProjectService projectServiceMock;
 
     @Autowired
     private ProjectService projectService;
@@ -207,7 +222,27 @@ public class ProjectResourceIT {
             .andExpect(jsonPath("$.[*].contactEmail").value(hasItem(DEFAULT_CONTACT_EMAIL)))
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
     }
-    
+
+    @SuppressWarnings({"unchecked"})
+    public void getAllProjectsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(projectServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restProjectMockMvc.perform(get("/api/projects?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(projectServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public void getAllProjectsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(projectServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restProjectMockMvc.perform(get("/api/projects?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(projectServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
     @Test
     @Transactional
     public void getProject() throws Exception {
