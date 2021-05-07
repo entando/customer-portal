@@ -7,7 +7,7 @@ import AdminConfiguration from '../components/Admin/Configuration/AdminConfigura
 import OpenTicketForm from '../components/Forms/OpenTicketForm';
 import ManageUser from '../components/Admin/ManageUser/ManageUser';
 import ManageSubscriptions from '../components/Admin/ManageSubscriptions/ManageSubscriptions';
-import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from '../api/helpers';
+import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../api/helpers';
 
 class LocalApp extends Component {
   constructor(props) {
@@ -49,7 +49,7 @@ class LocalApp extends Component {
                   <Link to={'/'}>Home</Link>
                 </li>
                 {/*TODO: rework the entando-de-app-based paths so the application name and locale are more general*/}
-                {isPortalAdminOrSupport() && (
+                {isPortalAdmin() && (
                   <li>
                     <Link to={'/entando-de-app/en/admin.page'}>Admin</Link>
                   </li>
