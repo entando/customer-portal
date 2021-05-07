@@ -68,7 +68,9 @@ public class Project implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Partner> partners = new HashSet<>();
 
-    @ManyToMany
+    //CUSTOM START for deletes
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    //CUSTOM END
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(name = "project_user",
         joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),

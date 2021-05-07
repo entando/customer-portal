@@ -61,7 +61,7 @@ public interface CustomerService {
 
     Optional<Customer> findByCustomerNumber(String customerNumber);
 
-    public List<Customer> findAllByUser(Long portalUserId);
+    List<Customer> findAllByUser(Long portalUserId);
 
     Optional<Customer> findOneByUser(Long companyId, Long portalUserId);
 }
