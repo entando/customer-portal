@@ -10,7 +10,7 @@ import {
   TableCell
 } from 'carbon-components-react';
 import '../../index.scss';
-import {apiGetCustomersProjects, apiDeleteProjectFromCustomer} from '../../api/customers';
+import {apiDeleteProjectFromCustomer, apiCustomerGet} from '../../api/customers';
 import withKeycloak from '../../auth/withKeycloak';
 import { Link } from 'react-router-dom';
 import i18n from '../../i18n';
@@ -71,7 +71,8 @@ class CustomerDataTable extends Component {
   async fetchData() {
     if (isAuthenticated(this.props)) {
       try {
-        const projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerId);
+        const customer = await apiCustomerGet(this.props.serviceUrl, this.props.customerId);
+        const projects = customer.data.projects;
         const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
         this.setState({
           projects: projects,
@@ -146,8 +147,8 @@ class CustomerDataTable extends Component {
   render() {
     return (
       <div>
-        <DataTable rows={rowData} headers={this.headerData}>
-          {({ rows, headers, getHeaderProps, getTableProps }) => (
+        <DataTable rows={[{id: '1'}]} headers={this.headerData}>
+          {({rows, headers, getHeaderProps, getTableProps}) => (
             <TableContainer description={i18n.t('customerDashboard.tableDesc')}>
               <Table {...getTableProps()}>
                 <TableHead>
@@ -156,7 +157,7 @@ class CustomerDataTable extends Component {
                       let result;
                       if (header.header === i18n.t('customerDetails.notes')) {
                         if (isPortalAdminOrSupport()) {
-                          result = <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>;
+                          result = <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>;
                         }
                       } else {
                         result = <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>;
@@ -167,7 +168,7 @@ class CustomerDataTable extends Component {
                 </TableHead>
                 <TableBody>
                   {Object.keys(this.state.projects).length !== 0
-                    ? this.state.projects.data.map((project, index) => {
+                    ? this.state.projects.map((project, index) => {
                       const subscription = getActiveSubscription(project);
                       if (!subscription) {
                         return (
@@ -194,7 +195,7 @@ class CustomerDataTable extends Component {
                                   ticketingSystem={this.state.ticketingSystem}
                                   locale={this.props.locale}
                                   project={project}
-                                  allProjects={this.state.projects.data}
+                                  allProjects={this.state.projects}
                                   handleDeleteProject={this.handleDeleteProject}
                                   updateProjectList={this.updateProjectList}
                                 />
@@ -235,7 +236,7 @@ class CustomerDataTable extends Component {
                                   locale={this.props.locale}
                                   subscription={subscription}
                                   project={project}
-                                  allProjects={this.state.projects.data}
+                                  allProjects={this.state.projects}
                                   handleDeleteProject={this.handleDeleteProject}
                                   updateProjectList={this.updateProjectList}
                                 />
@@ -254,7 +255,5 @@ class CustomerDataTable extends Component {
     );
   }
 }
-
-const rowData = [{id: 'a'}];
 
 export default withKeycloak(CustomerDataTable);

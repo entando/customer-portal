@@ -507,6 +507,7 @@ public class ProjectResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
      */
+    //TODO: remove
     @GetMapping("/projects/myprojects")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public List<Project> getMyProjects() {

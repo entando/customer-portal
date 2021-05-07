@@ -51,16 +51,6 @@ export const apiCustomerPut = async (serviceUrl, customer) => {
   return request(url, options);
 };
 
-export const apiGetCustomersProjects = async (serviceUrl, customerId) => {
-  const url = `${serviceUrl}/${resource}/${customerId}/projects`;
-  const options = {
-    ...getDefaultOptions(),
-    method: 'GET',
-  };
-
-  return request(url, options);
-};
-
 export const apiAddProjectToCustomer = async (serviceUrl, customerId, projectId) => {
   const url = `${serviceUrl}/${resource}/${customerId}/projects/${projectId}`;
   const options = {

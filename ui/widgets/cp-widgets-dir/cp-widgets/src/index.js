@@ -4,7 +4,6 @@ import './custom-elements/AdminConfigurationElement';
 import './custom-elements/AdminDashboardElement';
 import './custom-elements/AppElement';
 import './custom-elements/AssignUserElement';
-import './custom-elements/CustomerDataTableElement';
 import './custom-elements/DeleteUserElement';
 import './custom-elements/FormsOpenTicketElement';
 import './custom-elements/ManageSubscriptionsElement';

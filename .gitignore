@@ -149,6 +149,7 @@ Desktop.ini
 ## Local DB settings
 /src/main/docker/keycloak-db/
 /src/main/docker/postgresql-db/
+/src/main/docker/postgres-db/
 
 ######################
 # Entando bundles

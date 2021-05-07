@@ -1,43 +1,32 @@
 package com.mycompany.myapp.web.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-
-import javax.validation.Valid;
-
-import com.mycompany.myapp.domain.PortalUser;
+import com.mycompany.myapp.domain.Customer;
+import com.mycompany.myapp.domain.Project;
 import com.mycompany.myapp.security.AuthoritiesConstants;
+import com.mycompany.myapp.security.AuthoritiesUtil;
 import com.mycompany.myapp.security.SpringSecurityAuditorAware;
+import com.mycompany.myapp.service.CustomerService;
 import com.mycompany.myapp.service.PortalUserService;
 import com.mycompany.myapp.service.ProjectService;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.mycompany.myapp.domain.Customer;
-import com.mycompany.myapp.domain.Project;
-import com.mycompany.myapp.service.CustomerService;
-import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.Customer}.
@@ -95,11 +84,10 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated customer,
      * or with status {@code 400 (Bad Request)} if the customer is not valid,
      * or with status {@code 500 (Internal Server Error)} if the customer couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/customers")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<Customer> updateCustomer(@Valid @RequestBody Customer customer) throws URISyntaxException {
+    public ResponseEntity<Customer> updateCustomer(@Valid @RequestBody Customer customer) {
         log.debug("REST request to update Customer : {}", customer);
         if (customer.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -120,38 +108,15 @@ public class CustomerResource {
     public List<Customer> getAllCustomers() {
         log.debug("REST request to get all Customers");
 
-        if (userHasAdminOrSupport()) {
+        if (AuthoritiesUtil.isCurrentUserAdminOrSupport()) {
             return customerService.findAll();
         } else {
             Optional<Long> userId = portalUserService.getCurrentPortalUserId();
             if (userId.isPresent()) {
-                return customerService.findByPortalUserId(userId.get());
+                return customerService.findAllByUser(userId.get());
             }
         }
         return new ArrayList<>();
-    }
-
-    /**
-     * {@code GET  /customers/all} : get map object of all customers' names and numbers.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the map of customers' names and numbers in body.
-     */
-    @GetMapping("/customers/all")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<Map<String, String>> getCustomersForAdminDashboard() {
-        Map<String, String> customers = new HashMap<>();
-
-        try {
-	        List<Customer> customerList = customerService.findAll();
-
-	        for (Customer customer : customerList) {
-	        	customers.put(customer.getName(), customer.getCustomerNumber());
-	        }
-        } catch(Exception e) {
-    		log.error("Error occurred while fetching all customer", e);
-    	}
-
-        return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
     /**
@@ -164,31 +129,16 @@ public class CustomerResource {
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public ResponseEntity<Customer> getCustomer(@PathVariable Long id) {
         log.debug("REST request to get Customer : {}", id);
-        Optional<Customer> optional = customerService.findOne(id);
-
-        //Check that the user has access to this customer
-        if(!userHasAdminOrSupport() && optional.isPresent()) {
-            List<Customer> customers = getMyCustomers();
-            Customer customer = optional.get();
-            if(!customers.contains(customer)) {
-                optional = Optional.empty();
+        Optional<Customer> customer = Optional.empty();
+        if (AuthoritiesUtil.isCurrentUserAdminOrSupport()) {
+            customer = customerService.findOne(id);
+        } else {
+            Optional<Long> userId = portalUserService.getCurrentPortalUserId();
+            if (userId.isPresent()) {
+                customer = customerService.findOneByUser(id, userId.get());
             }
         }
 
-        return ResponseUtil.wrapOrNotFound(optional);
-    }
-
-    /**
-     * {@code GET  /customers/:id} : get the "id" customer.
-     *
-     * @param id the id of the customer to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the customer, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/customers/admin/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<Customer> adminGetCustomer(@PathVariable Long id) {
-        log.debug("REST request to get Customer : {}", id);
-        Optional<Customer> customer = customerService.findOne(id);
         return ResponseUtil.wrapOrNotFound(customer);
     }
 
@@ -199,7 +149,7 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/customers/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         log.debug("REST request to delete Customer : {}", id);
 
@@ -214,7 +164,7 @@ public class CustomerResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/customers/{customerId}/projects/{projectId}")
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SUPPORT + "')")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Void> deleteProjectFromCustomer(@PathVariable Long customerId, @PathVariable Long projectId) {
         log.debug("REST request to delete project {} from Customer : {}", projectId, customerId);
 
@@ -244,7 +194,7 @@ public class CustomerResource {
      */
     @PostMapping("/customers/{customerId}/projects/{projectId}")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<Customer> addProjectToCustomer(@PathVariable Long customerId, @PathVariable Long projectId) throws URISyntaxException {
+    public ResponseEntity<Customer> addProject(@PathVariable Long customerId, @PathVariable Long projectId) throws URISyntaxException {
         log.debug("REST request to add Project to Customer : {}", customerId);
         Customer result = customerService.addProjectToCustomer(customerId, projectId);
 
@@ -259,103 +209,15 @@ public class CustomerResource {
      *
      * @param customerId the id of the project.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the project, or with status {@code 404 (Not Found)}.
+     * the project, or with status {@code 404 (Not Found)}.
      */
+    //TODO: remove
     @GetMapping("/customers/{customerId}/projects")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<Set<Project>> getCustomerProjects(@PathVariable Long customerId) {
+    public ResponseEntity<Set<Project>> getProjects(@PathVariable Long customerId) {
         Set<Project> projects = customerService.getCustomerProjects(customerId);
         return ResponseEntity.ok().headers(
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, customerId.toString()))
             .body(projects);
-    }
-
-    /**
-     * {@code GET  /customers/admin} : get all the customers.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
-     */
-    @GetMapping("/customers/admin")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public List<Customer> adminGetAllCustomers() {
-        log.debug("REST request to get all Customers");
-        return customerService.findAll();
-    }
-
-    /**
-     * {@code GET  /customers/mycustomers} : get the user's customers.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
-     */
-    @GetMapping("/customers/mycustomers")
-    @PreAuthorize(AuthoritiesConstants.HAS_CUSTOMER_OR_PARTNER)
-    public List<Customer> getMyCustomers() {
-        log.debug("REST request to get user's Customers");
-
-        List<Customer> customers = new ArrayList<>();
-
-        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
-        Optional<PortalUser> optional = portalUserService.findByUsername(currentUser);
-        if (optional.isPresent()) {
-            PortalUser currentPortalUser = optional.get();
-
-            List<Project> projects = projectService.findAll();
-            Set<Customer> toAdd = new HashSet<>();
-
-            for(Project project : projects) {
-                Set<PortalUser> users = projectService.getProjectUsers(project.getId());
-                if (users.contains(currentPortalUser)) {
-                    toAdd.add(project.getCustomer());
-                }
-            }
-            customers.addAll(toAdd);
-        }
-
-        return customers;
-    }
-
-    /**
-     * {@code GET  /customers/mycustomers/:customerId/projects} : get the projects of "customerId" customer.
-     *
-     * @param customerId the id of the customer.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     *         the projects, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/customers/mycustomers/{customerId}/projects")
-    @PreAuthorize(AuthoritiesConstants.HAS_CUSTOMER_OR_PARTNER)
-    public ResponseEntity<Set<Project>> getMyCustomerProjects(@PathVariable Long customerId) {
-        Set<Project> projects = customerService.getCustomerProjects(customerId);
-
-        //TODO: remove in factor of query or checkAccess
-        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
-        Optional<PortalUser> optional = portalUserService.findByUsername(currentUser);
-        Set<Project> result = new HashSet<>();
-        if (optional.isPresent()) {
-            PortalUser currentPortalUser = optional.get();
-            for(Project project : projects) {
-                Set<PortalUser> users = projectService.getProjectUsers(project.getId());
-                if (users.contains(currentPortalUser)) {
-                    result.add(project);
-                }
-            }
-        }
-
-        return ResponseEntity.ok().headers(
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, customerId.toString()))
-            .body(result);
-    }
-
-    private boolean userHasAdminOrSupport() {
-        return userHasRole(AuthoritiesConstants.ADMIN) || userHasRole(AuthoritiesConstants.SUPPORT);
-    }
-
-    private boolean userHasRole(String roleName) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        for (GrantedAuthority role : authentication.getAuthorities()) {
-            if(role.toString().equals(roleName)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

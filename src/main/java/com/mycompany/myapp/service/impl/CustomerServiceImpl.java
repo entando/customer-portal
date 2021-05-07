@@ -114,7 +114,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> findByPortalUserId(Long portalUserId) {
-        return customerRepository.findByPortalUserId(portalUserId);
+    public List<Customer> findAllByUser(Long portalUserId) {
+        return customerRepository.findAllByUser(portalUserId);
+    }
+
+    @Override
+    public Optional<Customer> findOneByUser(Long companyId, Long portalUserId) {
+        return customerRepository.findOneByUser(companyId, portalUserId);
     }
 }
