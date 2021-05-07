@@ -17,7 +17,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("select c from Customer c " +
         "join Project p on p.customer.id = c.id " +
         "join PortalUser u on u member of p.users " +
-        "where u.id = ?1")
+        "where u.id = ?1 " +
+        "order by c.name")
     List<Customer> findAllByUser(long userId);
 
     @Query("select distinct c from Customer c " +
