@@ -1,6 +1,6 @@
 package com.mycompany.myapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A PortalUser.
@@ -31,9 +33,10 @@ public class PortalUser implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = {"tickets", "partners", "portalUsers", "projectSubscriptions", "customer"}, allowSetters = true)
-    private Project project;
+    @ManyToMany(mappedBy = "users")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<Project> projects = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -70,17 +73,29 @@ public class PortalUser implements Serializable {
         this.email = email;
     }
 
-    public Project getProject() {
-        return project;
+    public Set<Project> getProjects() {
+        return projects;
     }
 
-    public PortalUser project(Project project) {
-        this.project = project;
+    public PortalUser projects(Set<Project> projects) {
+        this.projects = projects;
         return this;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public PortalUser addProject(Project project) {
+        this.projects.add(project);
+        project.getUsers().add(this);
+        return this;
+    }
+
+    public PortalUser removeProject(Project project) {
+        this.projects.remove(project);
+        project.getUsers().remove(this);
+        return this;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

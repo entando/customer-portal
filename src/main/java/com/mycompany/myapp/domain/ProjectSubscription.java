@@ -54,7 +54,9 @@ public class ProjectSubscription implements Serializable {
     private EntandoVersion entandoVersion;
 
     @ManyToOne
+    //CUSTOM START for performance
     @JsonIgnoreProperties(value = {"tickets", "partners", "portalUsers", "projectSubscriptions", "customer"}, allowSetters = true)
+    //CUSTOM END
     private Project project;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
