@@ -50,6 +50,8 @@ public class CacheConfiguration {
             createCache(cm, com.mycompany.myapp.domain.Ticket.class.getName());
             createCache(cm, com.mycompany.myapp.domain.TicketingSystem.class.getName());
             createCache(cm, com.mycompany.myapp.domain.PortalUser.class.getName());
+            createCache(cm, com.mycompany.myapp.domain.Project.class.getName() + ".users");
+            createCache(cm, com.mycompany.myapp.domain.PortalUser.class.getName() + ".projects");
             // jhipster-needle-caffeine-add-entry
         };
     }
