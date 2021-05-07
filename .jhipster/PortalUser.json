@@ -4,7 +4,9 @@
     {
       "fieldName": "username",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "email",
@@ -13,11 +15,12 @@
   ],
   "relationships": [
     {
-      "relationshipType": "many-to-one",
+      "relationshipType": "many-to-many",
       "otherEntityName": "project",
-      "otherEntityRelationshipName": "portalUser",
+      "otherEntityRelationshipName": "user",
       "relationshipName": "project",
-      "otherEntityField": "id"
+      "otherEntityField": "id",
+      "ownerSide": false
     }
   ],
   "changelogDate": "20210223145008",

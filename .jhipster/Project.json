@@ -4,12 +4,16 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "description",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "systemId",
@@ -30,7 +34,9 @@
     {
       "fieldName": "notes",
       "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRules": [
+        "maxlength"
+      ],
       "fieldValidateRulesMaxlength": "1024"
     }
   ],
@@ -54,10 +60,12 @@
       "relationshipName": "partner"
     },
     {
-      "relationshipType": "one-to-many",
+      "relationshipType": "many-to-many",
       "otherEntityName": "portalUser",
       "otherEntityRelationshipName": "project",
-      "relationshipName": "portalUser"
+      "relationshipName": "user",
+      "otherEntityField": "id",
+      "ownerSide": true
     },
     {
       "relationshipType": "many-to-one",

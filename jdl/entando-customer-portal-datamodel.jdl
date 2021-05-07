@@ -86,7 +86,10 @@ relationship OneToMany {
     Project to ProjectSubscription{project},
     Project to Ticket{project},
     Project to Partner{project},
-    Project to PortalUser{project}
+}
+
+relationship ManyToMany {
+    Project{user} to PortalUser{project}
 }
 
 relationship ManyToOne {

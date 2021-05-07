@@ -5,13 +5,17 @@
       "fieldName": "level",
       "fieldType": "SubscriptionLevel",
       "fieldValues": "GOLD,PLATINUM",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "status",
       "fieldType": "Status",
       "fieldValues": "REQUESTED,PENDING,ACTIVE,EXPIRED",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "lengthInMonths",
@@ -24,18 +28,19 @@
     {
       "fieldName": "notes",
       "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRules": [
+        "maxlength"
+      ],
       "fieldValidateRulesMaxlength": "1024"
     }
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "entandoVersion",
       "otherEntityRelationshipName": "projectSubscription",
       "relationshipName": "entandoVersion",
-      "otherEntityField": "id",
-      "ownerSide": true
+      "otherEntityField": "id"
     },
     {
       "relationshipType": "many-to-one",
