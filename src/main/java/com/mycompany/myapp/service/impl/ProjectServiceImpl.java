@@ -14,6 +14,8 @@ import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +71,12 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> findAll() {
         log.debug("Request to get all Projects");
         return projectRepository.findAll();
+    }
+
+    @Override
+    public Page<Project> findAllWithEagerRelationships(Pageable pageable) {
+        log.debug("Request to get all Projects pageable");
+        return projectRepository.findAllWithEagerRelationships(pageable);
     }
 
     /**
@@ -194,7 +202,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Project addUserToProject(Long projectId, Long userId) {
         Optional<Project> project = projectRepository.findById(projectId);
         Optional<PortalUser> user = portalUserRepository.findById(userId);
-        project.get().addPortalUser(user.get());
+        project.get().addUser(user.get());
         return projectRepository.save(project.get());
     }
 
@@ -243,7 +251,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Project deleteUserFromProject(Long projectId, Long userId) {
         Optional<Project> project = projectRepository.findById(projectId);
         Optional<PortalUser> user = portalUserRepository.findById(userId);
-        project.get().removePortalUser(user.get());
+        project.get().removeUser(user.get());
         return projectRepository.save(project.get());
     }
 
@@ -256,7 +264,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Set<PortalUser> getProjectUsers(Long id) {
         Optional<Project> project = findOne(id);
-        return project.isPresent() ? project.get().getPortalUsers() : new HashSet<>();
+        return project.isPresent() ? project.get().getUsers() : new HashSet<>();
     }
 
     /**

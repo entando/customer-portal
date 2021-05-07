@@ -16,13 +16,13 @@ import org.springframework.stereotype.Repository;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("select c from Customer c " +
         "join Project p on p.customer.id = c.id " +
-        "join PortalUser u on u member of p.portalUsers " +
+        "join PortalUser u on u member of p.users " +
         "where u.id = ?1")
     List<Customer> findAllByUser(long userId);
 
     @Query("select distinct c from Customer c " +
         "join Project p on p.customer.id = c.id " +
-        "join PortalUser u on u member of p.portalUsers " +
+        "join PortalUser u on u member of p.users " +
         "where c.id = ?1 and u.id = ?2")
     Optional<Customer> findOneByUser(long companyId, long userId);
 
