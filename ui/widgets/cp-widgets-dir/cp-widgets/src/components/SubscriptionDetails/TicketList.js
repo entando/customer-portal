@@ -114,7 +114,7 @@ class TicketList extends Component {
           <div>
             {/*View All Ticket*/}
             <a
-              href={ticketingSystemBaseUrl + '/issues/' + '?jql=Organizations=' + this.state.project.systemId}
+              href={ticketingSystemBaseUrl + '/issues/?jql=Organizations=' + this.state.project.systemId}
               style={{textDecoration: 'none'}}
               target="_blank"
               rel="noreferrer"

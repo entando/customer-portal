@@ -97,27 +97,15 @@ class CustomerDataTable extends Component {
     }
   }
 
+  // fix warning: Can't perform a React state update on an unmounted component
+  componentWillUnmount() {
+    this.setState = (state, callback) => {
+      //no-op
+    };
+  }
+
   updateProjectList = () => {
     this.fetchData();
-  };
-
-  showMenu = (e, id) => {
-    var showMenu = {};
-    showMenu[String(id)] = !this.state.showMenu[String(id)];
-    this.setState({
-      showMenu: showMenu,
-    });
-  };
-
-  closeMenu = () => {
-    this.setState(
-      {
-        showMenu: false,
-      },
-      () => {
-        document.removeEventListener('click', this.closeMenu);
-      }
-    );
   };
 
   async deleteProject(id) {
