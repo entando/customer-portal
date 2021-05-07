@@ -65,7 +65,7 @@ public class CustomerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/customers")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer customer) throws URISyntaxException {
         log.debug("REST request to save Customer : {}", customer);
         if (customer.getId() != null) {
@@ -86,7 +86,7 @@ public class CustomerResource {
      * or with status {@code 500 (Internal Server Error)} if the customer couldn't be updated.
      */
     @PutMapping("/customers")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Customer> updateCustomer(@Valid @RequestBody Customer customer) {
         log.debug("REST request to update Customer : {}", customer);
         if (customer.getId() == null) {
@@ -193,7 +193,7 @@ public class CustomerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/customers/{customerId}/projects/{projectId}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Customer> addProject(@PathVariable Long customerId, @PathVariable Long projectId) throws URISyntaxException {
         log.debug("REST request to add Project to Customer : {}", customerId);
         Customer result = customerService.addProjectToCustomer(customerId, projectId);
@@ -202,22 +202,5 @@ public class CustomerResource {
             .created(new URI("/api/customers/" + result.getId())).headers(HeaderUtil
                 .createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
-    }
-
-    /**
-     * {@code GET  /customers/:customerId/projects} : get the projects of "customerId" customer.
-     *
-     * @param customerId the id of the project.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
-     * the project, or with status {@code 404 (Not Found)}.
-     */
-    //TODO: remove
-    @GetMapping("/customers/{customerId}/projects")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<Set<Project>> getProjects(@PathVariable Long customerId) {
-        Set<Project> projects = customerService.getCustomerProjects(customerId);
-        return ResponseEntity.ok().headers(
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, customerId.toString()))
-            .body(projects);
     }
 }
