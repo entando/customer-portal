@@ -33,7 +33,10 @@ Install the bundle using the App Builder.
   * TODO configuration for email server
   
 # Development tips
-* The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. For example, the UI code will be reformatted and functional changes may not be useful at this point.
+* The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. 
+  * For example, the UI code may be reformatted and stock unused widgets generated
+  * repository/*Repository classes have some custom queries and methods
+  * web/rest/*Resource classes have been heavily customized with security checks and generally should be rolled back.
 * You can use `./mvnw clean` to reload the fake dataset from src/main/resources/config/liquibase/fake-data.
 * Removing the src/main/docker/keycloak-db directory will result in the realm from src/main/docker/realm-config being reloaded on the next restart.
 
