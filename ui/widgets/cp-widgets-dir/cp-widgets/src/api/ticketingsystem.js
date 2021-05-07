@@ -27,22 +27,31 @@ export const apiTicketingSystemsGet = async serviceUrl => {
   return request(url, options);
 };
 
-export const apiTicketingSystemPost = async (serviceUrl, ticketingsystem) => {
+//Note: post and put both use a ticketingsystemrequest
+export const apiTicketingSystemPost = async (serviceUrl, ticketingSystem, secret) => {
   const url = `${serviceUrl}/${resource}`;
+  const tsRequest = {
+    "ticketingSystem": ticketingSystem,
+    "secret": secret
+  }
   const options = {
     ...getDefaultOptions(),
     method: 'POST',
-    body: ticketingsystem ? JSON.stringify(ticketingsystem) : null,
+    body: JSON.stringify(tsRequest),
   };
   return request(url, options);
 };
 
-export const apiTicketingSystemPut = async (serviceUrl, ticketingsystem) => {
+export const apiTicketingSystemPut = async (serviceUrl, ticketingSystem, secret) => {
   const url = `${serviceUrl}/${resource}`;
+  const tsRequest = {
+    "ticketingSystem": ticketingSystem,
+    "secret": secret
+  }
   const options = {
     ...getDefaultOptions(),
     method: 'PUT',
-    body: ticketingsystem ? JSON.stringify(ticketingsystem) : null,
+    body: JSON.stringify(tsRequest),
   };
   return request(url, options);
 };

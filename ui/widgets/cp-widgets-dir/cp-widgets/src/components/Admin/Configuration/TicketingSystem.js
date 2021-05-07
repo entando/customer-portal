@@ -36,10 +36,9 @@ class TicketingSystem extends Component {
     const ticketingSystem = {
       url: this.state.url,
       serviceAccount: this.state.serviceAccount,
-      serviceAccountSecret: this.state.serviceAccountSecret,
       systemId: this.state.systemId,
     };
-    const response = (await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem)).data;
+    const response = (await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem, this.state.serviceAccountSecret)).data;
     this.setState({
       ticketingSystem: response,
     });
@@ -50,10 +49,9 @@ class TicketingSystem extends Component {
       id: this.state.ticketingSystem.id,
       url: this.state.url,
       serviceAccount: this.state.serviceAccount,
-      serviceAccountSecret: this.state.serviceAccountSecret,
       systemId: this.state.systemId,
     };
-    return await apiTicketingSystemPut(this.props.serviceUrl, ticketingSystem);
+    return await apiTicketingSystemPut(this.props.serviceUrl, ticketingSystem, this.state.serviceAccountSecret);
   }
 
   async fetchData() {

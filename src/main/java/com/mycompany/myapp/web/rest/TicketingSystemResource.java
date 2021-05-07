@@ -1,13 +1,13 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.TicketingSystem;
+import com.mycompany.myapp.request.TicketingSystemRequest;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.service.TicketingSystemService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,18 +45,20 @@ public class TicketingSystemResource {
     /**
      * {@code POST  /ticketing-systems} : Create a new ticketingSystem.
      *
-     * @param ticketingSystem the ticketingSystem to create.
+     * @param request the ticketingSystem to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new ticketingSystem, or with status {@code 400 (Bad Request)} if the ticketingSystem has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/ticketing-systems")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
-    public ResponseEntity<TicketingSystem> createTicketingSystem(@Valid @RequestBody TicketingSystem ticketingSystem) throws URISyntaxException {
-        log.debug("REST request to save TicketingSystem : {}", ticketingSystem);
-        if (ticketingSystem.getId() != null) {
+    public ResponseEntity<TicketingSystem> createTicketingSystem(@Valid @RequestBody TicketingSystemRequest request) throws URISyntaxException {
+        log.debug("REST request to save TicketingSystem : {}", request);
+        TicketingSystem ts = request.getTicketingSystem();
+        if (ts.getId() != null) {
             throw new BadRequestAlertException("A new ticketingSystem cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        TicketingSystem result = ticketingSystemService.save(ticketingSystem);
+        ts.setServiceAccountSecret(request.getSecret());
+        TicketingSystem result = ticketingSystemService.save(ts);
         return ResponseEntity.created(new URI("/api/ticketing-systems/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -65,7 +67,7 @@ public class TicketingSystemResource {
     /**
      * {@code PUT  /ticketing-systems} : Updates an existing ticketingSystem.
      *
-     * @param ticketingSystem the ticketingSystem to update.
+     * @param request the ticketingSystem to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ticketingSystem,
      * or with status {@code 400 (Bad Request)} if the ticketingSystem is not valid,
      * or with status {@code 500 (Internal Server Error)} if the ticketingSystem couldn't be updated.
@@ -73,14 +75,16 @@ public class TicketingSystemResource {
      */
     @PutMapping("/ticketing-systems")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
-    public ResponseEntity<TicketingSystem> updateTicketingSystem(@Valid @RequestBody TicketingSystem ticketingSystem) throws URISyntaxException {
-        log.debug("REST request to update TicketingSystem : {}", ticketingSystem);
-        if (ticketingSystem.getId() == null) {
+    public ResponseEntity<TicketingSystem> updateTicketingSystem(@Valid @RequestBody TicketingSystemRequest request) throws URISyntaxException {
+        log.debug("REST request to update TicketingSystem : {}", request);
+        TicketingSystem ts = request.getTicketingSystem();
+        if (ts.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        TicketingSystem result = ticketingSystemService.save(ticketingSystem);
+        ts.setServiceAccountSecret(request.getSecret());
+        TicketingSystem result = ticketingSystemService.save(ts);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, ticketingSystem.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
