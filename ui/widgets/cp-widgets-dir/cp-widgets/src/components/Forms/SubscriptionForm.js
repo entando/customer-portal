@@ -8,23 +8,18 @@ import {
   apiProjectSubscriptionPut,
   apiRenewSubscription,
   apiSubscriptionGet,
-  stripTime
+  stripTime,
 } from '../../api/subscriptions';
 import {apiProductVersionsGet} from '../../api/productVersion';
-import {
-  authenticationChanged,
-  isAuthenticated,
-  isPortalAdmin,
-  isPortalUser
-} from '../../api/helpers';
+import {authenticationChanged, isAuthenticated, isPortalAdmin, isPortalUser} from '../../api/helpers';
 import {apiAddSubscriptionToProject} from '../../api/projects';
-import moment from "moment";
+import moment from 'moment';
 
 const FORM_TYPE = {
   new: 'new',
   renewal: 'renewal',
-  edit: 'edit'
-}
+  edit: 'edit',
+};
 
 const SUBSCRIPTION_LEVEL = {
   GOLD: 'GOLD',
@@ -106,7 +101,7 @@ class SubscriptionForm extends Component {
       project = (await apiProjectGet(serviceUrl, projectId)).data;
       status = isAdmin ? SUBSCRIPTION_STATUS.pending : SUBSCRIPTION_STATUS.requested;
     } else {
-      console.log("Unable to load project and/or subscription");
+      console.log('Unable to load project and/or subscription');
       return;
     }
 
@@ -114,15 +109,15 @@ class SubscriptionForm extends Component {
 
     this.setState({
       subscription: subscription,
-      level: (subscription.level) ? subscription.level : '',
-      entandoVersionId: (subscription.entandoVersion) ? subscription.entandoVersion.id : '',
+      level: subscription.level ? subscription.level : '',
+      entandoVersionId: subscription.entandoVersion ? subscription.entandoVersion.id : '',
       startDate: stripTime(subscription.startDate),
-      lengthInMonths: (subscription.lengthInMonths) ? subscription.lengthInMonths : '',
+      lengthInMonths: subscription.lengthInMonths ? subscription.lengthInMonths : '',
       status: status,
       formType: formType,
       project: project,
       projectId: projectId,
-      productVersions: productVersions
+      productVersions: productVersions,
     });
   }
 
@@ -150,7 +145,7 @@ class SubscriptionForm extends Component {
     }
 
     this.setState({ invalid: invalid });
-    return (Object.keys(invalid).length === 0);
+    return Object.keys(invalid).length === 0;
   }
 
   handleChanges = e => {
@@ -170,7 +165,7 @@ class SubscriptionForm extends Component {
       formatted = moment(date[0].toISOString()).format('MM/DD/YYYY');
     }
     this.setState({
-      startDate: formatted
+      startDate: formatted,
     });
   };
 
@@ -180,7 +175,7 @@ class SubscriptionForm extends Component {
         submitSuccess: true,
         submitError: false,
         submitColour: '#24a148',
-      })
+      });
     } else {
       this.setState({
         submitSuccess: false,
@@ -230,7 +225,7 @@ class SubscriptionForm extends Component {
             this.updateStateForSuccess(false);
           });
       } else {
-        console.log("Illegal operation");
+        console.log('Illegal operation');
       }
     }
   };
@@ -239,7 +234,7 @@ class SubscriptionForm extends Component {
     return {
       entandoVersionId: this.state.entandoVersionId,
       projectId: this.state.projectId,
-      renewal: (this.state.formType === FORM_TYPE.renewal),
+      renewal: this.state.formType === FORM_TYPE.renewal,
       projectSubscription: {
         id: this.state.subscription.id,
         startDate: new Date(this.state.startDate),
@@ -248,7 +243,7 @@ class SubscriptionForm extends Component {
         status: this.state.status.toUpperCase(),
       },
     };
-  };
+  }
 
   async newSubscription(request) {
     return await apiProjectSubscriptionPost(this.props.serviceUrl, request);
@@ -385,11 +380,11 @@ class SubscriptionForm extends Component {
   }
 
   render() {
-    const titleKey = isPortalAdmin() ? "subscriptionForm.adminTitle" : "subscriptionForm.formTitle";
+    const titleKey = isPortalAdmin() ? 'subscriptionForm.adminTitle' : 'subscriptionForm.formTitle';
     const formType = this.state.formType;
-    let formLabelKey = "subscriptionForm.newSubscription";
+    let formLabelKey = 'subscriptionForm.newSubscription';
     if (formType !== 'new') {
-      formLabelKey = isPortalAdmin() ? "subscriptionForm.editSubscription" : "subscriptionForm.renewSubscription";
+      formLabelKey = isPortalAdmin() ? 'subscriptionForm.editSubscription' : 'subscriptionForm.renewSubscription';
     }
 
     if (!this.state.loading) {
@@ -424,7 +419,6 @@ class SubscriptionForm extends Component {
     else {
       return null;
     }
-
   }
 }
 

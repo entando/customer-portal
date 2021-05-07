@@ -4,8 +4,8 @@ import {ModalWrapper, Form, TextInput, Select, SelectItem, TextArea} from 'carbo
 import withKeycloak from '../../auth/withKeycloak';
 import {apiPartnerPost} from '../../api/partners';
 import {apiProjectsGet, apiAddPartnerToProject} from '../../api/projects';
-import {authenticationChanged, isAuthenticated} from "../../api/helpers";
-import {AuthenticatedView} from "../../auth/KeycloakViews";
+import {authenticationChanged, isAuthenticated} from '../../api/helpers';
+import {AuthenticatedView} from '../../auth/KeycloakViews';
 
 class AddPartnerModal extends Component {
   constructor(props) {
@@ -31,7 +31,6 @@ class AddPartnerModal extends Component {
       modalOpenButton.addEventListener('click', this.clearValues, false);
     }
   }
-
 
   componentDidUpdate(prevProps) {
     if (authenticationChanged(this.props, prevProps)) {
@@ -74,7 +73,7 @@ class AddPartnerModal extends Component {
     if (isAuthenticated(this.props)) {
       const projects = await apiProjectsGet(this.props.serviceUrl);
       this.setState({
-        projectList: projects.data
+        projectList: projects.data,
       });
     }
   }
@@ -132,9 +131,9 @@ class AddPartnerModal extends Component {
       <div className="bx--modal-header">
         <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
-    )
+    );
     const {keycloak} = this.props;
-    const modalId = "modal-form-partner";
+    const modalId = 'modal-form-partner';
     return (
       <AuthenticatedView keycloak={keycloak}>
         <ModalWrapper
@@ -151,7 +150,7 @@ class AddPartnerModal extends Component {
           <div className="form-container">
             <Form onSubmit={this.handleFormSubmit}>
               <Select
-                id={"projectId" + modalId}
+                id={'projectId' + modalId}
                 name="projectId"
                 labelText={i18n.t('adminDashboard.addPartner.projectList') + ' *'}
                 value={this.state.projectId}
@@ -170,7 +169,7 @@ class AddPartnerModal extends Component {
               </Select>
 
               <TextInput
-                id={"name" + modalId}
+                id={'name' + modalId}
                 name="name"
                 labelText={i18n.t('adminDashboard.addPartner.partnerName') + ' *'}
                 value={this.state.name}
@@ -179,7 +178,7 @@ class AddPartnerModal extends Component {
                 invalid={this.state.invalid['name']}
               />
               <TextInput
-                id={"partnerNumber" + modalId}
+                id={'partnerNumber' + modalId}
                 name="partnerNumber"
                 labelText={i18n.t('adminDashboard.addPartner.partnerNumber') + ' *'}
                 value={this.state.partnerNumber}

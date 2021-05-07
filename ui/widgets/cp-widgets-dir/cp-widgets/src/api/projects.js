@@ -96,7 +96,6 @@ export const apiDeleteSubscriptionFromProject = async (serviceUrl, projectId, su
   return request(url, options);
 };
 
-
 export const apiDeleteUserFromProject = async (serviceUrl, projectId, userId) => {
   const url = `${serviceUrl}/${resource}/${projectId}/users/${userId}`;
   const options = {

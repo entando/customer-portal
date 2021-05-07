@@ -41,8 +41,8 @@ class TicketingSystem extends Component {
     };
     const response = (await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem)).data;
     this.setState({
-      ticketingSystem: response
-    })
+      ticketingSystem: response,
+    });
   }
 
   async updateTicketingSystem() {
@@ -60,11 +60,11 @@ class TicketingSystem extends Component {
     const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
     this.setState({
       ticketingSystem: ticketingSystem,
-      url: (ticketingSystem) ? ticketingSystem.url : '',
-      serviceAccount: (ticketingSystem) ? ticketingSystem.serviceAccount : '',
+      url: ticketingSystem ? ticketingSystem.url : '',
+      serviceAccount: ticketingSystem ? ticketingSystem.serviceAccount : '',
       //Secret needs to be entered each time
-      systemId: (ticketingSystem) ? ticketingSystem.systemId : '',
-    })
+      systemId: ticketingSystem ? ticketingSystem.systemId : '',
+    });
   }
 
   componentDidMount() {

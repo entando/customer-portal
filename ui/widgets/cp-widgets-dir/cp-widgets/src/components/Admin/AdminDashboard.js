@@ -14,7 +14,7 @@ import {
   isPortalPartner,
   isPortalCustomer,
   isPortalUser,
-  isAuthenticated
+  isAuthenticated,
 } from '../../api/helpers';
 
 class AdminDashboard extends React.Component {
@@ -116,11 +116,8 @@ class AdminDashboard extends React.Component {
               {isPortalAdmin() ? (
                 <div className="bx--col">
                   <div>
-                    <AddPartnerModal
-                      serviceUrl={this.props.serviceUrl}
-                      updateCustomerList={this.updateCustomerList}
-                    />
-                    <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
+                    <AddPartnerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}/>
+                    <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}/>
                     <AddProjectModal
                       serviceUrl={this.props.serviceUrl}
                       updateCustomerList={this.updateCustomerList}

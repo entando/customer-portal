@@ -13,9 +13,9 @@ import {
 import '../../../index.scss';
 import withKeycloak from '../../../auth/withKeycloak';
 import i18n from '../../../i18n';
-import {isAuthenticated, authenticationChanged} from "../../../api/helpers";
-import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProjectGet} from "../../../api/projects";
-import {formatEndDate, formatStartDate} from "../../../api/subscriptions";
+import {isAuthenticated, authenticationChanged} from '../../../api/helpers';
+import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProjectGet} from '../../../api/projects';
+import {formatEndDate, formatStartDate} from '../../../api/subscriptions';
 
 class ManageSubscriptions extends Component {
   constructor(props) {
@@ -23,9 +23,8 @@ class ManageSubscriptions extends Component {
     this.state = {
       projectId: '',
       project: {},
-      subscriptions: []
-    }
-    ;
+      subscriptions: [],
+    };
     this.headerData = [
       {
         header: i18n.t('projectDetails.id'),
@@ -83,14 +82,14 @@ class ManageSubscriptions extends Component {
       let project = {};
       let subscriptions = {};
       if (projectId != null) {
-        project = ((await apiProjectGet(this.props.serviceUrl, projectId)).data);
-        subscriptions = ((await apiGetProjectSubscriptions(this.props.serviceUrl, projectId)).data);
+        project = (await apiProjectGet(this.props.serviceUrl, projectId)).data;
+        subscriptions = (await apiGetProjectSubscriptions(this.props.serviceUrl, projectId)).data;
       }
 
       this.setState({
         projectId: projectId,
         project: project,
-        subscriptions: subscriptions
+        subscriptions: subscriptions,
       });
     }
   }
@@ -104,7 +103,7 @@ class ManageSubscriptions extends Component {
   handleDeleteSubscription = (e, id) => {
     e.preventDefault();
     if (window.confirm(i18n.t('submitMessages.confirmDelete'))) {
-      console.log("confirmed to delete", id);
+      console.log('confirmed to delete', id);
       this.deleteSubscription(id)
         .then(() => {
           this.setState({
@@ -125,7 +124,7 @@ class ManageSubscriptions extends Component {
   render() {
     return (
       <div>
-        <h5>{(this.state.project !== null) && this.state.project.name}</h5>
+        <h5>{this.state.project !== null && this.state.project.name}</h5>
         <a
           href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.state.projectId}`}
           style={{textDecoration: 'none'}}
@@ -135,7 +134,7 @@ class ManageSubscriptions extends Component {
           </Button>
         </a>
 
-        <DataTable rows={[{id: "1"}]} headers={this.headerData}>
+        <DataTable rows={[{id: '1'}]} headers={this.headerData}>
           {({headers, getHeaderProps, getTableProps}) => (
             <TableContainer>
               <Table {...getTableProps()}>
@@ -147,7 +146,7 @@ class ManageSubscriptions extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(Object.keys(this.state.subscriptions).length !== 0) &&
+                  {Object.keys(this.state.subscriptions).length !== 0 &&
                   this.state.subscriptions.map((subscription, index) => (
                     <TableRow key={index}>
                       <TableCell>{subscription.id}</TableCell>
@@ -160,15 +159,17 @@ class ManageSubscriptions extends Component {
                       <TableCell>
                         <a
                           href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.state.projectId}&subscription=${subscription.id}`}
-                          style={{textDecoration: 'none'}}>
+                          style={{textDecoration: 'none'}}
+                        >
                           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Edit">
                             {i18n.t('buttons.edit')}
                           </Button>
                         </a>
                         <Button
                           kind="ghost"
-                          onClick={(event) => this.handleDeleteSubscription(event, subscription.id)}
-                          className="button-warning">
+                          onClick={event => this.handleDeleteSubscription(event, subscription.id)}
+                          className="button-warning"
+                        >
                           {i18n.t('buttons.delete')}
                         </Button>
                       </TableCell>

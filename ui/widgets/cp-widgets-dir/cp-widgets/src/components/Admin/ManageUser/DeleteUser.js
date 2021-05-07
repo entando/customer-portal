@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   DataTable,
   TableContainer,
@@ -12,7 +12,7 @@ import {
 } from 'carbon-components-react';
 import withKeycloak from '../../../auth/withKeycloak';
 import i18n from '../../../i18n';
-import {apiGetProjectUsers, apiDeleteUserFromProject} from "../../../api/projects";
+import {apiGetProjectUsers, apiDeleteUserFromProject} from '../../../api/projects';
 
 class DeleteUser extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class DeleteUser extends Component {
         key: 'userAccess',
       },
     ];
-    window.addEventListener("cp-user-assigned", (event) => {
+    window.addEventListener('cp-user-assigned', event => {
       this.fetchData();
     });
   }
@@ -71,12 +71,12 @@ class DeleteUser extends Component {
       const projectId = params.get('project');
       let users = [];
       if (projectId != null) {
-        users = ((await apiGetProjectUsers(this.props.serviceUrl, projectId)).data);
+        users = (await apiGetProjectUsers(this.props.serviceUrl, projectId)).data;
       }
 
       this.setState({
         users,
-        projectId
+        projectId,
       });
 
       this.handleUserDisplay();
@@ -92,11 +92,8 @@ class DeleteUser extends Component {
       username: user.username,
       email: user.email,
       userAccess: (
-        <Button
-          kind="ghost"
-          onClick={event => this.handleRemoveUser(user.id, projectId, event)}
-          className="button-warning"
-        >
+        <Button kind="ghost" onClick={event => this.handleRemoveUser(user.id, projectId, event)}
+                className="button-warning">
           {i18n.t('manageUsers.delete.removeUser')}
         </Button>
       ),
@@ -114,7 +111,7 @@ class DeleteUser extends Component {
       if (res.status === 201) {
         this.fetchData();
       } else {
-        console.warn("Failed to delete user", res);
+        console.warn('Failed to delete user', res);
       }
     });
   };

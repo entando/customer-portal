@@ -2,10 +2,7 @@ import {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {AccordionItem, Button} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import {
-  apiCustomerGet,
-  apiCustomerDelete,
-} from '../../api/customers';
+import {apiCustomerGet, apiCustomerDelete} from '../../api/customers';
 import CustomerDataTable from './CustomerDataTable';
 import CustomerDetails from './CustomerDetails';
 import {
@@ -43,7 +40,7 @@ class CustomerAccordian extends Component {
   async fetchData() {
     const customerId = this.props.customerId;
     try {
-      const customer = (await apiCustomerGet(this.props.serviceUrl, customerId));
+      const customer = await apiCustomerGet(this.props.serviceUrl, customerId);
       this.setState({
         customer: customer.data,
       });
@@ -68,9 +65,7 @@ class CustomerAccordian extends Component {
     return (
       <div>
         <div>
-          {isPortalCustomer() && (
-            <CustomerDetails serviceUrl={this.props.serviceUrl} customer={this.state.customer}/>
-          )}
+          {isPortalCustomer() && <CustomerDetails serviceUrl={this.props.serviceUrl} customer={this.state.customer}/>}
           <AccordionItem title={this.props.title} open={this.props.accordionOpened}>
             <div style={{display: 'flex'}}>
               {isPortalAdminOrSupport() && (

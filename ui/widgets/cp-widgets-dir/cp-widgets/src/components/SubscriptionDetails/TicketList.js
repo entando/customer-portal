@@ -8,7 +8,8 @@ import {
   TableHeader,
   TableBody,
   TableCell,
-  PaginationNav, Button,
+  PaginationNav,
+  Button,
 } from 'carbon-components-react';
 import {apiJiraTicketsGet} from '../../api/tickets';
 import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
@@ -105,9 +106,7 @@ class TicketList extends Component {
       onChange: event => this.setState({currentPage: event}),
     });
     const ticketSystemUrl = this.state.ticketingSystem.url;
-    const ticketingSystemBaseUrl = (ticketSystemUrl != null) ?
-      ticketSystemUrl.substr(0, ticketSystemUrl.indexOf('/rest'))
-      : null;
+    const ticketingSystemBaseUrl = ticketSystemUrl != null ? ticketSystemUrl.substr(0, ticketSystemUrl.indexOf('/rest')) : null;
 
     return (
       <div>
@@ -115,12 +114,10 @@ class TicketList extends Component {
           <div>
             {/*View All Ticket*/}
             <a
-              href={ticketingSystemBaseUrl + '/issues/' +
-              '?jql=Organizations=' +
-              this.state.project.systemId
-              }
+              href={ticketingSystemBaseUrl + '/issues/' + '?jql=Organizations=' + this.state.project.systemId}
               style={{textDecoration: 'none'}}
-              target="_blank" rel="noreferrer"
+              target="_blank"
+              rel="noreferrer"
             >
               <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
                 {i18n.t('buttons.viewAllTickets')}
@@ -139,9 +136,7 @@ class TicketList extends Component {
         )}
         <DataTable rows={[{id: '1'}]} headers={this.headerData}>
           {({rows, headers, getHeaderProps, getTableProps}) => (
-            <TableContainer
-              title={i18n.t('ticketDetails.listOfTickets')}
-            >
+            <TableContainer title={i18n.t('ticketDetails.listOfTickets')}>
               <Table {...getTableProps()}>
                 <TableHead>
                   <TableRow>
@@ -155,8 +150,7 @@ class TicketList extends Component {
                     this.state.tickets.data.map((ticket, index) => {
                       const indexOfLastItem = (this.state.currentPage + 1) * 10 - 1;
                       const firstIndexOfCurrentPage = this.state.currentPage * 10;
-                      const ticketUrl = ticketingSystemBaseUrl +
-                        '/browse/' + ticket.systemId;
+                      const ticketUrl = ticketingSystemBaseUrl + '/browse/' + ticket.systemId;
 
                       if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
                         return (

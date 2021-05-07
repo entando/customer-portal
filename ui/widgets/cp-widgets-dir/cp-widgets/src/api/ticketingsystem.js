@@ -14,8 +14,8 @@ export const apiTicketingSystemDelete = async (serviceUrl, id) => {
 export const apiCurrentTicketingSystemGet = async serviceUrl => {
   const ticketingSystems = (await apiTicketingSystemsGet(serviceUrl)).data;
   //Simplifying assumption to take the latest ticketing system as the current config. There should be only 1.
-  return (ticketingSystems && ticketingSystems.length) ? ticketingSystems[ticketingSystems.length - 1] : null;
-}
+  return ticketingSystems && ticketingSystems.length ? ticketingSystems[ticketingSystems.length - 1] : null;
+};
 
 export const apiTicketingSystemsGet = async serviceUrl => {
   const url = `${serviceUrl}/${resource}`;

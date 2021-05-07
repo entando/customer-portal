@@ -5,12 +5,12 @@ import '../index.scss';
 
 import KeycloakContext from '../auth/KeycloakContext';
 
-import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
+import {subscribeToWidgetEvent} from '../helpers/widgetEvents';
 import {KEYCLOAK_EVENT_TYPE} from '../custom-elements/widgetEventTypes';
-import * as Locale from "../i18n";
+import * as Locale from '../i18n';
 
 const getKeycloakInstance = () =>
-  (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
+  (window && window.entando && window.entando.keycloak && {...window.entando.keycloak, initialized: true}) || {
     initialized: false,
   };
 

@@ -16,4 +16,3 @@ import './custom-elements/SubscriptionFormElement';
 import './custom-elements/TicketListElement';
 import './custom-elements/TicketingSystemElement';
 import './local/LocalAppElement';
-

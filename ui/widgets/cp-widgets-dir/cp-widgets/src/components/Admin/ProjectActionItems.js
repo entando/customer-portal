@@ -5,7 +5,7 @@ import { Button } from 'carbon-components-react';
 import EditProjectModal from '../Admin/EditProjectModal';
 import ManagePartnersModal from '../Admin/ManagePartnersModal';
 import {isPortalAdmin} from '../../api/helpers';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 class ProjectActionItems extends React.Component {
   constructor() {
@@ -35,9 +35,7 @@ class ProjectActionItems extends React.Component {
 
   render() {
     const isAdmin = isPortalAdmin();
-    const actionDivider = (
-      <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>
-    );
+    const actionDivider = <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>;
     const topButton = (
       <Button onClick={this.handleClick} style={{padding: '10px 20px'}} kind="tertiary">
         +
@@ -54,7 +52,7 @@ class ProjectActionItems extends React.Component {
         />
         {actionDivider}
       </div>
-    )
+    );
     const subscriptionParam = this.props.subscription ? '&subscription=' + this.props.subscription.id : '';
     const newOrRenewSubscription = (
       <div>
@@ -86,7 +84,8 @@ class ProjectActionItems extends React.Component {
       <div>
         <a
           href={`/entando-de-app/${this.props.locale}/manage_subscriptions.page?project=${this.props.project.id}`}
-          style={{textDecoration: 'none'}}>
+          style={{textDecoration: 'none'}}
+        >
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Subscriptions">
             {i18n.t('buttons.manageSubscriptions')}
           </Button>
@@ -112,9 +111,12 @@ class ProjectActionItems extends React.Component {
         <a
           href={
             this.props.ticketingSystem.url.substr(0, this.props.ticketingSystem.url.indexOf('/rest')) +
-            '/issues/?jql=Organizations=' + this.props.project.systemId}
+            '/issues/?jql=Organizations=' +
+            this.props.project.systemId
+          }
           style={{textDecoration: 'none'}}
-          target="_blank" rel="noreferrer"
+          target="_blank"
+          rel="noreferrer"
         >
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="View All Tickets">
             {i18n.t('buttons.viewAllTickets')}
@@ -196,11 +198,8 @@ class ProjectActionItems extends React.Component {
                   {manageSubscriptions}
                   {manageUsers}
                   {/*Delete Project*/}
-                  <Button
-                    kind="ghost"
-                    onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
-                    className="button-warning"
-                  >
+                  <Button kind="ghost" onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
+                          className="button-warning">
                     {i18n.t('buttons.delete')}
                   </Button>
                   {actionDivider}

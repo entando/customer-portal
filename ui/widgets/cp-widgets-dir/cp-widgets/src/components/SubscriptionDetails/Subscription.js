@@ -4,12 +4,7 @@ import {Tile} from 'carbon-components-react';
 import {apiSubscriptionGet, formatStartDate, formatEndDate} from '../../api/subscriptions';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiGetProjectUsers, apiProjectGet} from '../../api/projects';
-import {
-  isPortalAdminOrSupport,
-  isPortalUser,
-  isPortalAdmin,
-  authenticationChanged,
-} from '../../api/helpers';
+import {isPortalAdminOrSupport, isPortalUser, isPortalAdmin, authenticationChanged} from '../../api/helpers';
 import EditSubscriptionModal from '../Admin/EditSubscriptionModal';
 import i18n from '../../i18n';
 
@@ -96,8 +91,10 @@ class Subscription extends React.Component {
                           {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? (
                             <>
                               {this.state.project.data.partners.map((partner, index) => (
-                                <div
-                                  key={index}> {index === this.state.project.data.partners.length - 1 ? partner.name : partner.name + ', '} </div>
+                                <div key={index}>
+                                  {' '}
+                                  {index === this.state.project.data.partners.length - 1 ? partner.name : partner.name + ', '}{' '}
+                                </div>
                               ))}
                             </>
                           ) : (
@@ -157,8 +154,7 @@ class Subscription extends React.Component {
                   ) : null}
                 </Tile>
                 <br/>
-                <TicketList projectId={this.state.project.data.id}
-                            serviceUrl={this.props.serviceUrl}
+                <TicketList projectId={this.state.project.data.id} serviceUrl={this.props.serviceUrl}
                             locale={this.props.locale}/>
               </div>
             </div>

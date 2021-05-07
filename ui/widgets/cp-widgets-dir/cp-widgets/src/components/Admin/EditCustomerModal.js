@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import i18n from '../../i18n';
-import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
+import {ModalWrapper, Form, TextInput, TextArea} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiCustomerGet, apiCustomerPut} from '../../api/customers';
-import {authenticationChanged, isAuthenticated} from "../../api/helpers";
+import {authenticationChanged, isAuthenticated} from '../../api/helpers';
 
 class EditCustomerModal extends Component {
   constructor(props) {
@@ -164,74 +164,76 @@ class EditCustomerModal extends Component {
       <div className="bx--modal-header">
         <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
-    )
+    );
     const modalId = this.state.modalId;
     const buttonClassName = 'bx--btn bx--btn--ghost edit-customer-button-' + this.props.customerId;
-    return (modalId &&
-      <ModalWrapper
-        buttonTriggerText={i18n.t('buttons.edit')}
-        modalHeading={i18n.t('adminDashboard.editCustomer.title')}
-        buttonTriggerClassName={buttonClassName}
-        className="modal-form"
-        id={modalId}
-        handleSubmit={this.handleFormSubmit}
-        primaryButtonText={i18n.t('modalText.save')}
-        secondaryButtonText={i18n.t('modalText.cancel')}
-      >
-        {modalConfirmation}
-        <div className="form-container">
-          <Form onSubmit={this.handleFormSubmit} id={"form-" + modalId}>
-            <TextInput
-              id={"name" + modalId}
-              name="name"
-              labelText={i18n.t('adminDashboard.addCustomer.customerName') + ' *'}
-              value={this.state.name}
-              onChange={this.handleChanges}
-              invalidText={i18n.t('validation.invalid.required')}
-              invalid={this.state.invalid['name']}
-            />
-            <TextInput
-              id={"customerNumber"+modalId}
-              name="customerNumber"
-              labelText={i18n.t('adminDashboard.addCustomer.customerNumber') + ' *'}
-              value={this.state.customerNumber}
-              onChange={this.handleChanges}
-              invalidText={i18n.t('validation.invalid.required')}
-              invalid={this.state.invalid['customerNumber']}
-            />
-            <TextInput
-              id={"contactName"+modalId}
-              name="contactName"
-              labelText={i18n.t('adminDashboard.addCustomer.contactName')}
-              value={this.state.contactName}
-              onChange={this.handleChanges}
-            />
-            <TextInput
-              id={"contactPhone"+modalId}
-              name="contactPhone"
-              labelText={i18n.t('adminDashboard.addCustomer.contactPhone')}
-              value={this.state.contactPhone}
-              onChange={this.handleChanges}
-            />
-            <TextInput
-              id={"contactEmail"+modalId}
-              name="contactEmail"
-              labelText={i18n.t('adminDashboard.addCustomer.contactEmail') + ' *'}
-              value={this.state.contactEmail}
-              onChange={this.handleChanges}
-              invalidText={i18n.t('validation.invalid.email')}
-              invalid={this.state.invalid['contactEmail']}
-            />
-            <TextArea
-              name="notes"
-              labelText={i18n.t('adminDashboard.addCustomer.notes')}
-              value={this.state.notes}
-              onChange={this.handleChanges}
-            />
-          </Form>
-        </div>
-        {modalConfirmation}
-      </ModalWrapper>
+    return (
+      modalId && (
+        <ModalWrapper
+          buttonTriggerText={i18n.t('buttons.edit')}
+          modalHeading={i18n.t('adminDashboard.editCustomer.title')}
+          buttonTriggerClassName={buttonClassName}
+          className="modal-form"
+          id={modalId}
+          handleSubmit={this.handleFormSubmit}
+          primaryButtonText={i18n.t('modalText.save')}
+          secondaryButtonText={i18n.t('modalText.cancel')}
+        >
+          {modalConfirmation}
+          <div className="form-container">
+            <Form onSubmit={this.handleFormSubmit} id={'form-' + modalId}>
+              <TextInput
+                id={'name' + modalId}
+                name="name"
+                labelText={i18n.t('adminDashboard.addCustomer.customerName') + ' *'}
+                value={this.state.name}
+                onChange={this.handleChanges}
+                invalidText={i18n.t('validation.invalid.required')}
+                invalid={this.state.invalid['name']}
+              />
+              <TextInput
+                id={'customerNumber' + modalId}
+                name="customerNumber"
+                labelText={i18n.t('adminDashboard.addCustomer.customerNumber') + ' *'}
+                value={this.state.customerNumber}
+                onChange={this.handleChanges}
+                invalidText={i18n.t('validation.invalid.required')}
+                invalid={this.state.invalid['customerNumber']}
+              />
+              <TextInput
+                id={'contactName' + modalId}
+                name="contactName"
+                labelText={i18n.t('adminDashboard.addCustomer.contactName')}
+                value={this.state.contactName}
+                onChange={this.handleChanges}
+              />
+              <TextInput
+                id={'contactPhone' + modalId}
+                name="contactPhone"
+                labelText={i18n.t('adminDashboard.addCustomer.contactPhone')}
+                value={this.state.contactPhone}
+                onChange={this.handleChanges}
+              />
+              <TextInput
+                id={'contactEmail' + modalId}
+                name="contactEmail"
+                labelText={i18n.t('adminDashboard.addCustomer.contactEmail') + ' *'}
+                value={this.state.contactEmail}
+                onChange={this.handleChanges}
+                invalidText={i18n.t('validation.invalid.email')}
+                invalid={this.state.invalid['contactEmail']}
+              />
+              <TextArea
+                name="notes"
+                labelText={i18n.t('adminDashboard.addCustomer.notes')}
+                value={this.state.notes}
+                onChange={this.handleChanges}
+              />
+            </Form>
+          </div>
+          {modalConfirmation}
+        </ModalWrapper>
+      )
     );
   }
 }

@@ -12,12 +12,12 @@ import {
 import '../../index.scss';
 import {apiDeleteProjectFromCustomer, apiCustomerGet} from '../../api/customers';
 import withKeycloak from '../../auth/withKeycloak';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import i18n from '../../i18n';
 import {authenticationChanged, getActiveSubscription, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
-import {apiCurrentTicketingSystemGet} from "../../api/ticketingsystem";
+import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
 import ProjectActionItems from '../Admin/ProjectActionItems';
-import {formatEndDate, formatStartDate} from "../../api/subscriptions";
+import {formatEndDate, formatStartDate} from '../../api/subscriptions';
 
 class CustomerDataTable extends Component {
   constructor(props) {
@@ -97,7 +97,6 @@ class CustomerDataTable extends Component {
     }
   }
 
-
   updateProjectList = () => {
     this.fetchData();
   };
@@ -111,11 +110,14 @@ class CustomerDataTable extends Component {
   };
 
   closeMenu = () => {
-    this.setState({
-      showMenu: false
-    }, () => {
-      document.removeEventListener('click', this.closeMenu);
-    });
+    this.setState(
+      {
+        showMenu: false,
+      },
+      () => {
+        document.removeEventListener('click', this.closeMenu);
+      }
+    );
   };
 
   async deleteProject(id) {
@@ -181,23 +183,24 @@ class CustomerDataTable extends Component {
                                 ))}
                               </TableCell>
                             ) : (
-                                <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              )}
                               <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                            )}
+                            <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                            <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                            <TableCell>{i18n.t('userMessages.none')}</TableCell>
                             <TableCell>{i18n.t('userMessages.none')}</TableCell>
                             <TableCell>{project.tickets && project.tickets.length}</TableCell>
-                              {isPortalAdminOrSupport() ? <TableCell style={{ width: '250px' }}>{project.notes}</TableCell> : null}
-                              <TableCell>
-                                <ProjectActionItems
-                                  serviceUrl={this.props.serviceUrl}
-                                  ticketingSystem={this.state.ticketingSystem}
-                                  locale={this.props.locale}
-                                  project={project}
-                                  allProjects={this.state.projects}
-                                  handleDeleteProject={this.handleDeleteProject}
-                                  updateProjectList={this.updateProjectList}
+                            {isPortalAdminOrSupport() ?
+                              <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
+                            <TableCell>
+                              <ProjectActionItems
+                                serviceUrl={this.props.serviceUrl}
+                                ticketingSystem={this.state.ticketingSystem}
+                                locale={this.props.locale}
+                                project={project}
+                                allProjects={this.state.projects}
+                                handleDeleteProject={this.handleDeleteProject}
+                                updateProjectList={this.updateProjectList}
                                 />
                               </TableCell>
                             </TableRow>
@@ -227,8 +230,7 @@ class CustomerDataTable extends Component {
                               <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
                               <TableCell>{project.tickets && project.tickets.length}</TableCell>
                               {isPortalAdminOrSupport() ?
-                                <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null
-                              }
+                                <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                               <TableCell>
                                 <ProjectActionItems
                                   serviceUrl={this.props.serviceUrl}

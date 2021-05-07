@@ -55,7 +55,7 @@ class AssignUser extends Component {
     this.setState({
       projectId: projectId,
       project: project,
-      users: users
+      users: users,
     });
   }
 
@@ -84,7 +84,7 @@ class AssignUser extends Component {
             submitMsg: i18n.t('submitMessages.updated'),
             submitColour: '#24a148',
           });
-          window.dispatchEvent(new CustomEvent("cp-user-assigned"));
+          window.dispatchEvent(new CustomEvent('cp-user-assigned'));
         } else {
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),

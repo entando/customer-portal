@@ -1,10 +1,10 @@
 import React from 'react';
-import { Tile } from 'carbon-components-react';
+import {Tile} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiCustomerGet} from '../../api/customers';
 import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
 import i18n from '../../i18n';
-import CustomerDataTable from "./CustomerDataTable";
+import CustomerDataTable from './CustomerDataTable';
 
 class CustomerProjectList extends React.Component {
   constructor(props) {
