@@ -24,6 +24,7 @@ Install the bundle using the App Builder.
   * cp-partner
   * cp-customer
   * The built-in mapper for email must be enabled on the server client so that user accounts can be retrieved from Jira and tickets created used that account information.
+  * Test users are automatically added in a local keycloak instance from docker/realm-config - admin/admin, support/user, partner/user, user/user.
 * Pages
   * Some features are delivered using dedicated pages within Entando.
     * open_service_ticket.page
