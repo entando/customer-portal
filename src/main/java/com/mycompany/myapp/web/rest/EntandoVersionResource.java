@@ -109,7 +109,7 @@ public class EntandoVersionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/entando-versions")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<EntandoVersion> updateEntandoVersion(@Valid @RequestBody EntandoVersion entandoVersion) throws URISyntaxException {
         log.debug("REST request to update EntandoVersion : {}", entandoVersion);
         if (entandoVersion.getId() == null) {
@@ -122,7 +122,7 @@ public class EntandoVersionResource {
     }
 
     @PutMapping("/entando-versions/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<EntandoVersion> updateEntandoVersionStatus(@PathVariable Long id) throws URISyntaxException {
 
     	try {
@@ -174,7 +174,7 @@ public class EntandoVersionResource {
     		log.error("Error occurred while fetching all customer", e);
     	}
 
-        return new ResponseEntity<List<EntandoVersionResponse>>(entandoVersions, HttpStatus.OK);
+        return new ResponseEntity<>(entandoVersions, HttpStatus.OK);
     }
 
     /**
@@ -198,7 +198,7 @@ public class EntandoVersionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/entando-versions/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Void> deleteEntandoVersion(@PathVariable Long id) {
         log.debug("REST request to delete EntandoVersion : {}", id);
 
