@@ -123,7 +123,7 @@ class SubscriptionForm extends Component {
       entandoVersionId: subscription.entandoVersion ? subscription.entandoVersion.id : '',
       startDate: stripTime(subscription.startDate),
       lengthInMonths: subscription.lengthInMonths ? subscription.lengthInMonths : '',
-      notes: subscription.ntes ? subscription.notes : '',
+      notes: subscription.notes ? subscription.notes : '',
       status: status,
       formType: formType,
       project: project,
