@@ -1,13 +1,8 @@
-import React from 'react';
+import {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {AccordionItem, Button} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import {
-  apiCustomerGet,
-  apiCustomerDelete,
-  apiGetCustomersProjects,
-  apiGetMyCustomersProjects
-} from '../../api/customers';
+import {apiCustomerGet, apiCustomerDelete} from '../../api/customers';
 import CustomerDataTable from './CustomerDataTable';
 import CustomerDetails from './CustomerDetails';
 import {
@@ -20,7 +15,7 @@ import {
 import EditCustomerModal from '../Admin/EditCustomerModal';
 import i18n from '../../i18n';
 
-class CustomerAccordian extends React.Component {
+class CustomerAccordian extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,35 +27,25 @@ class CustomerAccordian extends React.Component {
 
   componentDidMount() {
     if (isAuthenticated(this.props)) {
-      this.getCustomersProjects(this.props.customerNumber);
+      this.fetchData();
     }
   }
 
   componentDidUpdate(prevProps) {
     if (authenticationChanged(this.props, prevProps)) {
-      this.getCustomersProjects(this.props.customerNumber);
+      this.fetchData();
     }
   }
 
-  async getCustomersProjects(id) {
-    if (isAuthenticated(this.props)) {
-      const customer = await apiCustomerGet(this.props.serviceUrl, id);
-
-      var projects;
-      try {
-        if (isPortalAdminOrSupport()) {
-          projects = await apiGetCustomersProjects(this.props.serviceUrl, id);
-        } else {
-          projects = await apiGetMyCustomersProjects(this.props.serviceUrl, id);
-        }
-
-        this.setState({
-          projects: projects.data,
-          customer: customer.data,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+  async fetchData() {
+    const customerId = this.props.customerId;
+    try {
+      const customer = await apiCustomerGet(this.props.serviceUrl, customerId);
+      this.setState({
+        customer: customer.data,
+      });
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -80,16 +65,16 @@ class CustomerAccordian extends React.Component {
     return (
       <div>
         <div>
-          {isPortalCustomer() ? <CustomerDetails serviceUrl={this.props.serviceUrl} customerNumber={this.props.customerNumber} /> : null}
+          {isPortalCustomer() && <CustomerDetails serviceUrl={this.props.serviceUrl} customer={this.state.customer}/>}
           <AccordionItem title={this.props.title} open={this.props.accordionOpened}>
-            <div style={{ display: 'flex' }}>
-              {isPortalAdminOrSupport() ? (
-                <Link style={{ textDecoration: 'none' }} to={`/customer-details/${this.state.customer.id}`}>
+            <div style={{display: 'flex'}}>
+              {isPortalAdminOrSupport() && (
+                <Link style={{textDecoration: 'none'}} to={`/customer-details/${this.state.customer.id}`}>
                   <Button kind="ghost">{i18n.t('buttons.viewDetails')}</Button>
                 </Link>
-              ) : null}
-              {isPortalAdmin() ? (
-                <div style={{ display: 'flex' }}>
+              )}
+              {isPortalAdmin() && (
+                <div style={{display: 'flex'}}>
                   <EditCustomerModal
                     serviceUrl={this.props.serviceUrl}
                     customer={this.state.customer}
@@ -97,16 +82,16 @@ class CustomerAccordian extends React.Component {
                     updateCustomerList={this.props.updateCustomerList}
                     customerId={this.state.customer.id}
                   />
-                  <Button kind="ghost" style={{ color: 'red' }} onClick={() => this.handleDelete()}>
+                  <Button kind="ghost" style={{color: 'red'}} onClick={() => this.handleDelete()}>
                     {i18n.t('buttons.delete')}
                   </Button>
                 </div>
-              ) : null}
+              )}
             </div>
             <CustomerDataTable
               key={new Date().getTime()}
               serviceUrl={this.props.serviceUrl}
-              customerNumber={this.props.customerNumber}
+              customerId={this.props.customerId}
               locale={this.props.locale}
               updateCustomerList={this.props.updateCustomerList}
             />

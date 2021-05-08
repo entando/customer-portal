@@ -41,7 +41,7 @@ public interface CustomerService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-    
+
     /**
      * Add a project to a customer.
      *
@@ -58,6 +58,10 @@ public interface CustomerService {
      * @return the entity.
      */
     Set<Project> getCustomerProjects(Long id);
-    
+
     Optional<Customer> findByCustomerNumber(String customerNumber);
+
+    List<Customer> findAllByUser(Long portalUserId);
+
+    Optional<Customer> findOneByUser(Long companyId, Long portalUserId);
 }

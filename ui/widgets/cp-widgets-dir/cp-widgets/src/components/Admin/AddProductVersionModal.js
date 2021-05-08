@@ -112,10 +112,10 @@ class AddProductVersionModal extends Component {
   render() {
     const modalConfirmation = (
       <div className="bx--modal-header">
-        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+        <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
-    )
-    const modalId = "modal-form-product-version"
+    );
+    const modalId = 'modal-form-product-version';
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProductVersion')}
@@ -129,7 +129,7 @@ class AddProductVersionModal extends Component {
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <TextInput
-              id={"name" + modalId}
+              id={'name' + modalId}
               name="name"
               labelText={i18n.t('adminDashboard.addProductVersion.productVersion')}
               value={this.state.name}
@@ -139,7 +139,7 @@ class AddProductVersionModal extends Component {
             />
             <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}>
               <DatePickerInput
-                id={"startDate" + modalId}
+                id={'startDate' + modalId}
                 name="startDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('adminDashboard.addProductVersion.productVersionStartDate')}
@@ -152,7 +152,7 @@ class AddProductVersionModal extends Component {
             </DatePicker>
             <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleEndDateChange}>
               <DatePickerInput
-                id={"endDate" + modalId}
+                id={'endDate' + modalId}
                 name="endDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('adminDashboard.addProductVersion.productVersionEndDate')}

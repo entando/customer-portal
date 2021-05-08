@@ -1,7 +1,6 @@
 package com.mycompany.myapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -9,9 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,7 +17,6 @@ import java.util.Set;
 @Entity
 @Table(name = "project")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NamedQuery(name = "Project.findAll", query = "select p from Project p order by p.id")
 public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,21 +50,32 @@ public class Project implements Serializable {
     @Column(name = "notes", length = 1024)
     private String notes;
 
+    //CUSTOM START for deletes
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    //CUSTOM END
     private Set<ProjectSubscription> projectSubscriptions = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    //CUSTOM START for deletes
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    //CUSTOM END
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Ticket> tickets = new HashSet<>();
 
+    //CUSTOM START for deletes
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    //CUSTOM END
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Partner> partners = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    //CUSTOM START for deletes
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    //CUSTOM END
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<PortalUser> portalUsers = new HashSet<>();
+    @JoinTable(name = "project_user",
+        joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private Set<PortalUser> users = new HashSet<>();
 
     @ManyToOne
     @JsonIgnoreProperties(value = "projects", allowSetters = true)
@@ -249,29 +256,29 @@ public class Project implements Serializable {
         this.partners = partners;
     }
 
-    public Set<PortalUser> getPortalUsers() {
-        return portalUsers;
+    public Set<PortalUser> getUsers() {
+        return users;
     }
 
-    public Project portalUsers(Set<PortalUser> portalUsers) {
-        this.portalUsers = portalUsers;
+    public Project users(Set<PortalUser> portalUsers) {
+        this.users = portalUsers;
         return this;
     }
 
-    public Project addPortalUser(PortalUser portalUser) {
-        this.portalUsers.add(portalUser);
-        portalUser.setProject(this);
+    public Project addUser(PortalUser portalUser) {
+        this.users.add(portalUser);
+        portalUser.getProjects().add(this);
         return this;
     }
 
-    public Project removePortalUser(PortalUser portalUser) {
-        this.portalUsers.remove(portalUser);
-        portalUser.setProject(null);
+    public Project removeUser(PortalUser portalUser) {
+        this.users.remove(portalUser);
+        portalUser.getProjects().remove(this);
         return this;
     }
 
-    public void setPortalUsers(Set<PortalUser> portalUsers) {
-        this.portalUsers = portalUsers;
+    public void setUsers(Set<PortalUser> portalUsers) {
+        this.users = portalUsers;
     }
 
     public Customer getCustomer() {

@@ -1,22 +1,16 @@
 package com.mycompany.myapp.service.impl;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.mycompany.myapp.service.ProjectSubscriptionService;
+import com.mycompany.myapp.domain.ProjectSubscription;
+import com.mycompany.myapp.repository.ProjectSubscriptionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mycompany.myapp.domain.EntandoVersion;
-import com.mycompany.myapp.domain.Project;
-import com.mycompany.myapp.domain.ProjectSubscription;
-import com.mycompany.myapp.domain.enumeration.Status;
-import com.mycompany.myapp.repository.ProjectSubscriptionRepository;
-import com.mycompany.myapp.service.ProjectSubscriptionService;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link ProjectSubscription}.
@@ -82,14 +76,4 @@ public class ProjectSubscriptionServiceImpl implements ProjectSubscriptionServic
 
         projectSubscriptionRepository.deleteById(id);
     }
-
-	@Override
-	public Optional<ProjectSubscription> findLatestExpiredSubscription(Long entandoVersionId, Long projectId) {
-		return this.findAll()
-        .stream()
-        .filter(subscription -> Objects.nonNull(subscription.getEntandoVersion()) && Objects.nonNull(subscription.getProject()))
-        .filter(subscription -> subscription.getEntandoVersion().getId() == entandoVersionId && subscription.getProject().getId() == projectId)
-        .sorted(Comparator.comparing(ProjectSubscription::getStartDate).reversed())
-        .findFirst();
-	}
 }

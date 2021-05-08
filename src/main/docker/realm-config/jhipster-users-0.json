@@ -29,7 +29,16 @@
       "requiredActions": [],
       "realmRoles": ["offline_access", "uma_authorization"],
       "clientRoles": {
-        "account": ["view-profile", "manage-account"]
+        "account": [
+          "view-profile",
+          "manage-account"
+        ],
+        "realm-management": [
+          "view-users"
+        ],
+        "web_app": [
+          "cp-admin"
+        ]
       },
       "notBefore": 0,
       "groups": ["/Users", "/Admins"]
@@ -58,14 +67,119 @@
           "config": {}
         }
       ],
-      "disableableCredentialTypes": ["password"],
+      "disableableCredentialTypes": [
+        "password"
+      ],
       "requiredActions": [],
-      "realmRoles": ["offline_access", "uma_authorization"],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization"
+      ],
       "clientRoles": {
-        "account": ["view-profile", "manage-account"]
+        "account": [
+          "view-profile",
+          "manage-account"
+        ],
+        "web_app": [
+          "cp-customer"
+        ]
       },
       "notBefore": 0,
-      "groups": ["/Users"]
+      "groups": [
+        "/Users"
+      ]
+    },
+    {
+      "id": "c4af4e2f-b432-4c3b-8405-cca86cd5b97c",
+      "createdTimestamp": 1505479373742,
+      "username": "support",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "",
+      "lastName": "Support",
+      "email": "support@localhost",
+      "credentials": [
+        {
+          "type": "password",
+          "hashedSaltedValue": "MbKsMgWPnZyImih8s4SaoCSCq+XIY/c6S9F93sXEidHF1TjPWxCqMkec0+o3860CMLXHt3az61cIJOWI0FW9aw==",
+          "salt": "fmpBI1r8R1u75hDLMUlwBw==",
+          "hashIterations": 27500,
+          "counter": 0,
+          "algorithm": "pbkdf2-sha256",
+          "digits": 0,
+          "period": 0,
+          "createdDate": 1505479392766,
+          "config": {}
+        }
+      ],
+      "disableableCredentialTypes": [
+        "password"
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization"
+      ],
+      "clientRoles": {
+        "account": [
+          "view-profile",
+          "manage-account"
+        ],
+        "web_app": [
+          "cp-support"
+        ]
+      },
+      "notBefore": 0,
+      "groups": [
+        "/Users"
+      ]
+    },
+    {
+      "id": "c4af4e2f-b432-4c3b-8405-cca86cd5b97d",
+      "createdTimestamp": 1505479373742,
+      "username": "partner",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "",
+      "lastName": "Partner",
+      "email": "Partner@localhost",
+      "credentials": [
+        {
+          "type": "password",
+          "hashedSaltedValue": "MbKsMgWPnZyImih8s4SaoCSCq+XIY/c6S9F93sXEidHF1TjPWxCqMkec0+o3860CMLXHt3az61cIJOWI0FW9aw==",
+          "salt": "fmpBI1r8R1u75hDLMUlwBw==",
+          "hashIterations": 27500,
+          "counter": 0,
+          "algorithm": "pbkdf2-sha256",
+          "digits": 0,
+          "period": 0,
+          "createdDate": 1505479392766,
+          "config": {}
+        }
+      ],
+      "disableableCredentialTypes": [
+        "password"
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "offline_access",
+        "uma_authorization"
+      ],
+      "clientRoles": {
+        "account": [
+          "view-profile",
+          "manage-account"
+        ],
+        "web_app": [
+          "cp-partner"
+        ]
+      },
+      "notBefore": 0,
+      "groups": [
+        "/Users"
+      ]
     }
   ]
 }

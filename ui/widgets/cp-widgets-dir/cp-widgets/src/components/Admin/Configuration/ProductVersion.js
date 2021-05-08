@@ -81,7 +81,7 @@ class ProductVersion extends Component {
   };
 
   async handleToggleChange(id) {
-    return (await apiUpdateProductVersionsStatus(this.props.serviceUrl, id));
+    return await apiUpdateProductVersionsStatus(this.props.serviceUrl, id);
   }
 
   render() {
@@ -105,23 +105,24 @@ class ProductVersion extends Component {
                         <TableRow key={index}>
                           <TableCell>{productVersion.name}</TableCell>
                           <TableCell>
-                            <Toggle size="sm"
-                                    onClick={() => this.handleToggleChange(productVersion.id)}
-                                    aria-label="toggle button"
-                                    id={'toggle' + productVersion.id}
-                                    defaultToggled={productVersion.status}
+                            <Toggle
+                              size="sm"
+                              onClick={() => this.handleToggleChange(productVersion.id)}
+                              aria-label="toggle button"
+                              id={'toggle' + productVersion.id}
+                              defaultToggled={productVersion.status}
                             />
                           </TableCell>
-                            <TableCell>{productVersion.startDate}</TableCell>
-                            <TableCell>{productVersion.endDate}</TableCell>
-                            <TableCell>
-                              <div style={{ display: 'flex' }}>
-                                <EditVersionModal
-                                  key={productVersion.id}
-                                  version={productVersion}
-                                  serviceUrl={this.props.serviceUrl}
-                                  updateProductVersions={this.updateProductVersions}
-                                />
+                          <TableCell>{productVersion.startDate}</TableCell>
+                          <TableCell>{productVersion.endDate}</TableCell>
+                          <TableCell>
+                            <div style={{display: 'flex'}}>
+                              <EditVersionModal
+                                key={productVersion.id}
+                                version={productVersion}
+                                serviceUrl={this.props.serviceUrl}
+                                updateProductVersions={this.updateProductVersions}
+                              />
                                 <Button
                                   kind="ghost"
                                   onClick={e => this.handleDeleteVersion(e, productVersion.id)}
@@ -183,14 +184,14 @@ const rowData = [
   {
     id: 'b',
     entVersion: '6.3',
-    status: <Toggle size="sm"  aria-label="toggle button" id="status-2" />,
+    status: <Toggle size="sm" aria-label="toggle button" id="status-2"/>,
     startDate: 'Jile, 2019',
     endDate: 'April, 2023',
   },
   {
     id: 'c',
     entVersion: '6.2',
-    status: <Toggle size="sm"  aria-label="toggle button" defaultToggled id="status-3" />,
+    status: <Toggle size="sm" aria-label="toggle button" defaultToggled id="status-3"/>,
     startDate: 'September, 2020',
     endDate: 'April, 2024',
   },

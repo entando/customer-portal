@@ -1,11 +1,13 @@
 package com.mycompany.myapp.service.impl;
 
+import com.mycompany.myapp.security.SpringSecurityAuditorAware;
 import com.mycompany.myapp.service.PortalUserService;
 import com.mycompany.myapp.domain.PortalUser;
 import com.mycompany.myapp.repository.PortalUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,9 @@ public class PortalUserServiceImpl implements PortalUserService {
     private final Logger log = LoggerFactory.getLogger(PortalUserServiceImpl.class);
 
     private final PortalUserRepository portalUserRepository;
+
+    @Autowired
+    SpringSecurityAuditorAware springSecurityAuditorAware;
 
     public PortalUserServiceImpl(PortalUserRepository portalUserRepository) {
         this.portalUserRepository = portalUserRepository;
@@ -80,5 +85,18 @@ public class PortalUserServiceImpl implements PortalUserService {
     @Override
     public Optional<PortalUser> findByUsername(String username) {
         return portalUserRepository.findByUsername(username);
+    }
+
+    @Override
+    public Optional<Long> getCurrentPortalUserId() {
+        Optional<String> username = springSecurityAuditorAware.getCurrentUserLogin();
+        Long result = 0L;
+        if (username.isPresent()) {
+            Optional<PortalUser> user = portalUserRepository.findByUsername(username.get());
+            if (user.isPresent()) {
+                result = user.get().getId();
+            }
+        }
+        return Optional.of(result);
     }
 }

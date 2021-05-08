@@ -19,7 +19,7 @@ const ATTRIBUTES = {
   locale: 'locale',
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
-  serviceUrl: 'service-url'
+  serviceUrl: 'service-url',
 };
 
 class ManageUserElement extends HTMLElement {

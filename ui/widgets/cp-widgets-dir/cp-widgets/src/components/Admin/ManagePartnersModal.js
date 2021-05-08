@@ -4,13 +4,17 @@ import {
   Button,
   DataTable,
   ModalWrapper,
-  Table, TableBody,
-  TableCell, TableContainer, TableHead, TableHeader,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
   TableRow,
 } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import {isPortalAdminOrSupport} from "../../api/helpers";
-import {apiDeletePartnerFromProject} from "../../api/projects";
+import {isPortalAdminOrSupport} from '../../api/helpers';
+import {apiDeletePartnerFromProject} from '../../api/projects';
 
 class ManagePartnersModal extends Component {
   constructor(props) {
@@ -19,7 +23,7 @@ class ManagePartnersModal extends Component {
     this.state = {
       projectId: this.props.project.id,
       project: this.props.project,
-    }
+    };
 
     this.headerData = [
       {
@@ -51,7 +55,7 @@ class ManagePartnersModal extends Component {
     e.preventDefault();
     if (window.confirm('Are you sure you want to remove this partner from the project?')) {
       this.removePartner(projectId, partnerId)
-        .then((result) => {
+        .then(result => {
           this.setState({
             project: result.data,
             submitMsg: i18n.t('submitMessages.deleted'),
@@ -59,7 +63,7 @@ class ManagePartnersModal extends Component {
           });
           this.props.updateProjectList();
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
@@ -74,8 +78,8 @@ class ManagePartnersModal extends Component {
       <div className="bx--modal-header">
         <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
-    )
-    const modalId = "modal-form-manage-partners";
+    );
+    const modalId = 'modal-form-manage-partners';
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.managePartners')}
@@ -96,25 +100,17 @@ class ManagePartnersModal extends Component {
                   <TableHead>
                     <TableRow key="headerRow">
                       {headers.map(header => {
-                        return <TableHeader {...getHeaderProps({header})}>
-                          {header.header}
-                        </TableHeader>
+                        return <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>;
                       })}
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {this.state.project.partners.map((partner, index) => {
                       return (
-                        <TableRow key={"partner" + index}>
-                          <TableCell>
-                            {partner.name}
-                          </TableCell>
-                          <TableCell>
-                            {partner.partnerNumber}
-                          </TableCell>
-                          <TableCell>
-                            {partner.notes}
-                          </TableCell>
+                        <TableRow key={'partner' + index}>
+                          <TableCell>{partner.name}</TableCell>
+                          <TableCell>{partner.partnerNumber}</TableCell>
+                          <TableCell>{partner.notes}</TableCell>
                           <TableCell>
                             <div>
                               <Button
@@ -128,9 +124,8 @@ class ManagePartnersModal extends Component {
                             </div>
                           </TableCell>
                         </TableRow>
-                      )
-                    })
-                    }
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>

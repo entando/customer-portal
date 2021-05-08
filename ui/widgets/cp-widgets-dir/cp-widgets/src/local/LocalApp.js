@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import {BrowserRouter, Route, Switch, Link} from 'react-router-dom';
 import App from '../components/App';
 import withKeycloak from '../auth/withKeycloak';
-import SubscriptionForm from "../components/Forms/SubscriptionForm";
-import AdminConfiguration from "../components/Admin/Configuration/AdminConfiguration";
-import OpenTicketForm from "../components/Forms/OpenTicketForm";
-import ManageUser from "../components/Admin/ManageUser/ManageUser";
-import ManageSubscriptions from "../components/Admin/ManageSubscriptions/ManageSubscriptions";
-import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from "../api/helpers";
+import SubscriptionForm from '../components/Forms/SubscriptionForm';
+import AdminConfiguration from '../components/Admin/Configuration/AdminConfiguration';
+import OpenTicketForm from '../components/Forms/OpenTicketForm';
+import ManageUser from '../components/Admin/ManageUser/ManageUser';
+import ManageSubscriptions from '../components/Admin/ManageSubscriptions/ManageSubscriptions';
+import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../api/helpers';
 
 class LocalApp extends Component {
   constructor(props) {
@@ -45,12 +45,20 @@ class LocalApp extends Component {
             {/*Simple Menu for switching to page-based elements*/}
             <div>
               <ul>
-                <li><Link to={'/'}>Home</Link></li>
+                <li>
+                  <Link to={'/'}>Home</Link>
+                </li>
                 {/*TODO: rework the entando-de-app-based paths so the application name and locale are more general*/}
-                {isPortalAdminOrSupport() &&
-                <li><Link to={'/entando-de-app/en/admin.page'}>Admin</Link></li>
-                }
-                <li><a href="/" onClick={this.logout}>Logout</a></li>
+                {isPortalAdmin() && (
+                  <li>
+                    <Link to={'/entando-de-app/en/admin.page'}>Admin</Link>
+                  </li>
+                )}
+                <li>
+                  <a href="/" onClick={this.logout}>
+                    Logout
+                  </a>
+                </li>
               </ul>
             </div>
             <Switch>

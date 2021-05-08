@@ -1,29 +1,26 @@
 import React from 'react';
-import { Tile } from 'carbon-components-react';
+import {Tile} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import {apiAdminCustomerGet, apiGetCustomersProjects} from '../../api/customers';
+import {apiCustomerGet} from '../../api/customers';
 import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
 import i18n from '../../i18n';
-import CustomerDataTable from "./CustomerDataTable";
+import CustomerDataTable from './CustomerDataTable';
 
 class CustomerProjectList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      projects: {},
       customer: {},
     };
   }
 
-  async getCustomer() {
+  async fetchData() {
     if (isAuthenticated(this.props)) {
       try {
-        const customer = await apiAdminCustomerGet(this.props.serviceUrl, this.props.match.params.id);
-        const projects = await apiGetCustomersProjects(this.props.serviceUrl, customer.data.id);
+        const customer = await apiCustomerGet(this.props.serviceUrl, this.props.match.params.id);
         this.setState({
           customer: customer.data,
-          projects: projects.data,
           loading: false,
         });
       } catch (err) {
@@ -32,20 +29,16 @@ class CustomerProjectList extends React.Component {
     }
   }
 
-  updateCustomer = () => {
-    this.getCustomer();
-  };
-
   componentDidMount() {
     if (isPortalAdminOrSupport()) {
-      this.getCustomer();
+      this.fetchData();
     }
   }
 
   componentDidUpdate(prevProps) {
     if (authenticationChanged(this.props, prevProps)) {
       if (isPortalAdminOrSupport()) {
-        this.getCustomer();
+        this.fetchData();
       }
     }
   }
@@ -53,7 +46,8 @@ class CustomerProjectList extends React.Component {
   render() {
     if (!this.state.loading) {
       if (isPortalAdminOrSupport()) {
-        if (Object.keys(this.state.customer).length !== 0) {
+        const customer = this.state.customer;
+        if (customer) {
           return (
             <div>
               <Tile>
@@ -61,30 +55,31 @@ class CustomerProjectList extends React.Component {
                   <div className="bx--row">
                     <div className="bx--col">
                       <p>
-                        <strong>{i18n.t('customerDetails.id')}: </strong> {this.state.customer.id}
+                        <strong>{i18n.t('customerDetails.id')}: </strong> {customer.id}
                       </p>
                       <p>
-                        <strong>{i18n.t('customerDetails.name')}: </strong> {this.state.customer.name}
+                        <strong>{i18n.t('customerDetails.name')}: </strong> {customer.name}
                       </p>
                       <p>
-                        <strong>{i18n.t('customerDetails.notes')}: </strong> {this.state.customer.notes}
+                        <strong>{i18n.t('customerDetails.notes')}: </strong> {customer.notes}
                       </p>
                     </div>
                     <div className="bx--col">
                       <p>
-                        <strong>{i18n.t('customerDetails.contactName')}: </strong> {this.state.customer.contactName}
+                        <strong>{i18n.t('customerDetails.contactName')}: </strong> {customer.contactName}
                       </p>
                       <p>
-                        <strong>{i18n.t('customerDetails.contactPhone')}: </strong> {this.state.customer.contactPhone}
+                        <strong>{i18n.t('customerDetails.contactPhone')}: </strong> {customer.contactPhone}
                       </p>
                       <p>
-                        <strong>{i18n.t('customerDetails.contactEmail')}: </strong> {this.state.customer.contactEmail}
+                        <strong>{i18n.t('customerDetails.contactEmail')}: </strong> {customer.contactEmail}
                       </p>
                     </div>
                   </div>
                 </div>
               </Tile>
-              <CustomerDataTable serviceUrl={this.props.serviceUrl} customerNumber={this.state.customer.id} locale={this.props.locale} />
+              <CustomerDataTable serviceUrl={this.props.serviceUrl} customerId={customer.id}
+                                 locale={this.props.locale}/>
             </div>
           );
         } else {

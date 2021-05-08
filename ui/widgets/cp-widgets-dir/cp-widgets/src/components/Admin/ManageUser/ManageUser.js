@@ -33,7 +33,7 @@ class ManageUser extends Component {
         ),
         content: <AssignUser serviceUrl={this.props.serviceUrl}/>,
         open: true,
-      }
+      },
     ];
   }
 

@@ -36,13 +36,12 @@ class TicketingSystem extends Component {
     const ticketingSystem = {
       url: this.state.url,
       serviceAccount: this.state.serviceAccount,
-      serviceAccountSecret: this.state.serviceAccountSecret,
       systemId: this.state.systemId,
     };
-    const response = (await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem)).data;
+    const response = (await apiTicketingSystemPost(this.props.serviceUrl, ticketingSystem, this.state.serviceAccountSecret)).data;
     this.setState({
-      ticketingSystem: response
-    })
+      ticketingSystem: response,
+    });
   }
 
   async updateTicketingSystem() {
@@ -50,21 +49,20 @@ class TicketingSystem extends Component {
       id: this.state.ticketingSystem.id,
       url: this.state.url,
       serviceAccount: this.state.serviceAccount,
-      serviceAccountSecret: this.state.serviceAccountSecret,
       systemId: this.state.systemId,
     };
-    return await apiTicketingSystemPut(this.props.serviceUrl, ticketingSystem);
+    return await apiTicketingSystemPut(this.props.serviceUrl, ticketingSystem, this.state.serviceAccountSecret);
   }
 
   async fetchData() {
     const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
     this.setState({
       ticketingSystem: ticketingSystem,
-      url: (ticketingSystem) ? ticketingSystem.url : '',
-      serviceAccount: (ticketingSystem) ? ticketingSystem.serviceAccount : '',
+      url: ticketingSystem ? ticketingSystem.url : '',
+      serviceAccount: ticketingSystem ? ticketingSystem.serviceAccount : '',
       //Secret needs to be entered each time
-      systemId: (ticketingSystem) ? ticketingSystem.systemId : '',
-    })
+      systemId: ticketingSystem ? ticketingSystem.systemId : '',
+    });
   }
 
   componentDidMount() {

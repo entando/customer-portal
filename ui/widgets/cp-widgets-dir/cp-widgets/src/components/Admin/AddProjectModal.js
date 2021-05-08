@@ -180,10 +180,10 @@ class AddProjectModal extends Component {
   render() {
     const modalConfirmation = (
       <div className="bx--modal-header">
-        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+        <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
-    )
-    const modalId = "modal-form-project"
+    );
+    const modalId = 'modal-form-project';
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProject')}
@@ -199,7 +199,7 @@ class AddProjectModal extends Component {
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
             <Select
-              id={"customerId" + modalId}
+              id={'customerId' + modalId}
               name="customerId"
               labelText={i18n.t('adminDashboard.addProject.customerList') + ' *'}
               value={this.state.customerId}
@@ -218,7 +218,7 @@ class AddProjectModal extends Component {
             </Select>
 
             <TextInput
-              id={"name" + modalId}
+              id={'name' + modalId}
               name="name"
               labelText={i18n.t('adminDashboard.addProject.projectName') + ' *'}
               value={this.state.name}
@@ -227,7 +227,7 @@ class AddProjectModal extends Component {
               invalid={this.state.invalid['name']}
             />
             <TextInput
-              id={"description" + modalId}
+              id={'description' + modalId}
               name="description"
               labelText={i18n.t('adminDashboard.addProject.projectDesc') + ' *'}
               value={this.state.description}
@@ -236,28 +236,28 @@ class AddProjectModal extends Component {
               invalid={this.state.invalid['description']}
             />
             <TextInput
-              id={"systemId" + modalId}
+              id={'systemId' + modalId}
               name="systemId"
               labelText={i18n.t('adminDashboard.addProject.systemId')}
               value={this.state.systemId}
               onChange={this.handleChanges}
             />
             <TextInput
-              id={"contactName" + modalId}
+              id={'contactName' + modalId}
               name="contactName"
               labelText={i18n.t('adminDashboard.addProject.contactName')}
               value={this.state.contactName}
               onChange={this.handleChanges}
             />
             <TextInput
-              id={"contactPhone" + modalId}
+              id={'contactPhone' + modalId}
               name="contactPhone"
               labelText={i18n.t('adminDashboard.addProject.contactPhone')}
               value={this.state.contactPhone}
               onChange={this.handleChanges}
             />
             <TextInput
-              id={"contactEmail" + modalId}
+              id={'contactEmail' + modalId}
               name="contactEmail"
               labelText={i18n.t('adminDashboard.addProject.contactEmail') + ' *'}
               value={this.state.contactEmail}
@@ -266,7 +266,7 @@ class AddProjectModal extends Component {
               invalid={this.state.invalid['contactEmail']}
             />
             <TextArea
-              id={"notes" + modalId}
+              id={'notes' + modalId}
               name="notes"
               labelText={i18n.t('adminDashboard.addProject.notes')}
               value={this.state.notes}

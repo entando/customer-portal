@@ -4,7 +4,7 @@ import { ModalWrapper, Form, TextInput, DatePicker, DatePickerInput } from 'carb
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProductVersionGet, apiProductVersionPut } from '../../api/productVersion';
 import moment from 'moment';
-import {authenticationChanged} from "../../api/helpers";
+import {authenticationChanged} from '../../api/helpers';
 
 class EditVersionModal extends Component {
   constructor(props) {
@@ -139,11 +139,11 @@ class EditVersionModal extends Component {
   render() {
     const modalConfirmation = (
       <div className="bx--modal-header">
-        <p style={{ color: this.state.submitColour }}>{this.state.submitMsg}</p>
+        <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
-    )
+    );
     const buttonClassName = 'bx--btn bx--btn--ghost edit-version-button-' + this.props.version.id;
-    const modalId = this.state.modalId
+    const modalId = this.state.modalId;
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.edit')}
@@ -157,9 +157,9 @@ class EditVersionModal extends Component {
       >
         {modalConfirmation}
         <div className="form-container">
-          <Form onSubmit={this.handleFormSubmit} id={"form" + modalId}>
+          <Form onSubmit={this.handleFormSubmit} id={'form' + modalId}>
             <TextInput
-              id={"name" + modalId}
+              id={'name' + modalId}
               name="name"
               labelText={i18n.t('adminDashboard.addProject.projectName') + ' *'}
               value={this.state.name}
@@ -170,7 +170,7 @@ class EditVersionModal extends Component {
             <DatePicker dateFormat="m/d/Y" datePickerType="single" onChange={this.handleStartDateChange}
                         value={this.state.startDate}>
               <DatePickerInput
-                id={"startDate" + modalId}
+                id={'startDate' + modalId}
                 name="startDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('subscriptionDetails.startDate') + ' *'}
@@ -184,12 +184,12 @@ class EditVersionModal extends Component {
               dateFormat="m/d/Y"
               datePickerType="single"
               onChange={this.handleEndDateChange}
-              id={"endDate"+modalId}
+              id={'endDate' + modalId}
               name="endDate"
               value={this.state.endDate}
             >
               <DatePickerInput
-                id={"endDate"+modalId}
+                id={'endDate' + modalId}
                 name="endDate"
                 placeholder="mm/dd/yyyy"
                 labelText={i18n.t('subscriptionDetails.endDate') + ' *'}

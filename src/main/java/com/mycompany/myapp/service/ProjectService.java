@@ -1,10 +1,13 @@
 package com.mycompany.myapp.service;
 
+import com.mycompany.myapp.domain.*;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import com.mycompany.myapp.domain.*;
 
 /**
  * Service Interface for managing {@link Project}.
@@ -25,6 +28,14 @@ public interface ProjectService {
      * @return the list of entities.
      */
     List<Project> findAll();
+
+    /**
+     * Get all the projects with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    Page<Project> findAllWithEagerRelationships(Pageable pageable);
+
 
     /**
      * Get the "id" project.
@@ -144,14 +155,6 @@ public interface ProjectService {
      * @return the entity.
      */
     Set<PortalUser> getProjectUsers(Long id);
-
-    /**
-     * Get project by systemId.
-     *
-     * @param systemId the systemId of the entity.
-     * @return the entity.
-     */
-    Project getProjectBySystemId(String systemId);
 
     /**
      * Check if the current user has access to a project via admin role or direct assignment

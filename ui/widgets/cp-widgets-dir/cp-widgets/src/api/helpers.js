@@ -10,16 +10,16 @@ const SUPPORT = 'cp-support';
 const PARTNER = 'cp-partner';
 const CUSTOMER = 'cp-customer';
 
-export const isAuthenticated = (props) => {
+export const isAuthenticated = props => {
   const {keycloak} = props;
   return keycloak.initialized && keycloak.authenticated;
-}
+};
 
 export const authenticationChanged = (props, prevProps) => {
   const authenticated = isAuthenticated(props);
   const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-  return (authenticated && changedAuth);
-}
+  return authenticated && changedAuth;
+};
 
 export const isPortalAdmin = () => {
   return hasKeycloakClientRole(ADMIN);
@@ -80,14 +80,14 @@ export const getDefaultKeycloakOptions = () => ({
 });
 
 export const getActiveSubscription = project => {
-  return (project &&
+  return (
+    project &&
     project.projectSubscriptions &&
-    project.projectSubscriptions.find(
-      item => {
-        return (item.status === "ACTIVE") ? item : null
-      })
+    project.projectSubscriptions.find(item => {
+      return item.status === 'ACTIVE' ? item : null;
+    })
   );
-}
+};
 
 export const getUrl = url => {
   return `${url}`;

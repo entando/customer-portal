@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ManageSubscriptions from "../components/Admin/ManageSubscriptions/ManageSubscriptions";
+import ManageSubscriptions from '../components/Admin/ManageSubscriptions/ManageSubscriptions';
 import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';
@@ -18,7 +18,7 @@ const ATTRIBUTES = {
   locale: 'locale',
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
-  serviceUrl: 'service-url'
+  serviceUrl: 'service-url',
 };
 
 class ManageSubscriptionsElement extends HTMLElement {

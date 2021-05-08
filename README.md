@@ -24,6 +24,7 @@ Install the bundle using the App Builder.
   * cp-partner
   * cp-customer
   * The built-in mapper for email must be enabled on the server client so that user accounts can be retrieved from Jira and tickets created used that account information.
+  * Test users are automatically added in a local keycloak instance from docker/realm-config - admin/admin, support/user, partner/user, user/user.
 * Pages
   * Some features are delivered using dedicated pages within Entando.
     * open_service_ticket.page
@@ -33,9 +34,12 @@ Install the bundle using the App Builder.
   * TODO configuration for email server
   
 # Development tips
-* The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. For example, the UI code will be reformatted and functional changes may not be useful at this point.
-* You can use `mvn clean` to reload the fake dataset from src/main/resources/config/liquibase/fake-data.
-* Restarting the keycloak container will re-initialize the realm from src/main/docker/realm-config.
+* The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. 
+  * For example, the UI code may be reformatted and stock unused widgets generated
+  * repository/*Repository classes have some custom queries and methods
+  * web/rest/*Resource classes have been heavily customized with security checks and generally should be rolled back.
+* You can use `./mvnw clean` to reload the fake dataset from src/main/resources/config/liquibase/fake-data.
+* Removing the src/main/docker/keycloak-db directory will result in the realm from src/main/docker/realm-config being reloaded on the next restart.
 
 ---
 Standard Blueprint documentation follows...

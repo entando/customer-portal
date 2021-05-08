@@ -115,18 +115,22 @@ public class ProjectResource {
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<Project> updateProject(@Valid @RequestBody Project project) throws URISyntaxException {
         log.debug("REST request to update Project : {}", project);
+        Long projectId = project.getId();
 
+        if (projectId == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
 
         List<Project> projects = projectService.findAll();
         for (Project p : projects) {
-            if (p.getSystemId().equals(project.getSystemId()) && !project.getId().equals(p.getId()) && !project.getSystemId().trim().isEmpty()) {
+            if (p.getSystemId().equals(project.getSystemId()) && !projectId.equals(p.getId()) && !project.getSystemId().trim().isEmpty()) {
                 throw new BadRequestAlertException("A new project must have a unique system id", ENTITY_NAME, "systemidexists");
             }
         }
 
-        if (project.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
+        //CP-73 Probably a Spring way to do this but retrieve the existing users so they don't get lost on the update
+        projectService.findOne(projectId).ifPresent(p -> project.setUsers(p.getUsers()));
+
         Project result = projectService.save(project);
         return ResponseEntity.ok().headers(
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, project.getId().toString()))
@@ -507,6 +511,7 @@ public class ProjectResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
      */
+    //TODO: remove
     @GetMapping("/projects/myprojects")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public List<Project> getMyProjects() {

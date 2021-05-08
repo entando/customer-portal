@@ -1,9 +1,9 @@
 package com.mycompany.myapp.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import com.mycompany.myapp.domain.ProjectSubscription;
+
+import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 /**
  * Spring Data  repository for the ProjectSubscription entity.

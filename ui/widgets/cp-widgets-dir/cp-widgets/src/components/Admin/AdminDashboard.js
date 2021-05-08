@@ -5,7 +5,7 @@ import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import AddProjectModal from './AddProjectModal';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiAdminCustomersGet, apiMyCustomersGet } from '../../api/customers';
+import {apiCustomersGet} from '../../api/customers';
 import CustomerAccordian from '../Customer/CustomerAccordian';
 import {
   authenticationChanged,
@@ -13,9 +13,8 @@ import {
   isPortalSupport,
   isPortalPartner,
   isPortalCustomer,
-  isPortalAdminOrSupport,
   isPortalUser,
-  isAuthenticated
+  isAuthenticated,
 } from '../../api/helpers';
 
 class AdminDashboard extends React.Component {
@@ -31,24 +30,18 @@ class AdminDashboard extends React.Component {
   }
 
   componentDidMount() {
-    this.getCustomers();
+    this.fetchData();
   }
 
   componentDidUpdate(prevProps) {
     if (authenticationChanged(this.props, prevProps)) {
-      this.getCustomers();
+      this.fetchData();
     }
   }
 
-  async getCustomers() {
+  async fetchData() {
     if (isAuthenticated(this.props)) {
-      var customers;
-      if (isPortalAdminOrSupport()) {
-        customers = await apiAdminCustomersGet(this.props.serviceUrl);
-      } else {
-        customers = await apiMyCustomersGet(this.props.serviceUrl);
-      }
-
+      const customers = await apiCustomersGet(this.props.serviceUrl);
       this.setState({
         customers: customers.data,
         filteredCustomers: customers.data,
@@ -58,6 +51,7 @@ class AdminDashboard extends React.Component {
 
   handleSearch = event => {
     if (event.key === 'Enter') {
+      //Note: should refactor this to preform filtering in db
       const newFilteredState = this.state.customers.filter(customer =>
         customer.name.toLowerCase().includes(event.target.value.toLowerCase())
       );
@@ -76,7 +70,7 @@ class AdminDashboard extends React.Component {
   };
 
   updateCustomerList = () => {
-    this.getCustomers();
+    this.fetchData();
   };
 
   render() {
@@ -122,11 +116,8 @@ class AdminDashboard extends React.Component {
               {isPortalAdmin() ? (
                 <div className="bx--col">
                   <div>
-                    <AddPartnerModal
-                      serviceUrl={this.props.serviceUrl}
-                      updateCustomerList={this.updateCustomerList}
-                    />
-                    <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList} />
+                    <AddPartnerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}/>
+                    <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}/>
                     <AddProjectModal
                       serviceUrl={this.props.serviceUrl}
                       updateCustomerList={this.updateCustomerList}
@@ -154,7 +145,7 @@ class AdminDashboard extends React.Component {
                         <CustomerAccordian
                           key={customer.id}
                           serviceUrl={this.props.serviceUrl}
-                          customerNumber={customer.id}
+                          customerId={customer.id}
                           title={customer.name}
                           updateCustomerList={this.updateCustomerList}
                           locale={this.props.locale}

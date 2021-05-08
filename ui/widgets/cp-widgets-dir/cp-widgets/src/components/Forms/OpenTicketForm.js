@@ -4,11 +4,7 @@ import {Form, Select, SelectItem, Button, TextArea, TextInput} from 'carbon-comp
 import withKeycloak from '../../auth/withKeycloak';
 import {apiProjectGet} from '../../api/projects';
 import {apiJiraTicketPost} from '../../api/tickets';
-import {
-  authenticationChanged, getActiveSubscription,
-  isAuthenticated,
-  isPortalUser,
-} from '../../api/helpers';
+import {authenticationChanged, getActiveSubscription, isAuthenticated, isPortalUser} from '../../api/helpers';
 
 class OpenTicketForm extends Component {
   constructor() {
@@ -54,7 +50,7 @@ class OpenTicketForm extends Component {
     let project = (await apiProjectGet(this.props.serviceUrl, projectId)).data;
 
     if (!project) {
-      console.error("Unable to retrieve projectId ", projectId)
+      console.error('Unable to retrieve projectId ', projectId);
       project = {};
     }
 
@@ -89,7 +85,7 @@ class OpenTicketForm extends Component {
     }
 
     this.setState({
-      invalid: invalid
+      invalid: invalid,
     });
     return formIsValid;
   }
@@ -99,9 +95,8 @@ class OpenTicketForm extends Component {
     const name = input.name;
     const value = input.value;
     this.setState({
-        [name]: value
-      }
-    );
+      [name]: value,
+    });
   };
 
   handleFormSubmit = event => {
@@ -139,7 +134,7 @@ class OpenTicketForm extends Component {
         submitColour: '#da1e28',
       });
     }
-  }
+  };
 
   async createTicket() {
     if (isPortalUser()) {

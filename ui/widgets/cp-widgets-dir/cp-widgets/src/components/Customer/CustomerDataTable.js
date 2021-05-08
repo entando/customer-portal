@@ -1,14 +1,23 @@
-import React, { Component } from 'react';
-import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
+import {Component} from 'react';
+import {
+  DataTable,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableHeader,
+  TableBody,
+  TableCell
+} from 'carbon-components-react';
 import '../../index.scss';
-import { apiGetCustomersProjects, apiGetMyCustomersProjects, apiDeleteProjectFromCustomer } from '../../api/customers';
+import {apiDeleteProjectFromCustomer, apiCustomerGet} from '../../api/customers';
 import withKeycloak from '../../auth/withKeycloak';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import i18n from '../../i18n';
 import {authenticationChanged, getActiveSubscription, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
-import {apiCurrentTicketingSystemGet} from "../../api/ticketingsystem";
+import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
 import ProjectActionItems from '../Admin/ProjectActionItems';
-import {formatEndDate, formatStartDate} from "../../api/subscriptions";
+import {formatEndDate, formatStartDate} from '../../api/subscriptions';
 
 class CustomerDataTable extends Component {
   constructor(props) {
@@ -62,16 +71,9 @@ class CustomerDataTable extends Component {
   async fetchData() {
     if (isAuthenticated(this.props)) {
       try {
-        let projects;
-        //TOOD: refactor
-        if (isPortalAdminOrSupport()) {
-          projects = await apiGetCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
-        } else {
-          projects = await apiGetMyCustomersProjects(this.props.serviceUrl, this.props.customerNumber);
-        }
-
+        const customer = await apiCustomerGet(this.props.serviceUrl, this.props.customerId);
+        const projects = customer.data.projects;
         const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
-
         this.setState({
           projects: projects,
           ticketingSystem: ticketingSystem,
@@ -89,29 +91,26 @@ class CustomerDataTable extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (authenticationChanged(this.props, prevProps)) {
+      this.fetchData();
+    }
+  }
+
+  // fix warning: Can't perform a React state update on an unmounted component
+  componentWillUnmount() {
+    this.setState = (state, callback) => {
+      //no-op
+    };
+  }
+
   updateProjectList = () => {
     this.fetchData();
   };
 
-  showMenu = (e, id) => {
-    var showMenu = {};
-    showMenu[String(id)] = !this.state.showMenu[String(id)];
-    this.setState({
-      showMenu: showMenu,
-    });
-  };
-
-  closeMenu = () => {
-    this.setState({
-      showMenu: false
-    }, () => {
-      document.removeEventListener('click', this.closeMenu);
-    });
-  };
-
   async deleteProject(id) {
     if (isAuthenticated(this.props)) {
-      return await apiDeleteProjectFromCustomer(this.props.serviceUrl, this.props.customerNumber, id);
+      return await apiDeleteProjectFromCustomer(this.props.serviceUrl, this.props.customerId, id);
     }
   }
 
@@ -135,17 +134,11 @@ class CustomerDataTable extends Component {
     }
   };
 
-  componentDidUpdate(prevProps) {
-    if (authenticationChanged(this.props, prevProps)) {
-      this.fetchData();
-    }
-  }
-
   render() {
     return (
       <div>
-        <DataTable rows={rowData} headers={this.headerData}>
-          {({ rows, headers, getHeaderProps, getTableProps }) => (
+        <DataTable rows={[{id: '1'}]} headers={this.headerData}>
+          {({rows, headers, getHeaderProps, getTableProps}) => (
             <TableContainer description={i18n.t('customerDashboard.tableDesc')}>
               <Table {...getTableProps()}>
                 <TableHead>
@@ -154,7 +147,7 @@ class CustomerDataTable extends Component {
                       let result;
                       if (header.header === i18n.t('customerDetails.notes')) {
                         if (isPortalAdminOrSupport()) {
-                          result = <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>;
+                          result = <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>;
                         }
                       } else {
                         result = <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>;
@@ -165,7 +158,7 @@ class CustomerDataTable extends Component {
                 </TableHead>
                 <TableBody>
                   {Object.keys(this.state.projects).length !== 0
-                    ? this.state.projects.data.map((project, index) => {
+                    ? this.state.projects.map((project, index) => {
                       const subscription = getActiveSubscription(project);
                       if (!subscription) {
                         return (
@@ -178,23 +171,24 @@ class CustomerDataTable extends Component {
                                 ))}
                               </TableCell>
                             ) : (
-                                <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              )}
                               <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                              <TableCell>{project.tickets.length}</TableCell>
-                              {isPortalAdminOrSupport() ? <TableCell style={{ width: '250px' }}>{project.notes}</TableCell> : null}
-                              <TableCell>
-                                <ProjectActionItems
-                                  serviceUrl={this.props.serviceUrl}
-                                  ticketingSystem={this.state.ticketingSystem}
-                                  locale={this.props.locale}
-                                  project={project}
-                                  allProjects={this.state.projects.data}
-                                  handleDeleteProject={this.handleDeleteProject}
-                                  updateProjectList={this.updateProjectList}
+                            )}
+                            <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                            <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                            <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                            <TableCell>{i18n.t('userMessages.none')}</TableCell>
+                            <TableCell>{project.tickets && project.tickets.length}</TableCell>
+                            {isPortalAdminOrSupport() ?
+                              <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
+                            <TableCell>
+                              <ProjectActionItems
+                                serviceUrl={this.props.serviceUrl}
+                                ticketingSystem={this.state.ticketingSystem}
+                                locale={this.props.locale}
+                                project={project}
+                                allProjects={this.state.projects}
+                                handleDeleteProject={this.handleDeleteProject}
+                                updateProjectList={this.updateProjectList}
                                 />
                               </TableCell>
                             </TableRow>
@@ -222,10 +216,9 @@ class CustomerDataTable extends Component {
                               <TableCell>{subscription.status}</TableCell>
                               <TableCell>{formatStartDate(subscription.startDate)}</TableCell>
                               <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
-                              <TableCell>{project.tickets.length}</TableCell>
+                              <TableCell>{project.tickets && project.tickets.length}</TableCell>
                               {isPortalAdminOrSupport() ?
-                                <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null
-                              }
+                                <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                               <TableCell>
                                 <ProjectActionItems
                                   serviceUrl={this.props.serviceUrl}
@@ -233,7 +226,7 @@ class CustomerDataTable extends Component {
                                   locale={this.props.locale}
                                   subscription={subscription}
                                   project={project}
-                                  allProjects={this.state.projects.data}
+                                  allProjects={this.state.projects}
                                   handleDeleteProject={this.handleDeleteProject}
                                   updateProjectList={this.updateProjectList}
                                 />
@@ -252,7 +245,5 @@ class CustomerDataTable extends Component {
     );
   }
 }
-
-const rowData = [{id: 'a'}];
 
 export default withKeycloak(CustomerDataTable);
