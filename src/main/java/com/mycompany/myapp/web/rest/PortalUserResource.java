@@ -116,7 +116,7 @@ public class PortalUserResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/portal-users/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Void> deletePortalUser(@PathVariable Long id) {
         log.debug("REST request to delete PortalUser : {}", id);
 
@@ -131,7 +131,7 @@ public class PortalUserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the portalUser, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/portal-users/username/{username}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
     public ResponseEntity<PortalUser> getPortalUserByUserName(@PathVariable String username) {
         log.debug("REST request to get PortalUser by username: {}", username);
         Optional<PortalUser> portalUser = portalUserService.findByUsername(username);
