@@ -2,8 +2,8 @@ version: '2'
 services:
   custportapp-postgresql:
     image: postgres:12.1
-    # volumes:
-    #     - ~/volumes/jhipster/custportApp/postgresql/:/var/lib/postgresql/data/
+    volumes:
+      - ./postgresql-db:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=custportApp
       - POSTGRES_PASSWORD=
