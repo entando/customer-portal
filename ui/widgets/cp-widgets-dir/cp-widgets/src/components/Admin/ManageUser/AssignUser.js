@@ -5,6 +5,7 @@ import {apiAddUserToProject, apiProjectGet} from '../../../api/projects';
 import withKeycloak from '../../../auth/withKeycloak';
 import { apiKeycloakUserGet } from '../../../api/keycloak';
 import i18n from '../../../i18n';
+import {authenticationChanged, isAuthenticated} from "../../../api/helpers";
 class AssignUser extends Component {
   constructor(props) {
     super(props);
@@ -20,28 +21,20 @@ class AssignUser extends Component {
   }
 
   componentDidMount() {
-    const { keycloak } = this.props;
-
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
-      this.fetchData(keycloak.authServerUrl);
+    if (isAuthenticated(this.props)) {
+      this.fetchData();
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
-      this.fetchData(keycloak.authServerUrl);
+    if (authenticationChanged(this.props, prevProps)) {
+      this.fetchData();
     }
   }
 
-  async fetchData(keycloakUrl) {
+  async fetchData() {
     const {keycloak} = this.props;
-    const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(keycloakUrl, keycloak.realm)).data);
+    const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(keycloak.authServerUrl, keycloak.realm)).data);
     const search = window.location.search;
     const params = new URLSearchParams(search);
     let projectId = params.get('project');
@@ -79,7 +72,7 @@ class AssignUser extends Component {
 
     if (formIsValid) {
       this.assignUserToProject(projectId, assignUser).then(res => {
-        if (res.status === 201) {
+        if (res && res.status === 201) {
           this.setState({
             submitMsg: i18n.t('submitMessages.updated'),
             submitColour: '#24a148',
@@ -117,34 +110,33 @@ class AssignUser extends Component {
   }
 
   assignUserToProject = async (projectId, username) => {
-    const portalUserId = await this.getPortalUserId({ username, email: this.state.users.get(username) });
+    const email = this.state.users.get(username);
+    if (!email) {
+      alert("User is missing an email address in keycloak and cannot be assigned.")
+      return null;
+    }
+    const portalUserId = await this.getPortalUserId({username, email: this.state.users.get(username)});
     return await apiAddUserToProject(this.props.serviceUrl, projectId, portalUserId);
   };
 
   getPortalUserId = async keycloakUser => {
     let portalUserId = null;
     try {
-      const portalUser = await portalUserApi.apiUserGetByUsername(this.props.serviceUrl, keycloakUser.username);
+      const portalUser = await portalUserApi.apiUserGetByUsernameAndEmail(this.props.serviceUrl,
+        keycloakUser.username, keycloakUser.email);
       portalUserId = portalUser.data.id;
     } catch (e) {
-      if (e.message.toLowerCase().includes('not found')) {
-        const portalUser = await this.createPortalUser(keycloakUser);
-        portalUserId = portalUser.data.id;
-      }
+      console.warn(e);
     }
 
     return portalUserId;
   };
 
-  createPortalUser = async keycloakUser => {
-    return await portalUserApi.apiUserPost(this.props.serviceUrl, { username: keycloakUser.username, email: keycloakUser.email });
-  };
-
   setupFormComponents() {
     const users = this.state.users;
     const project = this.state.project;
-    let userList = null;
-    let projectList = null;
+    let userList;
+    let projectList;
 
     if (users.size > 0) {
       userList = [...users.keys()].map((assignUser, i) => (
