@@ -125,16 +125,31 @@ public class PortalUserResource {
     }
 
     /**
-     * {@code GET  /portal-users/username/:username} : get the "username" portalUser.
+     * {@code GET  /portal-users/username/:username/email/:email} : get the "username" portalUser.
      *
      * @param username the username of the portaluser
+     * @param email    the email of the portaluser, used to lazily create the portaluser if needed
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the portalUser, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/portal-users/username/{username}")
+    @GetMapping("/portal-users/username/{username}/email/{email}")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<PortalUser> getPortalUserByUserName(@PathVariable String username) {
+    public ResponseEntity<PortalUser> getPortalUserByUserName(@PathVariable String username, @PathVariable String email) {
         log.debug("REST request to get PortalUser by username: {}", username);
         Optional<PortalUser> portalUser = portalUserService.findByUsername(username);
+        if (!portalUser.isPresent()) {
+            if ((username == null) || username.trim().isEmpty()) {
+                throw new BadRequestAlertException("Missing username", "username", "username");
+            }
+            if ((email == null) || email.trim().isEmpty()) {
+                throw new BadRequestAlertException("Missing email", "email", "email");
+            }
+            log.debug("Creating new PortalUser by username {}, email {}", username, email);
+            PortalUser user = new PortalUser();
+            user.setUsername(username);
+            user.setEmail(email);
+            portalUser = Optional.of(portalUserService.save(user));
+        }
+
         return ResponseUtil.wrapOrNotFound(portalUser);
     }
 }

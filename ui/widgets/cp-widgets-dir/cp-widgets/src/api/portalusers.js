@@ -51,8 +51,8 @@ export const apiUserPost = async (serviceUrl, user) => {
   return await request(url, options);
 };
 
-export const apiUserGetByUsername = async (serviceUrl, username) => {
-  const url = getUrl(`${serviceUrl}/${resource}/username/${username}`);
+export const apiUserGetByUsernameAndEmail = async (serviceUrl, username, email) => {
+  const url = getUrl(`${serviceUrl}/${resource}/username/${username}/email/${email}`);
   const options = {
     ...getDefaultOptions(),
     method: 'GET',
