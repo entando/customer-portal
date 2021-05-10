@@ -281,7 +281,7 @@ public class ProjectServiceImpl implements ProjectService {
             return false;
         }
 
-        //TODO: optimize this with a join query
+        //Note: this could be optimized with a join query but not urgent given the small number of expected users on a single project
         Optional<PortalUser> user = portalUserRepository.findByUsername(username.get());
         if (user.isPresent()) {
             Set<PortalUser> projectUsers = getProjectUsers(projectId);
