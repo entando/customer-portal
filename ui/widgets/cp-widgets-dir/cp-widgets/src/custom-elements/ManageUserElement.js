@@ -60,4 +60,4 @@ class ManageUserElement extends HTMLElement {
   }
 }
 
-customElements.define('manage-user-widget', ManageUserElement);
+customElements.define('cp-manage-user-widget', ManageUserElement);

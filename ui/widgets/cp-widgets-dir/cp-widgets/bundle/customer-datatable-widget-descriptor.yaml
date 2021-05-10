@@ -1,6 +1,0 @@
-code: customer-datatable-widget
-titles:
-  en: Customer Data Table Widget
-  it: Customer Data Table Widget
-group: free
-customUiPath: customer-datatable-widget.ftl

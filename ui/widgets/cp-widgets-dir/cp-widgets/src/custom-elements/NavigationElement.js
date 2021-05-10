@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import Navigation from '../components/Navigation/Navigation';
 import KeycloakContext from '../auth/KeycloakContext';
 
-import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
-import { KEYCLOAK_EVENT_TYPE } from '../custom-elements/widgetEventTypes';
+import {subscribeToWidgetEvent} from '../helpers/widgetEvents';
+import {KEYCLOAK_EVENT_TYPE} from './widgetEventTypes';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
@@ -55,4 +55,4 @@ class NavigationElement extends HTMLElement {
   }
 }
 
-customElements.define('navigation-widget', NavigationElement);
+customElements.define('cp-navigation-widget', NavigationElement);

@@ -55,4 +55,4 @@ class SubscriptionElement extends HTMLElement {
   }
 }
 
-customElements.define('subscription-widget', SubscriptionElement);
+customElements.define('cp-subscription-widget', SubscriptionElement);

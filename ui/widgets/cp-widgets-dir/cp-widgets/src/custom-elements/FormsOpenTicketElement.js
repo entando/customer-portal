@@ -4,7 +4,7 @@ import OpenTicketForm from '../components/Forms/OpenTicketForm';
 import KeycloakContext from '../auth/KeycloakContext';
 
 import {subscribeToWidgetEvent} from '../helpers/widgetEvents';
-import {KEYCLOAK_EVENT_TYPE} from '../custom-elements/widgetEventTypes';
+import {KEYCLOAK_EVENT_TYPE} from './widgetEventTypes';
 import * as Locale from '../i18n';
 
 const getKeycloakInstance = () =>
@@ -58,4 +58,4 @@ class FormsOpenTicketElement extends HTMLElement {
   }
 }
 
-customElements.define('forms-openticket-widget', FormsOpenTicketElement);
+customElements.define('cp-forms-openticket-widget', FormsOpenTicketElement);

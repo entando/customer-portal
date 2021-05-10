@@ -57,4 +57,4 @@ class ProductVersionElement extends HTMLElement {
   }
 }
 
-customElements.define('product-version-widget', ProductVersionElement);
+customElements.define('cp-product-version-widget', ProductVersionElement);
