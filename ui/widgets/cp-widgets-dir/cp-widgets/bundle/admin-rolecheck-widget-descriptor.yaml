@@ -1,6 +1,0 @@
-code: admin-rolecheck-widget
-titles:
-  en: Admin Role Check Widget
-  it: Admin Role Check Widget
-group: free
-customUiPath: admin-rolecheck-widget.ftl

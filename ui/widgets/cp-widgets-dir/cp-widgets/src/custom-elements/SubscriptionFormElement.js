@@ -60,4 +60,4 @@ class SubscriptionFormElement extends HTMLElement {
   }
 }
 
-customElements.define('subscription-form-widget', SubscriptionFormElement);
+customElements.define('cp-subscription-form-widget', SubscriptionFormElement);

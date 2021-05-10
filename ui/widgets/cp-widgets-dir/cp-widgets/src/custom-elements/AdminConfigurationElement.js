@@ -60,4 +60,4 @@ class AdminConfigurationElement extends HTMLElement {
   }
 }
 
-customElements.define('admin-configuration-widget', AdminConfigurationElement);
+customElements.define('cp-admin-configuration-widget', AdminConfigurationElement);

@@ -59,4 +59,4 @@ class ManageSubscriptionsElement extends HTMLElement {
   }
 }
 
-customElements.define('manage-subscriptions-widget', ManageSubscriptionsElement);
+customElements.define('cp-manage-subscriptions-widget', ManageSubscriptionsElement);

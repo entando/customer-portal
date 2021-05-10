@@ -60,4 +60,4 @@ class AppElement extends HTMLElement {
   }
 }
 
-customElements.define('app-element', AppElement);
+customElements.define('cp-app-element', AppElement);

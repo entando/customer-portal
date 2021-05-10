@@ -57,4 +57,4 @@ class TicketingSystemElement extends HTMLElement {
   }
 }
 
-customElements.define('ticketing-system-widget', TicketingSystemElement);
+customElements.define('cp-ticketing-system-widget', TicketingSystemElement);
