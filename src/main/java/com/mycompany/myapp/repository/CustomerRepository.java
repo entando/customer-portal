@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-    @Query("select c from Customer c " +
+    @Query("select distinct c from Customer c " +
         "join Project p on p.customer.id = c.id " +
         "join PortalUser u on u member of p.users " +
         "where u.id = ?1 " +
