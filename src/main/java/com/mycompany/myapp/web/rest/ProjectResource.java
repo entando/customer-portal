@@ -1,46 +1,26 @@
 package com.mycompany.myapp.web.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.validation.Valid;
-
+import com.mycompany.myapp.domain.*;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.SpringSecurityAuditorAware;
+import com.mycompany.myapp.service.ProjectService;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.mycompany.myapp.constant.CustportAppConstant;
-import com.mycompany.myapp.domain.Customer;
-import com.mycompany.myapp.domain.Partner;
-import com.mycompany.myapp.domain.PortalUser;
-import com.mycompany.myapp.domain.Project;
-import com.mycompany.myapp.domain.ProjectSubscription;
-import com.mycompany.myapp.domain.Ticket;
-import com.mycompany.myapp.response.model.SubscriptionDetailResponse;
-import com.mycompany.myapp.response.model.SubscriptionListResponse;
-import com.mycompany.myapp.service.CustomerService;
-import com.mycompany.myapp.service.ProjectService;
-import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.Project}.
@@ -61,9 +41,6 @@ public class ProjectResource {
 
     @Autowired
     SpringSecurityAuditorAware springSecurityAuditorAware;
-
-    @Autowired
-    private CustomerService customerService;
 
     public ProjectResource(ProjectService projectService) {
         this.projectService = projectService;
@@ -128,7 +105,7 @@ public class ProjectResource {
             }
         }
 
-        //CP-73 Probably a Spring way to do this but retrieve the existing users so they don't get lost on the update
+        //Note: there's probably a Spring way to do this but retrieve the existing users so they don't get lost on the update
         projectService.findOne(projectId).ifPresent(p -> project.setUsers(p.getUsers()));
 
         Project result = projectService.save(project);
@@ -143,82 +120,6 @@ public class ProjectResource {
         log.debug("REST request to get all Projects");
         return projectService.findAll();
     }
-
-    @GetMapping("/projects/subscriptions/customer/{customerNumber}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
-    public ResponseEntity<List<SubscriptionListResponse>> getSubscriptionsForCustomer(@PathVariable String customerNumber) {
-        List<SubscriptionListResponse> subscriptionList = new ArrayList<>();
-
-        try {
-            Optional<Customer> customer = customerService.findByCustomerNumber(customerNumber);
-
-            if (customer.isPresent()) {
-                SimpleDateFormat sdf = new SimpleDateFormat(CustportAppConstant.DATE_FORMAT);
-                Set<Project> projects = customer.get().getProjects();
-
-                for (Project project : projects) {
-                    SubscriptionListResponse subscription = new SubscriptionListResponse();
-
-                    subscription.setProjectName(project.getName());
-                    if (!project.getPartners().isEmpty()) {
-                        List<String> partners = new ArrayList<>();
-                        project.getPartners().stream().forEachOrdered(partner -> partners.add(partner.getName()));
-                        subscription.setPartners(partners);
-                    }
-
-                    Optional<ProjectSubscription> optionalSubscription = projectService.getActiveSubscription(project);
-                    if (optionalSubscription.isPresent()) {
-                        ProjectSubscription projectSubscription = optionalSubscription.get();
-                        subscription.setSubscriptionId(projectSubscription.getId());
-                        subscription.setStartDate(sdf.format(Date.from(projectSubscription.getStartDate().toInstant())));
-                        subscription.setEndDate(sdf.format(Date.from(projectSubscription.getStartDate().plusMonths(projectSubscription.getLengthInMonths()).toInstant())));
-
-                        if (projectSubscription.getEntandoVersion() != null) {
-                            subscription.setEntandoVersion(projectSubscription.getEntandoVersion().getName());
-                        }
-                    }
-                    subscription.setTickets(project.getTickets().size());
-
-                    subscriptionList.add(subscription);
-                }
-            }
-        } catch (Exception e) {
-            log.error("Error occurred while fetching subscriptions for customer number : " + customerNumber, e);
-        }
-
-        return new ResponseEntity<>(subscriptionList, HttpStatus.OK);
-    }
-
-    @GetMapping("/projects/subscriptions/detail")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
-    public ResponseEntity<SubscriptionDetailResponse> getSubscriptionDetail(
-        @RequestParam(value = "projectId") Long projectId) {
-        projectService.checkProjectAccess(projectId);
-        SubscriptionDetailResponse subscriptionDetail = new SubscriptionDetailResponse();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
-
-        Optional<Project> optionalProject = projectService.findOne(projectId);
-
-        if (optionalProject.isPresent()) {
-            Project project = optionalProject.get();
-
-            subscriptionDetail.setProjectName(project.getName());
-            subscriptionDetail.setDescription(project.getDescription());
-
-            Optional<ProjectSubscription> optionalSubscription = projectService.getActiveSubscription(project);
-            if (optionalSubscription.isPresent()) {
-                ProjectSubscription subscription = optionalSubscription.get();
-                subscriptionDetail.setLevel(subscription.getLevel().name());
-                subscriptionDetail.setStartDate(sdf.format(subscription.getStartDate()));
-            }
-
-            //TODO: logic is wrong
-            subscriptionDetail.setPartner(project.getPartners().stream().findFirst().get().getName()); // assume there is only one partner per project
-        }
-
-        return new ResponseEntity<>(subscriptionDetail, HttpStatus.OK);
-    }
-
 
     /**
      * {@code GET  /projects/:id} : get the "id" project.
@@ -245,7 +146,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/projects/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
 
@@ -432,7 +333,7 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @DeleteMapping("/projects/{projectId}/subscriptions/{subscriptionId}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Project> deleteSubscriptionFromProject(@PathVariable Long projectId, @PathVariable Long subscriptionId) throws URISyntaxException {
         log.debug("REST request to delete subscription {} from Project {}", subscriptionId, projectId);
         Project result = projectService.deleteSubscriptionFromProject(projectId, subscriptionId);
@@ -480,94 +381,5 @@ public class ProjectResource {
         return ResponseEntity.ok().headers(
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, projectId.toString()))
             .body(users);
-    }
-
-    @GetMapping("/projects/nameId")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public ResponseEntity<Map<Long, String>> getProjectIdsAndNames() {
-        List<Project> projects = projectService.findAll();
-        Map<Long, String> projectIdNameMap = new HashMap<>();
-        projects.forEach(project -> {
-            projectIdNameMap.put(project.getId(), project.getName());
-        });
-
-        return new ResponseEntity<>(projectIdNameMap, HttpStatus.OK);
-    }
-
-    /**
-     * {@code GET  /projects/admin} : get all the Projects.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
-     */
-    @GetMapping("/projects/admin")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
-    public List<Project> adminGetAllProjects() {
-        log.debug("REST request to get all Projects");
-        return projectService.findAll();
-    }
-
-    /**
-     * {@code GET  /projects/myprojects} : get all the customers.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of customers in body.
-     */
-    //TODO: remove
-    @GetMapping("/projects/myprojects")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
-    public List<Project> getMyProjects() {
-        log.debug("REST request to get user's Projects");
-
-        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
-        List<Project> projects = projectService.findAll();
-        Set<Project> result = new HashSet<>();
-        for (Project project : projects) {
-            Set<PortalUser> users = projectService.getProjectUsers(project.getId());
-            for (PortalUser user : users) {
-                if (currentUser.equals(user.getUsername())) {
-                    result.add(project);
-                    break;
-                }
-            }
-        }
-        return new ArrayList<>(result);
-    }
-
-    /**
-     * {@code GET  /projects/myproject/:id} : get the "id" project.
-     *
-     * @param id the id of the project to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the project, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/projects/myproject/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
-    public ResponseEntity<Project> getMyProject(@PathVariable Long id) {
-        log.debug("REST request to get Project : {}", id);
-        Optional<Project> project = projectService.findOne(id);
-
-        String currentUser = springSecurityAuditorAware.getCurrentUserLogin().get();
-        Set<PortalUser> projectUsers = projectService.getProjectUsers(project.get().getId());
-        for (PortalUser user : projectUsers) {
-            if (user.getUsername().equals(currentUser)) {
-                return ResponseUtil.wrapOrNotFound(project);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * {@code GET  /projects/myproject/:id} : get the users for my project.
-     *
-     * @param id the id of the project to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the project, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/projects/myproject/{id}/users")
-    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
-    public ResponseEntity<Set<PortalUser>> getMyProjectUsers(@PathVariable Long id) {
-        log.debug("REST request to get my Project users: {}", id);
-        ResponseEntity<Project> project = getMyProject(id);
-        if (!project.getStatusCode().is2xxSuccessful()) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        return getProjectUsers(id);
     }
 }
