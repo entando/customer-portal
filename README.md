@@ -40,6 +40,7 @@ Install the bundle using the App Builder.
   * web/rest/*Resource classes have been heavily customized with security checks and generally should be rolled back.
 * You can use `./mvnw clean` to reload the fake dataset from src/main/resources/config/liquibase/fake-data.
 * Removing the src/main/docker/keycloak-db directory will result in the realm from src/main/docker/realm-config being reloaded on the next restart.
+* Access controls are applied both in the UI and in the microservices. Individual REST APIs (e.g. ProjectResource) must either have tight constraints on an admin or support user (via an `@PreAuthorize annotation`) or customer or project-level access checks (e.g. `projectService.checkProjectAccess(projectId)`).
 
 ---
 Standard Blueprint documentation follows...
