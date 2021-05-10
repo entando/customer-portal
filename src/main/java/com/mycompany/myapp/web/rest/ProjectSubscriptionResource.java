@@ -214,7 +214,7 @@ public class ProjectSubscriptionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/project-subscriptions/{id}")
-    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<Void> deleteProjectSubscription(@PathVariable Long id) {
         log.debug("REST request to delete ProjectSubscription : {}", id);
 
