@@ -54,10 +54,6 @@ class CustomerDataTable extends Component {
         key: 'endDate',
       },
       {
-        header: i18n.t('customerDashboard.openTickets'),
-        key: 'openTickets',
-      },
-      {
         header: i18n.t('customerDetails.notes'),
         key: 'notes',
       },
@@ -177,7 +173,6 @@ class CustomerDataTable extends Component {
                             <TableCell>{i18n.t('userMessages.none')}</TableCell>
                             <TableCell>{i18n.t('userMessages.none')}</TableCell>
                             <TableCell>{i18n.t('userMessages.none')}</TableCell>
-                            <TableCell>{project.tickets && project.tickets.length}</TableCell>
                             {isPortalAdminOrSupport() ?
                               <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                             <TableCell>
@@ -216,7 +211,6 @@ class CustomerDataTable extends Component {
                               <TableCell>{subscription.status}</TableCell>
                               <TableCell>{formatStartDate(subscription.startDate)}</TableCell>
                               <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>
-                              <TableCell>{project.tickets && project.tickets.length}</TableCell>
                               {isPortalAdminOrSupport() ?
                                 <TableCell style={{width: '250px'}}>{project.notes}</TableCell> : null}
                               <TableCell>
