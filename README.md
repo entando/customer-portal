@@ -15,9 +15,8 @@ Install the bundle using the App Builder.
   * Service URL, e.g. https://<YOUR_ACCOUNT>.atlassian.net/rest/api/latest/
   * Service account email and password (or preferably API token)
   * Project name key, e.g. ENT
-  * Custom field ids for organizations (default 10002), subscription level (default 10038). See https://developer.atlassian.com/cloud/jira/service-desk/rest/intro/#fieldformats for documentation on field mapping and formats.
+  * Custom field ids (version, organization, and subscription level) should be set in the application.properties. The value of the fields must match exactly (e.g. v6.3.0 vs 6.3.0 for versions, GOLD vs Gold for subscription level) or ticket creation/display may fail.
   * By default the Customer Portal uses issue types Support and Feature Request
-  * The Affects Version field is used to map to the EntandoVersion and the text of the versions must match
 * Keycloak
   * cp-admin
   * cp-support
@@ -30,11 +29,9 @@ Install the bundle using the App Builder.
     * open_service_ticket.page
     * new_or_renew_subscription.page
     * manage_users.page
-* Email 
-  * TODO configuration for email server
   
 # Development tips
-* The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. 
+* The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. As of Entando 6.3, you'll need to add a liquibase changeset by hand if you don't want to reset your database. This may change with the next version of Entando or more specifically JHipster 7 which upgrades liquibase.
   * For example, the UI code may be reformatted and stock unused widgets generated
   * repository/*Repository classes have some custom queries and methods
   * web/rest/*Resource classes have been heavily customized with security checks and generally should be rolled back.
