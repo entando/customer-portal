@@ -117,11 +117,12 @@ class ProjectActionItems extends React.Component {
         {actionDivider}
       </>
     );
-    const viewAllTickets = (
+    const ticketingSystem = this.props.ticketingSystem;
+    const viewAllTickets = ticketingSystem && ticketingSystem.url && (
       <>
         <a
           href={
-            this.props.ticketingSystem.url.substr(0, this.props.ticketingSystem.url.indexOf('/rest')) +
+            ticketingSystem.url.substr(0, ticketingSystem.url.indexOf('/rest')) +
             '/issues/?jql=Organizations=' +
             this.props.project.systemId
           }
