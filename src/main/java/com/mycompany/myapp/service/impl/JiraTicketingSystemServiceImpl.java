@@ -8,11 +8,13 @@ import com.mycompany.myapp.service.JiraTicketingSystemService;
 import com.mycompany.myapp.domain.TicketingSystem;
 import com.mycompany.myapp.domain.Ticket;
 import com.mycompany.myapp.repository.TicketingSystemRepository;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -50,6 +53,15 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
     private final Logger log = LoggerFactory.getLogger(TicketingSystemServiceImpl.class);
 
     private final TicketingSystemRepository ticketingSystemRepository;
+
+    @Value("${cp.jira.customfield.versionsId}")
+    private Integer versionsId;
+
+    @Value("${cp.jira.customfield.organizationsId}")
+    private Integer organizationsId;
+
+    @Value("${cp.jira.customfield.subscriptionLevelId}")
+    private Integer subscriptionLevelId;
 
     public JiraTicketingSystemServiceImpl(TicketingSystemRepository ticketingSystemRepository) {
         this.ticketingSystemRepository = ticketingSystemRepository;
@@ -239,82 +251,16 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
         return null;
     }
 
-    /**
-     * Creating a new Jira ticket.
-     *
-     * @param systemId the systemId of the ticket
-     * @param baseUrl the baseUrl of the project
-     *
-     * @return the JSON response
-     */
-    @Override
-    public String createJiraTicket(String systemId, String baseUrl, String serviceAccount,
-                                   String serviceAccountSecret, Ticket ticket) {
-        String user = serviceAccount;
-        String password = serviceAccountSecret;
-
-        try {
-            URL url = new URL(baseUrl + "issue");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-
-            String auth = user + ":" + password;
-            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
-            String authHeaderValue = "Basic " + new String(encodedAuth);
-            con.setRequestProperty("Authorization", authHeaderValue);
-            con.setRequestProperty("Content-Type", "application/json; charset=utf8");
-            con.setDoOutput(true);
-            //TODO: refactor to use JSONObject, etc.
-            String jsonInputString = "{\n" +
-                "    \"fields\": {\n" +
-                "       \"project\":\n" +
-                "       {\n" +
-                "          \"key\": \"" + systemId + "\"\n" +
-                "       },\n" +
-                "       \"summary\": \"" + ticket.getDescription() + "\",\n" +
-                "       \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\n" +
-                "       \"issuetype\": {\n" +
-                "          \"name\": \"" + ticket.getType() + "\"\n" +
-                "       },\n" +
-                "       \"priority\":\n" +
-                "       {\n" +
-                "          \"name\": \"" + ticket.getPriority() + "\"\n" +
-                "       }\n" +
-                "   }\n" +
-                "}";
-            try(OutputStream os = con.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes("utf-8");
-                os.write(input, 0, input.length);
-            }
-
-            int status = con.getResponseCode();
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer content = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-            in.close();
-            con.disconnect();
-            JSONObject responseObject = new JSONObject(content.toString());
-
-            return responseObject.toString();
-        }
-        catch(Exception e) {
-            log.error("Create failure {}", systemId, e);
-        }
-        return null;
-    }
-
     @Override
     public String createJiraTicketInOrg(String systemId, String organization, String baseUrl,
                                         String serviceAccount, String serviceAccountSecret,
                                         Ticket ticket, EntandoVersion version, SubscriptionLevel level) {
 
         String jsonInputString = null;
+        HttpURLConnection con = null;
         try {
             URL url = new URL(baseUrl + "issue");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
 
             String auth = serviceAccount + ":" + serviceAccountSecret;
@@ -335,17 +281,27 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             fields.putOpt("description", ticket.getDescription());
             fields.put("issuetype", new JSONObject().put("name", ticket.getType()));
             fields.put("priority", new JSONObject().put("name", ticket.getPriority()));
-            fields.put("versions", new JSONArray().put(new JSONObject().put("name", version.getName())));
 
-            //// Custom fields
-            //TODO: CP-53 Add config options for the customfield identifiers
+            //// Custom fields - see the application.properties to set the ids
+            //Version
+            if (versionsId == -1) {
+                fields.put("versions", new JSONArray().put(new JSONObject().put("name", version.getName())));
+            } else if (versionsId > 0) {
+                fields.put("customfield_" + versionsId, new JSONObject().put("value", version.getName()));
+            }
+
             //Organization
-            fields.put("customfield_10002", new int[]{Integer.parseInt(organization)});
+            if (organizationsId > 0) {
+                fields.put("customfield_" + organizationsId, new int[]{Integer.parseInt(organization)});
+            }
+
             //Subscription Level
-            fields.put("customfield_10038", new JSONObject().put("value", level.name()));
+            if (subscriptionLevelId > 0) {
+                fields.put("customfield_" + subscriptionLevelId, new JSONObject().put("value", level.name()));
+            }
 
             //// User information
-            if (signedInUser != null &&  !signedInUser.equals("")) {
+            if (signedInUser != null && !signedInUser.equals("")) {
                 fields.put("reporter", new JSONObject().put("accountId", signedInUser));
             }
 
@@ -354,7 +310,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                 log.debug("jsonInputString: {}", jsonInputString);
             }
 
-            try(OutputStream os = con.getOutputStream()) {
+            try (OutputStream os = con.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
@@ -363,20 +319,24 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             if (log.isDebugEnabled()) {
                 log.debug("status {}. message {}", status, con.getResponseMessage());
             }
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuilder content = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
+            if (status != HttpURLConnection.HTTP_CREATED) {
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(con.getErrorStream(), writer, StandardCharsets.UTF_8);
+                log.warn("status {}, error {}, details {}", status,
+                    con.getResponseMessage(),
+                    writer.toString());
+            } else {
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(con.getInputStream(), writer, StandardCharsets.UTF_8);
+                JSONObject responseObject = new JSONObject(writer.toString());
+                return responseObject.toString();
             }
-            in.close();
-            con.disconnect();
-            JSONObject responseObject = new JSONObject(content.toString());
-
-            return responseObject.toString();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             log.error("Ticket creation failed for project id {} and json {}", systemId, jsonInputString, e);
+        } finally {
+            if (con != null) {
+                con.disconnect();
+            }
         }
         return null;
     }
@@ -560,11 +520,9 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
     /**
      * Get the default TicketingSystem
-     *
-     * @return
      */
     public Optional<TicketingSystem> getDefaultTicketingSystem() {
-        //Centralize this logic in case it needs to be refined
+        //Note: Centralize this logic in case it needs to be refined
         return findAll().stream().findFirst();
     }
 
