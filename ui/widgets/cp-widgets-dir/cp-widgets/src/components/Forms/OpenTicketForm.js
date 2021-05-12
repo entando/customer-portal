@@ -23,7 +23,7 @@ class OpenTicketForm extends Component {
       summary: '',
       description: '',
     };
-    this.types = ['Support', 'Feature Request'];
+    this.types = ['Support', 'New Feature', 'Bug'];
     this.priorities = ['Critical', 'High', 'Medium', 'Low'];
   }
 
