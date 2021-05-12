@@ -3,7 +3,7 @@ import i18n from '../../../i18n';
 import { Accordion, AccordionItem, Tile } from 'carbon-components-react';
 import TicketingSystem from './TicketingSystem';
 import ProductVersion from './ProductVersion';
-import { isPortalAdmin } from '../../../api/helpers';
+import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class AdminConfiguration extends React.Component {
@@ -35,10 +35,7 @@ class AdminConfiguration extends React.Component {
   }
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       this.setState({
         loading: false,
       });
@@ -46,12 +43,7 @@ class AdminConfiguration extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.setState({
         loading: false,
       });

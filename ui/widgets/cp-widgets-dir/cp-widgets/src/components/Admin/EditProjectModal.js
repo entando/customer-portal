@@ -91,9 +91,7 @@ class EditProjectModal extends Component {
   }
 
   async getProjectDetails() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       const project = await apiProjectGet(this.props.serviceUrl, this.props.project.id);
       this.setState({
         name: project.data.name,
@@ -165,11 +163,8 @@ class EditProjectModal extends Component {
   };
 
   clearValues = () => {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
     const customerModalElement = document.querySelector('#' + this.state.modalId);
-    if (!customerModalElement.className.includes('is-visible') && authenticated) {
+    if (!customerModalElement.className.includes('is-visible')) {
       this.setState({
         name: this.props.project.name,
         description: this.props.project.description,
@@ -184,10 +179,7 @@ class EditProjectModal extends Component {
   };
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       this.getCustomers();
       this.getAllProjects();
       this.getProjectDetails();

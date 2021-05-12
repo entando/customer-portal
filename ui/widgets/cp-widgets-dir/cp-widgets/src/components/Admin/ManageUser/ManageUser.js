@@ -3,7 +3,7 @@ import i18n from '../../../i18n';
 import { Accordion, AccordionItem } from 'carbon-components-react';
 import AssignUser from './AssignUser';
 import DeleteUser from './DeleteUser';
-import { isPortalAdmin } from '../../../api/helpers';
+import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
 
 class ManageUser extends Component {
@@ -38,10 +38,7 @@ class ManageUser extends Component {
   }
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       this.setState({
         loading: false,
       });
@@ -49,12 +46,7 @@ class ManageUser extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.setState({
         loading: false,
       });
