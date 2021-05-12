@@ -13,9 +13,10 @@ import {
 import '../../../index.scss';
 import withKeycloak from '../../../auth/withKeycloak';
 import i18n from '../../../i18n';
-import {isAuthenticated, authenticationChanged} from '../../../api/helpers';
+import {isAuthenticated, authenticationChanged, getPageUrl} from '../../../api/helpers';
 import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProjectGet} from '../../../api/projects';
 import {formatEndDate, formatStartDate} from '../../../api/subscriptions';
+import {PAGE_SUBSCRIPTION_FORM} from "../../../api/constants";
 
 class ManageSubscriptions extends Component {
   constructor(props) {
@@ -130,7 +131,7 @@ class ManageSubscriptions extends Component {
       <div>
         <h5>{this.state.project !== null && this.state.project.name}</h5>
         <a
-          href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.state.projectId}`}
+          href={`${getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}?project=${this.state.projectId}`}
           style={{textDecoration: 'none'}}
         >
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Add Subscription">
@@ -163,7 +164,7 @@ class ManageSubscriptions extends Component {
                       <TableCell>{subscription.notes}</TableCell>
                       <TableCell>
                         <a
-                          href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.state.projectId}&subscription=${subscription.id}`}
+                          href={`${getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}?project=${this.state.projectId}&subscription=${subscription.id}`}
                           style={{textDecoration: 'none'}}
                         >
                           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Edit">
