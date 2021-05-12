@@ -41,10 +41,16 @@ class AdminDashboard extends React.Component {
 
   async fetchData() {
     if (isAuthenticated(this.props)) {
-      const customers = await apiCustomersGet(this.props.serviceUrl);
+      let customers = {};
+      try {
+        customers = await apiCustomersGet(this.props.serviceUrl);
+      } catch (err) {
+        console.error(err);
+      }
+
       this.setState({
-        customers: customers.data,
-        filteredCustomers: customers.data,
+        customers: customers.data ? customers.data : {},
+        filteredCustomers: customers.data ? customers.data : {},
       });
     }
   }

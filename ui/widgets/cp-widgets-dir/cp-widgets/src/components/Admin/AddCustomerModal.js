@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomerPost } from '../../api/customers';
+import {apiCustomerPost} from '../../api/customers';
+import {isAuthenticated} from "../../api/helpers";
 
 class AddCustomerModal extends Component {
   constructor(props) {
@@ -67,9 +68,7 @@ class AddCustomerModal extends Component {
   };
 
   async customerPost(customer) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       return await apiCustomerPost(this.props.serviceUrl, customer);
     }
   }

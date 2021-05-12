@@ -3,7 +3,8 @@ import i18n from '../../i18n';
 import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
-import { apiProjectPost, apiProjectsGet } from '../../api/projects';
+import {apiProjectPost, apiProjectsGet} from '../../api/projects';
+import {authenticationChanged, isAuthenticated} from "../../api/helpers";
 
 class AddProjectModal extends Component {
   constructor(props) {
@@ -72,19 +73,19 @@ class AddProjectModal extends Component {
   }
 
   async getAllProjects() {
-    const projects = await apiProjectsGet(this.props.serviceUrl);
+    let projects = {}
+    try {
+      projects = await apiProjectsGet(this.props.serviceUrl);
+    } catch (err) {
+      console.error(err);
+    }
     this.setState({
-      projects: projects.data,
+      projects: projects.data ? projects.data : {},
     });
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.getCustomers();
       this.getAllProjects();
     }
@@ -98,18 +99,19 @@ class AddProjectModal extends Component {
   };
 
   async getCustomers() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
-      const customers = await apiCustomersGet(this.props.serviceUrl);
-      this.setState({ customerList: customers });
+    if (isAuthenticated(this.props)) {
+      let customers = {};
+      try {
+        customers = await apiCustomersGet(this.props.serviceUrl);
+      } catch (err) {
+        console.error(err);
+      }
+      this.setState({customerList: customers});
     }
   }
 
   async projectPost(project) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       const result = await apiProjectPost(this.props.serviceUrl, project);
       return await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id);
     }

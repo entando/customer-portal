@@ -71,9 +71,14 @@ class AddPartnerModal extends Component {
 
   async fetchData() {
     if (isAuthenticated(this.props)) {
-      const projects = await apiProjectsGet(this.props.serviceUrl);
+      let projects = {};
+      try {
+        projects = (await apiProjectsGet(this.props.serviceUrl)).data;
+      } catch (err) {
+        console.error(err);
+      }
       this.setState({
-        projectList: projects.data,
+        projectList: projects ? projects : {},
       });
     }
   }

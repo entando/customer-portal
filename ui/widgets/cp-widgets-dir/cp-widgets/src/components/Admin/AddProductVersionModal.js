@@ -4,6 +4,7 @@ import { ModalWrapper, Form, TextInput, DatePicker, DatePickerInput } from 'carb
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProductVersionPost } from '../../api/productVersion';
 import moment from 'moment';
+import {isAuthenticated} from "../../api/helpers";
 
 class AddProductVersionModal extends Component {
   constructor(props) {
@@ -57,9 +58,7 @@ class AddProductVersionModal extends Component {
   };
 
   async addProductVersion() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       return await apiProductVersionPost(this.props.serviceUrl, this.state);
     }
   }

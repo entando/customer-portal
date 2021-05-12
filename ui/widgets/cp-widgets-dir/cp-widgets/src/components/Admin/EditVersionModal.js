@@ -4,7 +4,7 @@ import { ModalWrapper, Form, TextInput, DatePicker, DatePickerInput } from 'carb
 import withKeycloak from '../../auth/withKeycloak';
 import { apiProductVersionGet, apiProductVersionPut } from '../../api/productVersion';
 import moment from 'moment';
-import {authenticationChanged} from '../../api/helpers';
+import {authenticationChanged, isAuthenticated} from '../../api/helpers';
 
 class EditVersionModal extends Component {
   constructor(props) {
@@ -76,26 +76,18 @@ class EditVersionModal extends Component {
   };
 
   async getVersionDetails() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
-      const version = await apiProductVersionGet(this.props.serviceUrl, this.props.version.id);
-      this.setState({
-        name: version.data.name,
-        startDate: moment(version.data.startDate).format('MM/DD/YYYY'),
-        endDate: moment(version.data.endDate).format('MM/DD/YYYY'),
-        modalId: 'modal-form-version-edit-' + version.data.id,
-        buttonId: 'edit-version-button-' + version.data.id,
-      });
-    }
+    const version = await apiProductVersionGet(this.props.serviceUrl, this.props.version.id);
+    this.setState({
+      name: version.data.name,
+      startDate: moment(version.data.startDate).format('MM/DD/YYYY'),
+      endDate: moment(version.data.endDate).format('MM/DD/YYYY'),
+      modalId: 'modal-form-version-edit-' + version.data.id,
+      buttonId: 'edit-version-button-' + version.data.id,
+    });
   }
 
   async versionPut(version) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
-      return await apiProductVersionPut(this.props.serviceUrl, version);
-    }
+    return await apiProductVersionPut(this.props.serviceUrl, version);
   }
 
   handleFormSubmit = () => {
@@ -126,10 +118,7 @@ class EditVersionModal extends Component {
   };
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       this.getVersionDetails();
       const modalOpenButton = document.querySelector('.edit-version-button-' + this.props.version.id);
       modalOpenButton.addEventListener('click', this.clearValues, false);

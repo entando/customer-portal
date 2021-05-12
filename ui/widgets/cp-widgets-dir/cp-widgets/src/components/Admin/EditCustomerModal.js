@@ -128,11 +128,8 @@ class EditCustomerModal extends Component {
   };
 
   clearValues = () => {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
     const customerModalElement = document.querySelector('#' + this.state.modalId);
-    if (!customerModalElement.className.includes('is-visible') && authenticated) {
+    if (!customerModalElement.className.includes('is-visible')) {
       this.setState({
         name: this.props.customer.name,
         customerNumber: this.props.customer.customerNumber,

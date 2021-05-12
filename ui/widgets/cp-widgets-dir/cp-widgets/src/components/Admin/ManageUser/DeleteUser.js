@@ -13,6 +13,7 @@ import {
 import withKeycloak from '../../../auth/withKeycloak';
 import i18n from '../../../i18n';
 import {apiGetProjectUsers, apiDeleteUserFromProject} from '../../../api/projects';
+import {authenticationChanged, isAuthenticated} from "../../../api/helpers";
 
 class DeleteUser extends Component {
   constructor(props) {
@@ -42,30 +43,19 @@ class DeleteUser extends Component {
   }
 
   componentDidMount() {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       this.fetchData();
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { keycloak } = this.props;
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-
-    const changedAuth = prevProps.keycloak.authenticated !== authenticated;
-
-    if (authenticated && changedAuth) {
+    if (authenticationChanged(this.props, prevProps)) {
       this.fetchData();
     }
   }
 
   async fetchData() {
-    const {keycloak} = this.props;
-
-    const authenticated = keycloak.initialized && keycloak.authenticated;
-    if (authenticated) {
+    if (isAuthenticated(this.props)) {
       let search = window.location.search;
       const params = new URLSearchParams(search);
       const projectId = params.get('project');

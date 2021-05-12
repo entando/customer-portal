@@ -21,7 +21,6 @@ class CustomerAccordian extends Component {
     this.state = {
       projects: {},
       customer: {},
-      authenticated: false,
     };
   }
 
