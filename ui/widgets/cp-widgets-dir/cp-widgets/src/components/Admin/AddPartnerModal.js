@@ -75,7 +75,7 @@ class AddPartnerModal extends Component {
       try {
         projects = (await apiProjectsGet(this.props.serviceUrl)).data;
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
       this.setState({
         projectList: projects ? projects : {},

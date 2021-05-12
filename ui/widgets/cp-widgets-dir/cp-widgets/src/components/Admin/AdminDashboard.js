@@ -45,7 +45,7 @@ class AdminDashboard extends React.Component {
       try {
         customers = await apiCustomersGet(this.props.serviceUrl);
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
 
       this.setState({

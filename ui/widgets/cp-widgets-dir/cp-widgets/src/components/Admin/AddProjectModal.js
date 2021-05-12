@@ -77,7 +77,7 @@ class AddProjectModal extends Component {
     try {
       projects = await apiProjectsGet(this.props.serviceUrl);
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
     this.setState({
       projects: projects.data ? projects.data : {},
@@ -104,7 +104,7 @@ class AddProjectModal extends Component {
       try {
         customers = await apiCustomersGet(this.props.serviceUrl);
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
       this.setState({customerList: customers});
     }
