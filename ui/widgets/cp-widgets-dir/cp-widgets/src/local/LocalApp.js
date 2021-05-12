@@ -7,7 +7,13 @@ import AdminConfiguration from '../components/Admin/Configuration/AdminConfigura
 import OpenTicketForm from '../components/Forms/OpenTicketForm';
 import ManageUser from '../components/Admin/ManageUser/ManageUser';
 import ManageSubscriptions from '../components/Admin/ManageSubscriptions/ManageSubscriptions';
-import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../api/helpers';
+import {authenticationChanged, getPageUrl, isAuthenticated, isPortalAdmin} from '../api/helpers';
+import {
+  PAGE_ADMIN_CONFIG,
+  PAGE_MANAGE_USERS,
+  PAGE_SUBSCRIPTION_FORM,
+  PAGE_TICKET_FORM
+} from "../api/constants";
 
 class LocalApp extends Component {
   constructor(props) {
@@ -33,8 +39,8 @@ class LocalApp extends Component {
     }
   }
 
-  logout() {
-    window.entando.keycloak.logout();
+  async logout() {
+    await window.entando.keycloak.logout();
   }
 
   render() {
@@ -46,12 +52,11 @@ class LocalApp extends Component {
             <div>
               <ul>
                 <li>
-                  <Link to={'/'}>Home</Link>
+                  <Link to='/'>Home</Link>
                 </li>
-                {/*TODO: rework the entando-de-app-based paths so the application name and locale are more general*/}
                 {isPortalAdmin() && (
                   <li>
-                    <Link to={'/entando-de-app/en/admin.page'}>Admin</Link>
+                    <Link to={getPageUrl(PAGE_ADMIN_CONFIG, this.props.locale)}>Admin</Link>
                   </li>
                 )}
                 <li>
@@ -62,19 +67,19 @@ class LocalApp extends Component {
               </ul>
             </div>
             <Switch>
-              <Route path="/entando-de-app/en/admin.page">
+              <Route path={getPageUrl(PAGE_ADMIN_CONFIG, this.props.locale)}>
                 <AdminConfiguration serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
-              <Route path="/entando-de-app/en/manage_subscriptions.page">
+              <Route path={getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}>
                 <ManageSubscriptions serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
-              <Route path="/entando-de-app/en/manage_users.page">
+              <Route path={getPageUrl(PAGE_MANAGE_USERS, this.props.locale)}>
                 <ManageUser serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
-              <Route path="/entando-de-app/en/new_or_renew_subscription.page">
+              <Route path={getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}>
                 <SubscriptionForm serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
-              <Route path="/entando-de-app/en/open_service_ticket.page">
+              <Route path={getPageUrl(PAGE_TICKET_FORM, this.props.locale)}>
                 <OpenTicketForm serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
               <Route path="/" exact={true}>

@@ -1,14 +1,11 @@
+import {ADMIN, SUPPORT, CUSTOMER, PARTNER, DOMAIN} from './constants';
+
 export const getKeycloakToken = () => {
   if (window && window.entando && window.entando.keycloak && window.entando.keycloak.authenticated) {
     return window.entando.keycloak.token;
   }
   return '';
 };
-
-const ADMIN = 'cp-admin';
-const SUPPORT = 'cp-support';
-const PARTNER = 'cp-partner';
-const CUSTOMER = 'cp-customer';
 
 export const isAuthenticated = props => {
   const {keycloak} = props;
@@ -88,6 +85,11 @@ export const getActiveSubscription = project => {
     })
   );
 };
+
+export const getPageUrl = (pageCode, locale) => {
+  const url = `${DOMAIN}/${locale}/${pageCode}`;
+  return getUrl(url);
+}
 
 export const getUrl = url => {
   return `${url}`;

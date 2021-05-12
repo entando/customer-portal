@@ -4,8 +4,13 @@ import withKeycloak from '../../auth/withKeycloak';
 import { Button } from 'carbon-components-react';
 import EditProjectModal from '../Admin/EditProjectModal';
 import ManagePartnersModal from '../Admin/ManagePartnersModal';
-import {isPortalAdmin} from '../../api/helpers';
+import {getPageUrl, isPortalAdmin} from '../../api/helpers';
 import {Link} from 'react-router-dom';
+import {
+  PAGE_MANAGE_SUBSCRIPTIONS,
+  PAGE_MANAGE_USERS, PAGE_SUBSCRIPTION_FORM,
+  PAGE_TICKET_FORM
+} from "../../api/constants";
 
 class ProjectActionItems extends React.Component {
   constructor() {
@@ -57,7 +62,7 @@ class ProjectActionItems extends React.Component {
     const newOrRenewSubscription = (
       <>
         <a
-          href={`/entando-de-app/${this.props.locale}/new_or_renew_subscription.page?project=${this.props.project.id}${subscriptionParam}`}
+          href={`${getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}?project=${this.props.project.id}${subscriptionParam}`}
           style={{textDecoration: 'none'}}
         >
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Subscription Request">
@@ -81,7 +86,7 @@ class ProjectActionItems extends React.Component {
     const manageUsers = (
       <>
         <a
-          href={`/entando-de-app/${this.props.locale}/manage_users.page?project=${this.props.project.id}`}
+          href={`${getPageUrl(PAGE_MANAGE_USERS, this.props.locale)}?project=${this.props.project.id}`}
           style={{textDecoration: 'none'}}
         >
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Users">
@@ -94,7 +99,7 @@ class ProjectActionItems extends React.Component {
     const manageSubscriptions = (
       <>
         <a
-          href={`/entando-de-app/${this.props.locale}/manage_subscriptions.page?project=${this.props.project.id}`}
+          href={`${getPageUrl(PAGE_MANAGE_SUBSCRIPTIONS, this.props.locale)}?project=${this.props.project.id}`}
           style={{textDecoration: 'none'}}
         >
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Subscriptions">
@@ -107,7 +112,7 @@ class ProjectActionItems extends React.Component {
     const openTicket = (
       <>
         <a
-          href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.props.project.id}`}
+          href={`${getPageUrl(PAGE_TICKET_FORM, this.props.locale)}?project=${this.props.project.id}`}
           style={{textDecoration: 'none'}}
         >
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">

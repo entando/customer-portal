@@ -15,8 +15,9 @@ import {apiJiraTicketsGet} from '../../api/tickets';
 import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiProjectGet} from '../../api/projects';
-import {authenticationChanged, isAuthenticated, isPortalUser} from '../../api/helpers';
+import {authenticationChanged, getPageUrl, isAuthenticated, isPortalUser} from '../../api/helpers';
 import i18n from '../../i18n';
+import {PAGE_TICKET_FORM} from "../../api/constants";
 
 class TicketList extends Component {
   constructor(props) {
@@ -125,7 +126,7 @@ class TicketList extends Component {
             </a>
             {/*Open Ticket*/}
             <a
-              href={`/entando-de-app/${this.props.locale}/open_service_ticket.page?project=${this.state.project.id}`}
+              href={`${getPageUrl(PAGE_TICKET_FORM)}?project=${this.state.project.id}`}
               style={{textDecoration: 'none'}}
             >
               <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
