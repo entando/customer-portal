@@ -1,236 +1,4 @@
 {
-  "roles": {
-    "admin": "Admin",
-    "customer": "Customer",
-    "partner": "Partner",
-    "support": "Support"
-  },
-
-	"buttons":{
-    "addCustomer": "Add a Customer +",
-    "addPartner": "Add a Partner +",
-    "addProject": "Add a Project +",
-    "addProductVersion": "Add product version +",
-    "addSubscription": "Add a Subscription",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "managePartners": "Manage Partners",
-    "manageSubscriptions": "Manage Subscriptions",
-    "manageUsers": "Manage Users",
-    "openTicket": "Open Ticket",
-    "save": "Save",
-    "submit": "Submit",
-    "subscriptionRequest": "Subscription Request",
-    "view": "View",
-    "viewAllTickets": "View All Tickets",
-    "viewTickets": "View Tickets",
-    "viewDetails": "View Details"
-  },
-
-  "customerDashboard": {
-    "title": "Welcome to Entando Customer Portal",
-    "customerName": "Customer Name",
-    "customerId": "Customer Id",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "projectName": "Project Name",
-    "partnerName": "Partner Name",
-    "entandoVersion": "Entando Version",
-    "openTickets": "Open Tickets",
-    "subscriptions": "Subscriptions",
-    "tableDesc": "In this table there are open subscriptions",
-    "partners": "Partners",
-    "status": "Status",
-    "action": "Action"
-  },
-
-  "adminDashboard": {
-    "title": "Welcome to Entando",
-    "adminTitle": "Welcome to Entando Admin View",
-    "customerTitle": "Welcome to Entando Customer View",
-    "partnerTitle": "Welcome to Entando Partner View",
-    "supportTitle": "Welcome to Entando Support View",
-    "allCustomers": "All Customers",
-    "searchLabel": "Customer Search",
-    "searchText": "Which customer are you looking for?",
-    "view": "View",
-    "addProject": {
-      "title": "Add a Project",
-      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis.",
-      "customerList": "Customer List",
-      "selectCustomer": "Select Customer",
-      "projectName": "Project Name",
-      "projectDesc": "Project Description",
-      "systemId": "System Id",
-      "contactName": "Contact Name",
-      "contactPhone": "Contact Phone",
-      "contactEmail": "Contact Email",
-      "notes": "Notes",
-      "editTitle": "Edit Project"
-    },
-    "addCustomer": {
-      "title": "Add a Customer",
-      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis.",
-      "customerName": "Customer Name",
-      "customerNumber": "Customer Number",
-      "contactName": "Contact Name",
-      "contactPhone": "Contact Phone",
-      "contactEmail": "Contact Email",
-      "notes": "Notes"
-    },
-    "addPartner": {
-      "title": "Add a Partner",
-      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis.",
-      "projectList": "Project List",
-      "selectProject": "Select Project",
-      "partnerName": "Partner Name",
-      "partnerNumber": "Partner Number",
-      "notes": "Notes"
-    },
-    "addProductVersion": {
-      "title": "Add a new product version",
-      "productVersion": "Product Version",
-      "productVersionStartDate": "Product Version Start Date",
-      "productVersionEndDate": "Product Version End Date"
-    },
-    "editCustomer": {
-      "title": "Edit Customer",
-      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus fermentum risus, sit amet fringilla nunc pellentesque quis."
-    },
-    "managePartners": {
-      "title": "Manage Partners"
-    }
-  },
-
-  "projectDetails": {
-    "description": "Description:",
-    "type": "Type:",
-    "quantityRequest": "Quantity Request:",
-    "components": "Components",
-    "id": "ID",
-    "status": "Status",
-    "level": "Level",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "lengthInMonths": "Length (months)",
-    "license": "License",
-    "listOfTickets": "List of Tickets",
-    "tickets": "Tickets",
-    "project": "Project",
-    "entandoVersion": "Entando Version",
-    "creationDate": "Creation Date",
-    "goToTicket": "Go to Ticket"
-  },
-
-  "ticketDetails": {
-    "listOfTickets":"List of Tickets",
-    "tickets": "Tickets",
-    "issue": "Issue",
-    "project": "Project",
-    "summary": "Summary",
-    "description": "Description",
-    "type": "Type",
-    "status": "Status",
-    "created":"Created",
-    "link": "Link",
-    "priority": "Priority",
-    "updated": "Updated",
-    "viewTicket": "View Ticket"
-  },
-
-  "supportTicketForm": {
-    "title": "Entando Admin View",
-    "formTitle": "Create new support ticket",
-    "desc": "Create a support ticket for an existing project.",
-    "select": "Select",
-    "type": "Type",
-    "selectProject": "Select Project",
-    "ticketNumber": "Ticket Number",
-    "customerName": "Customer Name",
-    "projectName": "ProjectName",
-    "ticketOpenedBy": "Ticket Opened By:",
-    "priority": "Priority",
-    "partnerName": "Partner Name",
-    "ticketSummary": "Ticket Summary",
-    "addticketSummary": "Add Ticket Summary",
-    "ticketDescription": "Ticket Description",
-    "addticketDescription": "Add Ticket Description"
-  },
-
-  "enhancementForm": {
-    "title": "Welcome to Entando Customer Portal",
-    "formTitle": "Request for Enhancement",
-    "desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-    "customerName": "Customer Name",
-    "ticketNumber": "Ticket Number",
-    "projectName": "ProjectName",
-    "ticketOpenedBy": "Ticket Opened By:",
-    "partnerName": "Partner Name",
-    "priority": "Priority",
-    "enhancementDescription": "Enhancement Description",
-    "addenhancementDescription": "Add Enhancement Description"
-  },
-
-  "customerDetails": {
-    "id": "Customer Id",
-		"name": "Customer Name",
-    "contactName": "Contact Name",
-    "contactPhone": "Contact Phone",
-    "contactEmail": "Contact Email",
-    "notes": "Notes"
-	},
-
-  "subscriptionDetails": {
-    "description": "Description",
-    "commitment": "Commitment",
-    "partners": "Partners",
-    "type": "Type",
-    "status": "Status",
-    "level": "Level",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "license": "License",
-    "lengthInMonths": "Length In Months",
-    "notes": "Notes",
-    "assignedUsers": "Assigned Users"
-  },
-
-  "subscriptionForm": {
-    "adminTitle": "Admin Subscription Form",
-    "formTitle": "Subscription Request",
-    "subscriptionType": "Subscription Type *",
-    "editSubscription": "Edit Subscription",
-    "newSubscription": "New Subscription",
-    "renewSubscription": "Renew Subscription",
-    "selectType": "Select Subscription Type",
-    "chooseLevel": "Choose a level",
-    "customerName": "Customer Name *",
-    "customerNumber": "Customer Number *",
-    "customerEmail": "Customer Email*",
-    "projectName": "Project Name*",
-    "subscriptionStartDate": "Subscription Start Date *",
-    "subscriptionStatus": "Subscription Status *",
-    "subscriptionLevel": "Subscription Level",
-    "subscriptionLength": "Subscription Length (months)",
-    "contactName": "Contact Name *",
-    "contactEmail": "Contact Email *",
-    "contactNumber": "Contact Phone Number",
-    "chooseVersion": "Choose Entando version",
-    "entandoVersion": "Entando Version",
-    "adminSubmitNewSuccess": "Successfully added a project subscription.",
-    "adminRenewNewSuccess": "Successfully renewed the latest project subscription.",
-    "customerSubmitSuccess": "You will be contacted by an Entando Sales representative to finalize the subscription.",
-    "newSubError": "Error in adding a project subscription.",
-    "renewSubError": "Error in renewing a project subscription."
-  },
-
-  "modalText": {
-    "cancel": "Cancel",
-    "done": "Done",
-    "save": "Save"
-  },
-
   "adminConfig": {
     "title": "Entando Admin View",
     "formTitle": "All Customers",
@@ -254,6 +22,113 @@
       "supportEndDate": "Support End Date"
     }
   },
+  "adminDashboard": {
+    "title": "Welcome to Entando",
+    "adminTitle": "Welcome to Entando Admin View",
+    "customerTitle": "Welcome to Entando Customer View",
+    "partnerTitle": "Welcome to Entando Partner View",
+    "supportTitle": "Welcome to Entando Support View",
+    "allCustomers": "All Customers",
+    "searchLabel": "Customer Search",
+    "searchText": "Which customer are you looking for?",
+    "view": "View",
+    "addProject": {
+      "title": "Add a Project",
+      "customerList": "Customer List",
+      "selectCustomer": "Select Customer",
+      "projectName": "Project Name",
+      "projectDesc": "Project Description",
+      "systemId": "System Id",
+      "contactName": "Contact Name",
+      "contactPhone": "Contact Phone",
+      "contactEmail": "Contact Email",
+      "notes": "Notes",
+      "editTitle": "Edit Project"
+    },
+    "addCustomer": {
+      "title": "Add a Customer",
+      "customerName": "Customer Name",
+      "customerNumber": "Customer Number",
+      "contactName": "Contact Name",
+      "contactPhone": "Contact Phone",
+      "contactEmail": "Contact Email",
+      "notes": "Notes"
+    },
+    "addPartner": {
+      "title": "Add a Partner",
+      "projectList": "Project List",
+      "selectProject": "Select Project",
+      "partnerName": "Partner Name",
+      "partnerNumber": "Partner Number",
+      "notes": "Notes"
+    },
+    "addProductVersion": {
+      "title": "Add a new product version",
+      "productVersion": "Product Version",
+      "productVersionStartDate": "Product Version Start Date",
+      "productVersionEndDate": "Product Version End Date"
+    },
+    "editCustomer": {
+      "title": "Edit Customer"
+    },
+    "managePartners": {
+      "title": "Manage Partners"
+    }
+  },
+  "buttons": {
+    "addCustomer": "Add a Customer +",
+    "addPartner": "Add a Partner +",
+    "addProject": "Add a Project +",
+    "addProductVersion": "Add product version +",
+    "addSubscription": "Add a Subscription",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "managePartners": "Manage Partners",
+    "manageSubscriptions": "Manage Subscriptions",
+    "manageUsers": "Manage Users",
+    "openTicket": "Open Ticket",
+    "save": "Save",
+    "submit": "Submit",
+    "subscriptionRequest": "Subscription Request",
+    "view": "View",
+    "viewAllTickets": "View All Tickets",
+    "viewTickets": "View Tickets",
+    "viewDetails": "View Details"
+  },
+  "customerDashboard": {
+    "title": "Welcome to Entando Customer Portal",
+    "customerName": "Customer Name",
+    "customerId": "Customer Id",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "projectName": "Project Name",
+    "partnerName": "Partner Name",
+    "entandoVersion": "Entando Version",
+    "openTickets": "Open Tickets",
+    "subscriptions": "Subscriptions",
+    "tableDesc": "In this table there are open subscriptions",
+    "partners": "Partners",
+    "status": "Status",
+    "action": "Action"
+  },
+  "customerDetails": {
+    "id": "Customer Id",
+    "name": "Customer Name",
+    "contactName": "Contact Name",
+    "contactPhone": "Contact Phone",
+    "contactEmail": "Contact Email",
+    "notes": "Notes"
+  },
+  "editSubscription": {
+    "title": "Edit Subscription",
+    "description": "Description",
+    "commitment": "Commitment",
+    "type": "Type",
+    "quantityRequest": "QuantityRequest",
+    "components": "Components",
+    "level": "Level"
+  },
   "manageUsers": {
     "title": "Entando Admin View",
     "assign": {
@@ -261,11 +136,11 @@
       "desc": "Assign a user to an existing project.",
       "projectName": "Project Name",
       "assignUser": "Assign User",
-      "selectRole": "Select Role",
-      "projectList": "Projects List",
-      "userList": "Users List",
       "noUsers": "There are currently no users in the system",
-      "noProjects": "There are currently no projects in the system"
+      "noProjects": "There are currently no projects in the system",
+      "projectList": "Projects List",
+      "selectRole": "Select Role",
+      "userList": "Users List"
     },
     "manage": {
       "title": "Manage all Users",
@@ -280,25 +155,36 @@
       "removeUser": "Remove User"
     }
   },
-	"editSubscription":{
-		"title":"Edit Subscription",
-		"desc": "Lorem ipsum dolor sit lorem a amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-		"description": "Description",
-		"commitment": "Commitment",
-		"type": "Type",
-		"quantityRequest": "QuantityRequest",
-		"components": "Components",
-		"level": "Level"
-	},
-	"validation":{
-		"invalid":{
-			"required": "This field is required.",
-			"email": "Email is not valid.",
-			"date": "Please enter a date in 'mm/dd/yyyy' format.",
-      "number": "This field must be a number."
-		}
-	},
-
+  "modalText": {
+    "cancel": "Cancel",
+    "done": "Done",
+    "save": "Save"
+  },
+  "projectDetails": {
+    "description": "Description:",
+    "type": "Type:",
+    "quantityRequest": "Quantity Request:",
+    "components": "Components",
+    "id": "ID",
+    "status": "Status",
+    "level": "Level",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "lengthInMonths": "Length (months)",
+    "license": "License",
+    "listOfTickets": "List of Tickets",
+    "tickets": "Tickets",
+    "project": "Project",
+    "entandoVersion": "Entando Version",
+    "creationDate": "Creation Date",
+    "goToTicket": "Go to Ticket"
+  },
+  "roles": {
+    "admin": "Admin",
+    "customer": "Customer",
+    "partner": "Partner",
+    "support": "Support"
+  },
   "submitMessages": {
     "subscriptionRequired": "A subscription is required to create tickets for this project",
     "created": "Successfully created",
@@ -309,11 +195,93 @@
     "error": "An error occurred",
     "ticketError": "An error occurred. Make sure this project has a corresponding organization in Jira."
   },
-
+  "subscriptionDetails": {
+    "description": "Description",
+    "commitment": "Commitment",
+    "partners": "Partners",
+    "type": "Type",
+    "status": "Status",
+    "level": "Level",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "license": "License",
+    "lengthInMonths": "Length In Months",
+    "notes": "Notes",
+    "assignedUsers": "Assigned Users"
+  },
+  "subscriptionForm": {
+    "adminSubmitNewSuccess": "Successfully added a project subscription.",
+    "adminRenewNewSuccess": "Successfully renewed a project subscription.",
+    "adminTitle": "Admin Subscription Form",
+    "chooseLevel": "Choose a level",
+    "chooseVersion": "Choose Entando version",
+    "contactEmail": "Contact Email *",
+    "contactName": "Contact Name *",
+    "contactNumber": "Contact Phone Number",
+    "customerEmail": "Customer Email *",
+    "customerName": "Customer Name *",
+    "customerNumber": "Customer Number *",
+    "customerSubmitSuccess": "You will be contacted by an Entando Sales representative to finalize the subscription.",
+    "entandoVersion": "Entando Version",
+    "formTitle": "Subscription Request",
+    "editSubscription": "Edit Subscription",
+    "newSubError": "Errore durante l'aggiunta di una sottoscrizione al progetto.",
+    "newSubscription": "New Subscription",
+    "projectName": "Project Name *",
+    "renewSubError": "Error in renewing a project subscription.",
+    "renewSubscription": "Renew Subscription",
+    "selectType": "Select Subscription Type",
+    "subscriptionLength": "Subscription Length (months)",
+    "subscriptionLevel": "Subscription Level",
+    "subscriptionStartDate": "Subscription Start Date *",
+    "subscriptionStatus": "Subscription Status *",
+    "subscriptionType": "Subscription Type *"
+  },
+  "supportTicketForm": {
+    "title": "Entando Admin View",
+    "formTitle": "Create new support ticket",
+    "desc": "Create a support ticket for an existing project.",
+    "select": "Select",
+    "type": "Type",
+    "selectProject": "Select Project",
+    "ticketNumber": "Ticket Number",
+    "customerName": "Customer Name",
+    "projectName": "ProjectName",
+    "ticketOpenedBy": "Ticket Opened By:",
+    "priority": "Priority",
+    "partnerName": "Partner Name",
+    "ticketSummary": "Ticket Summary",
+    "addticketSummary": "Add Ticket Summary",
+    "ticketDescription": "Ticket Description",
+    "addticketDescription": "Add Ticket Description"
+  },
+  "ticketDetails": {
+    "listOfTickets": "List of Tickets",
+    "tickets": "Tickets",
+    "issue": "Issue",
+    "project": "Project",
+    "summary": "Summary",
+    "description": "Description",
+    "type": "Type",
+    "status": "Status",
+    "created":"Created",
+    "link": "Link",
+    "priority": "Priority",
+    "updated": "Updated",
+    "viewTicket": "View Ticket"
+  },
   "userMessages": {
     "unauthorized": "Unauthorized",
     "loading": "Loading",
     "none": "None"
+  },
+  "validation": {
+    "invalid": {
+      "required": "This field is required.",
+      "email": "Email is not valid.",
+      "date": "Please enter a date in 'mm/dd/yyyy' format.",
+      "number": "This field must be a number."
+    }
   }
 }
 
