@@ -126,7 +126,7 @@ class TicketList extends Component {
             </a>
             {/*Open Ticket*/}
             <a
-              href={`${getPageUrl(PAGE_TICKET_FORM)}?project=${this.state.project.id}`}
+              href={`${getPageUrl(PAGE_TICKET_FORM, this.props.locale)}?project=${this.state.project.id}`}
               style={{textDecoration: 'none'}}
             >
               <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
