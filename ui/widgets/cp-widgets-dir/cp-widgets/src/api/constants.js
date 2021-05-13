@@ -1,4 +1,4 @@
-export const DOMAIN = process.env.REACT_APP_DOMAIN ? process.env.REACT_APP_DOMAIN : ''; // eslint-disable-line import/prefer-default-export
+export const DOMAIN = process.env.REACT_APP_PATH || ''; // eslint-disable-line import/prefer-default-export
 
 //Customer Portal roles
 export const ADMIN = 'cp-admin';
