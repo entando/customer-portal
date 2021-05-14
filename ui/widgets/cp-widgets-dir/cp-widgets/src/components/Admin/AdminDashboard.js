@@ -12,7 +12,6 @@ import {
   isPortalAdmin,
   isPortalSupport,
   isPortalPartner,
-  isPortalCustomer,
   isPortalUser,
   isAuthenticated,
 } from '../../api/helpers';
@@ -97,15 +96,6 @@ class AdminDashboard extends React.Component {
 
     return (
       <div className="admin-dashboard">
-        {isPortalAdmin() ? (
-          <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
-        ) : isPortalSupport() ? (
-          <h3 className="pageTitle">{i18n.t('adminDashboard.supportTitle')}</h3>
-        ) : isPortalCustomer() ? (
-          <h3 className="pageTitle">{i18n.t('adminDashboard.customerTitle')}</h3>
-        ) : isPortalPartner() ? (
-          <h3 className="pageTitle">{i18n.t('adminDashboard.partnerTitle')}</h3>
-        ) : null}
         {isPortalAdmin() || isPortalSupport() || isPortalPartner() ? (
           <Tile>
             <p className="title">{i18n.t('adminDashboard.allCustomers')}</p>
@@ -124,10 +114,8 @@ class AdminDashboard extends React.Component {
                   <div>
                     <AddPartnerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}/>
                     <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}/>
-                    <AddProjectModal
-                      serviceUrl={this.props.serviceUrl}
-                      updateCustomerList={this.updateCustomerList}
-                      allCustomers={this.state.customers}
+                    <AddProjectModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}
+                                     allCustomers={this.state.customers}
                     />
                   </div>
                 </div>
@@ -140,17 +128,18 @@ class AdminDashboard extends React.Component {
           <Accordion>
             {Object.keys(this.state.customers).length !== 0
               ? this.state.filteredCustomers.map((customer, index) => {
-                  // Pagination for Admin and Support roles (5 items per page)
-                  var indexOfLastItem = (this.state.currentPage + 1) * 5 - 1;
-                  var firstIndexOfCurrentPage = this.state.currentPage * 5;
-                  var accordionOpened = this.state.customers.length === 1;
+                //Pagination for Admin and Support roles (5 items per page)
+                //Note: eventually this should be pushed down into paginated microservice calls
+                var indexOfLastItem = (this.state.currentPage + 1) * 5 - 1;
+                var firstIndexOfCurrentPage = this.state.currentPage * 5;
+                var accordionOpened = this.state.customers.length === 1;
 
-                  if (isPortalUser()) {
-                    if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
-                      return (
-                        <CustomerAccordian
-                          key={customer.id}
-                          serviceUrl={this.props.serviceUrl}
+                if (isPortalUser()) {
+                  if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
+                    return (
+                      <CustomerAccordian
+                        key={customer.id}
+                        serviceUrl={this.props.serviceUrl}
                           customerId={customer.id}
                           title={customer.name}
                           updateCustomerList={this.updateCustomerList}

@@ -6,6 +6,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import {apiGetProjectUsers, apiProjectGet} from '../../api/projects';
 import {isPortalAdminOrSupport, isPortalUser, authenticationChanged} from '../../api/helpers';
 import i18n from '../../i18n';
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 const subscriptionData = {
   type: 'Product Support Subscription Entando Platform',
@@ -69,30 +70,33 @@ class Subscription extends React.Component {
     if (!this.state.loading) {
       if (isPortalUser()) {
         if (Object.keys(this.state.subscription).length !== 0 && Object.keys(this.state.project).length !== 0) {
+          const project = this.state.project.data;
+          const subscription = this.state.subscription.data;
           return (
             <div className="subscription-details">
               <div>
+                <Breadcrumbs project={project} subscription={subscription} locale={this.props.locale}/>
                 <Tile>
                   <div className="bx--grid">
                     <div className="bx--row">
                       <div className="bx--col">
                         <div>
-                          <strong>{i18n.t('customerDashboard.customerName')}:</strong> {this.state.project.data.customer.name}
+                          <strong>{i18n.t('customerDashboard.customerName')}:</strong> {project.customer.name}
                         </div>
                         <div>
-                          <strong>{i18n.t('customerDashboard.projectName')}:</strong> {this.state.project.data.name}
+                          <strong>{i18n.t('customerDashboard.projectName')}:</strong> {project.name}
                         </div>
                         <div>
-                          <strong>{i18n.t('subscriptionDetails.description')}:</strong> {this.state.subscription.data.project.description}
+                          <strong>{i18n.t('subscriptionDetails.description')}:</strong> {subscription.project.description}
                         </div>
                         <div>
                           <strong>{i18n.t('subscriptionDetails.partners')}:</strong>
-                          {this.state.project.data !== '' && Object.keys(this.state.project.data.partners).length !== 0 ? (
+                          {project !== '' && Object.keys(project.partners).length !== 0 ? (
                             <>
-                              {this.state.project.data.partners.map((partner, index) => (
+                              {project.partners.map((partner, index) => (
                                 <div key={index}>
                                   {' '}
-                                  {index === this.state.project.data.partners.length - 1 ? partner.name : partner.name + ', '}{' '}
+                                  {index === project.partners.length - 1 ? partner.name : partner.name + ', '}{' '}
                                 </div>
                               ))}
                             </>
@@ -105,31 +109,31 @@ class Subscription extends React.Component {
                         </div>
                         {isPortalAdminOrSupport() ? (
                           <div>
-                            <strong>{i18n.t('subscriptionDetails.notes')}:</strong> {this.state.subscription.data.notes}
+                            <strong>{i18n.t('subscriptionDetails.notes')}:</strong> {subscription.notes}
                           </div>
                         ) : null}
                       </div>
                       <div className="bx--col">
                         <div>
-                          <strong>{i18n.t('subscriptionDetails.status')}:</strong> {this.state.subscription.data.status}
+                          <strong>{i18n.t('subscriptionDetails.status')}:</strong> {subscription.status}
                         </div>
                         <div>
-                          <strong>{i18n.t('subscriptionDetails.level')}:</strong> {this.state.subscription.data.level}
+                          <strong>{i18n.t('subscriptionDetails.level')}:</strong> {subscription.level}
                         </div>
                         <div>
                           <strong>{i18n.t('subscriptionDetails.startDate')}:</strong>{' '}
-                          {formatStartDate(this.state.subscription.data.startDate)}
+                          {formatStartDate(subscription.startDate)}
                         </div>
                         <div>
                           <strong>{i18n.t('subscriptionDetails.endDate')}:</strong>{' '}
-                          {formatEndDate(this.state.subscription.data.startDate, this.state.subscription.data.lengthInMonths)}
+                          {formatEndDate(subscription.startDate, subscription.lengthInMonths)}
                         </div>
                         <div>
                           <strong>{i18n.t('subscriptionDetails.license')}:</strong> {license}
                         </div>
                         <div>
                           <strong>{i18n.t('subscriptionDetails.assignedUsers')}:</strong>
-                          {this.state.project.data !== '' && Object.keys(this.state.users.data).length !== 0 ? (
+                          {this.state.users.data !== '' && Object.keys(this.state.users.data).length !== 0 ? (
                             <>
                               {this.state.users.data.map((user, index) => (
                                 <div
@@ -145,8 +149,7 @@ class Subscription extends React.Component {
                   </div>
                 </Tile>
                 <br/>
-                <TicketList projectId={this.state.project.data.id} serviceUrl={this.props.serviceUrl}
-                            locale={this.props.locale}/>
+                <TicketList projectId={project.id} serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </div>
             </div>
           );

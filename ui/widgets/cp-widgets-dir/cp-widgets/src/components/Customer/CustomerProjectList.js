@@ -4,6 +4,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import {apiCustomerGet} from '../../api/customers';
 import {authenticationChanged, isAuthenticated, isPortalAdminOrSupport} from '../../api/helpers';
 import i18n from '../../i18n';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import CustomerDataTable from './CustomerDataTable';
 
 class CustomerProjectList extends React.Component {
@@ -50,6 +51,7 @@ class CustomerProjectList extends React.Component {
         if (customer) {
           return (
             <div>
+              <Breadcrumbs customer={customer} locale={this.props.locale}/>
               <Tile>
                 <div className="bx--grid">
                   <div className="bx--row">

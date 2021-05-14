@@ -9,7 +9,7 @@ import ManageUser from '../components/Admin/ManageUser/ManageUser';
 import ManageSubscriptions from '../components/Admin/ManageSubscriptions/ManageSubscriptions';
 import {authenticationChanged, getPageUrl, isAuthenticated, isPortalAdmin} from '../api/helpers';
 import {
-  PAGE_ADMIN_CONFIG, PAGE_MANAGE_SUBSCRIPTIONS,
+  PAGE_ADMIN_CONFIG, PAGE_CUSTOMER_PORTAL, PAGE_MANAGE_SUBSCRIPTIONS,
   PAGE_MANAGE_USERS,
   PAGE_SUBSCRIPTION_FORM,
   PAGE_TICKET_FORM
@@ -81,6 +81,9 @@ class LocalApp extends Component {
               </Route>
               <Route path={getPageUrl(PAGE_TICKET_FORM, this.props.locale)}>
                 <OpenTicketForm serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
+              </Route>
+              <Route path={getPageUrl(PAGE_CUSTOMER_PORTAL, this.props.locale)}>
+                <App serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
               </Route>
               <Route path="/" exact={true}>
                 <App serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
