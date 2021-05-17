@@ -23,6 +23,7 @@ import {apiProductVersionsGet} from '../../api/productVersion';
 import {authenticationChanged, isAuthenticated, isPortalAdmin, isPortalUser} from '../../api/helpers';
 import {apiAddSubscriptionToProject} from '../../api/projects';
 import moment from 'moment';
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 const FORM_TYPE = {
   new: 'new',
@@ -401,7 +402,6 @@ class SubscriptionForm extends Component {
   }
 
   render() {
-    const titleKey = isPortalAdmin() ? 'subscriptionForm.adminTitle' : 'subscriptionForm.formTitle';
     const formType = this.state.formType;
     let formLabelKey = 'subscriptionForm.newSubscription';
     if (formType !== 'new') {
@@ -412,7 +412,8 @@ class SubscriptionForm extends Component {
       if (isPortalUser()) {
         return (
           <div>
-            <h3 className="pageTitle">{i18n.t(titleKey)}</h3>
+            <Breadcrumbs project={this.state.project} subscription={this.state.subscription}
+                         locale={this.props.locale}/>
             <div className="form-container">
               {this.successErrorMessage()}
               <Form onSubmit={this.handleFormSubmit}>

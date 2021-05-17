@@ -46,7 +46,7 @@ class ProjectActionItems extends React.Component {
         +
       </Button>
     );
-    const editProjectSubscription = (
+    const editProject = (
       <>
         <EditProjectModal
           key={this.props.project.id}
@@ -167,7 +167,7 @@ class ProjectActionItems extends React.Component {
               }}
             >
               {actionDivider}
-              {isAdmin && editProjectSubscription}
+              {isAdmin && editProject}
               {newOrRenewSubscription}
               {isAdmin && (
                 <>
@@ -203,7 +203,7 @@ class ProjectActionItems extends React.Component {
                 </Button>
               </Link>
               {actionDivider}
-              {isAdmin && editProjectSubscription}
+              {isAdmin && editProject}
               {openTicket}
               {viewAllTickets}
               {!isAdmin && newOrRenewSubscription}

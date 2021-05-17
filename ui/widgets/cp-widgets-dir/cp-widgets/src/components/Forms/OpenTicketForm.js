@@ -5,6 +5,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import {apiProjectGet} from '../../api/projects';
 import {apiJiraTicketPost} from '../../api/tickets';
 import {authenticationChanged, getActiveSubscription, isAuthenticated, isPortalUser} from '../../api/helpers';
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 class OpenTicketForm extends Component {
   constructor() {
@@ -158,6 +159,7 @@ class OpenTicketForm extends Component {
       if (isPortalUser()) {
         return (
           <div>
+            <Breadcrumbs project={this.state.project} locale={this.props.locale}/>
             <div className="form-container">
               <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
               <Form onSubmit={this.handleFormSubmit}>

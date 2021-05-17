@@ -5,6 +5,7 @@ import AssignUser from './AssignUser';
 import DeleteUser from './DeleteUser';
 import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
+import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 
 class ManageUser extends Component {
   userFunctionality;
@@ -58,11 +59,12 @@ class ManageUser extends Component {
       if (isPortalAdmin()) {
         return (
           <div>
-            <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
+            <Breadcrumbs locale={this.props.locale}/>
             <div className="form-container">
               <Accordion>
                 {this.userFunctionality.map((item, index) => (
-                  <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description} open={item.open}>
+                  <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description}
+                                 open={item.open}>
                     {item.content}
                   </AccordionItem>
                 ))}

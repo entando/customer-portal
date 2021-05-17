@@ -5,6 +5,7 @@ import TicketingSystem from './TicketingSystem';
 import ProductVersion from './ProductVersion';
 import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
+import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 
 class AdminConfiguration extends React.Component {
   constructor(props) {
@@ -56,7 +57,7 @@ class AdminConfiguration extends React.Component {
       if (isPortalAdmin()) {
         return (
           <div>
-            <h3 className="pageTitle">{i18n.t('adminDashboard.adminTitle')}</h3>
+            <Breadcrumbs locale={this.props.locale}/>
             <div className="form-container">
               <Tile>
                 <p className="title">{i18n.t('adminConfig.title')}</p>
