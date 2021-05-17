@@ -3,6 +3,7 @@ import withKeycloak from "../../auth/withKeycloak";
 import {Breadcrumb, BreadcrumbItem} from "carbon-components-react";
 import {getActiveSubscription, getPageUrl} from "../../api/helpers";
 import {PAGE_CUSTOMER_PORTAL} from "../../api/constants";
+import i18n from "../../i18n";
 
 class Breadcrumbs extends Component {
 
@@ -18,7 +19,7 @@ class Breadcrumbs extends Component {
 
     return (
       <Breadcrumb style={{margin: "1em 0"}}>
-        <BreadcrumbItem href={homeUrl}>Home</BreadcrumbItem>
+        <BreadcrumbItem href={homeUrl}>{i18n.t('customerDashboard.customerPortal')}</BreadcrumbItem>
         {customer && customer.name && (
           <BreadcrumbItem href={`${homeUrl}#/customer-details/${customer.id}`}>
             {customer.name}
