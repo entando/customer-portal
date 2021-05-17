@@ -97,6 +97,7 @@
     "viewDetails": "View Details"
   },
   "customerDashboard": {
+    "customerPortal": "Customer Portal",
     "title": "Welcome to Entando Customer Portal",
     "customerName": "Customer Name",
     "customerId": "Customer Id",
