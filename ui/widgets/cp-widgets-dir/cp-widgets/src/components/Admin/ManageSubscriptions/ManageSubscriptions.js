@@ -17,6 +17,7 @@ import {isAuthenticated, authenticationChanged, getPageUrl} from '../../../api/h
 import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProjectGet} from '../../../api/projects';
 import {formatEndDate, formatStartDate} from '../../../api/subscriptions';
 import {PAGE_SUBSCRIPTION_FORM} from "../../../api/constants";
+import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 
 class ManageSubscriptions extends Component {
   constructor(props) {
@@ -127,9 +128,11 @@ class ManageSubscriptions extends Component {
   };
 
   render() {
+    const project = this.state.project;
     return (
       <div>
-        <h5>{this.state.project !== null && this.state.project.name}</h5>
+        <Breadcrumbs project={project} locale={this.props.locale}/>
+        <h5>{project.name}</h5>
         <a
           href={`${getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}?project=${this.state.projectId}`}
           style={{textDecoration: 'none'}}

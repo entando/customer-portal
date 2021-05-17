@@ -51,9 +51,6 @@ class LocalApp extends Component {
             {/*Simple Menu for switching to page-based elements*/}
             <div>
               <ul>
-                <li>
-                  <Link to='/'>Home</Link>
-                </li>
                 {isPortalAdmin() && (
                   <li>
                     <Link to={getPageUrl(PAGE_ADMIN_CONFIG, this.props.locale)}>Admin</Link>
