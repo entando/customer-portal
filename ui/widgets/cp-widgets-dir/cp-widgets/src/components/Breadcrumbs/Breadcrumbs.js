@@ -10,7 +10,7 @@ class Breadcrumbs extends Component {
   render() {
     const homeUrl = getPageUrl(PAGE_CUSTOMER_PORTAL, this.props.locale);
 
-    let customer = this.props.customer;
+    let customer = this.props.customer || {};
     const project = this.props.project;
     if (project) {
       customer = project.customer || {};
@@ -25,7 +25,7 @@ class Breadcrumbs extends Component {
             {customer.name}
           </BreadcrumbItem>
         )}
-        {project && project.name && subscription.id && (
+        {project && project.name && subscription && subscription.id && (
           <BreadcrumbItem href={`${homeUrl}#/subscription-details/${subscription.id}`}>
             {project.name}
           </BreadcrumbItem>
