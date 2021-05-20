@@ -31,9 +31,7 @@ class CustomerProjectList extends React.Component {
   }
 
   componentDidMount() {
-    if (isPortalAdminOrSupport()) {
-      this.fetchData();
-    }
+    this.fetchData();
   }
 
   componentDidUpdate(prevProps) {
@@ -46,52 +44,50 @@ class CustomerProjectList extends React.Component {
 
   render() {
     if (!this.state.loading) {
-      if (isPortalAdminOrSupport()) {
-        const customer = this.state.customer;
-        if (customer) {
-          return (
-            <div>
-              <Breadcrumbs customer={customer} locale={this.props.locale}/>
-              <Tile>
-                <div className="bx--grid">
-                  <div className="bx--row">
-                    <div className="bx--col">
-                      <p>
-                        <strong>{i18n.t('customerDetails.id')}: </strong> {customer.id}
-                      </p>
-                      <p>
-                        <strong>{i18n.t('customerDetails.name')}: </strong> {customer.name}
-                      </p>
-                      <p>
-                        <strong>{i18n.t('customerDetails.notes')}: </strong> {customer.notes}
-                      </p>
-                    </div>
-                    <div className="bx--col">
-                      <p>
-                        <strong>{i18n.t('customerDetails.contactName')}: </strong> {customer.contactName}
-                      </p>
-                      <p>
-                        <strong>{i18n.t('customerDetails.contactPhone')}: </strong> {customer.contactPhone}
-                      </p>
-                      <p>
-                        <strong>{i18n.t('customerDetails.contactEmail')}: </strong> {customer.contactEmail}
-                      </p>
-                    </div>
+      const customer = this.state.customer;
+      if (customer) {
+        return (
+          <div>
+            <Breadcrumbs customer={customer} locale={this.props.locale}/>
+            <Tile>
+              <div className="bx--grid">
+                <div className="bx--row">
+                  <div className="bx--col">
+                    <p>
+                      <strong>{i18n.t('customerDetails.id')}: </strong> {customer.id}
+                    </p>
+                    <p>
+                      <strong>{i18n.t('customerDetails.name')}: </strong> {customer.name}
+                    </p>
+                    {isPortalAdminOrSupport() &&
+                    <p>
+                      <strong>{i18n.t('customerDetails.notes')}: </strong> {customer.notes}
+                    </p>
+                    }
+                  </div>
+                  <div className="bx--col">
+                    <p>
+                      <strong>{i18n.t('customerDetails.contactName')}: </strong> {customer.contactName}
+                    </p>
+                    <p>
+                      <strong>{i18n.t('customerDetails.contactPhone')}: </strong> {customer.contactPhone}
+                    </p>
+                    <p>
+                      <strong>{i18n.t('customerDetails.contactEmail')}: </strong> {customer.contactEmail}
+                    </p>
                   </div>
                 </div>
-              </Tile>
-              <CustomerDataTable serviceUrl={this.props.serviceUrl} customerId={customer.id}
-                                 locale={this.props.locale}/>
-            </div>
-          );
-        } else {
-          return <p>{i18n.t('userMessages.loading')}...</p>;
-        }
+              </div>
+            </Tile>
+            <CustomerDataTable serviceUrl={this.props.serviceUrl} customerId={customer.id}
+                               locale={this.props.locale}/>
+          </div>
+        );
       } else {
-        return <p>{i18n.t('userMessages.unauthorized')}</p>;
+        return <p>{i18n.t('userMessages.loading')}...</p>;
       }
     } else {
-      return null;
+      return <p>{i18n.t('userMessages.unauthorized')}</p>;
     }
   }
 }
