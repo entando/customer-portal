@@ -56,7 +56,7 @@ class AdminConfiguration extends React.Component {
       // Authorized
       if (isPortalAdmin()) {
         return (
-          <div>
+          <div id="entando-customer-portal">
             <Breadcrumbs locale={this.props.locale}/>
             <div className="form-container">
               <Tile>

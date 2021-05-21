@@ -274,9 +274,11 @@
     "viewTicket": "visualizza la segnalazione"
   },
   "userMessages": {
-    "unauthorized": "Non autorizzato",
     "loading": "Caricamento in corso",
-    "none": "Nessuna"
+    "login": "Login",
+    "logout": "Logout",
+    "none": "Nessuna",
+    "unauthorized": "Non autorizzato"
   },
   "validation": {
     "invalid": {

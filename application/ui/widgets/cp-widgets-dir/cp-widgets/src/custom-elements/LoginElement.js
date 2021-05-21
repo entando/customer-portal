@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../index.scss';
-// import './entando.css';
-import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';
-import LocalApp from '../local/LocalApp';
 
 import {subscribeToWidgetEvent} from '../helpers/widgetEvents';
-import {KEYCLOAK_EVENT_TYPE} from '../custom-elements/widgetEventTypes';
+import {KEYCLOAK_EVENT_TYPE} from './widgetEventTypes';
+import * as Locale from '../i18n';
+import Login from '../components/Login/Login';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && {...window.entando.keycloak, initialized: true}) || {
@@ -23,7 +22,7 @@ const ATTRIBUTES = {
   serviceUrl: 'service-url',
 };
 
-class LocalAppElement extends HTMLElement {
+class LoginElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -33,7 +32,7 @@ class LocalAppElement extends HTMLElement {
   keycloak = getKeycloakInstance();
 
   connectedCallback() {
-    this.mountPoint = document.createElement('div');
+    this.mountPoint = document.createElement('span');
     this.keycloak = {...getKeycloakInstance(), initialized: true};
 
     this.unsubscribeFromKeycloakEvent = subscribeToWidgetEvent(KEYCLOAK_EVENT_TYPE, () => {
@@ -54,11 +53,11 @@ class LocalAppElement extends HTMLElement {
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <LocalApp serviceUrl={serviceUrl} locale={locale}/>
+        <Login serviceUrl={serviceUrl} locale={locale}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('local-app-element', LocalAppElement);
+customElements.define('cp-login-widget', LoginElement);
