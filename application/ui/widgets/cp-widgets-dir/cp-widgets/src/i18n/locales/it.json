@@ -1,12 +1,12 @@
 {
   "adminConfig": {
-    "title": "Entando Visualizza dell'Amministratore",
+    "title": "Interfaccia di Amministrazione di Entando",
     "formTitle": "Tutti i clienti",
-    "desc": "Configura il sistema di biglietteria e la versione di Entando di seguito.",
+    "desc": "Configura il sistema di segnalazione e le versioni di Entando qui di seguito.",
     "integrationTicketingSystem": {
-      "title": "Integrazione con il sistema di biglietteria",
-      "desc": "Questo ti permette di gestire il sistema di biglietteria",
-      "selectBackendTicketingSystem": "Seleziona Backend Ticketing System",
+      "title": "Integrazione con il sistema di segnalazione",
+      "desc": "Questo ti permette di gestire il sistema di segnalazione",
+      "selectBackendTicketingSystem": "Seleziona il sistema di segnalazione (Backend Ticketing System)",
       "select": "Selezionare",
       "url": "URL",
       "userName": "Nome utente",
@@ -14,20 +14,20 @@
       "projectName": "Nome del progetto"
     },
     "manageProductVersion": {
-      "title": "Gestisci versione prodotto",
+      "title": "Gestisci la versione del prodotto",
       "desc": "Ciò consente di gestire le versioni del prodotto Entando",
-      "entandoVersion": "Versione Entando",
+      "entandoVersion": "Versione di Entando",
       "status": "Stato *",
       "startDate": "data d'inizio",
-      "supportEndDate": "Data di fine del supporto"
+      "supportEndDate": "Data di fine supporto"
     }
   },
   "adminDashboard": {
     "title": "Benvenuti a Entando",
-    "adminTitle": "Benvenuti a Entando Visualizza dell'Amministratore",
-    "customerTitle": "Benvenuti a Entando Visualizza del Cliente",
-    "partnerTitle": "Benvenuti a Entando Visualizza del Socio",
-    "supportTitle": "Benvenuti a Entando Visualizza del Supporto",
+    "adminTitle": "Benvenuti all'Interfaccia di Amministrazione di Entando",
+    "customerTitle": "Benvenuti all'Interfaccia di Amministrazione dei Clienti di Entando",
+    "partnerTitle": "Benvenuti all'Interfaccia di Amministrazione dei Partner di Entando",
+    "supportTitle": "Benvenuti all'Interfaccia di Amministrazione del Supporto di Entando",
     "allCustomers": "Tutti i clienti",
     "searchLabel": "Ricerca dei clienti",
     "searchText": "Quale cliente stai cercando?",
@@ -55,18 +55,18 @@
       "notes": "Appunti"
     },
     "addPartner": {
-      "title": "Aggiungi un partner",
-      "projectList": "Elenco progetti",
+      "title": "Aggiungi un Partner",
+      "projectList": "Elenco Progetti",
       "selectProject": "Seleziona Progetto",
-      "partnerName": "Nome partner",
-      "partnerNumber": "Numero partner",
+      "partnerName": "Nome Partner",
+      "partnerNumber": "Numero Partner",
       "notes": "Appunti"
     },
     "addProductVersion": {
       "title": "Aggiungi una nuova versione del prodotto",
       "productVersion": "Versione del prodotto",
       "productVersionStartDate": "Data di inizio della versione del prodotto",
-      "productVersionEndDate": "Data di fine della versione del prodotto"
+      "productVersionEndDate": "Data di fine vita della versione del prodotto"
     },
     "editCustomer": {
       "title": "Modifica cliente"
@@ -84,16 +84,16 @@
     "cancel": "Annulla",
     "delete": "Elimina",
     "edit": "Modificare",
-    "managePartners": "Gestire i partner",
+    "managePartners": "Gestire i Partner",
     "manageSubscriptions": "Gestisci le iscrizioni",
-    "manageUsers": "Gestisci utenti",
+    "manageUsers": "Gestione Utenti",
     "openTicket": "Apri un ticket",
     "save": "Salva",
     "submit": "Invia",
     "subscriptionRequest": "Richiesta di abbonamento",
     "view": "Visualizza",
-    "viewAllTickets": "Visualizza tutti i biglietti",
-    "viewTickets": "Visualizzare i biglietti",
+    "viewAllTickets": "Visualizza tutte le richieste (tickets)",
+    "viewTickets": "Visualizzare tutte le richieste (tickets)",
     "viewDetails": "Visualizza dettagli"
   },
 
@@ -107,9 +107,9 @@
     "projectName": "Nome del progetto",
     "partnerName": "Nome partner",
     "entandoVersion": "Versione Entando",
-    "openTickets": "Biglietti aperti",
-    "subscriptions": "Abbonamenti",
-    "tableDesc": "In questa tabella ci sono iscrizioni aperte",
+    "openTickets": "Segnalazioni aperte",
+    "subscriptions": "Subscriptions",
+    "tableDesc": "In questa tabella ci sono Subscription aperte",
     "partners": "Partner",
     "status": "Stato",
     "action": "Azione"
@@ -123,16 +123,16 @@
     "notes": "Appunti"
   },
   "editSubscription": {
-    "title": "Modifica abbonamento",
+    "title": "Modifica subscription",
     "description": "Descrizione",
     "commitment": "Impegno",
     "type": "genere",
-    "quantityRequest": "QuantitàRichiesta",
+    "quantityRequest": "Quantità Richiesta",
     "components": "Componenti",
     "level": "Livello"
   },
   "manageUsers": {
-    "title": "Entando Visualizza dell'Amministratore",
+    "title": "Entando Interfaccia Amministrativa",
     "assign": {
       "title": "Assegna un nuovo utente",
       "desc": "Assegnare un utente a un progetto esistente.",
@@ -149,7 +149,7 @@
       "desc": "Visualizzare ed eliminare gli utenti esistenti."
     },
     "delete": {
-      "desc": "View and delete existing users",
+      "desc": "Visualizzare ed eliminare gli utenti esistenti",
       "userName": "Nome atente",
       "userEmail": "Email dell'utente",
       "dateAdded": "Data aggiunta",
@@ -159,48 +159,48 @@
   },
   "modalText": {
     "cancel": "Annulla",
-    "done": "Finito",
+    "done": "Completato",
     "save": "Salva"
   },
   "projectDetails": {
-    "description": "Description",
-    "type": "Type",
-    "quantityRequest": "Quantity Request:",
-    "components": "Components",
+    "description": "Descrizione",
+    "type": "Tipo",
+    "quantityRequest": "Quantità richiesta:",
+    "components": "Componente",
     "id": "ID",
     "status": "Stato",
-    "level": "Level",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "lengthInMonths": "Length (months)",
-    "license": "License",
-    "listOfTickets": "List of Tickets",
-    "tickets": "Tickets",
-    "project": "Project",
-    "entandoVersion": "Entando Version",
-    "creationDate": "Creation Date",
-    "goToTicket": "Go to Ticket"
+    "level": "Lievllo",
+    "startDate": "Data di inizio",
+    "endDate": "Data di fine",
+    "lengthInMonths": "Durata (mesi)",
+    "license": "Licenza",
+    "listOfTickets": "Lista delle segnalazioni",
+    "tickets": "Segnalazioni",
+    "project": "Progetto",
+    "entandoVersion": "Versione di Entando",
+    "creationDate": "Data di creazione",
+    "goToTicket": "Vai alla segnalazione"
   },
   "roles": {
     "admin": "Amministratore",
     "customer": "Cliente",
-    "partner": "Socio",
+    "partner": "Partner",
     "support": "Supporto"
   },
   "submitMessages": {
-    "subscriptionRequired": "È necessario un abbonamento per creare i biglietti per questo progetto",
-    "created": "Creato con successo",
-    "updated": "Aggiornato con successo",
-    "added": "Aggiunto con successo",
+    "subscriptionRequired": "È necessario una subscription per creare segnalazioni per questo progetto",
+    "created": "Creata con successo",
+    "updated": "Aggiornata con successo",
+    "added": "Aggiunta con successo",
     "confirmDelete": "Sei sicuro di voler eliminare questo articolo?",
     "deleted": "Cancellato con successo",
     "error": "Si è verificato un errore",
-    "ticketError": "Si è verificato un errore. Assicurarsi che questo progetto abbia un'organizzazione corrispondente a Jira."
+    "ticketError": "Si è verificato un errore. Assicurarsi che questo progetto abbia un'organizzazione corrispondente in Jira Service Desk."
   },
   "subscriptionDetails": {
     "description": "Descrizione",
     "commitment": "Impegno",
-    "partners": "Socio",
+    "partners": "Partner",
     "type": "Genere",
     "status": "Stato",
     "level": "Livello",
@@ -214,8 +214,8 @@
 
   "subscriptionForm": {
     "adminSubmitNewSuccess": "Aggiunta di una sottoscrizione al progetto riuscita.",
-    "adminRenewNewSuccess": "Rinnovato con successo un abbonamento al progetto.",
-    "adminTitle": "Entando Visualizza dell'Amministratore",
+    "adminRenewNewSuccess": "Rinnovato con successo una subscription al progetto.",
+    "adminTitle": "Interfaccia Amministrativa di Entando",
     "chooseLevel": "Scegli un livello",
     "chooseVersion": "Scegli la versione Entando",
     "contactEmail": "Contatto email *",
@@ -224,43 +224,43 @@
     "customerEmail": "Email del cliente *",
     "customerName": "Nome del cliente *",
     "customerNumber": "Numero cliente *",
-    "customerSubmitSuccess": "Sarai contattato da un addetto alle vendite Entando per finalizzare la sottoscrizione.",
-    "entandoVersion": "Versione Entando",
-    "formTitle": "Nuovo o rinnova abbonamento",
-    "editSubscription": "Modifica abbonamento",
-    "newSubError": "Error in adding a project subscription.",
-    "newSubscription": "Nuovo abbonamento",
+    "customerSubmitSuccess": "Sarai contattato da un addetto alle vendite Entando per finalizzare l'attivazione della subscription.",
+    "entandoVersion": "Versione di Entando",
+    "formTitle": "Nuova o rinnova subscription",
+    "editSubscription": "Modifica subscription",
+    "newSubError": "Errore durante la creazione di una nuova subscription di progetto.",
+    "newSubscription": "Nuovo subscription",
     "projectName": "Nome del progetto *",
-    "renewSubError": "Errore nel rinnovo dell'abbonamento a un progetto.",
-    "renewSubscription": "Rinnova l'abbonamento",
-    "selectType": "Seleziona il tipo di abbonamento",
-    "subscriptionLength": "Durata dell'abbonamento",
-    "subscriptionLevel": "Livello di abbonamento",
-    "subscriptionStartDate": "Data di inizio dell'abbonamento *",
-    "subscriptionStatus": "Stato dell'abbonamento",
-    "subscriptionType": "Genere di abbonamento *"
+    "renewSubError": "Errore nel rinnovo della subscription di un progetto.",
+    "renewSubscription": "Rinnova la subscription",
+    "selectType": "Seleziona il tipo di subscription",
+    "subscriptionLength": "Durata della subscription",
+    "subscriptionLevel": "Livello di subscription",
+    "subscriptionStartDate": "Data di inizio della subscription *",
+    "subscriptionStatus": "Stato della subscription",
+    "subscriptionType": "Genere di subscription *"
   },
   "supportTicketForm": {
-    "title": "Entando Visualizza dell'Amministratore",
-    "formTitle": "Creare un nuovo biglietto di supporto",
-    "desc": "Creare un nuovo biglietto di supporto per un progetto esistente.",
+    "title": "Interfaccia Amministrativa di Entando",
+    "formTitle": "Creare una nuova segnalazione di supporto",
+    "desc": "Creare una nuova segnalazione di supporto per un progetto esistente.",
     "select": "Seleziona",
     "type": "Genere",
     "selectProject": "Seleziona progetto",
-    "ticketNumber": "Ticket Number",
-    "customerName": "Customer Name",
-    "projectName": "ProjectName",
-    "ticketOpenedBy": "Ticket Opened By:",
+    "ticketNumber": "Numero della Segnalazione",
+    "customerName": "Nome Cliente",
+    "projectName": "Nome Progetto",
+    "ticketOpenedBy": "Segnalazione aperta da:",
     "priority": "Priorità",
-    "partnerName": "Partner Name",
-    "ticketSummary": "Riepiliogo del biglietto",
-    "addticketSummary": "Aggiungi il riepilogo del biglietto",
-    "ticketDescription": "Descrizione del biglietto",
-    "addticketDescription": "Aggiungi una descrizione del biglietto"
+    "partnerName": "Nome del Partner",
+    "ticketSummary": "Riepiliogo della segnalazione",
+    "addticketSummary": "Aggiungi il riepilogo della segnalazione",
+    "ticketDescription": "Descrizione della segnalazione",
+    "addticketDescription": "Aggiungi una descrizione alla segnalazione"
   },
   "ticketDetails": {
-    "listOfTickets": "Elenco dei biglietti",
-    "tickets": "Biglietti",
+    "listOfTickets": "Elenco delle segnalazioni",
+    "tickets": "Segnalazioni",
     "issue": "Problema",
     "project": "Progetto",
     "summary": "Sommario",
@@ -271,7 +271,7 @@
     "link": "Collegamento",
     "priority": "Priorità",
     "updated": "Aggiornato",
-    "viewTicket": "visualizza il biglietto"
+    "viewTicket": "visualizza la segnalazione"
   },
   "userMessages": {
     "unauthorized": "Non autorizzato",
