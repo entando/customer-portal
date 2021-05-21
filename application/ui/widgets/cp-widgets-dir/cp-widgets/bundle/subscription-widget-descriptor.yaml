@@ -1,6 +1,0 @@
-code: cp-subscription-widget
-titles:
-  en: Subscription Widget
-  it: Subscription Widget
-group: free
-customUiPath: subscription-widget.ftl

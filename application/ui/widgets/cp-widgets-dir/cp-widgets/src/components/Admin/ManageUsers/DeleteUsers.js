@@ -15,7 +15,7 @@ import i18n from '../../../i18n';
 import {apiGetProjectUsers, apiDeleteUserFromProject} from '../../../api/projects';
 import {authenticationChanged, isAuthenticated} from "../../../api/helpers";
 
-class DeleteUser extends Component {
+class DeleteUsers extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -136,4 +136,4 @@ class DeleteUser extends Component {
   }
 }
 
-export default withKeycloak(DeleteUser);
+export default withKeycloak(DeleteUsers);

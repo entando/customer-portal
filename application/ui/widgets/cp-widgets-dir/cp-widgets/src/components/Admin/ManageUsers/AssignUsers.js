@@ -6,7 +6,7 @@ import withKeycloak from '../../../auth/withKeycloak';
 import { apiKeycloakUserGet } from '../../../api/keycloak';
 import i18n from '../../../i18n';
 import {authenticationChanged, isAuthenticated} from "../../../api/helpers";
-class AssignUser extends Component {
+class AssignUsers extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -207,4 +207,4 @@ class AssignUser extends Component {
   }
 }
 
-export default withKeycloak(AssignUser);
+export default withKeycloak(AssignUsers);

@@ -1,6 +1,0 @@
-code: cp-assign-user-widget
-titles:
-  en: Assign User Widget
-  it: Assign User Widget
-group: free
-customUiPath: assign-user-widget.ftl

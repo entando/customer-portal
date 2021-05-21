@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import i18n from '../../../i18n';
-import { Accordion, AccordionItem } from 'carbon-components-react';
-import AssignUser from './AssignUser';
-import DeleteUser from './DeleteUser';
+import {Accordion, AccordionItem} from 'carbon-components-react';
+import AssignUsers from './AssignUsers';
+import DeleteUsers from './DeleteUsers';
 import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 
-class ManageUser extends Component {
+class ManageUsers extends Component {
   userFunctionality;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -22,7 +23,7 @@ class ManageUser extends Component {
             <p className="desc">{i18n.t('manageUsers.manage.desc')}</p>
           </div>
         ),
-        content: <DeleteUser serviceUrl={this.props.serviceUrl}/>,
+        content: <DeleteUsers serviceUrl={this.props.serviceUrl}/>,
         open: true,
       },
       {
@@ -32,7 +33,7 @@ class ManageUser extends Component {
             <p className="desc">{i18n.t('manageUsers.assign.desc')}</p>
           </div>
         ),
-        content: <AssignUser serviceUrl={this.props.serviceUrl}/>,
+        content: <AssignUsers serviceUrl={this.props.serviceUrl}/>,
         open: true,
       },
     ];
@@ -85,4 +86,4 @@ class ManageUser extends Component {
   }
 }
 
-export default withKeycloak(ManageUser);
+export default withKeycloak(ManageUsers);

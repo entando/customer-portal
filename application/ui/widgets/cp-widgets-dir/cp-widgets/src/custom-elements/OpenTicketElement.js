@@ -60,4 +60,4 @@ class OpenTicketElement extends HTMLElement {
   }
 }
 
-customElements.define('cp-open-ticket-widget', OpenTicketElement);
+customElements.get('cp-open-ticket') || customElements.define('cp-open-ticket', OpenTicketElement);

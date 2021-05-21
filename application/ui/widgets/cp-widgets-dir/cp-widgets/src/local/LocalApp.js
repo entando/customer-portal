@@ -5,7 +5,7 @@ import withKeycloak from '../auth/withKeycloak';
 import SubscriptionForm from '../components/Forms/SubscriptionForm';
 import AdminConfiguration from '../components/Admin/Configuration/AdminConfiguration';
 import OpenTicketForm from '../components/Forms/OpenTicketForm';
-import ManageUser from '../components/Admin/ManageUser/ManageUser';
+import ManageUsers from '../components/Admin/ManageUsers/ManageUsers';
 import ManageSubscriptions from '../components/Admin/ManageSubscriptions/ManageSubscriptions';
 import {authenticationChanged, getPageUrl, isAuthenticated, isPortalAdmin} from '../api/helpers';
 import {
@@ -64,7 +64,7 @@ class LocalApp extends Component {
                 <ManageSubscriptions serviceUrl={serviceUrl} locale={locale}/>
               </Route>
               <Route path={getPageUrl(PAGE_MANAGE_USERS, locale)}>
-                <ManageUser serviceUrl={serviceUrl} locale={locale}/>
+                <ManageUsers serviceUrl={serviceUrl} locale={locale}/>
               </Route>
               <Route path={getPageUrl(PAGE_SUBSCRIPTION_FORM, locale)}>
                 <SubscriptionForm serviceUrl={serviceUrl} locale={locale}/>

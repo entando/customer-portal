@@ -1,6 +1,0 @@
-code: cp-delete-user-widget
-titles:
-  en: Delete User Widget
-  it: Delete User Widget
-group: free
-customUiPath: delete-user-widget.ftl

@@ -60,4 +60,4 @@ class LoginElement extends HTMLElement {
   }
 }
 
-customElements.define('cp-login-widget', LoginElement);
+customElements.get('cp-login') || customElements.define('cp-login', LoginElement);
