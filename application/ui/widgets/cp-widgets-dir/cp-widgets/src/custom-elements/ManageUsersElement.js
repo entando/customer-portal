@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import DeleteUser from '../components/Admin/ManageUser/DeleteUser';
+import ManageUsers from '../components/Admin/ManageUsers/ManageUsers';
 import '../index.scss';
+import * as Locale from '../i18n';
 
 import KeycloakContext from '../auth/KeycloakContext';
 
-import {subscribeToWidgetEvent} from '../helpers/widgetEvents';
-import {KEYCLOAK_EVENT_TYPE} from './widgetEventTypes';
+import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
+import { KEYCLOAK_EVENT_TYPE } from './widgetEventTypes';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
@@ -21,7 +22,7 @@ const ATTRIBUTES = {
   serviceUrl: 'service-url',
 };
 
-class DeleteUserElement extends HTMLElement {
+class ManageUsersElement extends HTMLElement {
   container;
 
   mountPoint;
@@ -47,14 +48,16 @@ class DeleteUserElement extends HTMLElement {
 
   render() {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
+    const locale = this.getAttribute(ATTRIBUTES.locale) || '';
+    Locale.setLocale(locale);
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
-        <DeleteUser serviceUrl={serviceUrl} />
+        <ManageUsers serviceUrl={serviceUrl} locale={locale}/>
       </KeycloakContext.Provider>,
       this.mountPoint
     );
   }
 }
 
-customElements.define('cp-delete-user-widget', DeleteUserElement);
+customElements.get('cp-manage-users') || customElements.define('cp-manage-users', ManageUsersElement);
