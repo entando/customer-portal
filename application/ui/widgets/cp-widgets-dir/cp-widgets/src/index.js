@@ -6,6 +6,7 @@ import './custom-elements/AppElement';
 import './custom-elements/AssignUserElement';
 import './custom-elements/DeleteUserElement';
 import './custom-elements/FormsOpenTicketElement';
+import './custom-elements/LoginElement';
 import './custom-elements/ManageSubscriptionsElement';
 import './custom-elements/ManageUserElement';
 import './custom-elements/NavigationElement';

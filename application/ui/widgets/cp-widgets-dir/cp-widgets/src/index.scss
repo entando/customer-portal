@@ -1,90 +1,84 @@
 @import 'carbon-components/scss/globals/scss/styles.scss';
 
-// Global Styles
-
-body {
-  font-size: 14px;
-  line-height: 14pt;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 1rem;
-  background: #f7f9fb;
-}
-
-h3 {
-  font-size: 32px;
-  line-height: 37px;
-}
-
-h4 {
-  font-size: 24px;
-  line-height: 34px;
-}
-
-p {
-  font-size: 14px;
-  line-height: 24px;
-}
-
-a {
-  color: #00a0df;
-}
-
-a:link,
-a:visited {
-  color: #8094d6;
-}
-
-#title {
-  text-align: center;
-}
-
-.pageTitle {
-  padding-left: 1rem;
-  margin: 2rem 0;
-}
-
-// Header and Footer
-
-.bx--header {
-  background: #002f87;
-}
-
-.Homepage__footer {
-  text-align: center;
-}
-
-// Navigation Menu
-.bx--grid {
-  .navigationMenu {
-    margin: 2rem;
-    float: right !important;
-    left: 100% !important;
-  }
-
-  .bx--header__nav:before {
-    background-color: transparent;
-  }
-
-  a.bx--header__menu-item span {
-    color: #002f87;
-  }
-}
-
-// Buttons
-button.button-warning {
-  display: flex;
-  width: 100%;
-  color: red;
-}
-
-.dropdown-button-button {
-  width: 100%;
-}
-
-
-// App Component Bx--Form Fields
+// Customer Portal Styles
 #entando-customer-portal {
+  // Global Styles
+  h3 {
+    font-size: 32px;
+    line-height: 37px;
+  }
+
+  h4 {
+    font-size: 24px;
+    line-height: 34px;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+  a {
+    color: #00a0df;
+  }
+
+  a:link,
+  a:visited {
+    color: #8094d6;
+  }
+
+  #title {
+    text-align: center;
+  }
+
+  .pageTitle {
+    padding-left: 1rem;
+    margin: 2rem 0;
+  }
+
+  // Header and Footer
+  .bx--header {
+    background: #002f87;
+  }
+
+  .Homepage__footer {
+    text-align: center;
+  }
+
+  // Login
+  .entando-login a:hover {
+    text-decoration: underline;
+  }
+
+  // Navigation Menu
+  .bx--grid {
+    .navigationMenu {
+      margin: 2rem;
+      float: right !important;
+      left: 100% !important;
+    }
+
+    .bx--header__nav:before {
+      background-color: transparent;
+    }
+
+    a.bx--header__menu-item span {
+      color: #002f87;
+    }
+  }
+
+  // Buttons
+  button.button-warning {
+    display: flex;
+    width: 100%;
+    color: red;
+  }
+
+  .dropdown-button-button {
+    width: 100%;
+  }
+
+  // Forms
   form.bx--form {
     background: #fff;
     margin: 1rem 0;
@@ -98,31 +92,38 @@ button.button-warning {
   .bx--data-table-header {
     background: #fff;
   }
+
   .bx--data-table th {
     background-color: #eaf0f5;
   }
+
   .bx--tile {
     background: #fff;
   }
+
   .bx--data-table td,
   .bx--data-table tbody th {
     background: #fff;
   }
+
+  nav .bx--breadcrumb {
+    padding-left: 1rem;
+  }
+
   nav.bx--pagination-nav {
     float: right;
   }
+
   .modal-form form.bx--form {
     background: transparent;
   }
+
   .bx--form-item {
     margin-bottom: 1.5rem;
   }
+
   .form-container {
     margin: 15px;
-  }
-  .form-container .form-desc {
-    margin: 2rem 0;
-    padding: 0 2rem;
   }
   .bx--accordion__title {
     font-size: 18px;

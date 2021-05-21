@@ -272,9 +272,11 @@
     "viewTicket": "View Ticket"
   },
   "userMessages": {
-    "unauthorized": "Unauthorized",
     "loading": "Loading",
-    "none": "None"
+    "login": "Login",
+    "logout": "Logout",
+    "none": "None",
+    "unauthorized": "Unauthorized"
   },
   "validation": {
     "invalid": {

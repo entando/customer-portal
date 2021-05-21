@@ -14,6 +14,7 @@ import {
   PAGE_SUBSCRIPTION_FORM,
   PAGE_TICKET_FORM
 } from "../api/constants";
+import Login from "../components/Login/Login";
 
 class LocalApp extends Component {
   constructor(props) {
@@ -39,51 +40,43 @@ class LocalApp extends Component {
     }
   }
 
-  async logout() {
-    await window.entando.keycloak.logout();
-  }
-
   render() {
+    const {locale, serviceUrl} = this.props;
     if (!this.state.loading) {
       return (
         <div>
           <BrowserRouter forceRefresh={true}>
-            {/*Simple Menu for switching to page-based elements*/}
+            <Login locale={locale}/>
             <div>
               <ul>
                 {isPortalAdmin() && (
                   <li>
-                    <Link to={getPageUrl(PAGE_ADMIN_CONFIG, this.props.locale)}>Admin</Link>
+                    <Link to={getPageUrl(PAGE_ADMIN_CONFIG, locale)}>Admin</Link>
                   </li>
                 )}
-                <li>
-                  <a href="/" onClick={this.logout}>
-                    Logout
-                  </a>
-                </li>
               </ul>
             </div>
             <Switch>
-              <Route path={getPageUrl(PAGE_ADMIN_CONFIG, this.props.locale)}>
-                <AdminConfiguration serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
+              <Route path={getPageUrl(PAGE_ADMIN_CONFIG, locale)}>
+                <AdminConfiguration serviceUrl={serviceUrl} locale={locale}/>
               </Route>
-              <Route path={getPageUrl(PAGE_MANAGE_SUBSCRIPTIONS, this.props.locale)}>
-                <ManageSubscriptions serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
+              <Route path={getPageUrl(PAGE_MANAGE_SUBSCRIPTIONS, locale)}>
+                <ManageSubscriptions serviceUrl={serviceUrl} locale={locale}/>
               </Route>
-              <Route path={getPageUrl(PAGE_MANAGE_USERS, this.props.locale)}>
-                <ManageUser serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
+              <Route path={getPageUrl(PAGE_MANAGE_USERS, locale)}>
+                <ManageUser serviceUrl={serviceUrl} locale={locale}/>
               </Route>
-              <Route path={getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}>
-                <SubscriptionForm serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
+              <Route path={getPageUrl(PAGE_SUBSCRIPTION_FORM, locale)}>
+                <SubscriptionForm serviceUrl={serviceUrl} locale={locale}/>
               </Route>
-              <Route path={getPageUrl(PAGE_TICKET_FORM, this.props.locale)}>
-                <OpenTicketForm serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
+              <Route path={getPageUrl(PAGE_TICKET_FORM, locale)}>
+                <OpenTicketForm serviceUrl={serviceUrl} locale={locale}/>
               </Route>
-              <Route path={getPageUrl(PAGE_CUSTOMER_PORTAL, this.props.locale)}>
-                <App serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
+              <Route path={getPageUrl(PAGE_CUSTOMER_PORTAL, locale)}>
+                <App serviceUrl={serviceUrl} locale={locale}/>
               </Route>
               <Route path="/" exact={true}>
-                <App serviceUrl={this.props.serviceUrl} locale={this.props.locale}/>
+                <App serviceUrl={serviceUrl} locale={locale}/>
               </Route>
             </Switch>
           </BrowserRouter>

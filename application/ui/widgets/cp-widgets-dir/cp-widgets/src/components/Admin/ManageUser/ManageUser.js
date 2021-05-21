@@ -58,7 +58,7 @@ class ManageUser extends Component {
     if (!this.state.loading) {
       if (isPortalAdmin()) {
         return (
-          <div>
+          <div id="entando-customer-portal">
             <Breadcrumbs locale={this.props.locale}/>
             <div className="form-container">
               <Accordion>

@@ -411,7 +411,7 @@ class SubscriptionForm extends Component {
     if (!this.state.loading) {
       if (isPortalUser()) {
         return (
-          <div>
+          <div id="entando-customer-portal">
             <Breadcrumbs project={this.state.project} subscription={this.state.subscription}
                          locale={this.props.locale}/>
             <div className="form-container">

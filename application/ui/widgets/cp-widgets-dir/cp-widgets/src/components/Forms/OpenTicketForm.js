@@ -158,7 +158,7 @@ class OpenTicketForm extends Component {
     if (!this.state.loading) {
       if (isPortalUser()) {
         return (
-          <div>
+          <div id="entando-customer-portal">
             <Breadcrumbs project={this.state.project} locale={this.props.locale}/>
             <div className="form-container">
               <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>

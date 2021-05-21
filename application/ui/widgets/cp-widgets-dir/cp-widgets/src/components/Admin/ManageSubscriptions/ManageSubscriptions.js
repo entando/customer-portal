@@ -130,7 +130,7 @@ class ManageSubscriptions extends Component {
   render() {
     const project = this.state.project;
     return (
-      <div>
+      <div id="entando-customer-portal">
         <Breadcrumbs project={project} locale={this.props.locale}/>
         <h5>{project.name}</h5>
         <a
