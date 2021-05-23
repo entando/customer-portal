@@ -1,7 +1,7 @@
 {
   "generator-jhipster": {
     "promptValues": {
-      "packageName": "com.mycompany.myapp"
+      "packageName": "com.entando.customerportal"
     },
     "bundleName": "custportapp-bundle",
     "dockerOrganization": "jordengerovac",
@@ -9,8 +9,8 @@
     "jhipsterVersion": "6.9.0",
     "applicationType": "microservice",
     "baseName": "custportApp",
-    "packageName": "com.mycompany.myapp",
-    "packageFolder": "com/mycompany/myapp",
+    "packageName": "com.entando.customerportal",
+    "packageFolder": "com/entando/customerportal",
     "serverPort": "8081",
     "authenticationType": "oauth2",
     "cacheProvider": "caffeine",
