@@ -1,5 +1,5 @@
 # ===================================================================
-# Spring Boot configuration for the "prod" profile.
+# Spring Boot configuration for the "dev" profile.
 #
 # This configuration overrides the application.yml file.
 #
@@ -15,50 +15,65 @@
 
 logging:
   level:
-    ROOT: INFO
-    com.entando.customerportal: INFO
-    io.github.jhipster: INFO
-
-management:
-  metrics:
-    export:
-      prometheus:
-        enabled: false
+    ROOT: DEBUG
+    io.github.jhipster: DEBUG
+    com.entando.customerportal: DEBUG
 
 spring:
+  profiles:
+    active: dev
+    include:
+      - swagger
+      # Uncomment to activate TLS for the dev profile
+      #- tls
   devtools:
     restart:
-      enabled: false
+      enabled: true
+      additional-exclude: .h2.server.properties
     livereload:
-      enabled: false
+      enabled: false # we use Webpack dev server + BrowserSync for livereload
+  jackson:
+    serialization:
+      indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/custportApp
+    url: jdbc:h2:file:./target/h2db/db/custportapp;DB_CLOSE_DELAY=-1
     username: custportApp
     password:
     hikari:
       poolName: Hikari
       auto-commit: false
+  h2:
+    console:
+      enabled: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedPostgreSQL95Dialect
-    database: POSTGRESQL
-    show-sql: false
+    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
+    database: H2
+    show-sql: true
     properties:
       hibernate.id.new_generator_mappings: true
       hibernate.connection.provider_disables_autocommit: true
       hibernate.cache.use_second_level_cache: true
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
-  # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
-    contexts: prod
+    # Remove 'faker' if you do not want the sample data to be loaded automatically
+    contexts: dev, faker
   mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: smtp.gmail.com
+    port: 587
+    username: yourEmail
+    password: yourPassword
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+        auth: true
+        starttls.enable: true
+        ssl.trust: smtp.gmail.com
+  messages:
+    cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
-    cache: true
+    cache: false
   sleuth:
     sampler:
       probability: 1 # report 100% of traces
@@ -69,31 +84,8 @@ spring:
       discovery:
         enabled: true
 
-# ===================================================================
-# To enable TLS in production, generate a certificate using:
-# keytool -genkey -alias custportapp -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
-#
-# You can also use Let's Encrypt:
-# https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm
-#
-# Then, modify the server.ssl properties so your "server" configuration looks like:
-#
-# server:
-#    port: 443
-#    ssl:
-#        key-store: classpath:config/tls/keystore.p12
-#        key-store-password: password
-#        key-store-type: PKCS12
-#        key-alias: custportapp
-#        # The ciphers suite enforce the security by deactivating some old and deprecated SSL cipher, this list was tested against SSL Labs (https://www.ssllabs.com/ssltest/)
-#        ciphers: TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 ,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 ,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 ,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA,TLS_RSA_WITH_CAMELLIA_256_CBC_SHA,TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA,TLS_RSA_WITH_CAMELLIA_128_CBC_SHA
-# ===================================================================
 server:
   port: 8081
-  compression:
-    enabled: true
-    mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
-    min-response-size: 1024
 
 # ===================================================================
 # JHipster specific properties
@@ -102,15 +94,21 @@ server:
 # ===================================================================
 
 jhipster:
-  http:
-    cache: # Used by the CachingHttpHeadersFilter
-      timeToLiveInDays: 1461
   cache: # Cache configuration
     caffeine: # Caffeine configuration
       time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
-      max-entries: 1000 # Number of objects in each cache entry
+      max-entries: 100 # Number of objects in each cache entry
+  # CORS is disabled by default on microservices, as you should access them through a gateway.
+  # If you want to enable it, please uncomment the configuration below.
+  cors:
+    allowed-origins: '*'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'Authorization,Link,X-Total-Count'
+    allow-credentials: true
+    max-age: 1800
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    base-url: http://my-server-url-to-change # Modify according to your server's URL
+    base-url: http://127.0.0.1:8081
   metrics:
     logs: # Reports metrics in the logs
       enabled: false
