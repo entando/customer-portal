@@ -61,4 +61,4 @@ class LocalAppElement extends HTMLElement {
   }
 }
 
-customElements.define('cp-local-app', LocalAppElement);
+customElements.get('cp-local-app') || customElements.define('cp-local-app', LocalAppElement);
