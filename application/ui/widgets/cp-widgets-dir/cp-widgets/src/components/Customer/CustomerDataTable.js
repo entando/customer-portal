@@ -10,7 +10,7 @@ import {
   TableCell
 } from 'carbon-components-react';
 import '../../index.scss';
-import {apiDeleteProjectFromCustomer, apiCustomerGet} from '../../api/customers';
+import {apiDeleteProjectFromCustomer} from '../../api/customers';
 import withKeycloak from '../../auth/withKeycloak';
 import {Link} from 'react-router-dom';
 import i18n from '../../i18n';
@@ -66,10 +66,11 @@ class CustomerDataTable extends Component {
 
   async fetchData() {
     if (isAuthenticated(this.props)) {
+      const {customer, serviceUrl} = this.props;
       try {
-        const customer = await apiCustomerGet(this.props.serviceUrl, this.props.customerId);
-        const projects = customer.data.projects;
-        const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
+        //TODO: may need to call API for this once permissions are adjusted
+        const projects = customer.projects;
+        const ticketingSystem = await apiCurrentTicketingSystemGet(serviceUrl);
         this.setState({
           projects: projects,
           ticketingSystem: ticketingSystem,
@@ -153,7 +154,7 @@ class CustomerDataTable extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {Object.keys(this.state.projects).length !== 0
+                  {this.state.projects && Object.keys(this.state.projects).length !== 0
                     ? this.state.projects.map((project, index) => {
                       const subscription = getActiveSubscription(project);
                       if (!subscription) {

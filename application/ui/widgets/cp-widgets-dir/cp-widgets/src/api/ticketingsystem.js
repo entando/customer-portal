@@ -11,10 +11,15 @@ export const apiTicketingSystemDelete = async (serviceUrl, id) => {
   return request(url, options);
 };
 
+//Simplifying assumptions
+// 1) Take the latest ticketing system as the current config. There should be only 1.
+// 2) Only load it once in the current context
 export const apiCurrentTicketingSystemGet = async serviceUrl => {
-  const ticketingSystems = (await apiTicketingSystemsGet(serviceUrl)).data;
-  //Simplifying assumption to take the latest ticketing system as the current config. There should be only 1.
-  return ticketingSystems && ticketingSystems.length ? ticketingSystems[ticketingSystems.length - 1] : null;
+  if (window.entando.currentTicketingSystem == null) {
+    const ticketingSystems = (await apiTicketingSystemsGet(serviceUrl)).data;
+    window.entando.currentTicketingSystem = ticketingSystems && ticketingSystems.length ? ticketingSystems[ticketingSystems.length - 1] : null;
+  }
+  return window.entando.currentTicketingSystem;
 };
 
 export const apiTicketingSystemsGet = async serviceUrl => {

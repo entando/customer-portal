@@ -79,7 +79,7 @@ class CustomerProjectList extends React.Component {
                 </div>
               </div>
             </Tile>
-            <CustomerDataTable serviceUrl={this.props.serviceUrl} customerId={customer.id}
+            <CustomerDataTable serviceUrl={this.props.serviceUrl} customer={customer}
                                locale={this.props.locale}/>
           </div>
         );
