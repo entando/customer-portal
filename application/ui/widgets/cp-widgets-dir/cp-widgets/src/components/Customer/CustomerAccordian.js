@@ -90,7 +90,7 @@ class CustomerAccordian extends Component {
             <CustomerDataTable
               key={new Date().getTime()}
               serviceUrl={this.props.serviceUrl}
-              customerId={this.props.customerId}
+              customer={this.state.customer}
               locale={this.props.locale}
               updateCustomerList={this.props.updateCustomerList}
             />
