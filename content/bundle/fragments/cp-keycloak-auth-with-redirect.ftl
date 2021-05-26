@@ -37,8 +37,14 @@
                 ...(window.entando || {}),
                 keycloak,
             };
+            const silentRedirectUri = window.location.origin + '/en/cp_keycloak_silent_check_sso.page';
+            const initOptions = {
+                onLoad: 'login-required',
+                silentCheckSsoRedirectUri: silentRedirectUri,
+                enableLogging: true
+            };
             window.entando.keycloak
-                .init({onLoad: 'login-required', promiseType: 'native', enableLogging: true})
+                .init(initOptions)
                 .catch(function (e) {
                     console.error(e);
                     console.error(consolePrefix, 'Failed to initialize Keycloak');
