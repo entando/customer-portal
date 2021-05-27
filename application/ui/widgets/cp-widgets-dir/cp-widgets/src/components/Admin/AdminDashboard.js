@@ -56,7 +56,7 @@ class AdminDashboard extends React.Component {
 
   handleSearch = event => {
     if (event.key === 'Enter') {
-      //Note: should refactor this to preform filtering in db
+      //Note: should refactor this to perform filtering in db
       const newFilteredState = this.state.customers.filter(customer =>
         customer.name.toLowerCase().includes(event.target.value.toLowerCase())
       );

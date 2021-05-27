@@ -318,4 +318,14 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return result;
     }
+
+    @Override
+    public List<Project> findByCustomer(Long customerId) {
+        return projectRepository.findByCustomer(customerId);
+    }
+
+    @Override
+    public List<Project> findByCustomerAndUser(Long customerId, Long portalUserId) {
+        return projectRepository.findByCustomerAndUser(customerId, portalUserId);
+    }
 }

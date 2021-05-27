@@ -21,6 +21,16 @@ export const apiProjectsGet = async serviceUrl => {
   return request(url, options);
 };
 
+export const apiProjectsGetByCustomer = async (serviceUrl, id) => {
+  const url = getUrl(`${serviceUrl}/${resource}/customer/${id}`);
+  const options = {
+    ...getDefaultOptions(),
+    method: 'GET',
+  };
+
+  return request(url, options);
+};
+
 export const apiProjectGet = async (serviceUrl, id) => {
   const url = getUrl(`${serviceUrl}/${resource}/${id}`);
   const options = {

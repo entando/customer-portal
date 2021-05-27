@@ -2,7 +2,10 @@ package com.entando.customerportal.web.rest;
 
 import com.entando.customerportal.domain.*;
 import com.entando.customerportal.security.AuthoritiesConstants;
+import com.entando.customerportal.security.AuthoritiesUtil;
 import com.entando.customerportal.security.SpringSecurityAuditorAware;
+import com.entando.customerportal.service.CustomerService;
+import com.entando.customerportal.service.PortalUserService;
 import com.entando.customerportal.service.ProjectService;
 import com.entando.customerportal.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -37,13 +41,17 @@ public class ProjectResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final CustomerService customerService;
     private final ProjectService projectService;
+    private final PortalUserService portalUserService;
 
     @Autowired
     SpringSecurityAuditorAware springSecurityAuditorAware;
 
-    public ProjectResource(ProjectService projectService) {
+    public ProjectResource(CustomerService customerService, ProjectService projectService, PortalUserService portalUserService) {
+        this.customerService = customerService;
         this.projectService = projectService;
+        this.portalUserService = portalUserService;
     }
 
     /**
@@ -120,6 +128,28 @@ public class ProjectResource {
         log.debug("REST request to get all Projects");
         return projectService.findAll();
     }
+
+    /**
+     * {@code GET  /projects/customers/:id} : get the projects for the customer
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in the body.
+     */
+    @GetMapping("/projects/customer/{id}")
+    @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
+    public List<Project> getCustomerProjects(@PathVariable Long id) {
+        log.debug("REST request to get all Projects for the customer");
+
+        if (AuthoritiesUtil.isCurrentUserAdminOrSupport()) {
+            return projectService.findByCustomer(id);
+        } else {
+            Optional<Long> userId = portalUserService.getCurrentPortalUserId();
+            if (userId.isPresent()) {
+                return projectService.findByCustomerAndUser(id, userId.get());
+            }
+        }
+        return new ArrayList<>();
+    }
+
 
     /**
      * {@code GET  /projects/:id} : get the "id" project.

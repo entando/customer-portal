@@ -1,5 +1,6 @@
 package com.entando.customerportal.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -16,7 +17,10 @@ import java.util.Set;
 @Entity
 @Table(name = "customer")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NamedQuery(name = "Customer.findAll", query = "select c from Customer c order by c.id")
+@NamedQuery(name = "Customer.findAll", query = "select c from Customer c order by c.name")
+//CUSTOM START for performance and to perform correct permission checks
+@JsonIgnoreProperties(value = {"projects"}, allowSetters = true)
+//CUSTOM END
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
