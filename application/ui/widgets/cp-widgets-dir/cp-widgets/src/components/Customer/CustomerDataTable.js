@@ -18,6 +18,7 @@ import {authenticationChanged, getActiveSubscription, isAuthenticated, isPortalA
 import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
 import ProjectActionItems from '../Admin/ProjectActionItems';
 import {formatEndDate, formatStartDate} from '../../api/subscriptions';
+import {apiProjectsGetByCustomer} from '../../api/projects';
 
 class CustomerDataTable extends Component {
   constructor(props) {
@@ -68,9 +69,12 @@ class CustomerDataTable extends Component {
     if (isAuthenticated(this.props)) {
       const {customer, serviceUrl} = this.props;
       try {
-        //TODO: may need to call API for this once permissions are adjusted
-        const projects = customer.projects;
-        const ticketingSystem = await apiCurrentTicketingSystemGet(serviceUrl);
+        let projects = {};
+        let ticketingSystem = {};
+        if (customer && customer.id) {
+          projects = (await apiProjectsGetByCustomer(serviceUrl, customer.id)).data;
+          ticketingSystem = await apiCurrentTicketingSystemGet(serviceUrl);
+        }
         this.setState({
           projects: projects,
           ticketingSystem: ticketingSystem,

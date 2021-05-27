@@ -172,6 +172,10 @@ public interface ProjectService {
     /**
      * Get the current active subscription for a project
      */
-    public Optional<ProjectSubscription> getActiveSubscription(Project project);
+    Optional<ProjectSubscription> getActiveSubscription(Project project);
+
+    List<Project> findByCustomer(Long customerId);
+
+    List<Project> findByCustomerAndUser(Long customerId, Long portalUserId);
 
 }
