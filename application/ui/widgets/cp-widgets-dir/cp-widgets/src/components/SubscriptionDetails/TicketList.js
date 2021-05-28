@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   DataTable,
+  InlineLoading,
   TableContainer,
   Table,
   TableHead,
@@ -27,6 +28,7 @@ class TicketList extends Component {
       project: {},
       ticketingSystem: {},
       currentPage: 0,
+      loading: true
     };
     this.headerData = [
       {
@@ -74,6 +76,7 @@ class TicketList extends Component {
           tickets: tickets,
           project: project,
           ticketingSystem: ticketingSystem,
+          loading: false
         });
       } catch (err) {
         console.log(err);
@@ -135,58 +138,63 @@ class TicketList extends Component {
             </a>
           </div>
         )}
-        <DataTable rows={[{id: '1'}]} headers={this.headerData}>
-          {({rows, headers, getHeaderProps, getTableProps}) => (
-            <TableContainer title={i18n.t('ticketDetails.listOfTickets')}>
-              <Table {...getTableProps()}>
-                <TableHead>
-                  <TableRow>
-                    {headers.map(header => (
-                      <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.keys(this.state.tickets).length !== 0 ? (
-                    this.state.tickets.data.map((ticket, index) => {
-                      const indexOfLastItem = (this.state.currentPage + 1) * 10 - 1;
-                      const firstIndexOfCurrentPage = this.state.currentPage * 10;
-                      const ticketUrl = ticketingSystemBaseUrl + '/browse/' + ticket.systemId;
+        {this.state.loading && <InlineLoading/>}
+        {!this.state.loading && (
+          <>
+            <DataTable rows={[{id: '1'}]} headers={this.headerData}>
+              {({rows, headers, getHeaderProps, getTableProps}) => (
+                <TableContainer title={i18n.t('ticketDetails.listOfTickets')}>
+                  <Table {...getTableProps()}>
+                    <TableHead>
+                      <TableRow>
+                        {headers.map(header => (
+                          <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Object.keys(this.state.tickets).length !== 0 ? (
+                        this.state.tickets.data.map((ticket, index) => {
+                          const indexOfLastItem = (this.state.currentPage + 1) * 10 - 1;
+                          const firstIndexOfCurrentPage = this.state.currentPage * 10;
+                          const ticketUrl = ticketingSystemBaseUrl + '/browse/' + ticket.systemId;
 
-                      if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
-                        return (
-                          <TableRow key={ticket.id}>
-                            <TableCell>
-                              <a href={ticketUrl} target="_blank" rel="noreferrer">
-                                {ticket.systemId}
-                              </a>
-                            </TableCell>
-                            <TableCell>{ticket.summary}</TableCell>
-                            <TableCell>{ticket.status}</TableCell>
-                            <TableCell>{ticket.type}</TableCell>
-                            <TableCell>{ticket.priority}</TableCell>
-                            <TableCell>{new Date(ticket.createDate).toDateString()}</TableCell>
-                            <TableCell>{new Date(ticket.updateDate).toDateString()}</TableCell>
-                            <TableCell>
-                              <a href={ticketUrl} target="_blank" rel="noreferrer">
-                                {i18n.t('ticketDetails.viewTicket')}
-                              </a>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      } else {
-                        return null;
-                      }
-                    })
-                  ) : (
-                    <TableRow/>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </DataTable>
-        <PaginationNav {...paginationProps()} className="pagination-right"/>
+                          if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
+                            return (
+                              <TableRow key={ticket.id}>
+                                <TableCell>
+                                  <a href={ticketUrl} target="_blank" rel="noreferrer">
+                                    {ticket.systemId}
+                                  </a>
+                                </TableCell>
+                                <TableCell>{ticket.summary}</TableCell>
+                                <TableCell>{ticket.status}</TableCell>
+                                <TableCell>{ticket.type}</TableCell>
+                                <TableCell>{ticket.priority}</TableCell>
+                                <TableCell>{new Date(ticket.createDate).toDateString()}</TableCell>
+                                <TableCell>{new Date(ticket.updateDate).toDateString()}</TableCell>
+                                <TableCell>
+                                  <a href={ticketUrl} target="_blank" rel="noreferrer">
+                                    {i18n.t('ticketDetails.viewTicket')}
+                                  </a>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })
+                      ) : (
+                        <TableRow/>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+            </DataTable>
+            <PaginationNav {...paginationProps()} className="pagination-right"/>
+          </>
+        )}
       </div>
     );
   }

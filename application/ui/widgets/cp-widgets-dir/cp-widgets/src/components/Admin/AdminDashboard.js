@@ -1,6 +1,6 @@
 import React from 'react';
 import i18n from '../../i18n';
-import { Accordion, PaginationNav, Search, Tile } from 'carbon-components-react';
+import {Accordion, InlineLoading, PaginationNav, Search, Tile} from 'carbon-components-react';
 import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
 import AddProjectModal from './AddProjectModal';
@@ -25,6 +25,7 @@ class AdminDashboard extends React.Component {
       filteredCustomers: {},
       currentPage: 0,
       test: '',
+      loading: true
     };
   }
 
@@ -50,6 +51,7 @@ class AdminDashboard extends React.Component {
       this.setState({
         customers: customers.data ? customers.data : {},
         filteredCustomers: customers.data ? customers.data : {},
+        loading: false
       });
     }
   }
@@ -124,22 +126,24 @@ class AdminDashboard extends React.Component {
           </Tile>
         ) : null}
 
-        <div className="form-container">
-          <Accordion>
-            {Object.keys(this.state.customers).length !== 0
-              ? this.state.filteredCustomers.map((customer, index) => {
-                //Pagination for Admin and Support roles (5 items per page)
-                //Note: eventually this should be pushed down into paginated microservice calls
-                var indexOfLastItem = (this.state.currentPage + 1) * 5 - 1;
-                var firstIndexOfCurrentPage = this.state.currentPage * 5;
-                var accordionOpened = this.state.customers.length === 1;
+        {this.state.loading && <InlineLoading/>}
+        {!this.state.loading && (
+          <div className="form-container">
+            <Accordion>
+              {Object.keys(this.state.customers).length !== 0
+                ? this.state.filteredCustomers.map((customer, index) => {
+                  //Pagination for Admin and Support roles (5 items per page)
+                  //Note: eventually this should be pushed down into paginated microservice calls
+                  var indexOfLastItem = (this.state.currentPage + 1) * 5 - 1;
+                  var firstIndexOfCurrentPage = this.state.currentPage * 5;
+                  var accordionOpened = this.state.customers.length === 1;
 
-                if (isPortalUser()) {
-                  if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
-                    return (
-                      <CustomerAccordian
-                        key={customer.id}
-                        serviceUrl={this.props.serviceUrl}
+                  if (isPortalUser()) {
+                    if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
+                      return (
+                        <CustomerAccordian
+                          key={customer.id}
+                          serviceUrl={this.props.serviceUrl}
                           customerId={customer.id}
                           title={customer.name}
                           updateCustomerList={this.updateCustomerList}
@@ -154,10 +158,11 @@ class AdminDashboard extends React.Component {
                     return null;
                   }
                 })
-              : null}
-          </Accordion>
-          <PaginationNav {...props()} className="pagination-right" />
-        </div>
+                : null}
+            </Accordion>
+            <PaginationNav {...props()} className="pagination-right"/>
+          </div>
+        )}
       </div>
     );
   }
