@@ -58,8 +58,6 @@
                     console.error(e);
                     console.error(consolePrefix, 'Failed to initialize Keycloak');
                 });
-
-            //TODO: set token refresh per https://www.keycloak.org/securing-apps/vue
         };
 
         function onKeycloakScriptError(e) {
