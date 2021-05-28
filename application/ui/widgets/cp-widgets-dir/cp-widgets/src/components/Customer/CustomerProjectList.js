@@ -87,7 +87,7 @@ class CustomerProjectList extends React.Component {
         return <p>{i18n.t('userMessages.loading')}...</p>;
       }
     } else {
-      return <p>{i18n.t('userMessages.unauthorized')}</p>;
+      return null;
     }
   }
 }
