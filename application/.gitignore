@@ -158,3 +158,4 @@ Desktop.ini
 /bundle/
 
 .ent/ent-state
+/src/main/docker/docker.yml
