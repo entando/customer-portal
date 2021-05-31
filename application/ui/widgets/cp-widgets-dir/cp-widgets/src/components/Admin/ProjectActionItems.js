@@ -4,11 +4,8 @@ import withKeycloak from '../../auth/withKeycloak';
 import { Button } from 'carbon-components-react';
 import EditProjectModal from '../Admin/EditProjectModal';
 import ManagePartnersModal from '../Admin/ManagePartnersModal';
-import {getPageUrl, isPortalAdmin} from '../../api/helpers';
+import {isPortalAdmin} from '../../api/helpers';
 import {Link} from 'react-router-dom';
-import {
-  PAGE_MANAGE_USERS,
-} from "../../api/constants";
 
 class ProjectActionItems extends React.Component {
   constructor() {
@@ -81,14 +78,11 @@ class ProjectActionItems extends React.Component {
     );
     const manageUsers = (
       <>
-        <a
-          href={`${getPageUrl(PAGE_MANAGE_USERS, this.props.locale)}?project=${this.props.project.id}`}
-          style={{textDecoration: 'none'}}
-        >
+        <Link to={`/manage-users/${this.props.project.id}`} style={{textDecoration: 'none'}}>
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Users">
             {i18n.t('buttons.manageUsers')}
           </Button>
-        </a>
+        </Link>
         {actionDivider}
       </>
     );

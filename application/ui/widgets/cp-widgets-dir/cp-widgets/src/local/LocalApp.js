@@ -3,12 +3,10 @@ import {BrowserRouter, Route, Switch, Link} from 'react-router-dom';
 import App from '../components/App';
 import withKeycloak from '../auth/withKeycloak';
 import AdminConfiguration from '../components/Admin/Configuration/AdminConfiguration';
-import ManageUsers from '../components/Admin/ManageUsers/ManageUsers';
 import {authenticationChanged, getPageUrl, isAuthenticated, isPortalAdmin} from '../api/helpers';
 import {
   PAGE_ADMIN_CONFIG,
-  PAGE_CUSTOMER_PORTAL,
-  PAGE_MANAGE_USERS,
+  PAGE_CUSTOMER_PORTAL
 } from "../api/constants";
 import Login from "../components/Login/Login";
 
@@ -55,9 +53,6 @@ class LocalApp extends Component {
             <Switch>
               <Route path={getPageUrl(PAGE_ADMIN_CONFIG, locale)}>
                 <AdminConfiguration serviceUrl={serviceUrl} locale={locale}/>
-              </Route>
-              <Route path={getPageUrl(PAGE_MANAGE_USERS, locale)}>
-                <ManageUsers serviceUrl={serviceUrl} locale={locale}/>
               </Route>
               <Route path={getPageUrl(PAGE_CUSTOMER_PORTAL, locale)}>
                 <App serviceUrl={serviceUrl} locale={locale}/>

@@ -10,6 +10,7 @@ import i18n from '../i18n';
 import ManageSubscriptions from './Admin/ManageSubscriptions/ManageSubscriptions';
 import SubscriptionForm from './Forms/SubscriptionForm';
 import OpenTicketForm from './Forms/OpenTicketForm';
+import ManageUsers from './Admin/ManageUsers/ManageUsers';
 
 class App extends Component {
   constructor(props) {
@@ -59,6 +60,11 @@ class App extends Component {
                     path={'**/manage-subscriptions/:id'}
                     render={props => <ManageSubscriptions {...props} serviceUrl={this.props.serviceUrl}
                                                           locale={this.props.locale}/>}
+                  />
+                  <Route
+                    path={'**/manage-users/:id'}
+                    render={props => <ManageUsers {...props} serviceUrl={this.props.serviceUrl}
+                                                  locale={this.props.locale}/>}
                   />
                   <Route
                     path={'**/subscription-details/:id'}
