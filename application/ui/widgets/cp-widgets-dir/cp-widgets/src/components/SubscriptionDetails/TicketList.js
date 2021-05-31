@@ -16,9 +16,9 @@ import {apiJiraTicketsGet} from '../../api/tickets';
 import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiProjectGet} from '../../api/projects';
-import {authenticationChanged, getPageUrl, isAuthenticated, isPortalUser} from '../../api/helpers';
+import {authenticationChanged, isAuthenticated, isPortalUser} from '../../api/helpers';
 import i18n from '../../i18n';
-import {PAGE_TICKET_FORM} from "../../api/constants";
+import {Link} from 'react-router-dom';
 
 class TicketList extends Component {
   constructor(props) {
@@ -128,14 +128,11 @@ class TicketList extends Component {
               </Button>
             </a>
             {/*Open Ticket*/}
-            <a
-              href={`${getPageUrl(PAGE_TICKET_FORM, this.props.locale)}?project=${this.state.project.id}`}
-              style={{textDecoration: 'none'}}
-            >
+            <Link to={`/ticket/${this.state.project.id}`} style={{textDecoration: 'none'}}>
               <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
                 {i18n.t('buttons.openTicket')}
               </Button>
-            </a>
+            </Link>
           </div>
         )}
         {this.state.loading && <InlineLoading/>}

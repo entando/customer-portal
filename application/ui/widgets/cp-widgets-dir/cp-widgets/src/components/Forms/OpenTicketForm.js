@@ -45,9 +45,7 @@ class OpenTicketForm extends Component {
       return;
     }
 
-    let search = window.location.search;
-    let params = new URLSearchParams(search);
-    let projectId = params.get('project');
+    const projectId = this.props.match.params.id;
     let project = (await apiProjectGet(this.props.serviceUrl, projectId)).data;
 
     if (!project) {

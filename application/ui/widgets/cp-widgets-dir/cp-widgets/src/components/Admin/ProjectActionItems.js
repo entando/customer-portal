@@ -8,7 +8,6 @@ import {getPageUrl, isPortalAdmin} from '../../api/helpers';
 import {Link} from 'react-router-dom';
 import {
   PAGE_MANAGE_USERS,
-  PAGE_TICKET_FORM
 } from "../../api/constants";
 
 class ProjectActionItems extends React.Component {
@@ -105,14 +104,11 @@ class ProjectActionItems extends React.Component {
     );
     const openTicket = (
       <>
-        <a
-          href={`${getPageUrl(PAGE_TICKET_FORM, this.props.locale)}?project=${this.props.project.id}`}
-          style={{textDecoration: 'none'}}
-        >
+        <Link to={`/ticket/${this.props.project.id}`} style={{textDecoration: 'none'}}>
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
             {i18n.t('buttons.openTicket')}
           </Button>
-        </a>
+        </Link>
         {actionDivider}
       </>
     );

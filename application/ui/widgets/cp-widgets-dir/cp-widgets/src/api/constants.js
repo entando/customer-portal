@@ -11,4 +11,3 @@ export const PAGE_CUSTOMER_PORTAL = 'customer_portal.page'
 export const PAGE_ADMIN_CONFIG = 'cp_admin_config.page'
 
 export const PAGE_MANAGE_USERS = 'cp_manage_users.page'
-export const PAGE_TICKET_FORM = 'cp_ticket.page'

@@ -9,6 +9,7 @@ import CustomerProjectList from './Customer/CustomerProjectList';
 import i18n from '../i18n';
 import ManageSubscriptions from './Admin/ManageSubscriptions/ManageSubscriptions';
 import SubscriptionForm from './Forms/SubscriptionForm';
+import OpenTicketForm from './Forms/OpenTicketForm';
 
 class App extends Component {
   constructor(props) {
@@ -63,6 +64,11 @@ class App extends Component {
                     path={'**/subscription-details/:id'}
                     render={props => <Subscription {...props} serviceUrl={this.props.serviceUrl}
                                                    locale={this.props.locale}/>}
+                  />
+                  <Route
+                    path={'**/ticket/:id'}
+                    render={props => <OpenTicketForm {...props} serviceUrl={this.props.serviceUrl}
+                                                     locale={this.props.locale}/>}
                   />
                   <Route
                     path="**/"
