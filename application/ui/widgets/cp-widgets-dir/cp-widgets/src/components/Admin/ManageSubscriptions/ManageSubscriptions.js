@@ -81,9 +81,7 @@ class ManageSubscriptions extends Component {
 
   async fetchData() {
     if (isAuthenticated(this.props)) {
-      let search = window.location.search;
-      const params = new URLSearchParams(search);
-      const projectId = params.get('project');
+      const projectId = this.props.match.params.id;
 
       let project = {};
       let subscriptions = {};
@@ -159,7 +157,7 @@ class ManageSubscriptions extends Component {
                     <TableRow key={index}>
                       <TableCell>{subscription.id}</TableCell>
                       <TableCell>{subscription.status}</TableCell>
-                      <TableCell>{subscription.entandoVersion.name}</TableCell>
+                      <TableCell>{subscription.entandoVersion && subscription.entandoVersion.name}</TableCell>
                       <TableCell>{subscription.level}</TableCell>
                       <TableCell>{formatStartDate(subscription.startDate)}</TableCell>
                       <TableCell>{formatEndDate(subscription.startDate, subscription.lengthInMonths)}</TableCell>

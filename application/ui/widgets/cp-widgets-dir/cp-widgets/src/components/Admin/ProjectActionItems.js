@@ -7,7 +7,6 @@ import ManagePartnersModal from '../Admin/ManagePartnersModal';
 import {getPageUrl, isPortalAdmin} from '../../api/helpers';
 import {Link} from 'react-router-dom';
 import {
-  PAGE_MANAGE_SUBSCRIPTIONS,
   PAGE_MANAGE_USERS, PAGE_SUBSCRIPTION_FORM,
   PAGE_TICKET_FORM
 } from "../../api/constants";
@@ -98,14 +97,11 @@ class ProjectActionItems extends React.Component {
     );
     const manageSubscriptions = (
       <>
-        <a
-          href={`${getPageUrl(PAGE_MANAGE_SUBSCRIPTIONS, this.props.locale)}?project=${this.props.project.id}`}
-          style={{textDecoration: 'none'}}
-        >
+        <Link to={`/manage-subscriptions/${this.props.project.id}`} style={{textDecoration: 'none'}}>
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Subscriptions">
             {i18n.t('buttons.manageSubscriptions')}
           </Button>
-        </a>
+        </Link>
         {actionDivider}
       </>
     );
