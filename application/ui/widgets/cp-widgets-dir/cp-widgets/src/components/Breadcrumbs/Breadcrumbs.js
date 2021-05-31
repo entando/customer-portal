@@ -19,7 +19,7 @@ class Breadcrumbs extends Component {
 
     return (
       <Breadcrumb style={{margin: "1em 0"}}>
-        <BreadcrumbItem href={homeUrl}>{i18n.t('customerDashboard.customerPortal')}</BreadcrumbItem>
+        <BreadcrumbItem href={`${homeUrl}#`}>{i18n.t('customerDashboard.customerPortal')}</BreadcrumbItem>
         {customer && customer.name && (
           <BreadcrumbItem href={`${homeUrl}#/customer-details/${customer.id}`}>
             {customer.name}

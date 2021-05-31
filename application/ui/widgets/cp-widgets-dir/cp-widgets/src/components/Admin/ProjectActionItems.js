@@ -7,7 +7,7 @@ import ManagePartnersModal from '../Admin/ManagePartnersModal';
 import {getPageUrl, isPortalAdmin} from '../../api/helpers';
 import {Link} from 'react-router-dom';
 import {
-  PAGE_MANAGE_USERS, PAGE_SUBSCRIPTION_FORM,
+  PAGE_MANAGE_USERS,
   PAGE_TICKET_FORM
 } from "../../api/constants";
 
@@ -57,17 +57,15 @@ class ProjectActionItems extends React.Component {
         {actionDivider}
       </>
     );
-    const subscriptionParam = this.props.subscription ? '&subscription=' + this.props.subscription.id : '';
+    const subscriptionParam = this.props.subscription ? '/' + this.props.subscription.id : '';
     const newOrRenewSubscription = (
       <>
-        <a
-          href={`${getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}?project=${this.props.project.id}${subscriptionParam}`}
-          style={{textDecoration: 'none'}}
-        >
+        <Link to={`/subscription/${this.props.project.id}${subscriptionParam}`}
+              style={{textDecoration: 'none'}}>
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Subscription Request">
             {i18n.t('buttons.subscriptionRequest')}
           </Button>
-        </a>
+        </Link>
         {actionDivider}
       </>
     );

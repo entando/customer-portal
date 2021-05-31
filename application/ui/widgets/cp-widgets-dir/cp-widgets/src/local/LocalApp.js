@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {BrowserRouter, Route, Switch, Link} from 'react-router-dom';
 import App from '../components/App';
 import withKeycloak from '../auth/withKeycloak';
-import SubscriptionForm from '../components/Forms/SubscriptionForm';
 import AdminConfiguration from '../components/Admin/Configuration/AdminConfiguration';
 import OpenTicketForm from '../components/Forms/OpenTicketForm';
 import ManageUsers from '../components/Admin/ManageUsers/ManageUsers';
@@ -11,7 +10,6 @@ import {
   PAGE_ADMIN_CONFIG,
   PAGE_CUSTOMER_PORTAL,
   PAGE_MANAGE_USERS,
-  PAGE_SUBSCRIPTION_FORM,
   PAGE_TICKET_FORM
 } from "../api/constants";
 import Login from "../components/Login/Login";
@@ -62,9 +60,6 @@ class LocalApp extends Component {
               </Route>
               <Route path={getPageUrl(PAGE_MANAGE_USERS, locale)}>
                 <ManageUsers serviceUrl={serviceUrl} locale={locale}/>
-              </Route>
-              <Route path={getPageUrl(PAGE_SUBSCRIPTION_FORM, locale)}>
-                <SubscriptionForm serviceUrl={serviceUrl} locale={locale}/>
               </Route>
               <Route path={getPageUrl(PAGE_TICKET_FORM, locale)}>
                 <OpenTicketForm serviceUrl={serviceUrl} locale={locale}/>

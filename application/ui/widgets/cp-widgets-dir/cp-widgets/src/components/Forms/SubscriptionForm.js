@@ -91,11 +91,9 @@ class SubscriptionForm extends Component {
 
     const serviceUrl = this.props.serviceUrl;
 
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-
-    const subscriptionId = params.get('subscription');
-    let projectId = params.get('project');
+    const params = this.props.match.params;
+    const subscriptionId = params.subscriptionId;
+    let projectId = params.projectId;
 
     let subscription = {};
     let project = {};

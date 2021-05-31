@@ -4,5 +4,4 @@ import './custom-elements/AppElement';
 import './custom-elements/LoginElement';
 import './custom-elements/ManageUsersElement';
 import './custom-elements/OpenTicketElement';
-import './custom-elements/SubscriptionFormElement';
 import './local/LocalAppElement';
