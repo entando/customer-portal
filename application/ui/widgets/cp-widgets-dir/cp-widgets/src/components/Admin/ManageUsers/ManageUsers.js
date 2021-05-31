@@ -23,7 +23,7 @@ class ManageUsers extends Component {
             <p className="desc">{i18n.t('manageUsers.manage.desc')}</p>
           </div>
         ),
-        content: <DeleteUsers serviceUrl={this.props.serviceUrl}/>,
+        content: <DeleteUsers {...props} serviceUrl={this.props.serviceUrl}/>,
         open: true,
       },
       {
@@ -33,7 +33,7 @@ class ManageUsers extends Component {
             <p className="desc">{i18n.t('manageUsers.assign.desc')}</p>
           </div>
         ),
-        content: <AssignUsers serviceUrl={this.props.serviceUrl}/>,
+        content: <AssignUsers {...props} serviceUrl={this.props.serviceUrl}/>,
         open: true,
       },
     ];

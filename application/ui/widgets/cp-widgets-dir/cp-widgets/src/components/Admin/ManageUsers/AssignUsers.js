@@ -35,9 +35,7 @@ class AssignUsers extends Component {
   async fetchData() {
     const {keycloak} = this.props;
     const users = this.mapKeycloakUserEmails((await apiKeycloakUserGet(keycloak.authServerUrl, keycloak.realm)).data);
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    let projectId = params.get('project');
+    let projectId = this.props.match.params.id;
     let project = null;
     if (projectId != null) {
       project = (await apiProjectGet(this.props.serviceUrl, projectId)).data;

@@ -56,9 +56,7 @@ class DeleteUsers extends Component {
 
   async fetchData() {
     if (isAuthenticated(this.props)) {
-      let search = window.location.search;
-      const params = new URLSearchParams(search);
-      const projectId = params.get('project');
+      const projectId = this.props.match.params.id;
       let users = [];
       if (projectId != null) {
         users = (await apiGetProjectUsers(this.props.serviceUrl, projectId)).data;
