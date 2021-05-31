@@ -8,6 +8,7 @@ import {authenticationChanged, isAuthenticated, isPortalUser} from '../api/helpe
 import CustomerProjectList from './Customer/CustomerProjectList';
 import i18n from '../i18n';
 import ManageSubscriptions from './Admin/ManageSubscriptions/ManageSubscriptions';
+import SubscriptionForm from './Forms/SubscriptionForm';
 
 class App extends Component {
   constructor(props) {
@@ -47,6 +48,11 @@ class App extends Component {
                     path={'**/customer-details/:id'}
                     render={props => <CustomerProjectList {...props} serviceUrl={this.props.serviceUrl}
                                                           locale={this.props.locale}/>}
+                  />
+                  <Route
+                    path={'**/subscription/:projectId/:subscriptionId'}
+                    render={props => <SubscriptionForm {...props} serviceUrl={this.props.serviceUrl}
+                                                       locale={this.props.locale}/>}
                   />
                   <Route
                     path={'**/manage-subscriptions/:id'}

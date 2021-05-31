@@ -13,11 +13,11 @@ import {
 import '../../../index.scss';
 import withKeycloak from '../../../auth/withKeycloak';
 import i18n from '../../../i18n';
-import {isAuthenticated, authenticationChanged, getPageUrl} from '../../../api/helpers';
+import {isAuthenticated, authenticationChanged} from '../../../api/helpers';
 import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProjectGet} from '../../../api/projects';
 import {formatEndDate, formatStartDate} from '../../../api/subscriptions';
-import {PAGE_SUBSCRIPTION_FORM} from "../../../api/constants";
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
+import {Link} from 'react-router-dom';
 
 class ManageSubscriptions extends Component {
   constructor(props) {
@@ -131,15 +131,11 @@ class ManageSubscriptions extends Component {
       <div id="entando-customer-portal">
         <Breadcrumbs project={project} locale={this.props.locale}/>
         <h5>{project.name}</h5>
-        <a
-          href={`${getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}?project=${this.state.projectId}`}
-          style={{textDecoration: 'none'}}
-        >
+        <Link to={`/subscription/${this.state.projectId}`} style={{textDecoration: 'none'}}>
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Add Subscription">
             {i18n.t('buttons.addSubscription')}
           </Button>
-        </a>
-
+        </Link>
         <DataTable rows={[{id: '1'}]} headers={this.headerData}>
           {({headers, getHeaderProps, getTableProps}) => (
             <TableContainer>
@@ -164,14 +160,12 @@ class ManageSubscriptions extends Component {
                       <TableCell>{subscription.lengthInMonths}</TableCell>
                       <TableCell>{subscription.notes}</TableCell>
                       <TableCell>
-                        <a
-                          href={`${getPageUrl(PAGE_SUBSCRIPTION_FORM, this.props.locale)}?project=${this.state.projectId}&subscription=${subscription.id}`}
-                          style={{textDecoration: 'none'}}
-                        >
+                        <Link to={`/subscription/${this.state.projectId}/${subscription.id}`}
+                              style={{textDecoration: 'none'}}>
                           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Edit">
                             {i18n.t('buttons.edit')}
                           </Button>
-                        </a>
+                        </Link>
                         <Button
                           kind="ghost"
                           onClick={event => this.handleDeleteSubscription(event, subscription.id)}
