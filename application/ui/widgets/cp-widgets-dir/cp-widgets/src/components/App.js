@@ -7,6 +7,7 @@ import {AuthenticatedView, UnauthenticatedView} from '../auth/KeycloakViews';
 import {authenticationChanged, isAuthenticated, isPortalUser} from '../api/helpers';
 import CustomerProjectList from './Customer/CustomerProjectList';
 import i18n from '../i18n';
+import ManageSubscriptions from './Admin/ManageSubscriptions/ManageSubscriptions';
 
 class App extends Component {
   constructor(props) {
@@ -44,15 +45,23 @@ class App extends Component {
                 <Switch>
                   <Route
                     path={'**/customer-details/:id'}
-                    render={props => <CustomerProjectList {...props} serviceUrl={this.props.serviceUrl} locale={this.props.locale} />}
+                    render={props => <CustomerProjectList {...props} serviceUrl={this.props.serviceUrl}
+                                                          locale={this.props.locale}/>}
+                  />
+                  <Route
+                    path={'**/manage-subscriptions/:id'}
+                    render={props => <ManageSubscriptions {...props} serviceUrl={this.props.serviceUrl}
+                                                          locale={this.props.locale}/>}
                   />
                   <Route
                     path={'**/subscription-details/:id'}
-                    render={props => <Subscription {...props} serviceUrl={this.props.serviceUrl} locale={this.props.locale} />}
+                    render={props => <Subscription {...props} serviceUrl={this.props.serviceUrl}
+                                                   locale={this.props.locale}/>}
                   />
                   <Route
                     path="**/"
-                    render={props => <AdminDashboard {...props} serviceUrl={this.props.serviceUrl} locale={this.props.locale} />}
+                    render={props => <AdminDashboard {...props} serviceUrl={this.props.serviceUrl}
+                                                     locale={this.props.locale}/>}
                   />
                 </Switch>
               </HashRouter>

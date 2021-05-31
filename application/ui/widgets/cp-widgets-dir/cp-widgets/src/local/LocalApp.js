@@ -6,10 +6,10 @@ import SubscriptionForm from '../components/Forms/SubscriptionForm';
 import AdminConfiguration from '../components/Admin/Configuration/AdminConfiguration';
 import OpenTicketForm from '../components/Forms/OpenTicketForm';
 import ManageUsers from '../components/Admin/ManageUsers/ManageUsers';
-import ManageSubscriptions from '../components/Admin/ManageSubscriptions/ManageSubscriptions';
 import {authenticationChanged, getPageUrl, isAuthenticated, isPortalAdmin} from '../api/helpers';
 import {
-  PAGE_ADMIN_CONFIG, PAGE_CUSTOMER_PORTAL, PAGE_MANAGE_SUBSCRIPTIONS,
+  PAGE_ADMIN_CONFIG,
+  PAGE_CUSTOMER_PORTAL,
   PAGE_MANAGE_USERS,
   PAGE_SUBSCRIPTION_FORM,
   PAGE_TICKET_FORM
@@ -59,9 +59,6 @@ class LocalApp extends Component {
             <Switch>
               <Route path={getPageUrl(PAGE_ADMIN_CONFIG, locale)}>
                 <AdminConfiguration serviceUrl={serviceUrl} locale={locale}/>
-              </Route>
-              <Route path={getPageUrl(PAGE_MANAGE_SUBSCRIPTIONS, locale)}>
-                <ManageSubscriptions serviceUrl={serviceUrl} locale={locale}/>
               </Route>
               <Route path={getPageUrl(PAGE_MANAGE_USERS, locale)}>
                 <ManageUsers serviceUrl={serviceUrl} locale={locale}/>
