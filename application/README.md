@@ -26,9 +26,9 @@ Install the bundle using the App Builder.
   * Test users are automatically added in a local keycloak instance from docker/realm-config - admin/admin, support/user, partner/user, user/user.
 * Pages
   * Some features are delivered using dedicated pages within Entando.
-    * open_service_ticket.page
-    * new_or_renew_subscription.page
-    * manage_users.page
+      * customer_portal.page
+      * cp_admin_config.page
+      * cp_keycloak_silent_check_sso.page
   
 # Development tips
 * The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. As of Entando 6.3, you'll need to add a liquibase changeset by hand if you don't want to reset your database. This may change with the next version of Entando or more specifically JHipster 7 which upgrades liquibase.
@@ -36,7 +36,11 @@ Install the bundle using the App Builder.
   * repository/*Repository classes have some custom queries and methods
   * web/rest/*Resource classes have been heavily customized with security checks and generally should be rolled back.
 * You can use `./mvnw clean` to reload the fake dataset from src/main/resources/config/liquibase/fake-data.
-* Removing the src/main/docker/keycloak-db directory will result in the realm from src/main/docker/realm-config being reloaded on the next restart.
+* You may encounter checksum issues with liquibase. These can be cleared (if you've enabled the jdbc connection in the
+  pom.xml) using './mvnw liquibase:clearCheckSums' BUT you should carefully consider this a warning sign. You may have
+  introduced changes in the database schema and actually need to update the liquibase changesets instead.
+* Removing the src/main/docker/keycloak-db directory will result in the realm from src/main/docker/realm-config being
+  reloaded on the next restart.
 * Access controls are applied both in the UI and in the microservices. Individual REST APIs (e.g. ProjectResource) must either have tight constraints on an admin or support user (via an `@PreAuthorize annotation`) or customer or project-level access checks (e.g. `projectService.checkProjectAccess(projectId)`).
 
 ---
