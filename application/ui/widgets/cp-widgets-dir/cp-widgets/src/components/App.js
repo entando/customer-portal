@@ -52,7 +52,7 @@ class App extends Component {
                                                           locale={this.props.locale}/>}
                   />
                   <Route
-                    path={'**/subscription/:projectId/:subscriptionId'}
+                    path={'**/subscription/:projectId/:subscriptionId?'}
                     render={props => <SubscriptionForm {...props} serviceUrl={this.props.serviceUrl}
                                                        locale={this.props.locale}/>}
                   />
