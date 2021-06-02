@@ -1,0 +1,205 @@
+code: cp-internal-page
+description: CP Internal Page
+configuration:
+  frames:
+    - pos: 0
+      description: Language
+      mainFrame: false
+      sketch:
+        x1: 6
+        y1: 0
+        x2: 7
+        y2: 0
+    - pos: 1
+      description: Entando Central Link
+      mainFrame: false
+      sketch:
+        x1: 8
+        y1: 0
+        x2: 9
+        y2: 0
+    - pos: 2
+      description: Login
+      mainFrame: false
+      sketch:
+        x1: 10
+        y1: 0
+        x2: 11
+        y2: 0
+    - pos: 3
+      description: Header Logo
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 1
+        x2: 1
+        y2: 2
+    - pos: 4
+      description: Empty space
+      mainFrame: false
+      sketch:
+        x1: 2
+        y1: 1
+        x2: 4
+        y2: 2
+    - pos: 5
+      description: Entando Menu
+      mainFrame: false
+      sketch:
+        x1: 5
+        y1: 1
+        x2: 9
+        y2: 2
+    - pos: 6
+      description: Empty space
+      mainFrame: false
+      sketch:
+        x1: 10
+        y1: 1
+        x2: 11
+        y2: 2
+    - pos: 7
+      description: 1 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 3
+        x2: 11
+        y2: 4
+    - pos: 8
+      description: 2 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 5
+        x2: 11
+        y2: 6
+    - pos: 9
+      description: 3 Content 12 columns
+      mainFrame: true
+      sketch:
+        x1: 0
+        y1: 7
+        x2: 11
+        y2: 8
+    - pos: 10
+      description: 4 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 9
+        x2: 11
+        y2: 10
+    - pos: 11
+      description: 5 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 11
+        x2: 11
+        y2: 12
+    - pos: 12
+      description: 6 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 13
+        x2: 11
+        y2: 14
+    - pos: 13
+      description: 7 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 15
+        x2: 11
+        y2: 16
+    - pos: 14
+      description: 8 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 17
+        x2: 11
+        y2: 18
+    - pos: 15
+      description: 9 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 19
+        x2: 11
+        y2: 20
+    - pos: 16
+      description: 10 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 21
+        x2: 11
+        y2: 22
+    - pos: 17
+      description: 11 Content 12 columns
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 23
+        x2: 11
+        y2: 24
+    - pos: 18
+      description: footer logo
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 25
+        x2: 1
+        y2: 26
+    - pos: 19
+      description: footer content 1
+      mainFrame: false
+      sketch:
+        x1: 2
+        y1: 25
+        x2: 3
+        y2: 26
+    - pos: 20
+      description: footer content 2
+      mainFrame: false
+      sketch:
+        x1: 4
+        y1: 25
+        x2: 5
+        y2: 26
+    - pos: 21
+      description: footer content3
+      mainFrame: false
+      sketch:
+        x1: 6
+        y1: 25
+        x2: 7
+        y2: 26
+    - pos: 22
+      description: footer content 4
+      mainFrame: false
+      sketch:
+        x1: 8
+        y1: 25
+        x2: 9
+        y2: 26
+    - pos: 23
+      description: footer content 5
+      mainFrame: false
+      sketch:
+        x1: 10
+        y1: 25
+        x2: 11
+        y2: 26
+    - pos: 24
+      description: Footer social links
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 27
+        x2: 11
+        y2: 27
+templatePath: cp-internal-page.ftl

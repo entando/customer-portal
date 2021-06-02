@@ -100,8 +100,6 @@
 
 <script nonce="<@wp.cspNonce />" type="text/javascript"
         src="<@wp.resourceURL />static/js/dropdownAnimation.js"/></script>
-<!--no animations
-<script nonce="<@wp.cspNonce />" type="text/javascript" src="<@wp.resourceURL />static/js/animations.js"></script> -->
 <script nonce="<@wp.cspNonce />" type="text/javascript" src="<@wp.resourceURL />static/js/aos.js"></script>
 
 <script nonce="<@wp.cspNonce />">
