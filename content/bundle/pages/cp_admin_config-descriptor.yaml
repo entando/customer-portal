@@ -2,6 +2,7 @@ code: cp_admin_config
 parentCode: customer_portal
 titles:
   en: CP Admin Config
+  it: CP Admin Config
 pageModel: cp-internal-page
 ownerGroup: free
 joinGroups: [ ]

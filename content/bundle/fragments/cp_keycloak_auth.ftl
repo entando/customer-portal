@@ -2,7 +2,9 @@
 <script nonce="<@wp.cspNonce />">
     (function () {
         const consolePrefix = '[ENTANDO-KEYCLOAK]';
-        const keycloakConfigEndpoint = '<@wp.info key="systemParam" paramName="applicationBaseURL" />keycloak.json';
+        let keycloakConfigEndpoint = '<@wp.info key="systemParam" paramName="applicationBaseURL" />keycloak.json';
+        //TODO: this shouldn't be needed but is on entando.com
+        keycloakConfigEndpoint = keycloakConfigEndpoint.replace('http://', 'https://');
         let keycloakConfig;
 
         function dispatchKeycloakEvent(eventType) {

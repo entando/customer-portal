@@ -2,6 +2,7 @@ code: customer_portal
 parentCode: homepage
 titles:
   en: Customer Portal
+  it: Customer Portal
 pageModel: cp-internal-page
 ownerGroup: free
 joinGroups: [ ]
