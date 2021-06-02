@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 @Entity
 @Table(name = "entando_version")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NamedQuery(name = "EntandoVersion.findAll", query = "select v from EntandoVersion v order by v.id")
+@NamedQuery(name = "EntandoVersion.findAll", query = "select v from EntandoVersion v order by v.name desc")
 public class EntandoVersion implements Serializable {
 
     private static final long serialVersionUID = 1L;
