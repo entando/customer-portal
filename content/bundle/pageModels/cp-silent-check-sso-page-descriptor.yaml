@@ -1,0 +1,13 @@
+code: cp-silent-check-sso
+description: CP Silent Check SSO
+configuration:
+  frames:
+    - pos: 0
+      description: Frame
+      mainFrame: false
+      sketch:
+        x1: 0
+        y1: 0
+        x2: 11
+        y2: 0
+templatePath: cp-silent-check-sso-page.ftl

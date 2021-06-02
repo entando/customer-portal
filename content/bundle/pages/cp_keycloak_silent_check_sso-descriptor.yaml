@@ -1,0 +1,12 @@
+code: cp_keycloak_silent_check_sso
+parentCode: customer_portal
+titles:
+  en: CP Keycloak Silent Check SSO
+pageModel: cp-silent-check-sso
+ownerGroup: free
+joinGroups: [ ]
+displayedInMenu: true
+seo: false
+charset: utf-8
+status: published
+widgets: [ ]
