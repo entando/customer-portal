@@ -101,7 +101,7 @@ class SubscriptionForm extends Component {
     let status = '';
     const isAdmin = isPortalAdmin();
 
-    if (subscriptionId !== null) {
+    if (typeof subscriptionId !== "undefined") {
       subscription = (await apiSubscriptionGet(serviceUrl, subscriptionId)).data;
       status = isAdmin ? subscription.status : SUBSCRIPTION_STATUS.requested;
       formType = isAdmin ? FORM_TYPE.edit : FORM_TYPE.renewal;
