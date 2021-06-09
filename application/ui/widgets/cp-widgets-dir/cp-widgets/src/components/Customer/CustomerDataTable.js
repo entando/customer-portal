@@ -111,7 +111,7 @@ class CustomerDataTable extends Component {
 
   async deleteProject(id) {
     if (isAuthenticated(this.props)) {
-      return await apiDeleteProjectFromCustomer(this.props.serviceUrl, this.props.customerId, id);
+      return await apiDeleteProjectFromCustomer(this.props.serviceUrl, this.props.customer.id, id);
     }
   }
 

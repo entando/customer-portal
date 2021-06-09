@@ -40,25 +40,6 @@ class EditCustomerModal extends Component {
       invalid['customerNumber'] = true;
     }
 
-    //contactEmail
-    if (typeof this.state.contactEmail !== 'undefined') {
-      let lastAtPos = this.state.contactEmail.lastIndexOf('@');
-      let lastDotPos = this.state.contactEmail.lastIndexOf('.');
-
-      if (
-        !(
-          lastAtPos < lastDotPos &&
-          lastAtPos > 0 &&
-          this.state.contactEmail.indexOf('@@') === -1 &&
-          lastDotPos > 2 &&
-          this.state.contactEmail.length - lastDotPos > 2
-        )
-      ) {
-        formIsValid = false;
-        invalid['contactEmail'] = true;
-      }
-    }
-
     this.setState({ invalid: invalid });
     return formIsValid;
   }
@@ -214,7 +195,7 @@ class EditCustomerModal extends Component {
               <TextInput
                 id={'contactEmail' + modalId}
                 name="contactEmail"
-                labelText={i18n.t('adminDashboard.addCustomer.contactEmail') + ' *'}
+                labelText={i18n.t('adminDashboard.addCustomer.contactEmail')}
                 value={this.state.contactEmail}
                 onChange={this.handleChanges}
                 invalidText={i18n.t('validation.invalid.email')}
