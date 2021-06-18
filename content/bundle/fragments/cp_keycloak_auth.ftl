@@ -3,8 +3,10 @@
     (function () {
         const consolePrefix = '[ENTANDO-KEYCLOAK]';
         let keycloakConfigEndpoint = '<@wp.info key="systemParam" paramName="applicationBaseURL" />keycloak.json';
-        //TODO: this shouldn't be needed but is on entando.com
-        keycloakConfigEndpoint = keycloakConfigEndpoint.replace('http://', 'https://');
+        //Note: shouldn't be necessary but needed on entando.com to match protocol.
+        if (window.location.origin.startsWith('https://')) {
+            keycloakConfigEndpoint = keycloakConfigEndpoint.replace('http://', 'https://');
+        }
         let keycloakConfig;
 
         function dispatchKeycloakEvent(eventType) {

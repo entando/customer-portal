@@ -10,16 +10,13 @@
     <meta name="description" content=""/>
     <meta name="author" content="DM"/>
     <link rel="icon" href="<@wp.imgURL />favicon.png" type="image/png"/>
-    <@wp.fragment code="cp_keycloak_auth_with_redirect" escapeXml=false />
     <@wp.fragment code="header_inclusions" escapeXml=false />
-
 </head>
 <#assign owner><@wp.currentPage param="owner"/></#assign>
-
 <#assign resourceURL><@wp.resourceURL /></#assign>
 <script nonce="<@wp.cspNonce />">window.RESOURCE_NAME = "${resourceURL}"</script>
-
 <body class="internal">
+<@wp.fragment code="cp_keycloak_auth_with_redirect" escapeXml=false />
 
 <div class="entando-navbar-fixed md-and-up">
     <div class="entando-navbar-up">
