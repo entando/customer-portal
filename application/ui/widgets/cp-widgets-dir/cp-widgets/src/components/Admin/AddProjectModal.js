@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import i18n from '../../i18n';
-import { ModalWrapper, Form, TextInput, Select, SelectItem, TextArea } from 'carbon-components-react';
+import {ModalWrapper, Form, TextInput, TextArea} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
-import { apiCustomersGet, apiAddProjectToCustomer } from '../../api/customers';
+import {apiAddProjectToCustomer} from '../../api/customers';
 import {apiProjectPost, apiProjectsGet} from '../../api/projects';
 import {authenticationChanged, isAuthenticated} from "../../api/helpers";
 
@@ -11,9 +11,8 @@ class AddProjectModal extends Component {
     super(props);
 
     this.state = {
+      modalId: 'modal-form-project-' + props.customer.id,
       projects: {},
-      customerList: {},
-      customerId: '',
       name: '',
       description: '',
       systemId: '',
@@ -31,12 +30,6 @@ class AddProjectModal extends Component {
     let invalid = {};
     let formIsValid = true;
 
-    //customer
-    if (this.state.customerId === '' || this.state.customerId === 'customer-list') {
-      formIsValid = false;
-      invalid['customerId'] = true;
-    }
-
     //name
     if (this.state.name === '') {
       formIsValid = false;
@@ -53,6 +46,7 @@ class AddProjectModal extends Component {
     return formIsValid;
   }
 
+  //TODO: refactor to make this a validation call instead of loading all projects ahead of time
   async getAllProjects() {
     let projects = {}
     try {
@@ -67,7 +61,6 @@ class AddProjectModal extends Component {
 
   componentDidUpdate(prevProps) {
     if (authenticationChanged(this.props, prevProps)) {
-      this.getCustomers();
       this.getAllProjects();
     }
   }
@@ -79,22 +72,10 @@ class AddProjectModal extends Component {
     this.setState({ [name]: value });
   };
 
-  async getCustomers() {
-    if (isAuthenticated(this.props)) {
-      let customers = {};
-      try {
-        customers = await apiCustomersGet(this.props.serviceUrl);
-      } catch (err) {
-        console.log(err);
-      }
-      this.setState({customerList: customers});
-    }
-  }
-
   async projectPost(project) {
     if (isAuthenticated(this.props)) {
       const result = await apiProjectPost(this.props.serviceUrl, project);
-      return await apiAddProjectToCustomer(this.props.serviceUrl, this.state.customerId, result.data.id);
+      return await apiAddProjectToCustomer(this.props.serviceUrl, this.props.customer.id, result.data.id);
     }
   }
 
@@ -136,10 +117,9 @@ class AddProjectModal extends Component {
   };
 
   clearValues = () => {
-    const projectModalElement = document.querySelector('#modal-form-project');
+    const projectModalElement = document.querySelector('#' + this.state.modalId);
     if (!projectModalElement.className.includes('is-visible')) {
       this.setState({
-        customerId: '',
         name: '',
         description: '',
         systemId: '',
@@ -153,7 +133,6 @@ class AddProjectModal extends Component {
   };
 
   componentDidMount() {
-    this.getCustomers();
     this.getAllProjects();
 
     const modalOpenButton = document.querySelector('.add-project-button');
@@ -166,12 +145,12 @@ class AddProjectModal extends Component {
         <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
     );
-    const modalId = 'modal-form-project';
+    const modalId = this.state.modalId;
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProject')}
         modalHeading={i18n.t('adminDashboard.addProject.title')}
-        buttonTriggerClassName="add-project bx--btn bx--btn--tertiary add-project-button"
+        buttonTriggerClassName="bx--btn bx--btn--ghost add-project-button"
         className="modal-form"
         id={modalId}
         handleSubmit={this.handleFormSubmit}
@@ -181,25 +160,9 @@ class AddProjectModal extends Component {
         {modalConfirmation}
         <div className="form-container">
           <Form onSubmit={this.handleFormSubmit}>
-            <Select
-              id={'customerId' + modalId}
-              name="customerId"
-              labelText={i18n.t('adminDashboard.addProject.customerList') + ' *'}
-              value={this.state.customerId}
-              onChange={this.handleChanges}
-              invalidText={i18n.t('validation.invalid.required')}
-              invalid={this.state.invalid['customerId']}
-            >
-              <SelectItem text={i18n.t('adminDashboard.addProject.selectCustomer')} value="customer-list" />
-              {Object.keys(this.props.allCustomers).length !== 0
-                ? this.props.allCustomers.map((customerList, i) => (
-                    <SelectItem key={i} text={customerList.name} value={customerList.id}>
-                      {customerList.name}
-                    </SelectItem>
-                  ))
-                : null}
-            </Select>
-
+            <div>
+              <span>{i18n.t('adminDashboard.addCustomer.customerName')}:</span> {this.props.customer.name}
+            </div>
             <TextInput
               id={'name' + modalId}
               name="name"

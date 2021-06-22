@@ -14,6 +14,7 @@ import {
 } from '../../api/helpers';
 import EditCustomerModal from '../Admin/EditCustomerModal';
 import i18n from '../../i18n';
+import AddProjectModal from '../Admin/AddProjectModal';
 
 class CustomerAccordian extends Component {
   constructor(props) {
@@ -84,6 +85,10 @@ class CustomerAccordian extends Component {
                   <Button kind="ghost" style={{color: 'red'}} onClick={() => this.handleDelete()}>
                     {i18n.t('buttons.delete')}
                   </Button>
+
+                  <AddProjectModal serviceUrl={this.props.serviceUrl}
+                                   customer={this.state.customer}
+                                   updateCustomerList={this.props.updateCustomerList}/>
                 </div>
               )}
             </div>
