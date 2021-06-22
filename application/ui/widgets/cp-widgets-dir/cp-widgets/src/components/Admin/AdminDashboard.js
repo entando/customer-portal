@@ -3,7 +3,6 @@ import i18n from '../../i18n';
 import {Accordion, InlineLoading, PaginationNav, Search, Tile} from 'carbon-components-react';
 import AddCustomerModal from './AddCustomerModal';
 import AddPartnerModal from './AddPartnerModal';
-import AddProjectModal from './AddProjectModal';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiCustomersGet} from '../../api/customers';
 import CustomerAccordian from '../Customer/CustomerAccordian';
@@ -115,9 +114,6 @@ class AdminDashboard extends React.Component {
                   <div>
                     <AddPartnerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}/>
                     <AddCustomerModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}/>
-                    <AddProjectModal serviceUrl={this.props.serviceUrl} updateCustomerList={this.updateCustomerList}
-                                     allCustomers={this.state.customers}
-                    />
                   </div>
                 </div>
               ) : null}

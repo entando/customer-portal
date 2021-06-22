@@ -35,7 +35,6 @@
     "addProject": {
       "title": "Aggiungi un progetto",
       "customerList": "Elenco clienti",
-      "selectCustomer": "Seleziona cliente",
       "projectName": "Nome del progetto",
       "projectDesc": "descrizione del progetto",
       "systemId": "ID sistema",
@@ -78,7 +77,7 @@
   "buttons": {
     "addCustomer": "Aggiungi un cliente +",
     "addPartner": "Aggiungi un partner +",
-    "addProject": "Aggiungi un progetto +",
+    "addProject": "Aggiungi un progetto",
     "addSubscription": "Aggiungi un abbonamento",
     "addProductVersion": "Aggiungi la versione del prodotto +",
     "cancel": "Annulla",
