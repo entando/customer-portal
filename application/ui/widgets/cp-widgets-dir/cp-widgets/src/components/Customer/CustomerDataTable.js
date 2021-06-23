@@ -138,33 +138,33 @@ class CustomerDataTable extends Component {
   render() {
     return (
       <div>
-        <DataTable rows={[{id: '1'}]} headers={this.headerData}>
-          {({rows, headers, getHeaderProps, getTableProps}) => (
-            <TableContainer description={i18n.t('customerDashboard.tableDesc')}>
-              <Table {...getTableProps()}>
-                <TableHead>
-                  <TableRow key="headerRow">
-                    {headers.map(header => {
-                      let result;
-                      if (header.header === i18n.t('customerDetails.notes')) {
-                        if (isPortalAdminOrSupport()) {
+        {this.state.projects && (Object.keys(this.state.projects).length !== 0) && (
+          <DataTable rows={[{id: '1'}]} headers={this.headerData}>
+            {({rows, headers, getHeaderProps, getTableProps}) => (
+              <TableContainer description={i18n.t('customerDashboard.tableDesc')}>
+                <Table {...getTableProps()}>
+                  <TableHead>
+                    <TableRow key="headerRow">
+                      {headers.map(header => {
+                        let result;
+                        if (header.header === i18n.t('customerDetails.notes')) {
+                          if (isPortalAdminOrSupport()) {
+                            result = <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>;
+                          }
+                        } else {
                           result = <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>;
                         }
-                      } else {
-                        result = <TableHeader {...getHeaderProps({ header })}>{header.header}</TableHeader>;
-                      }
-                      return result;
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.state.projects && Object.keys(this.state.projects).length !== 0
-                    ? this.state.projects.map((project, index) => {
+                        return result;
+                      })}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {this.state.projects.map((project, index) => {
                       const subscription = getActiveSubscription(project);
                       if (!subscription) {
                         return (
                           <TableRow key={index}>
-                            <TableCell>{project.name}</TableCell>
+                            <TableCell style={{fontWeight: 'bold'}}>{project.name}</TableCell>
                             {project.partners.length !== 0 ? (
                               <TableCell>
                                 {project.partners.map((partner, partnerIndex) => (
@@ -189,16 +189,17 @@ class CustomerDataTable extends Component {
                                 allProjects={this.state.projects}
                                 handleDeleteProject={this.handleDeleteProject}
                                 updateProjectList={this.updateProjectList}
-                                />
-                              </TableCell>
-                            </TableRow>
-                          );
-                        } else {
-                          return (
-                            <TableRow key={index}>
-                              <TableCell>
-                                <Link to={`/subscription-details/${subscription.id}`}>{project.name}</Link>
-                              </TableCell>
+                              />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      } else {
+                        return (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Link to={`/subscription-details/${subscription.id}`}
+                                    style={{fontWeight: 'bold'}}>{project.name}</Link>
+                            </TableCell>
                               {project.partners.length !== 0 ? (
                                 <TableCell>
                                   {project.partners.map((partner, partnerIndex) => (
@@ -230,18 +231,18 @@ class CustomerDataTable extends Component {
                                   updateProjectList={this.updateProjectList}
                                 />
                               </TableCell>
-                            </TableRow>
-                          );
-                        }
-                      })
-                    : null}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </DataTable>
+                          </TableRow>
+                        );
+                      }
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </DataTable>
+        )}
       </div>
-    );
+    )
   }
 }
 

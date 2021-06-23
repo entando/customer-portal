@@ -4,6 +4,8 @@ import {ModalWrapper, Form, TextInput, TextArea} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiCustomerGet, apiCustomerPut} from '../../api/customers';
 import {authenticationChanged, isAuthenticated} from '../../api/helpers';
+import IconEdit from '../../assets/IconEdit.svg';
+import ButtonBody from '../Buttons/ButtonBody';
 
 class EditCustomerModal extends Component {
   constructor(props) {
@@ -148,7 +150,7 @@ class EditCustomerModal extends Component {
     return (
       modalId && (
         <ModalWrapper
-          buttonTriggerText={i18n.t('buttons.edit')}
+          buttonTriggerText={<ButtonBody label='buttons.edit' icon={IconEdit}/>}
           modalHeading={i18n.t('adminDashboard.editCustomer.title')}
           buttonTriggerClassName={buttonClassName}
           className="modal-form"

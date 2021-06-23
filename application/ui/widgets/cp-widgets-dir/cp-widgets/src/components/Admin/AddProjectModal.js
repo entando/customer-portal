@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import i18n from '../../i18n';
 import {ModalWrapper, Form, TextInput, TextArea} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiAddProjectToCustomer} from '../../api/customers';
 import {apiProjectPost, apiProjectsGet} from '../../api/projects';
 import {authenticationChanged, isAuthenticated} from "../../api/helpers";
+import IconPlus from '../../assets/IconPlus.svg';
+import ButtonBody from '../Buttons/ButtonBody';
 
 class AddProjectModal extends Component {
   constructor(props) {
@@ -148,7 +150,7 @@ class AddProjectModal extends Component {
     const modalId = this.state.modalId;
     return (
       <ModalWrapper
-        buttonTriggerText={i18n.t('buttons.addProject')}
+        buttonTriggerText={<ButtonBody label='buttons.addProject' icon={IconPlus}/>}
         modalHeading={i18n.t('adminDashboard.addProject.title')}
         buttonTriggerClassName="bx--btn bx--btn--ghost add-project-button"
         className="modal-form"
