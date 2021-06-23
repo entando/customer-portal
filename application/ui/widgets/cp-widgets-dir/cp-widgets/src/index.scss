@@ -1,6 +1,9 @@
 $css--reset: false;
 $css--body: false;
 @import 'carbon-components/scss/globals/scss/styles.scss';
+$cp-background-default: #E5E5E5;
+$cp-background-color: #EAF0F5;
+$cp-background-tile: #FFF;
 
 // Customer Portal Styles
 #entando-customer-portal {
@@ -80,9 +83,13 @@ $css--body: false;
     width: 100%;
   }
 
+  button.bx--btn--ghost img {
+    padding-left: 10px;
+  }
+
   // Forms
   form.bx--form {
-    background: #fff;
+    background: $cp-background-tile;
     margin: 1rem 0;
     padding: 1rem;
   }
@@ -91,21 +98,27 @@ $css--body: false;
     font-size: 14px;
     font-weight: 400;
   }
+
   .bx--data-table-header {
-    background: #fff;
+    background: $cp-background-color;
   }
 
-  .bx--data-table th {
-    background-color: #eaf0f5;
+  .bx--data-table thead {
+    font-weight: bold;
+    font-size: 16px;
   }
 
   .bx--tile {
-    background: #fff;
+    background: $cp-background-tile;
+  }
+
+  .bx--data-table th {
+    background: $cp-background-color;
   }
 
   .bx--data-table td,
   .bx--data-table tbody th {
-    background: #fff;
+    background: $cp-background-tile;
   }
 
   nav .bx--breadcrumb {
@@ -128,16 +141,15 @@ $css--body: false;
     margin: 15px;
   }
   .bx--accordion__title {
-    font-size: 18px;
-  }
-  .bx--data-table .bx--table-header-label {
-    font-weight: normal;
+    font-size: 24px;
   }
   .bx--modal-container {
-    background: #fff;
+    background: $cp-background-tile;
+
     .form-container {
       background: transparent;
     }
+
     .bx--modal-header {
       padding-left: 2rem;
     }
@@ -161,12 +173,16 @@ $css--body: false;
   // Admin Dashboard
 
   .admin-dashboard {
+    background-color: $cp-background-default;
+
     .bx--accordion__item {
       padding: 1rem;
     }
+
     .bx--accordion__item .bx--data-table-header {
       display: none;
     }
+
     .bx--accordion__content {
       padding-right: 2rem;
     }
@@ -177,9 +193,8 @@ $css--body: false;
       background-color: transparent;
     }
     .bx--tile {
-      margin: 15px;
-      min-height: 150px;
-      background: #fff;
+      margin: 20px;
+      background: $cp-background-tile;
     }
     .add-customer,
     .add-partner,
@@ -216,7 +231,7 @@ $css--body: false;
     }
   }
   .customer-details {
-    background: #fff;
+    background: $cp-background-tile;
     width: 368px;
     margin: 2rem 0;
   }
@@ -225,14 +240,14 @@ $css--body: false;
     margin: 2rem 0;
   }
   .title {
-    font-size: 18px;
-    margin: 0 0 15px 15px;
+    font-size: 24px;
+    margin: 0 0 20px 20px;
   }
   .desc {
     padding-left: 15px;
   }
   .form-container {
-    background: #fff;
+    background: $cp-background-tile;
   }
   .bx--grid {
     margin: 2rem 0;

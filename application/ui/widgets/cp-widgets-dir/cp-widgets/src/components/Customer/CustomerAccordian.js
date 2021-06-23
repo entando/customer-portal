@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {AccordionItem, Button} from 'carbon-components-react';
+import {AccordionItem} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiCustomerGet, apiCustomerDelete} from '../../api/customers';
 import CustomerDataTable from './CustomerDataTable';
@@ -13,8 +13,10 @@ import {
   authenticationChanged
 } from '../../api/helpers';
 import EditCustomerModal from '../Admin/EditCustomerModal';
-import i18n from '../../i18n';
 import AddProjectModal from '../Admin/AddProjectModal';
+import IconDetails from '../../assets/IconDetails.svg';
+import IconDelete from '../../assets/IconDelete.svg';
+import GhostButton from '../Buttons/GhostButton';
 
 class CustomerAccordian extends Component {
   constructor(props) {
@@ -70,7 +72,7 @@ class CustomerAccordian extends Component {
             <div style={{display: 'flex'}}>
               {isPortalAdminOrSupport() && (
                 <Link style={{textDecoration: 'none'}} to={`/customer-details/${this.state.customer.id}`}>
-                  <Button kind="ghost">{i18n.t('buttons.viewDetails')}</Button>
+                  <GhostButton label='buttons.viewDetails' icon={IconDetails}/>
                 </Link>
               )}
               {isPortalAdmin() && (
@@ -82,13 +84,11 @@ class CustomerAccordian extends Component {
                     updateCustomerList={this.props.updateCustomerList}
                     customerId={this.state.customer.id}
                   />
-                  <Button kind="ghost" style={{color: 'red'}} onClick={() => this.handleDelete()}>
-                    {i18n.t('buttons.delete')}
-                  </Button>
-
                   <AddProjectModal serviceUrl={this.props.serviceUrl}
                                    customer={this.state.customer}
                                    updateCustomerList={this.props.updateCustomerList}/>
+
+                  <GhostButton label='buttons.delete' icon={IconDelete} onClick={this.handleDelete}/>
                 </div>
               )}
             </div>

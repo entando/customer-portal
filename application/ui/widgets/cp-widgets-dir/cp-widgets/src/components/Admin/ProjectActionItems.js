@@ -99,6 +99,7 @@ class ProjectActionItems extends React.Component {
     const openTicket = (
       <>
         <Link to={`/ticket/${this.props.project.id}`} style={{textDecoration: 'none'}}>
+{/*TODO: rework using GhostButton*/}
           <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
             {i18n.t('buttons.openTicket')}
           </Button>
