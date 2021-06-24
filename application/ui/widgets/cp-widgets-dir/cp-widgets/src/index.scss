@@ -6,7 +6,8 @@ $cp-background-color: #EAF0F5;
 $cp-background-tile: #FFF;
 
 // Customer Portal Styles
-#entando-customer-portal {
+#entando-customer-portal,
+.entando-customer-portal {
   // Global Styles
   h3 {
     font-size: 32px;
@@ -70,6 +71,12 @@ $cp-background-tile: #FFF;
     a.bx--header__menu-item span {
       color: #002f87;
     }
+  }
+
+  //Overflow Menu
+  .bx--overflow-menu-options__option-content {
+    text-overflow: clip;
+    white-space: pre-wrap;
   }
 
   // Buttons
@@ -254,3 +261,4 @@ $cp-background-tile: #FFF;
     padding: 0 2rem;
   }
 }
+
