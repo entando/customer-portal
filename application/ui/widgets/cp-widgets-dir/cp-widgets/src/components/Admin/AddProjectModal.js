@@ -11,9 +11,8 @@ import ButtonBody from '../Buttons/ButtonBody';
 class AddProjectModal extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      modalId: 'modal-form-project-' + props.customer.id,
+      modalId: 'modal-form-project-' + props.customerId,
       projects: {},
       name: '',
       description: '',

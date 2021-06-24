@@ -1,171 +1,127 @@
-import React from 'react';
+import React, {Component} from 'react';
 import i18n from '../../i18n';
 import withKeycloak from '../../auth/withKeycloak';
-import { Button } from 'carbon-components-react';
+import {Button, OverflowMenu, OverflowMenuItem} from 'carbon-components-react';
 import EditProjectModal from '../Admin/EditProjectModal';
 import ManagePartnersModal from '../Admin/ManagePartnersModal';
 import {isPortalAdmin} from '../../api/helpers';
 import {Link} from 'react-router-dom';
+import {withRouter} from 'react-router';
 
-class ProjectActionItems extends React.Component {
+class ProjectActionItems extends Component {
   constructor() {
     super();
     this.state = {
+      openEditProject: false,
+      openManagePartners: false,
+      menu: {},
+      //TODO: remove
       showMenu: false,
     };
   }
 
-  handleClick = () => {
-    if (!this.state.showMenu) {
-      document.addEventListener('mousedown', this.handleOutsideClick, false);
-    } else {
-      document.removeEventListener('mousedown', this.handleOutsideClick, false);
+  handleCloseModal = (e) => {
+    if (e) {
+      e.preventDefault();
     }
-
-    this.setState(prevState => ({
-      showMenu: !prevState.showMenu,
-    }));
-  };
-
-  handleOutsideClick = e => {
-    if (this.node && !this.node.contains(e.target)) {
-      this.handleClick();
-    }
+    this.setState({
+      openEditProject: false,
+      openManagePartners: false
+    });
   };
 
   render() {
     const isAdmin = isPortalAdmin();
+    //TODO: remove
     const actionDivider = <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>;
-    const topButton = (
-      <Button onClick={this.handleClick} style={{padding: '10px 20px'}} kind="tertiary">
-        +
-      </Button>
+    const {history} = this.props;
+    //TODO: remove
+    const topButton = 'button';
+
+    const deleteProject = isAdmin && (
+      <OverflowMenuItem itemText={i18n.t('buttons.delete')}
+                        onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
+                        isDelete={true}/>
     );
-    const editProject = (
-      <>
-        <EditProjectModal
-          key={this.props.project.id}
-          allProjects={this.props.allProjects}
-          project={this.props.project}
-          serviceUrl={this.props.serviceUrl}
-          updateProjectList={this.props.updateProjectList}
-        />
-        {actionDivider}
-      </>
+
+    const editProject = isAdmin && (
+      <OverflowMenuItem itemText={i18n.t('buttons.edit')}
+                        onClick={() => this.setState({openEditProject: true})}/>
     );
+    const editProjectModal = isAdmin && (
+      <EditProjectModal
+        open={this.state.openEditProject}
+        closeModal={this.handleCloseModal}
+        allProjects={this.props.allProjects}
+        project={this.props.project}
+        serviceUrl={this.props.serviceUrl}
+        updateProjectList={this.props.updateProjectList}
+      />
+    );
+
+    const managePartners = isAdmin && (
+      <OverflowMenuItem itemText={i18n.t('buttons.managePartners')}
+                        onClick={() => this.setState({openManagePartners: true})}/>
+    );
+    const managePartnersModal = isAdmin && (
+      <ManagePartnersModal
+        open={this.state.openManagePartners}
+        closeModal={this.handleCloseModal}
+        project={this.props.project}
+        serviceUrl={this.props.serviceUrl}
+        updateProjectList={this.props.updateProjectList}
+      />
+    );
+
+    const manageSubscriptions = isAdmin && (
+      <OverflowMenuItem itemText={i18n.t('buttons.manageSubscriptions')}
+                        onClick={() => history.push(`/manage-subscriptions/${this.props.project.id}`)}/>
+    );
+
+    const manageUsers = isAdmin && (
+      <OverflowMenuItem itemText={i18n.t('buttons.manageUsers')}
+                        onClick={() => history.push(`/manage-users/${this.props.project.id}`)}/>
+    );
+
     const subscriptionParam = this.props.subscription ? '/' + this.props.subscription.id : '';
     const newOrRenewSubscription = (
-      <>
-        <Link to={`/subscription/${this.props.project.id}${subscriptionParam}`}
-              style={{textDecoration: 'none'}}>
-          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Subscription Request">
-            {i18n.t('buttons.subscriptionRequest')}
-          </Button>
-        </Link>
-        {actionDivider}
-      </>
+      <OverflowMenuItem itemText={i18n.t('buttons.subscriptionRequest')}
+                        onClick={() => history.push(`/subscription/${this.props.project.id}${subscriptionParam}`)}/>
     );
-    const managePartners = (
-      <>
-        <ManagePartnersModal
-          key={this.props.project.id}
-          project={this.props.project}
-          serviceUrl={this.props.serviceUrl}
-          updateProjectList={this.props.updateProjectList}
-        />
-        {actionDivider}
-      </>
-    );
-    const manageUsers = (
-      <>
-        <Link to={`/manage-users/${this.props.project.id}`} style={{textDecoration: 'none'}}>
-          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Users">
-            {i18n.t('buttons.manageUsers')}
-          </Button>
-        </Link>
-        {actionDivider}
-      </>
-    );
-    const manageSubscriptions = (
-      <>
-        <Link to={`/manage-subscriptions/${this.props.project.id}`} style={{textDecoration: 'none'}}>
-          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Manage Subscriptions">
-            {i18n.t('buttons.manageSubscriptions')}
-          </Button>
-        </Link>
-        {actionDivider}
-      </>
-    );
+
     const openTicket = (
-      <>
-        <Link to={`/ticket/${this.props.project.id}`} style={{textDecoration: 'none'}}>
-{/*TODO: rework using GhostButton*/}
-          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
-            {i18n.t('buttons.openTicket')}
-          </Button>
-        </Link>
-        {actionDivider}
-      </>
+      <OverflowMenuItem itemText={i18n.t('buttons.openTicket')}
+                        onClick={() => history.push(`/ticket/${this.props.project.id}`)}/>
     );
+
+    let viewAllTickets = {};
     const ticketingSystem = this.props.ticketingSystem;
-    const viewAllTickets = ticketingSystem && ticketingSystem.url && (
-      <>
-        <a
-          href={
-            ticketingSystem.url.substr(0, ticketingSystem.url.indexOf('/rest')) +
-            '/issues/?jql=Organizations=' +
-            this.props.project.systemId
-          }
-          style={{textDecoration: 'none'}}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Button kind="ghost" style={{display: 'block', width: '100%'}} value="View All Tickets">
-            {i18n.t('buttons.viewAllTickets')}
-          </Button>
-        </a>
-        {actionDivider}
-      </>
-    );
-    const deleteProject = (
-      <>
-        <Button
-          kind="ghost"
-          onClick={e => this.props.handleDeleteProject(e, this.props.project.id)}
-          style={{display: 'block', width: '100%', color: 'red'}}
-        >
-          {i18n.t('buttons.delete')}
-        </Button>
-        {actionDivider}
-      </>
-    );
+    if (ticketingSystem && ticketingSystem.url) {
+      const ticketsUrl = ticketingSystem.url.substr(0, ticketingSystem.url.indexOf('/rest')) +
+        '/issues/?jql=Organizations=' + this.props.project.systemId;
+      viewAllTickets = (
+        <OverflowMenuItem itemText={i18n.t('buttons.viewAllTickets')}
+                          onClick={() => window.open(ticketsUrl)}/>
+      );
+    }
+
     if (!this.props.subscription) {
       return (
         <>
-          {topButton}
-          {this.state.showMenu && (
-            <div
-              className="menu"
-              style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}}
-              ref={node => {
-                this.node = node;
-              }}
-            >
-              {actionDivider}
-              {isAdmin && editProject}
-              {newOrRenewSubscription}
-              {isAdmin && (
-                <>
-                  {openTicket}
-                  {viewAllTickets}
-                  {manageSubscriptions}
-                  {manageUsers}
-                  {managePartners}
-                  {deleteProject}
-                </>
-              )}
-            </div>
-          )}
+          <OverflowMenu flipped={true} menuOptionsClass='entando-customer-portal'>
+            {editProject}
+            {newOrRenewSubscription}
+            {openTicket}
+            {viewAllTickets}
+            {manageSubscriptions}
+            {manageUsers}
+            {managePartners}
+            {deleteProject}
+          </OverflowMenu>
+
+          {/* Modals */}
+          {editProjectModal}
+          {managePartnersModal}
         </>
       );
     } else {
@@ -188,7 +144,7 @@ class ProjectActionItems extends React.Component {
                 </Button>
               </Link>
               {actionDivider}
-              {isAdmin && editProject}
+              {/*{isAdmin && editProject}*/}
               {openTicket}
               {viewAllTickets}
               {!isAdmin && newOrRenewSubscription}
@@ -208,4 +164,4 @@ class ProjectActionItems extends React.Component {
   }
 }
 
-export default withKeycloak(ProjectActionItems);
+export default withKeycloak(withRouter(ProjectActionItems));

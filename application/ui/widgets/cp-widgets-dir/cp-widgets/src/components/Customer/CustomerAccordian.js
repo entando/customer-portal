@@ -85,6 +85,7 @@ class CustomerAccordian extends Component {
                     customerId={this.state.customer.id}
                   />
                   <AddProjectModal serviceUrl={this.props.serviceUrl}
+                                   customerId={this.props.customerId}
                                    customer={this.state.customer}
                                    updateCustomerList={this.props.updateCustomerList}/>
 

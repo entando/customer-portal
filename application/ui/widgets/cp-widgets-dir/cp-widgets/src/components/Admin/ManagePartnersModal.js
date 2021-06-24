@@ -3,7 +3,7 @@ import i18n from '../../i18n';
 import {
   Button,
   DataTable,
-  ModalWrapper,
+  Modal,
   Table,
   TableBody,
   TableCell,
@@ -62,6 +62,8 @@ class ManagePartnersModal extends Component {
             submitColour: '#24a148',
           });
           this.props.updateProjectList();
+          //For now leave the modal open after saving
+          // this.props.closeModal();
         })
         .catch(err => {
           console.log(err);
@@ -81,15 +83,14 @@ class ManagePartnersModal extends Component {
     );
     const modalId = 'modal-form-manage-partners';
     return (
-      <ModalWrapper
-        buttonTriggerText={i18n.t('buttons.managePartners')}
-        modalHeading={i18n.t('adminDashboard.managePartners.title')}
-        buttonTriggerClassName="add-partner bx--btn bx--btn--tertiary add-partner-button"
-        className="modal-form"
+      <Modal
         id={modalId}
-        hasForm={false}
+        className="modal-form"
+        open={this.props.open}
+        onRequestClose={this.props.closeModal}
+        onRequestSubmit={this.props.closeModal}
+        modalHeading={i18n.t('adminDashboard.managePartners.title')}
         primaryButtonText={i18n.t('modalText.done')}
-        secondaryButtonText={null}
       >
         {modalConfirmation}
         <div>
@@ -133,7 +134,7 @@ class ManagePartnersModal extends Component {
           </DataTable>
         </div>
         {modalConfirmation}
-      </ModalWrapper>
+      </Modal>
     );
   }
 }

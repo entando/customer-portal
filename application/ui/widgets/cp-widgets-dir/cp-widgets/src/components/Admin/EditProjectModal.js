@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import i18n from '../../i18n';
-import { ModalWrapper, Form, TextInput, TextArea } from 'carbon-components-react';
+import {Modal, Form, TextInput, TextArea} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import { apiCustomersGet } from '../../api/customers';
 import {apiProjectGet, apiProjectPut, apiProjectsGet} from '../../api/projects';
@@ -9,7 +9,6 @@ import {authenticationChanged, isAuthenticated} from "../../api/helpers";
 class EditProjectModal extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       projects: {},
       customerList: {},
@@ -47,14 +46,6 @@ class EditProjectModal extends Component {
 
     this.setState({ invalid: invalid });
     return formIsValid;
-  }
-
-  componentDidUpdate(prevProps) {
-    if (authenticationChanged(this.props, prevProps)) {
-      this.getCustomers();
-      this.getAllProjects();
-      this.getProjectDetails();
-    }
   }
 
   handleChanges = e => {
@@ -133,8 +124,11 @@ class EditProjectModal extends Component {
             submitColour: '#24a148',
           });
           this.props.updateProjectList();
+          //For now leave the modal open after saving
+          // this.props.closeModal();
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           this.setState({
             submitMsg: i18n.t('submitMessages.error'),
             submitColour: '#da1e28',
@@ -143,32 +137,22 @@ class EditProjectModal extends Component {
     }
   };
 
-  clearValues = () => {
-    const customerModalElement = document.querySelector('#' + this.state.modalId);
-    if (!customerModalElement.className.includes('is-visible')) {
-      this.setState({
-        name: this.props.project.name,
-        description: this.props.project.description,
-        systemId: this.props.project.systemId,
-        contactName: this.props.project.contactName,
-        contactPhone: this.props.project.contactPhone,
-        contactEmail: this.props.project.contactEmail,
-        notes: this.props.project.notes,
-        invalid: {},
-      });
-    }
-  };
-
   componentDidMount() {
     if (isAuthenticated(this.props)) {
       this.getCustomers();
       this.getAllProjects();
       this.getProjectDetails();
-
-      const modalOpenButton = document.querySelector('.edit-project-button-' + this.props.project.id);
-      modalOpenButton.addEventListener('click', this.clearValues, false);
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (authenticationChanged(this.props, prevProps)) {
+      this.getCustomers();
+      this.getAllProjects();
+      this.getProjectDetails();
+    }
+  }
+
 
   render() {
     const modalConfirmation = (
@@ -176,16 +160,15 @@ class EditProjectModal extends Component {
         <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
       </div>
     );
-    const buttonClassName = 'dropdown-button-button bx--btn bx--btn--ghost edit-project-button-' + this.props.project.id;
     const modalId = this.state.modalId;
     return (
-      <ModalWrapper
-        buttonTriggerText={i18n.t('buttons.edit')}
-        modalHeading={i18n.t('adminDashboard.addProject.editTitle')}
-        buttonTriggerClassName={buttonClassName}
-        className="modal-form"
+      <Modal
         id={this.state.modalId}
-        handleSubmit={this.handleFormSubmit}
+        className="modal-form"
+        open={this.props.open}
+        onRequestClose={this.props.closeModal}
+        onRequestSubmit={this.handleFormSubmit}
+        modalHeading={i18n.t('adminDashboard.addProject.editTitle')}
         primaryButtonText={i18n.t('modalText.save')}
         secondaryButtonText={i18n.t('modalText.cancel')}
       >
@@ -249,7 +232,7 @@ class EditProjectModal extends Component {
           </Form>
         </div>
         {modalConfirmation}
-      </ModalWrapper>
+      </Modal>
     );
   }
 }
