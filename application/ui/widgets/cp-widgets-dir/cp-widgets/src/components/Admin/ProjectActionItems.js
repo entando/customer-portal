@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import i18n from '../../i18n';
 import withKeycloak from '../../auth/withKeycloak';
-import {Button, OverflowMenu, OverflowMenuItem} from 'carbon-components-react';
+import {OverflowMenu, OverflowMenuItem} from 'carbon-components-react';
 import EditProjectModal from '../Admin/EditProjectModal';
 import ManagePartnersModal from '../Admin/ManagePartnersModal';
 import {isPortalAdmin} from '../../api/helpers';
-import {Link} from 'react-router-dom';
 import {withRouter} from 'react-router';
 
 class ProjectActionItems extends Component {
@@ -14,9 +13,6 @@ class ProjectActionItems extends Component {
     this.state = {
       openEditProject: false,
       openManagePartners: false,
-      menu: {},
-      //TODO: remove
-      showMenu: false,
     };
   }
 
@@ -32,11 +28,7 @@ class ProjectActionItems extends Component {
 
   render() {
     const isAdmin = isPortalAdmin();
-    //TODO: remove
-    const actionDivider = <hr style={{margin: '0', border: 'none', borderTop: '1px solid lightgrey'}}/>;
     const {history} = this.props;
-    //TODO: remove
-    const topButton = 'button';
 
     const deleteProject = isAdmin && (
       <OverflowMenuItem itemText={i18n.t('buttons.delete')}
@@ -84,19 +76,19 @@ class ProjectActionItems extends Component {
     );
 
     const subscriptionParam = this.props.subscription ? '/' + this.props.subscription.id : '';
-    const newOrRenewSubscription = (
+    const newOrRenewSubscription = ((!this.props.subscription || !isAdmin) && (
       <OverflowMenuItem itemText={i18n.t('buttons.subscriptionRequest')}
                         onClick={() => history.push(`/subscription/${this.props.project.id}${subscriptionParam}`)}/>
-    );
+    ));
 
-    const openTicket = (
+    const openTicket = this.props.subscription && (
       <OverflowMenuItem itemText={i18n.t('buttons.openTicket')}
                         onClick={() => history.push(`/ticket/${this.props.project.id}`)}/>
     );
 
-    let viewAllTickets = {};
+    let viewAllTickets = (<></>);
     const ticketingSystem = this.props.ticketingSystem;
-    if (ticketingSystem && ticketingSystem.url) {
+    if (this.props.subscription && ticketingSystem && ticketingSystem.url) {
       const ticketsUrl = ticketingSystem.url.substr(0, ticketingSystem.url.indexOf('/rest')) +
         '/issues/?jql=Organizations=' + this.props.project.systemId;
       viewAllTickets = (
@@ -105,62 +97,34 @@ class ProjectActionItems extends Component {
       );
     }
 
-    if (!this.props.subscription) {
-      return (
-        <>
-          <OverflowMenu flipped={true} menuOptionsClass='entando-customer-portal'>
-            {editProject}
-            {newOrRenewSubscription}
-            {openTicket}
-            {viewAllTickets}
-            {manageSubscriptions}
-            {manageUsers}
-            {managePartners}
-            {deleteProject}
-          </OverflowMenu>
+    const viewSubscription = this.props.subscription && (
+      <OverflowMenuItem itemText={i18n.t('buttons.view')}
+                        onClick={() => history.push(`/subscription-details/${this.props.subscription.id}`)}/>
+    );
 
-          {/* Modals */}
-          {editProjectModal}
-          {managePartnersModal}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {topButton}
-          {this.state.showMenu && (
-            <div
-              className="menu"
-              style={{zIndex: '100', position: 'absolute', backgroundColor: 'white'}}
-              ref={node => {
-                this.node = node;
-              }}
-            >
-              {actionDivider}
-              {/*View Project Subscription*/}
-              <Link to={`/subscription-details/${this.props.subscription.id}`} style={{textDecoration: 'none'}}>
-                <Button kind="ghost" style={{display: 'block', width: '100%'}} value="View">
-                  {i18n.t('buttons.view')}
-                </Button>
-              </Link>
-              {actionDivider}
-              {/*{isAdmin && editProject}*/}
-              {openTicket}
-              {viewAllTickets}
-              {!isAdmin && newOrRenewSubscription}
-              {isAdmin && (
-                <>
-                  {manageSubscriptions}
-                  {manageUsers}
-                  {managePartners}
-                  {deleteProject}
-                </>
-              )}
-            </div>
-          )}
-        </>
-      );
-    }
+    const overflowModals = (
+      <>
+        {editProjectModal}
+        {managePartnersModal}
+      </>
+    );
+
+    return (
+      <>
+        <OverflowMenu flipped={true} menuOptionsClass='entando-customer-portal'>
+          {viewSubscription}
+          {editProject}
+          {newOrRenewSubscription}
+          {openTicket}
+          {viewAllTickets}
+          {manageSubscriptions}
+          {manageUsers}
+          {managePartners}
+          {deleteProject}
+        </OverflowMenu>
+        {overflowModals}
+      </>
+    );
   }
 }
 
