@@ -14,9 +14,8 @@ import {
 } from '../../api/helpers';
 import EditCustomerModal from '../Admin/EditCustomerModal';
 import AddProjectModal from '../Admin/AddProjectModal';
-import IconDetails from '../../assets/IconDetails.svg';
-import IconDelete from '../../assets/IconDelete.svg';
 import GhostButton from '../Buttons/GhostButton';
+import {IconDelete, IconDetails} from '../../helpers/icons';
 
 class CustomerAccordian extends Component {
   constructor(props) {

@@ -5,8 +5,8 @@ import withKeycloak from '../../auth/withKeycloak';
 import {apiAddProjectToCustomer} from '../../api/customers';
 import {apiProjectPost, apiProjectsGet} from '../../api/projects';
 import {authenticationChanged, isAuthenticated} from "../../api/helpers";
-import IconPlus from '../../assets/IconPlus.svg';
 import ButtonBody from '../Buttons/ButtonBody';
+import {IconPlus} from '../../helpers/icons';
 
 class AddProjectModal extends Component {
   constructor(props) {

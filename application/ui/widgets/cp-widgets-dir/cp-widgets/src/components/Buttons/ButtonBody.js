@@ -5,7 +5,7 @@ const ButtonBody = ({label, icon}) => {
   return (
     <>
       {i18n.t(label)}
-      <img src={icon} alt=''/>
+      {icon}
     </>
   );
 }
