@@ -47,7 +47,7 @@ class CustomerProjectList extends React.Component {
       const customer = this.state.customer;
       if (customer) {
         return (
-          <div>
+          <div className="project-list">
             <Breadcrumbs customer={customer} locale={this.props.locale}/>
             <Tile>
               <div className="bx--grid">
