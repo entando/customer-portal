@@ -4,8 +4,8 @@ import {ModalWrapper, Form, TextInput, TextArea} from 'carbon-components-react';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiCustomerGet, apiCustomerPut} from '../../api/customers';
 import {authenticationChanged, isAuthenticated} from '../../api/helpers';
-import IconEdit from '../../assets/IconEdit.svg';
 import ButtonBody from '../Buttons/ButtonBody';
+import {IconEdit} from '../../helpers/icons'
 
 class EditCustomerModal extends Component {
   constructor(props) {
