@@ -111,9 +111,10 @@ class TicketList extends Component {
     });
     const ticketSystemUrl = this.state.ticketingSystem.url;
     const ticketingSystemBaseUrl = ticketSystemUrl != null ? ticketSystemUrl.substr(0, ticketSystemUrl.indexOf('/rest')) : null;
+    const ticketCount = Object.keys(this.state.tickets).length;
 
     return (
-      <div>
+      <div className="bx--tile">
         {this.state.project.id && (
           <div>
             {/*View All Ticket*/}
@@ -150,7 +151,7 @@ class TicketList extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {Object.keys(this.state.tickets).length !== 0 ? (
+                      {ticketCount !== 0 ? (
                         this.state.tickets.data.map((ticket, index) => {
                           const indexOfLastItem = (this.state.currentPage + 1) * 10 - 1;
                           const firstIndexOfCurrentPage = this.state.currentPage * 10;
@@ -189,7 +190,9 @@ class TicketList extends Component {
                 </TableContainer>
               )}
             </DataTable>
-            <PaginationNav {...paginationProps()} className="pagination-right"/>
+            {ticketCount > 10 && (
+              <PaginationNav {...paginationProps()} className="pagination-right"/>
+            )}
           </>
         )}
       </div>

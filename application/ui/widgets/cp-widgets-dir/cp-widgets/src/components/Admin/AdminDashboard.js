@@ -93,6 +93,7 @@ class AdminDashboard extends React.Component {
       itemsShown: Number(1),
       onChange: event => this.setState({ currentPage: event }),
     });
+    const customerCount = Object.keys(this.state.customers).length;
 
     return (
       <div className="admin-dashboard">
@@ -125,7 +126,7 @@ class AdminDashboard extends React.Component {
         {!this.state.loading && (
           <div className="form-container">
             <Accordion>
-              {Object.keys(this.state.customers).length !== 0
+              {(customerCount !== 0)
                 ? this.state.filteredCustomers.map((customer, index) => {
                   //Pagination for Admin and Support roles (5 items per page)
                   //Note: eventually this should be pushed down into paginated microservice calls
@@ -155,7 +156,9 @@ class AdminDashboard extends React.Component {
                 })
                 : null}
             </Accordion>
-            <PaginationNav {...props()} className="pagination-right"/>
+            {customerCount > 1 && (
+              <PaginationNav {...props()} className="pagination-right"/>
+            )}
           </div>
         )}
       </div>
