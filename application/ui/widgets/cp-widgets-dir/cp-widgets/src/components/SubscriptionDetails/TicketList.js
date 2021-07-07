@@ -10,7 +10,6 @@ import {
   TableBody,
   TableCell,
   PaginationNav,
-  Button,
 } from 'carbon-components-react';
 import {apiJiraTicketsGet} from '../../api/tickets';
 import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
@@ -19,6 +18,8 @@ import {apiProjectGet} from '../../api/projects';
 import {authenticationChanged, isAuthenticated, isPortalUser} from '../../api/helpers';
 import i18n from '../../i18n';
 import {Link} from 'react-router-dom';
+import GhostButton from '../Buttons/GhostButton';
+import {IconDetails, IconPlus} from '../../helpers/icons';
 
 class TicketList extends Component {
   constructor(props) {
@@ -124,15 +125,11 @@ class TicketList extends Component {
               target="_blank"
               rel="noreferrer"
             >
-              <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
-                {i18n.t('buttons.viewAllTickets')}
-              </Button>
+              <GhostButton label='buttons.viewAllTickets' icon={IconDetails}/>
             </a>
             {/*Open Ticket*/}
-            <Link to={`/ticket/${this.state.project.id}`} style={{textDecoration: 'none'}}>
-              <Button kind="ghost" style={{display: 'block', width: '100%'}} value="Open Ticket">
-                {i18n.t('buttons.openTicket')}
-              </Button>
+            <Link style={{textDecoration: 'none'}} to={`/ticket/${this.state.project.id}`}>
+              <GhostButton label='buttons.openTicket' icon={IconPlus}/>
             </Link>
           </div>
         )}
