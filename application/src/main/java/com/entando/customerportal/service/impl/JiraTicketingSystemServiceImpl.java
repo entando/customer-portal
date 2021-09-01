@@ -1,5 +1,6 @@
 package com.entando.customerportal.service.impl;
 
+import com.entando.customerportal.constant.CustportAppConstant;
 import com.entando.customerportal.domain.EntandoVersion;
 import com.entando.customerportal.domain.Project;
 import com.entando.customerportal.domain.enumeration.SubscriptionLevel;
@@ -539,8 +540,10 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
         ticket.setSystemId(jiraKey);
 
         JSONObject fields = json.getJSONObject("fields");
-        ticket.setSummary(getField(fields, "summary", null));
-        ticket.setDescription(getField(fields, "description", null));
+
+        //Jira can support longer fields than the simple Spring Data frontend cache so do a simple truncation on some fields
+        ticket.setSummary(getField(fields, "summary", null, CustportAppConstant.DEFAULT_STRING_FIELD_LENGTH));
+        ticket.setDescription(getField(fields, "description", null, CustportAppConstant.DEFAULT_STRING_FIELD_LENGTH));
         ticket.setType(getField(fields, "issuetype", "name"));
         ticket.setStatus(getField(fields, "status", "name"));
         ticket.setPriority(getField(fields, "priority", "name"));
@@ -557,6 +560,10 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
     }
 
     private String getField(JSONObject jsonObject, String key, String childKey) {
+        return getField(jsonObject, key, childKey, 0);
+    }
+
+    private String getField(JSONObject jsonObject, String key, String childKey, int maxLength) {
         if (jsonObject == null) {
             return null;
         }
@@ -564,10 +571,17 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             return null;
         }
         if (childKey == null) {
-            return (!jsonObject.isNull(key)) ? jsonObject.getString(key) : null;
+            if (jsonObject.isNull(key)) {
+                return null;
+            }
+            String result = jsonObject.getString(key);
+            if ((maxLength > 0) && (result.length() > maxLength)) {
+                result = result.substring(0, maxLength);
+            }
+            return result;
         }
         JSONObject child = jsonObject.getJSONObject(key);
-        return getField(child, childKey, null);
+        return getField(child, childKey, null, maxLength);
     }
 
 }
