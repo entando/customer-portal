@@ -5,7 +5,7 @@
 
     <groupId>com.entando.solutions</groupId>
     <artifactId>customerportal</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.5</version>
     <packaging>jar</packaging>
     <name>Customer Portal</name>
 
@@ -655,7 +655,9 @@
                     <version>${liquibase.version}</version>
                     <configuration>
                         <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
-                        <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
+                        <diffChangeLogFile>
+                            ${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml
+                        </diffChangeLogFile>
                         <driver>org.h2.Driver</driver>
                         <url>jdbc:h2:file:${project.build.directory}/h2db/db/custportapp</url>
                         <defaultSchemaName></defaultSchemaName>
@@ -665,7 +667,9 @@
                         <verbose>true</verbose>
                         <logging>debug</logging>
                         <contexts>!test</contexts>
-                        <diffExcludeObjects>oauth_access_token, oauth_approvals, oauth_client_details, oauth_client_token, oauth_code, oauth_refresh_token</diffExcludeObjects>
+                        <diffExcludeObjects>oauth_access_token, oauth_approvals, oauth_client_details,
+                            oauth_client_token, oauth_code, oauth_refresh_token
+                        </diffExcludeObjects>
                     </configuration>
                     <dependencies>
                         <dependency>

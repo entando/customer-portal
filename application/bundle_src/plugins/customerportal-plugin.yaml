@@ -1,4 +1,4 @@
-image: entandodemo/customerportal:0.0.4-SNAPSHOT
+image: entandodemo/customerportal:0.0.5
 dbms: postgresql
 healthCheckPath: "/management/health"
 roles:

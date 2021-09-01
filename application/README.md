@@ -1,14 +1,17 @@
-# Deployment
-With this configuration, you can use the ent cli (https://dev.entando.org/v6.3/docs/reference/entando-cli.html) to perform the full deployment sequence:
+# Deployment and installation
+With this configuration, you can use the ent cli (https://dev.entando.org/next/docs/reference/entando-cli.html) to perform the full deployment sequence:
 
-1. `cp -r bundle_src bundle` (this is only needed the first time ina local env unless the bundle dir is removed)
-2. `ent prj init`
-3. `ent prj build` (build the frontend and backend) or `ent prj fe-build -a` (to just build the frontend, including changes from bundle_src)
-4. `ent prj pbs-init` (requires the git bundle repo url)
-5. `ent prj pub` or `ent prj fe-push` (publish all or just the frontend)
-6. For a local Entando installation: `ent prj generate-cr | ent kubectl create -n entando -f -`
+### Setup the project directory.
+1. Prepare the bundle directory: `cp -r bundle_src bundle`
+2. Initialize the project: `ent prj init`
+3. Initialize publication: `ent prj pbs-init` (requires the git bundle repo url)
 
-Install the bundle using the App Builder.
+### Publish the bundle.
+1. Build: `ent prj build` (build the frontend and backend) or `ent prj fe-build -a` (to just build the frontend, including changes from bundle_src)
+2. Publish: `ent prj pub` or `ent prj fe-push` (publish all or just the frontend)
+3. Deploy (after connecting to k8s): `ent prj deploy`
+4. Install the bundle via 1) App Builder, 2) `ent prj install`, or 3) `ent prj install --conflict-strategy=OVERRIDE` on subsequent installs.
+5. Iterate steps 1-4 to publish new versions.
 
 # Prerequisites
 * JIRA Service Management instance
