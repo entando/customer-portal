@@ -10,7 +10,6 @@
     <meta name="description" content=""/>
     <meta name="author" content="DM"/>
     <link rel="icon" href="<@wp.imgURL />favicon.png" type="image/png"/>
-    <@wp.fragment code="header_inclusions" escapeXml=false />
 </head>
 <#assign owner><@wp.currentPage param="owner"/></#assign>
 <#assign resourceURL><@wp.resourceURL /></#assign>
@@ -39,23 +38,6 @@
 <nav class="navbar navbar-expand-xl sticky-top entando-navbar ">
     <div class="container entando-container">
         <@wp.show frame=3 />
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <div id="entando-toogle-button">
-                <input type="checkbox"/>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <@wp.show frame=4 />
-            <@wp.show frame=5 />
-            <div class="entando-navbar-cta md-and-up page-model ">
-                <@wp.show frame=6 />
-                <a href="<@wp.url page="quote" />" class="btn btn-entando-quote my-2 my-sm-0">get a quote</a>
-            </div>
-        </div>
     </div>
 </nav>
 
@@ -81,32 +63,6 @@
         <@wp.show frame=23 />
     </div>
 </div>
-
-<div class="entando-social-sharing md-and-up">
-    <div class="container entando-container">
-        <@wp.show frame=24 />
-    </div>
-</div>
-
-<div class="entando-social-sharing md-and-down mb-2">
-    <div class="container entando-container">
-        <@wp.show frame=24 />
-    </div>
-</div>
-<@wp.fragment code="fragment_entando_copyright_vatcode" escapeXml=false />
-
-<script nonce="<@wp.cspNonce />" type="text/javascript"
-        src="<@wp.resourceURL />static/js/dropdownAnimation.js"/></script>
-<script nonce="<@wp.cspNonce />" type="text/javascript" src="<@wp.resourceURL />static/js/aos.js"></script>
-
-<script nonce="<@wp.cspNonce />">
-    AOS.init({
-
-        duration: 1500,
-        easing: 'ease',
-        once: true
-    });
-</script>
 
 </body>
 </html>

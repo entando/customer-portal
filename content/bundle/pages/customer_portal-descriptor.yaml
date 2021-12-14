@@ -11,45 +11,18 @@ seo: false
 charset: utf-8
 status: published
 widgets:
-  - code: entando-widget-language_choose
+  - code: language
     config: null
     pos: 0
   - code: cp-login-widget
     config: null
     pos: 2
-  - code: entando-header-logo-home
+  - code: logo
     config: null
     pos: 3
-  - code: entando_menu
-    config:
-      navSpec: code(about_the_platform).subtree(1) + code(services).subtree(1) + code(developerresources).subtree(1) + code(partners).subtree(1) + code(news).subtree(1)
-    pos: 5
   - code: content_viewer
     config: null
     pos: 7
   - code: cp-app-widget
     config: null
     pos: 8
-  - code: entando_footer_logo
-    config: null
-    pos: 18
-  - code: Footer_Company
-    config:
-      modelId: '3'
-      contentId: LIT79
-    pos: 19
-  - code: Footer_Community
-    config:
-      modelId: '3'
-      contentId: LIT87
-    pos: 20
-  - code: Footer_tools
-    config:
-      modelId: '3'
-      contentId: LIT89
-    pos: 21
-  - code: Footer_Social_Link
-    config:
-      modelId: '4'
-      contentId: LIT148
-    pos: 24
