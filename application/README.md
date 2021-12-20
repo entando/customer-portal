@@ -45,9 +45,9 @@ With this configuration, you can use the ent cli (https://dev.entando.org/next/d
 * Removing the src/main/docker/keycloak-db directory will result in the realm from src/main/docker/realm-config being
   reloaded on the next restart.
 * Access controls are applied both in the UI and in the microservices. Individual REST APIs (e.g. ProjectResource) must either have tight constraints on an admin or support user (via an `@PreAuthorize annotation`) or customer or project-level access checks (e.g. `projectService.checkProjectAccess(projectId)`).
-* For local installations, the '.env.local.template' must be copied to  '.env.local' to initialize the FE properly.
+* For local installations, the `.env.local.template` must be copied to  `.env.local` to initialize the FE properly.
 
-e.g. 'cp ui/widgets/cp-widgets-dir/cp-widgets/.env.local.template ui/widgets/cp-widgets-dir/cp-widgets/.env.local'
+e.g. `cp ui/widgets/cp-widgets-dir/cp-widgets/.env.local.template ui/widgets/cp-widgets-dir/cp-widgets/.env.local`
 
 ---
 Standard Blueprint documentation follows...
