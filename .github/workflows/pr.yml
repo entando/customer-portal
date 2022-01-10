@@ -34,7 +34,8 @@ env:
   LOCAL_CLONE_DIR: "local-checkout"
   SNYK_ORG: "entando-ixc"
 
-  #CUSTOM START - define project dir
+  #CUSTOM START - define project type and dir
+  ENTANDO_OPT_PROJECT_TYPE: "${{ secrets.ENTANDO_OPT_PROJECT_TYPE }}"
   LOCAL_PROJECT_DIR: "local-checkout/application"
   #CUSTOM END
 
