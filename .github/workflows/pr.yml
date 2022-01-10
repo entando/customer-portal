@@ -35,7 +35,7 @@ env:
   SNYK_ORG: "entando-ixc"
 
   #CUSTOM START - define project dir
-  LOCAL_PROJECT_DIR: "${{LOCAL_CLONE_DIR}}/application"
+  LOCAL_PROJECT_DIR: "${LOCAL_CLONE_DIR}/application"
   #CUSTOM END
 
 jobs:
