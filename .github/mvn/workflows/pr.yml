@@ -34,12 +34,15 @@ env:
   LOCAL_CLONE_DIR: "local-checkout"
   SNYK_ORG: "entando-ixc"
 
+  #CUSTOM START - define project dir
+  LOCAL_PROJECT_DIR: "${{LOCAL_CLONE_DIR}}/application"
+  #CUSTOM END
 
 jobs:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # PREPARE
-  
+
   prepare:
     runs-on: ubuntu-latest
     outputs:
@@ -65,7 +68,7 @@ jobs:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # FULL-BUILD
-  
+
   full-build:
     needs: [ 'prepare' ]
     runs-on: ubuntu-latest
@@ -119,8 +122,10 @@ jobs:
           ENTANDO_OPT_SONAR_PROJECT_KEY: "${{ secrets.ENTANDO_OPT_SONAR_PROJECT_KEY }}"
           SONAR_TOKEN: "${{ secrets.SONAR_TOKEN }}"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      #~ CUSTOM START - set project dir
         run: |
-          ~/ppl-run generic FULL-BUILD --lcd "$LOCAL_CLONE_DIR"
+          ~/ppl-run generic FULL-BUILD --lcd "$LOCAL_PROJECT_DIR"
+      #~ CUSTOM END
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -134,7 +139,7 @@ jobs:
       fail-fast: false
       matrix:
         scan-type: ${{fromJson(needs.prepare.outputs.SCAN_MATRIX)}}
-      
+
     steps:
       #~ CHECKOUT
       - name: "CHECKOUT"
