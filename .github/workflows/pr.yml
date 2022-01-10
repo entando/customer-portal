@@ -62,8 +62,10 @@ jobs:
       - name: "PR preflight checks"
         if: steps.START.outputs.PR_PREFLIGHT_CHECKS != 'false'
         id: pr-preflight-checks
+        # CUSTOM START - set project dir
         run: |
-          ~/ppl-run pr-preflight-checks --lcd "$LOCAL_CLONE_DIR"
+          ~/ppl-run pr-preflight-checks --lcd "$LOCAL_PROJECT_DIR"
+        # CUSTOM END
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
