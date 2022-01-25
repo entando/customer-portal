@@ -54,7 +54,7 @@ class CustomerAccordian extends Component {
     return await apiCustomerDelete(this.props.serviceUrl, this.state.customer.id);
   }
 
-  handleDelete() {
+  handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
       this.deleteCustomer().then(() => {
         this.props.updateCustomerList();

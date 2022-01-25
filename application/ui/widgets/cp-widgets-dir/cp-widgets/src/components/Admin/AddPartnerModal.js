@@ -117,6 +117,7 @@ class AddPartnerModal extends Component {
   };
 
   clearValues = () => {
+    this.componentDidMount()
     const partnerModalElement = document.querySelector('#modal-form-partner');
     if (!partnerModalElement.className.includes('is-visible')) {
       this.setState({
