@@ -8,14 +8,41 @@ import withKeycloak from '../../../auth/withKeycloak';
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 import TicketTypeConfiguration from './TicketTypeConfiguration';
 import ServiceSubLevelConfiguration from './ServiceSubLevelConfiguration';
+import { apiTicketingSystemConfigResourceGet } from '../../../api/manageFieldConfigurations';
 
 class AdminConfiguration extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
+      refinedTicketType : [],
+      refinedSubLevel: [],
+      adminConfig: []
     };
-    this.adminConfig = [
+  }
+
+  componentDidMount() {
+    if (isAuthenticated(this.props)) {
+      this.setState({
+        loading: false,
+      });
+      this.getTicketAndSubLevel();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (authenticationChanged(this.props, prevProps)) {
+      this.setState({
+        loading: false,
+      });
+    }
+    if (prevState.refinedTicketType.length !== this.state.refinedTicketType.length || prevState.refinedSubLevel.length !== this.state.refinedSubLevel.length) {
+      this.initAdminConfig()
+    }
+  }
+
+  initAdminConfig = () => {
+    const setAdminConfig = [
       {
         label: (
           <div>
@@ -43,27 +70,34 @@ class AdminConfiguration extends React.Component {
         ),
         content: (
           <>
-            <TicketTypeConfiguration />
-            <ServiceSubLevelConfiguration />
+            <TicketTypeConfiguration ticketType={this.state.refinedTicketType} />
+            <ServiceSubLevelConfiguration subLevel={this.state.refinedSubLevel} />
           </>
         )
       },
     ];
+    this.setState({ adminConfig: setAdminConfig })
   }
 
-  componentDidMount() {
-    if (isAuthenticated(this.props)) {
-      this.setState({
-        loading: false,
-      });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (authenticationChanged(this.props, prevProps)) {
-      this.setState({
-        loading: false,
-      });
+  getTicketAndSubLevel = async () => {
+    try {
+      const { data: ticketTypesAndSubLevelsData } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
+      let refinedTicketType = [];
+      let refinedSubLevel = [];
+      if (ticketTypesAndSubLevelsData) {
+        ticketTypesAndSubLevelsData.map(ticketTypeAndSubLevel => {
+          if (ticketTypeAndSubLevel.ticketType) {
+            refinedTicketType.push({ id: ticketTypeAndSubLevel.id, ticketType: ticketTypeAndSubLevel.ticketType })
+          }
+          if (ticketTypeAndSubLevel.subscriptionLevel) {
+            refinedSubLevel.push({ id: ticketTypeAndSubLevel.id, ticketType: ticketTypeAndSubLevel.subscriptionLevel })
+          }
+        })
+        this.setState({ refinedTicketType })
+        this.setState({ refinedSubLevel })
+      }
+    } catch (error) {
+      console.log('Error: ', error)
     }
   }
 
@@ -80,7 +114,7 @@ class AdminConfiguration extends React.Component {
                 <p className="desc">{i18n.t('adminConfig.desc')}</p>
               </Tile>
               <Accordion>
-                {this.adminConfig.map((item, index) => (
+                {this.state.adminConfig.map((item, index) => (
                   <AccordionItem key={index.toString()} index={index} title={item.label} description={item.description}>
                     <div>{item.content}</div>
                   </AccordionItem>

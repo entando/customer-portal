@@ -41,11 +41,20 @@ class TicketTypeConfiguration extends Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.ticketType.length !== prevState.ticketTypeRowData.length) {
+            this.getTicketTypes()
+        }
         if (authenticationChanged(this.props, prevProps)) {
             if (isPortalAdminOrSupport()) {
                 this.getProductVersions();
             }
+        }
+    }
+
+    getTicketTypes() {
+        if (this.props.ticketType.length) {
+            this.setState({ ticketTypeRowData: this.props.ticketType })
         }
     }
 

@@ -4,7 +4,7 @@
     "formTitle": "Tutti i clienti",
     "desc": "Configura il sistema di segnalazione e le versioni di Entando qui di seguito.",
     "integrationTicketingSystem": {
-      "title": "Integrazione con il sistema di segnalazione",
+      "title": "Collegamento al sistema di biglietteria",
       "desc": "Questo ti permette di gestire il sistema di segnalazione",
       "selectBackendTicketingSystem": "Seleziona il sistema di segnalazione (Backend Ticketing System)",
       "select": "Selezionare",
@@ -22,7 +22,7 @@
       "supportEndDate": "Data di fine supporto"
     },
     "manageFieldConfigurations": {
-      "title": "Gestisci le configurazioni dei campi",
+      "title": "Configurazione del sistema di biglietteria",
       "manageFieldConfigurationsDesc": "Questo ti permetterà di gestire i campi a tendina utilizzati nei vari form per la creazione e la gestione dei ticket",
       "ticketTypeConfigurations": "Configurazioni del tipo di biglietto",
       "subscriptionLevelConfiguration": "Configurazione del livello di abbonamento",

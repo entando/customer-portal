@@ -4,7 +4,7 @@
     "formTitle": "All Customers",
     "desc": "Configure the Ticketing System and Entando Versions below.",
     "integrationTicketingSystem": {
-      "title": "Integration with Ticketing System",
+      "title": "Ticketing System Connection",
       "desc": "This allows you to manage the ticketing system",
       "selectBackendTicketingSystem": "Select Backend Ticketing System",
       "select": "Select",
@@ -22,7 +22,7 @@
       "supportEndDate": "Support End Date"
     },
     "manageFieldConfigurations": {
-      "title": "Manage Field Configurations",
+      "title": "Ticketing System Configuration",
       "manageFieldConfigurationsDesc": "This will allow you to manage dropdown fields used in the various form for create and managing tickets",
       "ticketTypeConfigurations": "Ticket Type Configurations",
       "subscriptionLevelConfiguration": "Subscription Level Configuration",

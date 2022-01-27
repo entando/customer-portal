@@ -41,11 +41,20 @@ class ServiceSubLevelConfiguration extends Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.subLevel.length !== prevState.serviceSubTypeRowData.length) {
+            this.getSubscription()
+        }
         if (authenticationChanged(this.props, prevProps)) {
             if (isPortalAdminOrSupport()) {
                 this.getProductVersions();
             }
+        }
+    }
+
+    getSubscription() {
+        if (this.props.subLevel.length) {
+            this.setState({ serviceSubTypeRowData: this.props.subLevel })
         }
     }
 
