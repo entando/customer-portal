@@ -6,6 +6,8 @@ import ProductVersion from './ProductVersion';
 import {authenticationChanged, isAuthenticated, isPortalAdmin} from '../../../api/helpers';
 import withKeycloak from '../../../auth/withKeycloak';
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
+import TicketTypeConfiguration from './TicketTypeConfiguration';
+import ServiceSubLevelConfiguration from './ServiceSubLevelConfiguration';
 
 class AdminConfiguration extends React.Component {
   constructor(props) {
@@ -31,6 +33,20 @@ class AdminConfiguration extends React.Component {
           </div>
         ),
         content: <ProductVersion serviceUrl={this.props.serviceUrl} />,
+      },
+      {
+        label: (
+          <div>
+            <p className="title">{"Manage Field Configurations"}</p>
+            <p className="desc">{"This will allow you to manage dropdown fields used in the various form for create and managing tickets"}</p>
+          </div>
+        ),
+        content: (
+          <>
+            <TicketTypeConfiguration />
+            <ServiceSubLevelConfiguration />
+          </>
+        )
       },
     ];
   }
