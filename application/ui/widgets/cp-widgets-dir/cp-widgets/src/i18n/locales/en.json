@@ -20,6 +20,16 @@
       "status": "Status *",
       "startDate": "Start Date",
       "supportEndDate": "Support End Date"
+    },
+    "manageFieldConfigurations": {
+      "title": "Manage Field Configurations",
+      "manageFieldConfigurationsDesc": "This will allow you to manage dropdown fields used in the various form for create and managing tickets",
+      "ticketTypeConfigurations": "Ticket Type Configurations",
+      "subscriptionLevelConfiguration": "Subscription Level Configuration",
+      "ticketType": "Ticket Type",
+      "subscriptionLevel": "Subscription Level",
+      "addTicketTypeButton": "Add Ticket Type",
+      "addSubscriptionLevelButton": "Add Subscription Level"
     }
   },
   "adminDashboard": {

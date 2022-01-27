@@ -93,7 +93,7 @@ class ServiceSubLevelConfiguration extends Component {
             return (
                 <>
                     <div>
-                        <h4>Subscription Level Configuration</h4>
+                        <h4>{i18n.t('adminConfig.manageFieldConfigurations.subscriptionLevelConfiguration')}</h4>
                         <TableContainer>
                             <Table>
                                 <TableHead>
@@ -127,7 +127,7 @@ class ServiceSubLevelConfiguration extends Component {
                             <Form className="bx--row" style={{ margin: "2rem 0rem", padding: "0rem" }} onSubmit={this.handleFormSubmit}>
                                 <div className="bx--col-lg-6" style={{ paddingLeft: "0rem" }}>
                                     <TextInput
-                                        id="sublevel" labelText="Subscription Level" type="text"
+                                        id="sublevel" labelText={i18n.t('adminConfig.manageFieldConfigurations.subscriptionLevel')} type="text"
                                         value={this.state.subscriptionLevel} onChange={this.setFormData}
                                         invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
                                         onBlur={() => { this.setState({ subscriptionLevel: this.state.subscriptionLevel.trimEnd() }) }}
@@ -135,7 +135,7 @@ class ServiceSubLevelConfiguration extends Component {
                                 </div>
                                 <div className="bx--col-lg-6">
                                     <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ "paddingTop": "0.5rem", "alignItems": "center" }}>
-                                        Add Subscription Level
+                                        {i18n.t('adminConfig.manageFieldConfigurations.addSubscriptionLevelButton')}
                                     </Button>
                                 </div>
                             </Form>
@@ -152,11 +152,11 @@ class ServiceSubLevelConfiguration extends Component {
 
 const headerData = [
     {
-        header: "Subscription Level",
+        header: i18n.t('adminConfig.manageFieldConfigurations.subscriptionLevel'),
         key: 'sublevel',
     },
     {
-        header: "Action",
+        header: i18n.t('customerDashboard.action'),
         key: 'action',
     },
 ];

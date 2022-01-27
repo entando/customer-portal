@@ -94,7 +94,7 @@ class TicketTypeConfiguration extends Component {
             return (
                 <>
                     <div>
-                        <h4>Ticket Type Configurations</h4>
+                        <h4>{i18n.t('adminConfig.manageFieldConfigurations.ticketTypeConfigurations')}</h4>
                         <TableContainer>
                             <Table>
                                 <TableHead>
@@ -128,7 +128,7 @@ class TicketTypeConfiguration extends Component {
                             <Form className="bx--row" style={{ margin: "2rem 0rem", padding: "0rem" }} onSubmit={this.handleFormSubmit}>
                                 <div className="bx--col-lg-6" style={{ paddingLeft: "0rem" }}>
                                     <TextInput
-                                        id="tickettype" labelText="Ticket Type" type="text"
+                                        id="tickettype" labelText={i18n.t('adminConfig.manageFieldConfigurations.ticketType')} type="text"
                                         value={this.state.ticketName} onChange={this.setFormData}
                                         invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
                                         onBlur={() => { this.setState({ ticketName: this.state.ticketName.trimEnd() }) }}
@@ -136,7 +136,7 @@ class TicketTypeConfiguration extends Component {
                                 </div>
                                 <div className="bx--col-lg-6">
                                     <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ "paddingTop": "0.5rem", "alignItems": "center" }}>
-                                        Add Ticket Type
+                                        {i18n.t('adminConfig.manageFieldConfigurations.addTicketTypeButton')}
                                     </Button>
                                 </div>
                             </Form>
@@ -153,11 +153,11 @@ class TicketTypeConfiguration extends Component {
 
 const headerData = [
     {
-        header: "Ticket Type",
+        header: i18n.t('adminConfig.manageFieldConfigurations.ticketType'),
         key: 'ticketType',
     },
     {
-        header: "Action",
+        header: i18n.t('customerDashboard.action'),
         key: 'action',
     },
 ];

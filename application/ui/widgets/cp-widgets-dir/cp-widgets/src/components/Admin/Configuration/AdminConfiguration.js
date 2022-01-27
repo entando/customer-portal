@@ -37,8 +37,8 @@ class AdminConfiguration extends React.Component {
       {
         label: (
           <div>
-            <p className="title">{"Manage Field Configurations"}</p>
-            <p className="desc">{"This will allow you to manage dropdown fields used in the various form for create and managing tickets"}</p>
+            <p className="title">{i18n.t('adminConfig.manageFieldConfigurations.title')}</p>
+            <p className="desc">{i18n.t('adminConfig.manageFieldConfigurations.manageFieldConfigurationsDesc')}</p>
           </div>
         ),
         content: (

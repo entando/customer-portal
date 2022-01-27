@@ -20,6 +20,16 @@
       "status": "Stato *",
       "startDate": "data d'inizio",
       "supportEndDate": "Data di fine supporto"
+    },
+    "manageFieldConfigurations": {
+      "title": "Gestisci le configurazioni dei campi",
+      "manageFieldConfigurationsDesc": "Questo ti permetterà di gestire i campi a tendina utilizzati nei vari form per la creazione e la gestione dei ticket",
+      "ticketTypeConfigurations": "Configurazioni del tipo di biglietto",
+      "subscriptionLevelConfiguration": "Configurazione del livello di abbonamento",
+      "ticketType": "Tipo di biglietto",
+      "subscriptionLevel": "Livello di abbonamento",
+      "addTicketTypeButton": "Aggiungi tipo di biglietto",
+      "addSubscriptionLevelButton": "Aggiungi livello di abbonamento"
     }
   },
   "adminDashboard": {
