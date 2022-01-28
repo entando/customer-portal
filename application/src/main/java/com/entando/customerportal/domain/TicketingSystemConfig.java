@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -17,7 +16,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "ticketing_system_configuration")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class TicketingSystemConfig  implements Serializable {
+public class TicketingSystemConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -26,20 +25,17 @@ public class TicketingSystemConfig  implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
     
-    @NotNull
-    @Column(name = "ticket_type", nullable = false)
+    @Column(name = "ticket_type", nullable = true)
     private String ticketType;
     
-    @NotNull
-    @Column(name = "subscription_level", nullable = false)
+    @Column(name = "subscription_level", nullable = true)
     private String subscriptionLevel;
     
-    @NotNull
-    @Column(name = "product_name", nullable = false)
+    @Column(name = "product_name", nullable = true)
     private String productName;
     
-    @Column(name = "active")
-    private Boolean active = false;
+    @Column(name = "jira_customfield", nullable = true)
+    private String jiraCustomField;
 
 	public Long getId() {
 		return id;
@@ -73,12 +69,12 @@ public class TicketingSystemConfig  implements Serializable {
 		this.productName = productName;
 	}
 
-	public Boolean getActive() {
-		return active;
+	public String getJiraCustomField() {
+		return jiraCustomField;
 	}
 
-	public void setActive(Boolean active) {
-		this.active = active;
+	public void setJiraCustomField(String jiraCustomField) {
+		this.jiraCustomField = jiraCustomField;
 	}
 
 }

@@ -15,19 +15,19 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="ticket_type" type="varchar(255)">
+            <column name="ticket_type" type="varchar(600)">
                 <constraints nullable="true" />
             </column>
-            <column name="subscription_level" type="varchar(255)">
+            <column name="subscription_level" type="varchar(600)">
                 <constraints nullable="true" />
             </column>
             <column name="product_name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="active" type="boolean" valueBoolean="false">
-                <constraints nullable="false" />
+            <column name="jira_customfield" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
-            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here --> 
         </createTable>
     </changeSet>
 

@@ -14,12 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.entando.customerportal.domain.TicketingSystem;
 import com.entando.customerportal.domain.TicketingSystemConfig;
+import com.entando.customerportal.request.TicketingSystemConfigRequest;
 import com.entando.customerportal.security.AuthoritiesConstants;
 import com.entando.customerportal.security.SpringSecurityAuditorAware;
 import com.entando.customerportal.service.TicketingSystemConfigService;
@@ -28,7 +29,7 @@ import com.entando.customerportal.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 
 @RestController
-@RequestMapping("/api/config")
+@RequestMapping("/api/ticketing-system-config")
 //@Transactional
 @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
 public class TicketingSystemConfigResource {
@@ -49,7 +50,7 @@ public class TicketingSystemConfigResource {
         this.configService = configService;
     }
     
-    @PostMapping("/ticketing-system-config")
+    @PostMapping("/")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
     public ResponseEntity<TicketingSystemConfig> createTicketingSystemConfiguration(@Valid @RequestBody TicketingSystemConfig ticketType) throws URISyntaxException {
         log.debug("REST request to save TicketType : {}", ticketType);
@@ -62,7 +63,20 @@ public class TicketingSystemConfigResource {
             .body(result);
     }
     
-    @GetMapping("/ticketing-system-config")
+    @PutMapping("/")
+    @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
+    public ResponseEntity<TicketingSystemConfig> updateTicketingSystemConfiguration(@RequestBody TicketingSystemConfigRequest ticketingSystemConfigReq) throws URISyntaxException {
+        log.debug("REST request to save TicketType : {}", ticketingSystemConfigReq);
+        if (ticketingSystemConfigReq.getFlag() != null) {
+            throw new BadRequestAlertException("A new ticketing system type cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        TicketingSystemConfig result = configService.updateTicketingSystemConfiguration(ticketingSystemConfigReq);
+        return ResponseEntity.created(new URI("/api/tickettype/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+    
+    @GetMapping("/")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public List<TicketingSystemConfig> getAllTicketingSystemConfigrations() {
         log.debug("REST request to get all TicketingSystems");
