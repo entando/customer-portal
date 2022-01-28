@@ -24,16 +24,12 @@ import {authenticationChanged, isAuthenticated, isPortalAdmin, isPortalUser} fro
 import {apiAddSubscriptionToProject} from '../../api/projects';
 import moment from 'moment';
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
+import { apiTicketingSystemConfigResourceGet } from '../../api/manageFieldConfigurations';
 
 const FORM_TYPE = {
   new: 'new',
   renewal: 'renewal',
   edit: 'edit',
-};
-
-const SUBSCRIPTION_LEVEL = {
-  GOLD: 'GOLD',
-  PLATINUM: 'PLATINUM',
 };
 
 const SUBSCRIPTION_STATUS = {
@@ -63,12 +59,14 @@ class SubscriptionForm extends Component {
       submitSuccess: false,
       submitError: false,
       submitColour: 'black',
+      subsList: []
     };
   }
 
   componentDidMount() {
     if (isAuthenticated(this.props)) {
       this.fetchData();
+      this.getLevelList();
       this.setState({
         loading: false,
       });
@@ -81,6 +79,18 @@ class SubscriptionForm extends Component {
       this.setState({
         loading: false,
       });
+    }
+  }
+
+  async getLevelList() {
+    try {
+      const data = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
+      if (data.data[0].hasOwnProperty('subscriptionLevel')) {
+        const subLists = JSON.parse(data.data[0].subscriptionLevel);
+        this.setState({ subsList: subLists })
+      }
+    } catch (error) {
+      console.error("Error: ", error)
     }
   }
 
@@ -265,9 +275,14 @@ class SubscriptionForm extends Component {
   }
 
   setupFormComponents() {
-    const subscriptionLevelList = Object.entries(SUBSCRIPTION_LEVEL).map(([key, value]) => (
-      <SelectItem key={key} text={value} value={key}>
-        {value}
+    // const subscriptionLevelList = Object.entries(SUBSCRIPTION_LEVEL).map(([key, value]) => (
+    //   <SelectItem key={key} text={value} value={key}>
+    //     {value}
+    //   </SelectItem>
+    // ));
+    const subscriptionLevelList = this.state.subsList.map((subscr, idx) => (
+      <SelectItem key={idx} text={subscr.levelName} value={subscr.levelName}>
+        {subscr.levelName}
       </SelectItem>
     ));
     subscriptionLevelList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseLevel')} value=""/>);

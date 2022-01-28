@@ -1,6 +1,6 @@
 import { getDefaultOptions, request, getUrl } from './helpers';
 
-const resource = 'api/config/ticketing-system-config';
+const resource = 'api/ticketing-system-config/';
 
 /**
  *
