@@ -85,12 +85,16 @@ class TicketTypeConfiguration extends Component {
         const ticketListBuilder = JSON.stringify([...this.state.ticketTypeRowData, { name: this.state.ticketName }]);
         // TODO: Post API HIT
         // TODO: Rerender happens here.
-        await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', ticketListBuilder).then(() => {
-            this.props.getTicketAndSubLevel()
-        });
-        const updateTicketTypeRowData = [...this.state.ticketTypeRowData, { name: this.state.ticketName }]
-        this.setState({ ticketTypeRowData: updateTicketTypeRowData })
-        this.setState({ ticketName: '' })
+        try {
+            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', ticketListBuilder).then(() => {
+                this.props.getTicketAndSubLevel()
+            });
+            const updateTicketTypeRowData = [...this.state.ticketTypeRowData, { name: this.state.ticketName }]
+            this.setState({ ticketTypeRowData: updateTicketTypeRowData })
+            this.setState({ ticketName: '' })
+        } catch (error) {
+            console.error('Error :',error)
+        }
     }
 
     setFormData = (e) => {
@@ -103,11 +107,15 @@ class TicketTypeConfiguration extends Component {
         if (window.confirm(`Are you sure you want to Delete the ${ticket.name} type!`)) {
             let updateTicketTypeAfterDeletedTicket = []
             updateTicketTypeAfterDeletedTicket = JSON.stringify(this.state.ticketTypeRowData.filter(ticketType => ticket.name !== ticketType.name))
-            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', updateTicketTypeAfterDeletedTicket).then(() => {
-                this.props.getTicketAndSubLevel()
-            });
-            updateTicketTypeAfterDeletedTicket = JSON.parse(updateTicketTypeAfterDeletedTicket)
-            this.setState({ ticketTypeRowData: updateTicketTypeAfterDeletedTicket })
+            try {
+                await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', updateTicketTypeAfterDeletedTicket).then(() => {
+                    this.props.getTicketAndSubLevel()
+                });
+                updateTicketTypeAfterDeletedTicket = JSON.parse(updateTicketTypeAfterDeletedTicket)
+                this.setState({ ticketTypeRowData: updateTicketTypeAfterDeletedTicket })
+            } catch (error) {
+                console.error('Error ', error)
+            }
         }
     }
 

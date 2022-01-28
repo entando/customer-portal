@@ -73,12 +73,16 @@ class ServiceSubLevelConfiguration extends Component {
         const ticketListFake = JSON.stringify([])
         console.log(subsListBuilder);
         // TODO: Post API HIT
-        await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', ticketListFake, subsListBuilder).then(() => {
-            this.props.getTicketAndSubLevel()
-        });
-        const updateserviceSubTypeRowData = [...this.state.serviceSubTypeRowData, { levelName: this.state.subscriptionLevel }]
-        this.setState({ serviceSubTypeRowData: updateserviceSubTypeRowData })
-        this.setState({ subscriptionLevel: '' })
+        try {
+            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', ticketListFake, subsListBuilder).then(() => {
+                this.props.getTicketAndSubLevel()
+            });
+            const updateserviceSubTypeRowData = [...this.state.serviceSubTypeRowData, { levelName: this.state.subscriptionLevel }]
+            this.setState({ serviceSubTypeRowData: updateserviceSubTypeRowData })
+            this.setState({ subscriptionLevel: '' })
+        } catch (error) {
+            console.error('Error ', error)
+        }
     }
 
     setFormData = (e) => {
@@ -92,11 +96,15 @@ class ServiceSubLevelConfiguration extends Component {
             let updateServiceSubTypeAfterDeletedSubscr = []
             updateServiceSubTypeAfterDeletedSubscr = JSON.stringify(this.state.serviceSubTypeRowData.filter(ticketType => ticket.levelName !== ticketType.levelName))
             const updateTicketTypeAfterDeletedTicket = JSON.stringify([])
-            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', updateTicketTypeAfterDeletedTicket, updateServiceSubTypeAfterDeletedSubscr).then(() => {
-                this.props.getTicketAndSubLevel()
-            });
-            updateServiceSubTypeAfterDeletedSubscr = JSON.parse(updateServiceSubTypeAfterDeletedSubscr)
-            this.setState({ serviceSubTypeRowData: updateServiceSubTypeAfterDeletedSubscr })
+            try {
+                await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', updateTicketTypeAfterDeletedTicket, updateServiceSubTypeAfterDeletedSubscr).then(() => {
+                    this.props.getTicketAndSubLevel()
+                });
+                updateServiceSubTypeAfterDeletedSubscr = JSON.parse(updateServiceSubTypeAfterDeletedSubscr)
+                this.setState({ serviceSubTypeRowData: updateServiceSubTypeAfterDeletedSubscr })
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 
