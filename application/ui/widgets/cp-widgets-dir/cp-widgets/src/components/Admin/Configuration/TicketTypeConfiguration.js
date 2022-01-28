@@ -185,23 +185,4 @@ const headerData = [
     },
 ];
 
-// const ticketTypeRowData = [
-//     {
-//         // id: 'a',
-//         ticketType: 'Bug'
-//     },
-//     {
-//         // id: 'b',
-//         ticketType: 'Task'
-//     },
-//     {
-//         // id: 'c',
-//         ticketType: 'Epic'
-//     },
-//     {
-//         // id: 'd',
-//         ticketType: 'Story'
-//     },
-// ]
-
 export default withKeycloak(TicketTypeConfiguration);

@@ -9,6 +9,7 @@ import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 import TicketTypeConfiguration from './TicketTypeConfiguration';
 import ServiceSubLevelConfiguration from './ServiceSubLevelConfiguration';
 import { apiTicketingSystemConfigResourceGet } from '../../../api/manageFieldConfigurations';
+import ProductNameConfiguration from './ProductNameConfiguration';
 
 class AdminConfiguration extends React.Component {
   constructor(props) {
@@ -17,7 +18,8 @@ class AdminConfiguration extends React.Component {
       loading: true,
       refinedTicketType : [],
       refinedSubLevel: [],
-      adminConfig: []
+      adminConfig: [],
+      productName: ''
     };
   }
 
@@ -54,6 +56,7 @@ class AdminConfiguration extends React.Component {
         if (ticketTypesAndSubLevelsData[0].subscriptionLevel.length) {
           refinedSubLevel = JSON.parse(ticketTypesAndSubLevelsData[0].subscriptionLevel)
         }
+        this.setState({ productName: ticketTypesAndSubLevelsData[0].productName })
         this.setState({ refinedTicketType })
         this.setState({ refinedSubLevel })
       }
@@ -93,6 +96,7 @@ class AdminConfiguration extends React.Component {
           <>
             <TicketTypeConfiguration serviceUrl={this.props.serviceUrl} ticketType={this.state.refinedTicketType} getTicketAndSubLevel={this.getTicketAndSubLevel} />
             <ServiceSubLevelConfiguration serviceUrl={this.props.serviceUrl} subLevel={this.state.refinedSubLevel} getTicketAndSubLevel={this.getTicketAndSubLevel} />
+            <ProductNameConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName}/>
           </>
         )
       },

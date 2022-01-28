@@ -24,12 +24,12 @@ class ServiceSubLevelConfiguration extends Component {
             this.getProductVersions();
         }
         if (this.props.subLevel.length) {
-            this.getTicketTypes()
+            this.getSubscription()
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.subLevel.length !== prevState.serviceSubTypeRowData.length) {
+        if (prevProps.subLevel.length !== this.props.subLevel.length) {
             this.getSubscription()
         }
         if (authenticationChanged(this.props, prevProps)) {
@@ -57,6 +57,7 @@ class ServiceSubLevelConfiguration extends Component {
 
     handleFormSubmit = async (e) => {
         e.preventDefault();
+
         if (!this.state.subscriptionLevel.length || this.state.subscriptionLevel.length < 3) {
             this.setState({ validations: { isError: true, errorMsg: "Subscription Level must be at least 3 characters" } })
             return
@@ -65,11 +66,17 @@ class ServiceSubLevelConfiguration extends Component {
             this.setState({ validations: { isError: true, errorMsg: "This Subscription Level already exist, please enter a new Level" } })
             return
         }
+
+        console.log(this.state.subscriptionLevel, this.state.serviceSubTypeRowData)
+        const subsListBuilder = JSON.stringify([...this.state.serviceSubTypeRowData, { levelName: this.state.subscriptionLevel }]);
+        // IMP: remover latter
+        const ticketListFake = JSON.stringify([])
+        console.log(subsListBuilder);
         // TODO: Post API HIT
-        await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', this.state.ticketName).then(() => {
+        await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', ticketListFake, subsListBuilder).then(() => {
             this.props.getTicketAndSubLevel()
         });
-        const updateserviceSubTypeRowData = [...this.state.serviceSubTypeRowData, { ticketType: this.state.subscriptionLevel }]
+        const updateserviceSubTypeRowData = [...this.state.serviceSubTypeRowData, { levelName: this.state.subscriptionLevel }]
         this.setState({ serviceSubTypeRowData: updateserviceSubTypeRowData })
         this.setState({ subscriptionLevel: '' })
     }
@@ -80,10 +87,15 @@ class ServiceSubLevelConfiguration extends Component {
         this.setState({ subscriptionLevel: e.target.value.trimStart()})
     }
 
-    handleDeleteServiceSubType = (ticket) => {
-        if (window.confirm(`Are you sure you want to Delete the ${ticket.ticketType} Service/Sub Level Config!`)) {
+    handleDeleteServiceSubType = async (ticket) => {
+        if (window.confirm(`Are you sure you want to Delete the ${ticket.levelName} Subs Level Config!`)) {
             let updateServiceSubTypeAfterDeletedSubscr = []
-            updateServiceSubTypeAfterDeletedSubscr = this.state.serviceSubTypeRowData.filter(ticketType => ticket.ticketType !== ticketType.ticketType)
+            updateServiceSubTypeAfterDeletedSubscr = JSON.stringify(this.state.serviceSubTypeRowData.filter(ticketType => ticket.levelName !== ticketType.levelName))
+            const updateTicketTypeAfterDeletedTicket = JSON.stringify([])
+            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', updateTicketTypeAfterDeletedTicket, updateServiceSubTypeAfterDeletedSubscr).then(() => {
+                this.props.getTicketAndSubLevel()
+            });
+            updateServiceSubTypeAfterDeletedSubscr = JSON.parse(updateServiceSubTypeAfterDeletedSubscr)
             this.setState({ serviceSubTypeRowData: updateServiceSubTypeAfterDeletedSubscr })
         }
     }
@@ -161,24 +173,5 @@ const headerData = [
         key: 'action',
     },
 ];
-
-// const serviceSubTypeRowData = [
-//     {
-//         // id: 'a',
-//         ticketType: 'Bug'
-//     },
-//     {
-//         // id: 'b',
-//         ticketType: 'Task'
-//     },
-//     {
-//         // id: 'c',
-//         ticketType: 'Epic'
-//     },
-//     {
-//         // id: 'd',
-//         ticketType: 'Story'
-//     },
-// ]
 
 export default withKeycloak(ServiceSubLevelConfiguration);
