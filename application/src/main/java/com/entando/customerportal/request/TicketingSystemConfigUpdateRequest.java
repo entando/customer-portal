@@ -1,14 +1,17 @@
 package com.entando.customerportal.request;
 
+import java.util.Map;
+
 import javax.validation.constraints.NotNull;
+
 import com.entando.customerportal.constant.TicketingSystemConfigEnum;
 
-public class TicketingSystemConfigRequest {
+public class TicketingSystemConfigUpdateRequest {
 	
 	@NotNull(message = "flag field is required")
-	TicketingSystemConfigEnum flag;
+	private TicketingSystemConfigEnum flag;
 	
-	String value;
+	private Map<String, String> values;
 
 	public TicketingSystemConfigEnum getFlag() {
 		return flag;
@@ -18,13 +21,11 @@ public class TicketingSystemConfigRequest {
 		this.flag = flag;
 	}
 
-	public String getValue() {
-		return value;
+	public Map<String, String> getValues() {
+		return values;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setValues(Map<String, String> values) {
+		this.values = values;
 	}
-	
-	
 }

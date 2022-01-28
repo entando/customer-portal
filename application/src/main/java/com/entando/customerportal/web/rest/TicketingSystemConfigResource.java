@@ -4,8 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entando.customerportal.domain.TicketingSystemConfig;
-import com.entando.customerportal.request.TicketingSystemConfigRequest;
+import com.entando.customerportal.request.TicketingSystemConfigAddRequest;
+import com.entando.customerportal.request.TicketingSystemConfigUpdateRequest;
 import com.entando.customerportal.security.AuthoritiesConstants;
 import com.entando.customerportal.security.SpringSecurityAuditorAware;
 import com.entando.customerportal.service.TicketingSystemConfigService;
@@ -30,7 +29,6 @@ import io.github.jhipster.web.util.HeaderUtil;
 
 @RestController
 @RequestMapping("/api/ticketing-system-config")
-//@Transactional
 @PreAuthorize(AuthoritiesConstants.HAS_ADMIN_OR_SUPPORT)
 public class TicketingSystemConfigResource {
 	
@@ -50,36 +48,33 @@ public class TicketingSystemConfigResource {
         this.configService = configService;
     }
     
-    @PostMapping("/")
+    @PostMapping("")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
-    public ResponseEntity<TicketingSystemConfig> createTicketingSystemConfiguration(@Valid @RequestBody TicketingSystemConfig ticketType) throws URISyntaxException {
-        log.debug("REST request to save TicketType : {}", ticketType);
-        if (ticketType.getId() != null) {
-            throw new BadRequestAlertException("A new ticketing system type cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        TicketingSystemConfig result = configService.saveTicketingSystemConfiguration(ticketType);
-        return ResponseEntity.created(new URI("/api/tickettype/" + result.getId()))
+    public ResponseEntity<TicketingSystemConfig> createTicketingSystemConfiguration(@RequestBody TicketingSystemConfigAddRequest ticketSystemConfigAddReq) throws URISyntaxException {
+        log.debug("REST request to save Ticketing System Configuration : {}", ticketSystemConfigAddReq);
+        TicketingSystemConfig result = configService.addTicketingSystemConfiguration(ticketSystemConfigAddReq);
+        return ResponseEntity.created(new URI("/api/ticketing-system-config" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
     
-    @PutMapping("/")
+    @PutMapping("")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
-    public ResponseEntity<TicketingSystemConfig> updateTicketingSystemConfiguration(@RequestBody TicketingSystemConfigRequest ticketingSystemConfigReq) throws URISyntaxException {
-        log.debug("REST request to save TicketType : {}", ticketingSystemConfigReq);
-        if (ticketingSystemConfigReq.getFlag() != null) {
-            throw new BadRequestAlertException("A new ticketing system type cannot already have an ID", ENTITY_NAME, "idexists");
+    public ResponseEntity<TicketingSystemConfig> updateTicketingSystemConfiguration(@RequestBody TicketingSystemConfigUpdateRequest ticketingSystemConfigReq) throws URISyntaxException {
+        log.debug("REST request to update Ticketing System Configuration : {}", ticketingSystemConfigReq);
+        if (ticketingSystemConfigReq.getFlag() == null) {
+            throw new BadRequestAlertException("A flag is required", ENTITY_NAME, "flag required");
         }
         TicketingSystemConfig result = configService.updateTicketingSystemConfiguration(ticketingSystemConfigReq);
-        return ResponseEntity.created(new URI("/api/tickettype/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/ticketing-system-config" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
     
-    @GetMapping("/")
+    @GetMapping("")
     @PreAuthorize(AuthoritiesConstants.HAS_ANY_PORTAL_ROLE)
     public List<TicketingSystemConfig> getAllTicketingSystemConfigrations() {
-        log.debug("REST request to get all TicketingSystems");
+        log.debug("REST request to get all Ticketing System Configurations");
         return configService.getAllTicketingSystemConfiguration();
     }
 }
