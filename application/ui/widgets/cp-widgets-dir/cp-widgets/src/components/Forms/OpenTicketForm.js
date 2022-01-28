@@ -6,7 +6,7 @@ import {apiProjectGet} from '../../api/projects';
 import {apiJiraTicketPost} from '../../api/tickets';
 import {authenticationChanged, getActiveSubscription, isAuthenticated, isPortalUser} from '../../api/helpers';
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
-
+import { apiTicketingSystemConfigResourceGet } from '../../api/manageFieldConfigurations';
 class OpenTicketForm extends Component {
   constructor() {
     super();
@@ -23,7 +23,9 @@ class OpenTicketForm extends Component {
       status: 'To Do',
       summary: '',
       description: '',
+      types: []
     };
+    // TODO: need be dynamic IMP: need to remove
     this.types = ['Support', 'New Feature', 'Bug'];
     this.priorities = ['Critical', 'High', 'Medium', 'Low'];
   }
@@ -31,12 +33,25 @@ class OpenTicketForm extends Component {
   componentDidMount() {
     if (isAuthenticated(this.props)) {
       this.fetchData();
+      this.getTicketingSystem();
     }
   }
 
   componentDidUpdate(prevProps) {
     if (authenticationChanged(this.props, prevProps)) {
       this.fetchData();
+    }
+  }
+
+  async getTicketingSystem() {
+    try {
+      const { data: ticketTypes } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
+      if (ticketTypes && ticketTypes[0].hasOwnProperty('ticketType')) {
+        const ticketTypesArr = JSON.parse(ticketTypes[0].ticketType)
+        this.setState({ types: ticketTypesArr })
+      }
+    } catch (error) {
+      console.error("Error: ", error)
     }
   }
 
@@ -184,9 +199,9 @@ class OpenTicketForm extends Component {
                         invalidText={i18n.t('validation.invalid.required')}
                         invalid={this.state.invalid['type']}
                       >
-                        {this.types.map((type, i) => (
-                          <SelectItem key={i} text={type} value={type}>
-                            {type}
+                        {this.state.types.map((type, i) => (
+                          <SelectItem key={i} text={type.name} value={type.name}>
+                            {type.name}
                           </SelectItem>
                         ))}
                       </Select>
