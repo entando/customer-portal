@@ -5,30 +5,14 @@ import i18n from "../../../i18n";
 import { Button, Form, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TextInput } from 'carbon-components-react';
 import { apiProductVersionsGet } from "../../../api/productVersion";
 import { Add16 } from '@carbon/icons-react'
+import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
 
 class ServiceSubLevelConfiguration extends Component {
     constructor() {
         super();
         this.state = {
             subscriptionLevel: '',
-            serviceSubTypeRowData : [
-                // {
-                //     // id: 'a',
-                //     ticketType: 'Bug'
-                // },
-                {
-                    // id: 'b',
-                    ticketType: 'Gold'
-                },
-                {
-                    // id: 'c',
-                    ticketType: 'Platinum'
-                },
-                {
-                    // id: 'd',
-                    ticketType: 'Silver'
-                },
-            ],
+            serviceSubTypeRowData : [],
             validations: [
                 { isError: false, errorMsg: '' }
             ]
@@ -38,6 +22,9 @@ class ServiceSubLevelConfiguration extends Component {
     componentDidMount() {
         if (isPortalAdminOrSupport()) {
             this.getProductVersions();
+        }
+        if (this.props.subLevel.length) {
+            this.getTicketTypes()
         }
     }
 
@@ -68,7 +55,7 @@ class ServiceSubLevelConfiguration extends Component {
         }
     }
 
-    handleFormSubmit = (e) => {
+    handleFormSubmit = async (e) => {
         e.preventDefault();
         if (!this.state.subscriptionLevel.length || this.state.subscriptionLevel.length < 3) {
             this.setState({ validations: { isError: true, errorMsg: "Subscription Level must be at least 3 characters" } })
@@ -78,6 +65,10 @@ class ServiceSubLevelConfiguration extends Component {
             this.setState({ validations: { isError: true, errorMsg: "This Subscription Level already exist, please enter a new Level" } })
             return
         }
+        // TODO: Post API HIT
+        await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', this.state.ticketName).then(() => {
+            this.props.getTicketAndSubLevel()
+        });
         const updateserviceSubTypeRowData = [...this.state.serviceSubTypeRowData, { ticketType: this.state.subscriptionLevel }]
         this.setState({ serviceSubTypeRowData: updateserviceSubTypeRowData })
         this.setState({ subscriptionLevel: '' })
@@ -117,7 +108,8 @@ class ServiceSubLevelConfiguration extends Component {
                                 <TableBody>
                                     {this.state.serviceSubTypeRowData.map((ticket, index) => (
                                         <TableRow key={index} id={index}>
-                                            <TableCell>{ticket.ticketType}</TableCell>
+                                            {/* FIXME:  ticket.levelName can change*/}
+                                            <TableCell>{ticket.levelName}</TableCell>
                                             <TableCell>
                                                 <Button
                                                     kind="ghost"

@@ -41,6 +41,27 @@ class AdminConfiguration extends React.Component {
     }
   }
 
+  getTicketAndSubLevel = async () => {
+    try {
+      const { data: ticketTypesAndSubLevelsData } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
+      if (ticketTypesAndSubLevelsData.length) {
+        // FIXME: FOR NOW WE ARE ALLWAYS USING ticketTypesAndSubLevelsData.length - 1 OR ticketTypesAndSubLevelsData[0]
+        let refinedTicketType = [];
+        let refinedSubLevel = [];
+        if (ticketTypesAndSubLevelsData[0].ticketType.length) {
+          refinedTicketType = JSON.parse(ticketTypesAndSubLevelsData[0].ticketType);
+        }
+        if (ticketTypesAndSubLevelsData[0].subscriptionLevel.length) {
+          refinedSubLevel = JSON.parse(ticketTypesAndSubLevelsData[0].subscriptionLevel)
+        }
+        this.setState({ refinedTicketType })
+        this.setState({ refinedSubLevel })
+      }
+    } catch (error) {
+      console.log('Error: ', error)
+    }
+  }
+
   initAdminConfig = () => {
     const setAdminConfig = [
       {
@@ -70,35 +91,13 @@ class AdminConfiguration extends React.Component {
         ),
         content: (
           <>
-            <TicketTypeConfiguration ticketType={this.state.refinedTicketType} />
-            <ServiceSubLevelConfiguration subLevel={this.state.refinedSubLevel} />
+            <TicketTypeConfiguration serviceUrl={this.props.serviceUrl} ticketType={this.state.refinedTicketType} getTicketAndSubLevel={this.getTicketAndSubLevel} />
+            <ServiceSubLevelConfiguration serviceUrl={this.props.serviceUrl} subLevel={this.state.refinedSubLevel} getTicketAndSubLevel={this.getTicketAndSubLevel} />
           </>
         )
       },
     ];
     this.setState({ adminConfig: setAdminConfig })
-  }
-
-  getTicketAndSubLevel = async () => {
-    try {
-      const { data: ticketTypesAndSubLevelsData } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
-      let refinedTicketType = [];
-      let refinedSubLevel = [];
-      if (ticketTypesAndSubLevelsData) {
-        ticketTypesAndSubLevelsData.map(ticketTypeAndSubLevel => {
-          if (ticketTypeAndSubLevel.ticketType) {
-            refinedTicketType.push({ id: ticketTypeAndSubLevel.id, ticketType: ticketTypeAndSubLevel.ticketType })
-          }
-          if (ticketTypeAndSubLevel.subscriptionLevel) {
-            refinedSubLevel.push({ id: ticketTypeAndSubLevel.id, ticketType: ticketTypeAndSubLevel.subscriptionLevel })
-          }
-        })
-        this.setState({ refinedTicketType })
-        this.setState({ refinedSubLevel })
-      }
-    } catch (error) {
-      console.log('Error: ', error)
-    }
   }
 
   render() {

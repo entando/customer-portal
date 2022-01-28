@@ -5,30 +5,14 @@ import i18n from "../../../i18n";
 import { Button, Form, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TextInput } from 'carbon-components-react';
 import { apiProductVersionsGet } from "../../../api/productVersion";
 import { Add16 } from '@carbon/icons-react'
+import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
 
 class TicketTypeConfiguration extends Component {
     constructor() {
         super();
         this.state = {
             ticketName: '',
-            ticketTypeRowData: [
-                // {
-                //     // id: 'a',
-                //     ticketType: 'Bug'
-                // },
-                {
-                    // id: 'b',
-                    ticketType: 'Task'
-                },
-                {
-                    // id: 'c',
-                    ticketType: 'Epic'
-                },
-                {
-                    // id: 'd',
-                    ticketType: 'Story'
-                },
-            ],
+            ticketTypeRowData: [],
             validations: [
                 { isError: false, errorMsg: '' }
             ]
@@ -39,10 +23,26 @@ class TicketTypeConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             this.getProductVersions();
         }
+        if (this.props.ticketType.length) {
+            this.getTicketTypes()
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.ticketType.length !== prevState.ticketTypeRowData.length) {
+        // IMP: remove all the console.log
+        // console.log('-------------------------');
+        // console.log('this.props', this.props)
+        // console.log('prevProps', prevProps);
+        // console.log('prevState', prevState);
+        // console.log('this.state', this.state);
+        // console.log('-------------------------');
+        if (prevProps.ticketType.length !== this.props.ticketType.length) {
+            // console.log("#########################");
+            // console.log('this.props', this.props)
+            // console.log('prevProps', prevProps);
+            // console.log('prevState', prevState);
+            // console.log('this.state', this.state);
+            // console.log("#########################");
             this.getTicketTypes()
         }
         if (authenticationChanged(this.props, prevProps)) {
@@ -52,9 +52,11 @@ class TicketTypeConfiguration extends Component {
         }
     }
 
-    getTicketTypes() {
+    getTicketTypes(data) {
         if (this.props.ticketType.length) {
+            // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%', this.props.ticketType)
             this.setState({ ticketTypeRowData: this.props.ticketType })
+            // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%')
         }
     }
 
@@ -68,7 +70,7 @@ class TicketTypeConfiguration extends Component {
         }
     }
 
-    handleFormSubmit = (e) => {
+    handleFormSubmit = async (e) => {
         e.preventDefault();
 
         if (!this.state.ticketName.length || this.state.ticketName.length < 3) {
@@ -79,7 +81,14 @@ class TicketTypeConfiguration extends Component {
             this.setState({ validations: { isError: true, errorMsg: "This ticket type already exists, please enter a new ticket type" } })
             return
         }
-        const updateTicketTypeRowData = [...this.state.ticketTypeRowData, { ticketType: this.state.ticketName }]
+
+        const ticketListBuilder = JSON.stringify([...this.state.ticketTypeRowData, { name: this.state.ticketName }]);
+        // TODO: Post API HIT
+        // TODO: Rerender happens here.
+        await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', ticketListBuilder).then(() => {
+            this.props.getTicketAndSubLevel()
+        });
+        const updateTicketTypeRowData = [...this.state.ticketTypeRowData, { name: this.state.ticketName }]
         this.setState({ ticketTypeRowData: updateTicketTypeRowData })
         this.setState({ ticketName: '' })
     }
@@ -90,10 +99,14 @@ class TicketTypeConfiguration extends Component {
         this.setState({ ticketName: e.target.value.trimStart() })
     }
 
-    handleDeleteTicketType = (ticket) => {
-        if (window.confirm(`Are you sure you want to Delete the ${ticket.ticketType} type!`)) {
+    handleDeleteTicketType = async (ticket) => {
+        if (window.confirm(`Are you sure you want to Delete the ${ticket.name} type!`)) {
             let updateTicketTypeAfterDeletedTicket = []
-            updateTicketTypeAfterDeletedTicket = this.state.ticketTypeRowData.filter(ticketType => ticket.ticketType !== ticketType.ticketType)
+            updateTicketTypeAfterDeletedTicket = JSON.stringify(this.state.ticketTypeRowData.filter(ticketType => ticket.name !== ticketType.name))
+            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', updateTicketTypeAfterDeletedTicket).then(() => {
+                this.props.getTicketAndSubLevel()
+            });
+            updateTicketTypeAfterDeletedTicket = JSON.parse(updateTicketTypeAfterDeletedTicket)
             this.setState({ ticketTypeRowData: updateTicketTypeAfterDeletedTicket })
         }
     }
@@ -118,7 +131,8 @@ class TicketTypeConfiguration extends Component {
                                 <TableBody>
                                     {this.state.ticketTypeRowData.map((ticket, index) => (
                                         <TableRow key={index} id={index}>
-                                            <TableCell>{ticket.ticketType}</TableCell>
+                                            {/* FIXME:  ticket.name can change*/}
+                                            <TableCell>{ticket.name}</TableCell>
                                             <TableCell>
                                                 <Button
                                                     kind="ghost"
