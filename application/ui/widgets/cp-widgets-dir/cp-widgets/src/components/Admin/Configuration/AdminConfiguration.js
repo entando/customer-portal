@@ -38,7 +38,9 @@ class AdminConfiguration extends React.Component {
         loading: false,
       });
     }
-    if (prevState.refinedTicketType.length !== this.state.refinedTicketType.length || prevState.refinedSubLevel.length !== this.state.refinedSubLevel.length) {
+    if (prevState.refinedTicketType.length !== this.state.refinedTicketType.length ||
+      prevState.refinedSubLevel.length !== this.state.refinedSubLevel.length ||
+      prevState.productName !== this.state.productName) {
       this.initAdminConfig()
     }
   }
@@ -47,21 +49,25 @@ class AdminConfiguration extends React.Component {
     try {
       const { data: ticketTypesAndSubLevelsData } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
       if (ticketTypesAndSubLevelsData.length) {
-        // FIXME: FOR NOW WE ARE ALLWAYS USING ticketTypesAndSubLevelsData.length - 1 OR ticketTypesAndSubLevelsData[0]
         let refinedTicketType = [];
         let refinedSubLevel = [];
-        if (ticketTypesAndSubLevelsData[0].ticketType.length) {
+        let prodName = 'Entando';
+        if (ticketTypesAndSubLevelsData[0].ticketType) {
           refinedTicketType = JSON.parse(ticketTypesAndSubLevelsData[0].ticketType);
+          this.setState({ refinedTicketType: refinedTicketType })
         }
-        if (ticketTypesAndSubLevelsData[0].subscriptionLevel.length) {
+        if (ticketTypesAndSubLevelsData[0].subscriptionLevel) {
           refinedSubLevel = JSON.parse(ticketTypesAndSubLevelsData[0].subscriptionLevel)
+          this.setState({ refinedSubLevel: refinedSubLevel })
         }
-        this.setState({ productName: ticketTypesAndSubLevelsData[0].productName })
-        this.setState({ refinedTicketType })
-        this.setState({ refinedSubLevel })
+        if (ticketTypesAndSubLevelsData[0].hasOwnProperty('productName')
+        ) {
+          prodName = JSON.parse(ticketTypesAndSubLevelsData[0].productName)
+          this.setState({ productName: prodName[0].name })
+        }
       }
     } catch (error) {
-      console.log('Error: ', error)
+      console.error('Error: ', error)
     }
   }
 
@@ -96,7 +102,7 @@ class AdminConfiguration extends React.Component {
           <>
             <TicketTypeConfiguration serviceUrl={this.props.serviceUrl} ticketType={this.state.refinedTicketType} getTicketAndSubLevel={this.getTicketAndSubLevel} />
             <ServiceSubLevelConfiguration serviceUrl={this.props.serviceUrl} subLevel={this.state.refinedSubLevel} getTicketAndSubLevel={this.getTicketAndSubLevel} />
-            <ProductNameConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName}/>
+            <ProductNameConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName} getTicketAndSubLevel={this.getTicketAndSubLevel}/>
           </>
         )
       },

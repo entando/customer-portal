@@ -275,14 +275,9 @@ class SubscriptionForm extends Component {
   }
 
   setupFormComponents() {
-    // const subscriptionLevelList = Object.entries(SUBSCRIPTION_LEVEL).map(([key, value]) => (
-    //   <SelectItem key={key} text={value} value={key}>
-    //     {value}
-    //   </SelectItem>
-    // ));
     const subscriptionLevelList = this.state.subsList.map((subscr, idx) => (
-      <SelectItem key={idx} text={subscr.levelName} value={subscr.levelName}>
-        {subscr.levelName}
+      <SelectItem key={idx} text={subscr.name} value={subscr.name}>
+        {subscr.name}
       </SelectItem>
     ));
     subscriptionLevelList.unshift(<SelectItem key="-1" text={i18n.t('subscriptionForm.chooseLevel')} value=""/>);

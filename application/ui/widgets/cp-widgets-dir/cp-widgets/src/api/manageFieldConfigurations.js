@@ -26,20 +26,16 @@ export const apiTicketingSystemConfigResourceGet = async serviceUrl => {
  * @param {*} ticketType
  * @returns
  */
-// TODO: IMP: PARAMETER REQUIRED TO CHANGE
-export const apiTicketingSystemConfigResourcePost = async (serviceUrl, active = false, productName, ticketType = "", subscriptionLevel = "") => {
+export const apiTicketingSystemConfigResourcePost = async (serviceUrl, typeOfData, Data) => {
     const url = `${serviceUrl}/${resource}`
     const payloadBuilder = {
-        active, productName,
-        subscriptionLevel: subscriptionLevel,
-        ticketType: ticketType
+        flag: typeOfData,
+        values: Data
     }
-
     const options = {
         ...getDefaultOptions(),
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify(payloadBuilder)
     }
-
     return request(url, options)
 }

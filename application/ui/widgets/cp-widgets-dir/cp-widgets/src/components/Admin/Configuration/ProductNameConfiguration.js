@@ -4,6 +4,8 @@ import withKeycloak from "../../../auth/withKeycloak";
 import i18n from "../../../i18n";
 import { Button, ComposedModal, ModalBody, ModalFooter, ModalHeader, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TextInput, } from 'carbon-components-react';
 import { apiProductVersionsGet } from "../../../api/productVersion";
+import { TICKETING_SYSTEM_CONFIG_ENUM } from "../../../api/constants";
+import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
 
 class ProductNameConfiguration extends Component {
     constructor() {
@@ -43,17 +45,26 @@ class ProductNameConfiguration extends Component {
     }
 
     onEditProductNameHandle = () => {
-        this.setState({open: true})
+        this.setState({ changedProductName: this.props.productName })
+        this.setState({ open: true })
     }
 
-    onEditProductNameSave = () => {
-        // TODO: API HIT:
+    onEditProductNameSave = async () => {
         alert('How dare you hit me', this.state.changedProductName)
         this.setState({ open: false })
+        const updatedProdName = [{ name: this.state.changedProductName }]
+        try {
+            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, TICKETING_SYSTEM_CONFIG_ENUM.PRODUCT_NAME, updatedProdName).then(() => {
+                this.props.getTicketAndSubLevel()
+            });
+            this.setState({ changedProductName: this.props.productName })
+        } catch (error) {
+            console.error('Error ', error)
+        }
     }
 
     productOnChangeHandler = (e) => {
-        this.setState({changedProductName: e.target.value})
+        this.setState({ changedProductName: e.target.value })
     }
 
     render() {
@@ -95,7 +106,6 @@ class ProductNameConfiguration extends Component {
                                     data-modal-primary-focus
                                     id="text-input-1"
                                     labelText="Product Name*"
-                                    // TODO: bind data
                                     value={this.state.changedProductName}
                                     onChange={(e) => { this.productOnChangeHandler(e) }}
                                 />

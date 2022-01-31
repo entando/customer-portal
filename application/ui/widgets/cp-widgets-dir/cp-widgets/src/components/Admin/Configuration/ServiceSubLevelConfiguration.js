@@ -6,6 +6,7 @@ import { Button, Form, Table, TableBody, TableCell, TableContainer, TableHead, T
 import { apiProductVersionsGet } from "../../../api/productVersion";
 import { Add16 } from '@carbon/icons-react'
 import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
+import { TICKETING_SYSTEM_CONFIG_ENUM } from "../../../api/constants";
 
 class ServiceSubLevelConfiguration extends Component {
     constructor() {
@@ -66,15 +67,9 @@ class ServiceSubLevelConfiguration extends Component {
             this.setState({ validations: { isError: true, errorMsg: "This Subscription Level already exist, please enter a new Level" } })
             return
         }
-
-        console.log(this.state.subscriptionLevel, this.state.serviceSubTypeRowData)
-        const subsListBuilder = JSON.stringify([...this.state.serviceSubTypeRowData, { levelName: this.state.subscriptionLevel }]);
-        // IMP: remover latter
-        const ticketListFake = JSON.stringify([])
-        console.log(subsListBuilder);
-        // TODO: Post API HIT
+        const subsListBuilder = [...this.state.serviceSubTypeRowData, { name: this.state.subscriptionLevel }];
         try {
-            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', ticketListFake, subsListBuilder).then(() => {
+            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, TICKETING_SYSTEM_CONFIG_ENUM.SUBSCRIPTION_LEVEL, subsListBuilder).then(() => {
                 this.props.getTicketAndSubLevel()
             });
             const updateserviceSubTypeRowData = [...this.state.serviceSubTypeRowData, { levelName: this.state.subscriptionLevel }]
@@ -88,16 +83,15 @@ class ServiceSubLevelConfiguration extends Component {
     setFormData = (e) => {
         if ((!e && !e.target && !e.target.value) || e.target.value.length > 100) return
         this.setState({ validations: { isError: false, errorMsg: "" } })
-        this.setState({ subscriptionLevel: e.target.value.trimStart()})
+        this.setState({ subscriptionLevel: e.target.value.trimStart() })
     }
 
     handleDeleteServiceSubType = async (ticket) => {
-        if (window.confirm(`Are you sure you want to Delete the ${ticket.levelName} Subs Level Config!`)) {
+        if (window.confirm(`Are you sure you want to Delete the ${ticket.name} Subs Level Config!`)) {
             let updateServiceSubTypeAfterDeletedSubscr = []
-            updateServiceSubTypeAfterDeletedSubscr = JSON.stringify(this.state.serviceSubTypeRowData.filter(ticketType => ticket.levelName !== ticketType.levelName))
-            const updateTicketTypeAfterDeletedTicket = JSON.stringify([])
+            updateServiceSubTypeAfterDeletedSubscr = this.state.serviceSubTypeRowData.filter(ticketType => ticket.name !== ticketType.name)
             try {
-                await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', updateTicketTypeAfterDeletedTicket, updateServiceSubTypeAfterDeletedSubscr).then(() => {
+                await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, TICKETING_SYSTEM_CONFIG_ENUM.SUBSCRIPTION_LEVEL, updateServiceSubTypeAfterDeletedSubscr).then(() => {
                     this.props.getTicketAndSubLevel()
                 });
                 updateServiceSubTypeAfterDeletedSubscr = JSON.parse(updateServiceSubTypeAfterDeletedSubscr)
@@ -109,6 +103,21 @@ class ServiceSubLevelConfiguration extends Component {
     }
 
     render() {
+        let subLevelRecord = []
+        this.state.serviceSubTypeRowData.forEach((subscr) => {
+            subLevelRecord.push(<TableRow key={subscr.name} id={subscr.name}>
+                <TableCell>{subscr.name}</TableCell>
+                <TableCell>
+                    <Button
+                        kind="ghost"
+                        onClick={() => this.handleDeleteServiceSubType(subscr)}
+                        style={{ display: 'flex', width: '100%', color: 'red' }}
+                    >
+                        {i18n.t('buttons.delete')}
+                    </Button>
+                </TableCell>
+            </TableRow>)
+        })
         if (isPortalAdminOrSupport()) {
             return (
                 <>
@@ -126,21 +135,7 @@ class ServiceSubLevelConfiguration extends Component {
                                 </TableHead>
 
                                 <TableBody>
-                                    {this.state.serviceSubTypeRowData.map((ticket, index) => (
-                                        <TableRow key={index} id={index}>
-                                            {/* FIXME:  ticket.levelName can change*/}
-                                            <TableCell>{ticket.levelName}</TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    kind="ghost"
-                                                    onClick={() => this.handleDeleteServiceSubType(ticket)}
-                                                    style={{ display: 'flex', width: '100%', color: 'red' }}
-                                                >
-                                                    {i18n.t('buttons.delete')}
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {subLevelRecord}
                                 </TableBody>
                             </Table>
                         </TableContainer>

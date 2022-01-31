@@ -6,6 +6,7 @@ import { Button, Form, Table, TableBody, TableCell, TableContainer, TableHead, T
 import { apiProductVersionsGet } from "../../../api/productVersion";
 import { Add16 } from '@carbon/icons-react'
 import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
+import { TICKETING_SYSTEM_CONFIG_ENUM } from "../../../api/constants";
 
 class TicketTypeConfiguration extends Component {
     constructor() {
@@ -29,20 +30,7 @@ class TicketTypeConfiguration extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // IMP: remove all the console.log
-        // console.log('-------------------------');
-        // console.log('this.props', this.props)
-        // console.log('prevProps', prevProps);
-        // console.log('prevState', prevState);
-        // console.log('this.state', this.state);
-        // console.log('-------------------------');
         if (prevProps.ticketType.length !== this.props.ticketType.length) {
-            // console.log("#########################");
-            // console.log('this.props', this.props)
-            // console.log('prevProps', prevProps);
-            // console.log('prevState', prevState);
-            // console.log('this.state', this.state);
-            // console.log("#########################");
             this.getTicketTypes()
         }
         if (authenticationChanged(this.props, prevProps)) {
@@ -54,9 +42,7 @@ class TicketTypeConfiguration extends Component {
 
     getTicketTypes(data) {
         if (this.props.ticketType.length) {
-            // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%', this.props.ticketType)
             this.setState({ ticketTypeRowData: this.props.ticketType })
-            // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%')
         }
     }
 
@@ -81,16 +67,13 @@ class TicketTypeConfiguration extends Component {
             this.setState({ validations: { isError: true, errorMsg: "This ticket type already exists, please enter a new ticket type" } })
             return
         }
-
-        const ticketListBuilder = JSON.stringify([...this.state.ticketTypeRowData, { name: this.state.ticketName }]);
-        // TODO: Post API HIT
-        // TODO: Rerender happens here.
+        let ticketListBuilder = [...this.state.ticketTypeRowData, {name: this.state.ticketName}]
         try {
-            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', ticketListBuilder).then(() => {
+            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, TICKETING_SYSTEM_CONFIG_ENUM.TICKET_TYPE, ticketListBuilder).then(() => {
                 this.props.getTicketAndSubLevel()
             });
-            const updateTicketTypeRowData = [...this.state.ticketTypeRowData, { name: this.state.ticketName }]
-            this.setState({ ticketTypeRowData: updateTicketTypeRowData })
+            const updateTicketTypeRowData = ticketListBuilder
+            this.setState({ ticketTypeRowData: [updateTicketTypeRowData] })
             this.setState({ ticketName: '' })
         } catch (error) {
             console.error('Error :',error)
@@ -106,9 +89,9 @@ class TicketTypeConfiguration extends Component {
     handleDeleteTicketType = async (ticket) => {
         if (window.confirm(`Are you sure you want to Delete the ${ticket.name} type!`)) {
             let updateTicketTypeAfterDeletedTicket = []
-            updateTicketTypeAfterDeletedTicket = JSON.stringify(this.state.ticketTypeRowData.filter(ticketType => ticket.name !== ticketType.name))
+            updateTicketTypeAfterDeletedTicket = this.state.ticketTypeRowData.filter(ticketType => ticket.name !== ticketType.name)
             try {
-                await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, true, 'Entando', updateTicketTypeAfterDeletedTicket).then(() => {
+                await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, TICKETING_SYSTEM_CONFIG_ENUM.TICKET_TYPE, updateTicketTypeAfterDeletedTicket).then(() => {
                     this.props.getTicketAndSubLevel()
                 });
                 updateTicketTypeAfterDeletedTicket = JSON.parse(updateTicketTypeAfterDeletedTicket)
@@ -120,6 +103,21 @@ class TicketTypeConfiguration extends Component {
     }
 
     render() {
+        let ticketTypeRecord = []
+        this.state.ticketTypeRowData.forEach((ticket) => {
+            ticketTypeRecord.push(<TableRow key={ticket.name} id={ticket.name}>
+                <TableCell>{ticket.name}</TableCell>
+                <TableCell>
+                    <Button
+                        kind="ghost"
+                        onClick={() => this.handleDeleteTicketType(ticket)}
+                        style={{ display: 'flex', width: '100%', color: 'red' }}
+                    >
+                        {i18n.t('buttons.delete')}
+                    </Button>
+                </TableCell>
+            </TableRow>)
+        })
         if (isPortalAdminOrSupport()) {
             return (
                 <>
@@ -137,21 +135,7 @@ class TicketTypeConfiguration extends Component {
                                 </TableHead>
 
                                 <TableBody>
-                                    {this.state.ticketTypeRowData.map((ticket, index) => (
-                                        <TableRow key={index} id={index}>
-                                            {/* FIXME:  ticket.name can change*/}
-                                            <TableCell>{ticket.name}</TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    kind="ghost"
-                                                    onClick={() => this.handleDeleteTicketType(ticket)}
-                                                    style={{ display: 'flex', width: '100%', color: 'red' }}
-                                                >
-                                                    {i18n.t('buttons.delete')}
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {ticketTypeRecord}
                                 </TableBody>
                             </Table>
                         </TableContainer>
