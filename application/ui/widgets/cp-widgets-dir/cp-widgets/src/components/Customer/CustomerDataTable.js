@@ -39,7 +39,7 @@ class CustomerDataTable extends Component {
         key: 'partners',
       },
       {
-        header: this.props.productName[0].name ? `${this.props.productName[0].name} Version` : '',
+        header: (this.props.productName && this.props.productName[0].name) ? `${this.props.productName[0].name} Version` : 'Version',
         key: 'entandoVersion',
       },
       {
