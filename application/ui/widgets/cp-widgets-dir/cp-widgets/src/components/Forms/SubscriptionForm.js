@@ -59,7 +59,8 @@ class SubscriptionForm extends Component {
       submitSuccess: false,
       submitError: false,
       submitColour: 'black',
-      subsList: []
+      subsList: [],
+      productName: ''
     };
   }
 
@@ -88,6 +89,7 @@ class SubscriptionForm extends Component {
       if (data.data[0].hasOwnProperty('subscriptionLevel')) {
         const subLists = JSON.parse(data.data[0].subscriptionLevel);
         this.setState({ subsList: subLists })
+        this.setState({productName: JSON.parse(data.data[0].productName)[0].name})
       }
     } catch (error) {
       console.error("Error: ", error)
@@ -340,7 +342,7 @@ class SubscriptionForm extends Component {
             <Select
               id="entandoVersionId"
               name="entandoVersionId"
-              labelText={i18n.t('subscriptionForm.entandoVersion') + ' *'}
+              labelText={`${this.state.productName} Version *`}
               value={this.state.entandoVersionId}
               onChange={this.handleChanges}
               invalidText={i18n.t('validation.invalid.required')}

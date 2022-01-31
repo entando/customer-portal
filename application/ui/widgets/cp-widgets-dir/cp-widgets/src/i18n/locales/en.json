@@ -15,7 +15,7 @@
     },
     "manageProductVersion": {
       "title": "Manage Product Version",
-      "desc": "Manage the Entando Product Versions",
+      "desc": "Manage the Product Versions",
       "entandoVersion": "Entando Version",
       "status": "Status *",
       "startDate": "Start Date",
@@ -224,7 +224,7 @@
     "adminRenewNewSuccess": "Successfully renewed a project subscription.",
     "adminTitle": "Admin Subscription Form",
     "chooseLevel": "Choose a level",
-    "chooseVersion": "Choose Entando version",
+    "chooseVersion": "Choose a version",
     "contactEmail": "Contact Email *",
     "contactName": "Contact Name *",
     "contactNumber": "Contact Phone Number",

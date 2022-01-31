@@ -15,7 +15,7 @@
     },
     "manageProductVersion": {
       "title": "Gestisci la versione del prodotto",
-      "desc": "Ciò consente di gestire le versioni del prodotto Entando",
+      "desc": "Gestisci le versioni del prodotto",
       "entandoVersion": "Versione di Entando",
       "status": "Stato *",
       "startDate": "data d'inizio",
@@ -226,7 +226,7 @@
     "adminRenewNewSuccess": "Rinnovato con successo una subscription al progetto.",
     "adminTitle": "Interfaccia Amministrativa di Entando",
     "chooseLevel": "Scegli un livello",
-    "chooseVersion": "Scegli la versione Entando",
+    "chooseVersion": "Scegli una versione",
     "contactEmail": "Contatto email *",
     "contactName": "Nome del contatto *",
     "contactNumber": "numero di contatto telefonico",

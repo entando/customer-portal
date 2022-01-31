@@ -39,7 +39,7 @@ class CustomerDataTable extends Component {
         key: 'partners',
       },
       {
-        header: i18n.t('customerDashboard.entandoVersion'),
+        header: this.props.productName[0].name ? `${this.props.productName[0].name} Version` : '',
         key: 'entandoVersion',
       },
       {

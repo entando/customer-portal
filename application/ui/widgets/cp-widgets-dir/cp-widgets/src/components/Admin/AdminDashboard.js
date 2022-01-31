@@ -14,6 +14,7 @@ import {
   isPortalUser,
   isAuthenticated,
 } from '../../api/helpers';
+import { apiTicketingSystemConfigResourceGet } from '../../api/manageFieldConfigurations';
 
 class AdminDashboard extends React.Component {
   constructor() {
@@ -24,7 +25,8 @@ class AdminDashboard extends React.Component {
       filteredCustomers: {},
       currentPage: 0,
       test: '',
-      loading: true
+      loading: true,
+      ticketSystemConfig: {},
     };
   }
 
@@ -43,6 +45,8 @@ class AdminDashboard extends React.Component {
       let customers = {};
       try {
         customers = await apiCustomersGet(this.props.serviceUrl);
+        const { data: ticketSystemConfig } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
+        this.setState({ ticketSystemConfig: ticketSystemConfig[0] })
       } catch (err) {
         console.log(err);
       }
@@ -145,6 +149,7 @@ class AdminDashboard extends React.Component {
                           updateCustomerList={this.updateCustomerList}
                           locale={this.props.locale}
                           accordionOpened={accordionOpened}
+                          ticketSystemConfig={this.state.ticketSystemConfig}
                         />
                       );
                     } else {

@@ -63,7 +63,7 @@ class ServiceSubLevelConfiguration extends Component {
             this.setState({ validations: { isError: true, errorMsg: "Subscription Level must be at least 3 characters" } })
             return
         }
-        if (this.state.serviceSubTypeRowData.find((ticket) => (ticket.ticketType === this.state.subscriptionLevel))) {
+        if (this.state.serviceSubTypeRowData.find((ticket) => (ticket.name === this.state.subscriptionLevel))) {
             this.setState({ validations: { isError: true, errorMsg: "This Subscription Level already exist, please enter a new Level" } })
             return
         }

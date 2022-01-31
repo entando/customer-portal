@@ -89,7 +89,7 @@ class AdminConfiguration extends React.Component {
             <p className="desc">{i18n.t('adminConfig.manageProductVersion.desc')}</p>
           </div>
         ),
-        content: <ProductVersion serviceUrl={this.props.serviceUrl} />,
+        content: <ProductVersion serviceUrl={this.props.serviceUrl} productName={this.state.productName}/>,
       },
       {
         label: (

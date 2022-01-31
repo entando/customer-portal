@@ -95,7 +95,7 @@ class ProductVersion extends Component {
                   <TableHead>
                     <TableRow>
                       {headers.map(header => (
-                        <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>
+                        <TableHeader {...getHeaderProps({ header })}>{header.key === 'entVersion' ? this.props.productName : header.header}</TableHeader>
                       ))}
                     </TableRow>
                   </TableHead>

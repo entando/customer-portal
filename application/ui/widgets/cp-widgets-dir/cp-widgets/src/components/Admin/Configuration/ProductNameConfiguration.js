@@ -50,7 +50,10 @@ class ProductNameConfiguration extends Component {
     }
 
     onEditProductNameSave = async () => {
-        alert('How dare you hit me', this.state.changedProductName)
+        if (!this.state.changedProductName || this.state.changedProductName < 3) {
+            this.setState({ validations: { isError: true, errorMsg: "Product Name must be at least 3 characters" } })
+            return
+        }
         this.setState({ open: false })
         const updatedProdName = [{ name: this.state.changedProductName }]
         try {
@@ -64,6 +67,15 @@ class ProductNameConfiguration extends Component {
     }
 
     productOnChangeHandler = (e) => {
+        if (e.target.value.length > 100) {
+            return
+        }
+        if (!e.target.value || e.target.value.length < 3) {
+            this.setState({ validations: { isError: true, errorMsg: "Product Name must be at least 3 characters" } })
+            this.setState({ changedProductName: e.target.value })
+            return
+        }
+        this.setState({ validations: { isError: false, errorMsg: "" } })
         this.setState({ changedProductName: e.target.value })
     }
 
@@ -107,6 +119,7 @@ class ProductNameConfiguration extends Component {
                                     id="text-input-1"
                                     labelText="Product Name*"
                                     value={this.state.changedProductName}
+                                    invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
                                     onChange={(e) => { this.productOnChangeHandler(e) }}
                                 />
                             </ModalBody>
