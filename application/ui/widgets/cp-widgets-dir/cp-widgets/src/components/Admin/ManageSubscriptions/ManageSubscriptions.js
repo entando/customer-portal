@@ -150,7 +150,7 @@ class ManageSubscriptions extends Component {
                 <TableHead>
                   <TableRow>
                     {headers.map(header => (
-                      <TableHeader {...getHeaderProps({header})}>{header.key === 'entandoVersion' ? this.state.productName : header.header}</TableHeader>
+                      <TableHeader {...getHeaderProps({ header })}>{header.key === 'entandoVersion' ? `${this.state.productName} Version` : header.header}</TableHeader>
                     ))}
                   </TableRow>
                 </TableHead>
