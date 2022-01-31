@@ -63,7 +63,7 @@ class TicketTypeConfiguration extends Component {
             this.setState({ validations: { isError: true, errorMsg: "Ticket Type must be at least 3 characters" } })
             return
         }
-        if (this.state.ticketTypeRowData.find((ticket) => (ticket.name === this.state.ticketName))) {
+        if (this.state.ticketTypeRowData.find((ticket) => (ticket.name.toLocaleLowerCase() === this.state.ticketName.toLocaleLowerCase()))) {
             this.setState({ validations: { isError: true, errorMsg: "This ticket type already exists, please enter a new ticket type" } })
             return
         }
