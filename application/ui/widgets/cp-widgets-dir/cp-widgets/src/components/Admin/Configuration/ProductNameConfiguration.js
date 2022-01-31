@@ -45,6 +45,7 @@ class ProductNameConfiguration extends Component {
     }
 
     onEditProductNameHandle = () => {
+        this.setState({ validations: { isError: false, errorMsg: "" } })
         this.setState({ changedProductName: this.props.productName })
         this.setState({ open: true })
     }
