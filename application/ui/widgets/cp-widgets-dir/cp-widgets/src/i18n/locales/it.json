@@ -294,7 +294,15 @@
       "required": "Questo campo è obbligatorio.",
       "email": "L'email non è valida.",
       "date": "Inserisci una data nel formato 'mm / gg / aaaa'.",
-      "number": "Questo campo deve essere un numero."
+      "number": "Questo campo deve essere un numero.",
+      "productNameMaxChar": "Product Name must not exceed 100 characters",
+      "productNameMinChar": "Product Name must be at least 3 characters",
+      "subscrLevelMinChar": "Subscription Level must be at least 3 characters",
+      "subscrLevelMaxChar": "Subscription Level must not exceed 100 characters",
+      "subscrDupCheck": "This Subscription Level already exist, please enter a new Level",
+      "ticketTypeMinChar": "Ticket Type must be at least 3 characters",
+      "ticketTypeMaxChar": "Ticket Type must not exceed 100 characters",
+      "ticketDupCheck": "This ticket type already exists, please enter a new ticket type"
     }
   }
 }

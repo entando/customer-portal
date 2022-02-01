@@ -6,7 +6,7 @@ import { Button, Form, Table, TableBody, TableCell, TableContainer, TableHead, T
 import { apiProductVersionsGet } from "../../../api/productVersion";
 import { Add16 } from '@carbon/icons-react'
 import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
-import { TICKETING_SYSTEM_CONFIG_ENUM } from "../../../api/constants";
+import { TICKETING_SYSTEM_CONFIG_ENUM, VALIDATION_VARS } from "../../../api/constants";
 
 class ServiceSubLevelConfiguration extends Component {
     constructor() {
@@ -18,6 +18,7 @@ class ServiceSubLevelConfiguration extends Component {
                 { isError: false, errorMsg: '' }
             ]
         };
+        this.timeoutId = null;
     }
 
     componentDidMount() {
@@ -81,9 +82,22 @@ class ServiceSubLevelConfiguration extends Component {
     }
 
     setFormData = (e) => {
-        if ((!e && !e.target && !e.target.value) || e.target.value.length > 100) return
-        this.setState({ validations: { isError: false, errorMsg: "" } })
-        this.setState({ subscriptionLevel: e.target.value.trimStart() })
+        if (!e && !e.target && !e.target.value) return
+        if (e.target.value.length <= VALIDATION_VARS.CHAR_MAX_LIMIT) {
+            this.setState({ validations: { isError: false, errorMsg: "" } })
+            this.setState({ subscriptionLevel: e.target.value.trimStart() })
+            return;
+        }
+        if (this.state.subscriptionLevel.length >= VALIDATION_VARS.CHAR_MAX_LIMIT) {
+            this.setState({ validations: { isError: true, errorMsg: "Subscription Level must not exceed 100 characters" } })
+            if (!this.timeoutId) {
+                this.timeoutId = setTimeout(() => {
+                    this.setState({ validations: { isError: false, errorMsg: "" } })
+                    this.timeoutId = null;
+                }, VALIDATION_VARS.CHAR_LIMIT_MSG_APPEAR_TIME)
+            }
+            return
+        }
     }
 
     handleDeleteServiceSubType = async (ticket) => {

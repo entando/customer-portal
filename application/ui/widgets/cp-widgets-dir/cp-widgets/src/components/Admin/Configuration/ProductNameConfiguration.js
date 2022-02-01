@@ -4,7 +4,7 @@ import withKeycloak from "../../../auth/withKeycloak";
 import i18n from "../../../i18n";
 import { Button, ComposedModal, ModalBody, ModalFooter, ModalHeader, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TextInput, } from 'carbon-components-react';
 import { apiProductVersionsGet } from "../../../api/productVersion";
-import { TICKETING_SYSTEM_CONFIG_ENUM } from "../../../api/constants";
+import { TICKETING_SYSTEM_CONFIG_ENUM, VALIDATION_VARS } from "../../../api/constants";
 import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
 
 class ProductNameConfiguration extends Component {
@@ -17,6 +17,7 @@ class ProductNameConfiguration extends Component {
             ],
             changedProductName: ''
         };
+        this.timeoutId = null;
     }
 
     componentDidMount() {
@@ -52,7 +53,7 @@ class ProductNameConfiguration extends Component {
 
     onEditProductNameSave = async () => {
         if (!this.state.changedProductName || this.state.changedProductName < 3) {
-            this.setState({ validations: { isError: true, errorMsg: "Product Name must be at least 3 characters" } })
+            this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.productNameMinChar') } })
             return
         }
         this.setState({ open: false })
@@ -68,16 +69,22 @@ class ProductNameConfiguration extends Component {
     }
 
     productOnChangeHandler = (e) => {
-        if (e.target.value.length > 100) {
-            return
-        }
-        if (!e.target.value || e.target.value.length < 3) {
-            this.setState({ validations: { isError: true, errorMsg: "Product Name must be at least 3 characters" } })
+        if (!e && !e.target && !e.target.value) return
+        if (e.target.value.length <= VALIDATION_VARS.CHAR_MAX_LIMIT) {
+            this.setState({ validations: { isError: false, errorMsg: "" } })
             this.setState({ changedProductName: e.target.value })
             return
         }
-        this.setState({ validations: { isError: false, errorMsg: "" } })
-        this.setState({ changedProductName: e.target.value })
+        if (e.target.value.length >= VALIDATION_VARS.CHAR_MAX_LIMIT) {
+            this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.productNameMaxChar') } })
+            if (!this.timeoutId) {
+                setTimeout(() => {
+                    this.setState({ validations: { isError: false, errorMsg: "" } })
+                    this.timeoutId = null;
+                }, VALIDATION_VARS.CHAR_LIMIT_MSG_APPEAR_TIME)
+            }
+            return
+        }
     }
 
     render() {
