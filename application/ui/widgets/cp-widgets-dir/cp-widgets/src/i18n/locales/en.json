@@ -30,6 +30,9 @@
       "subscriptionLevel": "Subscription Level",
       "addTicketTypeButton": "Add Ticket Type",
       "addSubscriptionLevelButton": "Add Subscription Level"
+    },
+    "productNameConfigurations": {
+      "title": "Product Name Configuration"
     }
   },
   "adminDashboard": {
