@@ -74,8 +74,7 @@ class TicketTypeConfiguration extends Component {
                 this.props.getTicketAndSubLevel()
             });
             const updateTicketTypeRowData = ticketListBuilder
-            this.setState({ ticketTypeRowData: [updateTicketTypeRowData] })
-            this.setState({ ticketName: '' })
+            this.setState({ ticketTypeRowData: [updateTicketTypeRowData], ticketName: '' })
         } catch (error) {
             console.error('Error :',error)
         }
@@ -84,8 +83,7 @@ class TicketTypeConfiguration extends Component {
     setFormData = (e) => {
         if (!e && !e.target && !e.target.value) return
         if (e.target.value.length <= VALIDATION_VARS.CHAR_MAX_LIMIT) {
-            this.setState({ validations: { isError: false, errorMsg: "" } })
-            this.setState({ ticketName: e.target.value.trimStart() })
+            this.setState({ validations: { isError: false, errorMsg: "" }, ticketName: e.target.value.trimStart() })
             return;
         }
         if (this.state.ticketName.length >= VALIDATION_VARS.CHAR_MAX_LIMIT) {

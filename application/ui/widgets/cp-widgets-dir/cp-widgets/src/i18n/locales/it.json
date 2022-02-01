@@ -30,6 +30,9 @@
       "subscriptionLevel": "Livello di abbonamento",
       "addTicketTypeButton": "Aggiungi tipo di biglietto",
       "addSubscriptionLevelButton": "Aggiungi livello di abbonamento"
+    },
+    "productNameConfigurations": {
+      "title": "Configurazione del nome del prodotto"
     }
   },
   "adminDashboard": {

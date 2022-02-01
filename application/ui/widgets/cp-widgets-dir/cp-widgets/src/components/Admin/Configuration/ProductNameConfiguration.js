@@ -46,9 +46,7 @@ class ProductNameConfiguration extends Component {
     }
 
     onEditProductNameHandle = () => {
-        this.setState({ validations: { isError: false, errorMsg: "" } })
-        this.setState({ changedProductName: this.props.productName })
-        this.setState({ open: true })
+        this.setState({ validations: { isError: false, errorMsg: "" }, changedProductName: this.props.productName, open: true })
     }
 
     onEditProductNameSave = async () => {
@@ -71,8 +69,7 @@ class ProductNameConfiguration extends Component {
     productOnChangeHandler = (e) => {
         if (!e && !e.target && !e.target.value) return
         if (e.target.value.length <= VALIDATION_VARS.CHAR_MAX_LIMIT) {
-            this.setState({ validations: { isError: false, errorMsg: "" } })
-            this.setState({ changedProductName: e.target.value })
+            this.setState({ validations: { isError: false, errorMsg: "" }, changedProductName: e.target.value })
             return
         }
         if (e.target.value.length >= VALIDATION_VARS.CHAR_MAX_LIMIT) {
@@ -92,7 +89,7 @@ class ProductNameConfiguration extends Component {
             return (
                 <>
                     <div>
-                        <h4>Product Name Configuration</h4>
+                        <h4>{i18n.t("adminConfig.productNameConfigurations.title")}</h4>
                         <TableContainer>
                             <Table>
                                 <TableHead>
@@ -120,7 +117,7 @@ class ProductNameConfiguration extends Component {
                             </Table>
                         </TableContainer>
                         <ComposedModal open={this.state.open} onClose={() => { this.setState({ open: false }) }} >
-                            <ModalHeader title="Edit" />
+                            <ModalHeader title={i18n.t('buttons.edit')} />
                             <ModalBody>
                                 <TextInput
                                     data-modal-primary-focus
@@ -135,10 +132,10 @@ class ProductNameConfiguration extends Component {
                                 <Button
                                     kind="secondary"
                                     onMouseDown={() => { this.setState({ open: false }) }}>
-                                    Cancel
+                                    {i18n.t('buttons.cancel')}
                                 </Button>
                                 <Button kind="primary" onClick={() => { this.onEditProductNameSave() }}>
-                                    Save
+                                    {i18n.t('buttons.save')}
                                 </Button>
                             </ModalFooter>
                         </ComposedModal>
