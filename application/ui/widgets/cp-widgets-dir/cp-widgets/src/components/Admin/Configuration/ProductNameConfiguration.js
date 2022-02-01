@@ -50,7 +50,11 @@ class ProductNameConfiguration extends Component {
     }
 
     onEditProductNameSave = async () => {
-        if (!this.state.changedProductName || this.state.changedProductName < 3) {
+        if (!this.state.changedProductName) {
+            this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.required') } })
+            return
+        }
+        if (this.state.changedProductName.length < 3) {
             this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.productNameMinChar') } })
             return
         }
