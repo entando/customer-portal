@@ -24,7 +24,7 @@
     "manageFieldConfigurations": {
       "title": "Ticketing System Configuration",
       "manageFieldConfigurationsDesc": "This will allow you to manage dropdown fields used in the various form for create and managing tickets",
-      "ticketTypeConfigurations": "Ticket Type Configurations",
+      "ticketTypeConfigurations": "Ticket Type Configuration",
       "subscriptionLevelConfiguration": "Subscription Level Configuration",
       "ticketType": "Ticket Type",
       "subscriptionLevel": "Subscription Level",
