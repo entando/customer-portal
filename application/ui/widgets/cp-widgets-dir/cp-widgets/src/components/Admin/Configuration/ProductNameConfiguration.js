@@ -73,7 +73,12 @@ class ProductNameConfiguration extends Component {
     productOnChangeHandler = (e) => {
         if (!e && !e.target && !e.target.value) return
         if (e.target.value.length <= VALIDATION_VARS.CHAR_MAX_LIMIT) {
-            this.setState({ validations: { isError: false, errorMsg: "" }, changedProductName: e.target.value })
+            if (!e.target.value.length) this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.required') }, changedProductName: e.target.value })
+            else if (e.target.value.length && e.target.value.length < VALIDATION_VARS.CHAR_MIN_LIMIT) {
+                this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.productNameMinChar') }, changedProductName: e.target.value })
+            } else {
+                this.setState({ validations: { isError: false, errorMsg: "" }, changedProductName: e.target.value })
+            }
             return
         }
         if (e.target.value.length >= VALIDATION_VARS.CHAR_MAX_LIMIT) {
