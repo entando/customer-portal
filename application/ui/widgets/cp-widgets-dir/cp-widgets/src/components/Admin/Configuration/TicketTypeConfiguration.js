@@ -103,7 +103,7 @@ class TicketTypeConfiguration extends Component {
     }
 
     handleDeleteTicketType = async (ticket) => {
-        if (window.confirm(`Are you sure you want to Delete the ${ticket.name} type!`)) {
+        if (window.confirm(`Are you sure you want to delete the Ticket type?`)) {
             let updateTicketTypeAfterDeletedTicket = []
             updateTicketTypeAfterDeletedTicket = this.state.ticketTypeRowData.filter(ticketType => ticket.name !== ticketType.name)
             try {
