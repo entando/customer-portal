@@ -61,11 +61,11 @@ class ServiceSubLevelConfiguration extends Component {
         e.preventDefault();
 
         if (!this.state.subscriptionLevel.length || this.state.subscriptionLevel.length < 3) {
-            this.setState({ validations: { isError: true, errorMsg: "Subscription Level must be at least 3 characters" } })
+            this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.subscrLevelMinChar') } })
             return
         }
         if (this.state.serviceSubTypeRowData.find((ticket) => (ticket.name.toLocaleLowerCase() === this.state.subscriptionLevel.toLocaleLowerCase()))) {
-            this.setState({ validations: { isError: true, errorMsg: "This Subscription Level already exist, please enter a new Level" } })
+            this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.subscrDupCheck') } })
             return
         }
         const subsListBuilder = [...this.state.serviceSubTypeRowData, { name: this.state.subscriptionLevel }];
@@ -89,7 +89,7 @@ class ServiceSubLevelConfiguration extends Component {
             return;
         }
         if (this.state.subscriptionLevel.length >= VALIDATION_VARS.CHAR_MAX_LIMIT) {
-            this.setState({ validations: { isError: true, errorMsg: "Subscription Level must not exceed 100 characters" } })
+            this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.subscrLevelMaxChar') } })
             if (!this.timeoutId) {
                 this.timeoutId = setTimeout(() => {
                     this.setState({ validations: { isError: false, errorMsg: "" } })

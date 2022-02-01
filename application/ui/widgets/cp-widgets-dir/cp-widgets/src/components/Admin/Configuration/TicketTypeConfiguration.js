@@ -61,11 +61,11 @@ class TicketTypeConfiguration extends Component {
         e.preventDefault();
 
         if (!this.state.ticketName.length || this.state.ticketName.length < 3) {
-            this.setState({ validations: { isError: true, errorMsg: "Ticket Type must be at least 3 characters" } })
+            this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.ticketTypeMinChar') } })
             return
         }
         if (this.state.ticketTypeRowData.find((ticket) => (ticket.name.toLocaleLowerCase() === this.state.ticketName.toLocaleLowerCase()))) {
-            this.setState({ validations: { isError: true, errorMsg: "This ticket type already exists, please enter a new ticket type" } })
+            this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.ticketDupCheck') } })
             return
         }
         let ticketListBuilder = [...this.state.ticketTypeRowData, {name: this.state.ticketName}]
@@ -89,7 +89,7 @@ class TicketTypeConfiguration extends Component {
             return;
         }
         if (this.state.ticketName.length >= VALIDATION_VARS.CHAR_MAX_LIMIT) {
-            this.setState({ validations: { isError: true, errorMsg: "Ticket Type must not exceed 100 characters" } })
+            this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.ticketTypeMaxChar') } })
             if (!this.timeoutId) {
                 setTimeout(() => {
                     this.setState({ validations: { isError: false, errorMsg: "" } })

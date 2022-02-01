@@ -295,14 +295,14 @@
       "email": "L'email non è valida.",
       "date": "Inserisci una data nel formato 'mm / gg / aaaa'.",
       "number": "Questo campo deve essere un numero.",
-      "productNameMaxChar": "Product Name must not exceed 100 characters",
-      "productNameMinChar": "Product Name must be at least 3 characters",
-      "subscrLevelMinChar": "Subscription Level must be at least 3 characters",
-      "subscrLevelMaxChar": "Subscription Level must not exceed 100 characters",
-      "subscrDupCheck": "This Subscription Level already exist, please enter a new Level",
-      "ticketTypeMinChar": "Ticket Type must be at least 3 characters",
-      "ticketTypeMaxChar": "Ticket Type must not exceed 100 characters",
-      "ticketDupCheck": "This ticket type already exists, please enter a new ticket type"
+      "productNameMaxChar": "Il nome del prodotto non deve superare i 100 caratteri",
+      "productNameMinChar": "Il nome del prodotto deve contenere almeno 3 caratteri",
+      "subscrLevelMinChar": "Il livello di abbonamento deve essere di almeno 3 caratteri",
+      "subscrLevelMaxChar": "Il livello di abbonamento non deve superare i 100 caratteri",
+      "subscrDupCheck": "Questo livello di abbonamento esiste già, inserisci un nuovo livello",
+      "ticketTypeMinChar": "Il tipo di biglietto deve contenere almeno 3 caratteri",
+      "ticketTypeMaxChar": "Il tipo di biglietto non deve superare i 100 caratteri",
+      "ticketDupCheck": "Questo tipo di biglietto esiste già, inserisci un nuovo tipo di biglietto"
     }
   }
 }
