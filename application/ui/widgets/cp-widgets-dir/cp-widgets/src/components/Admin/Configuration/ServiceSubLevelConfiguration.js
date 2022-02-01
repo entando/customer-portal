@@ -104,7 +104,7 @@ class ServiceSubLevelConfiguration extends Component {
     }
 
     handleDeleteServiceSubType = async (ticket) => {
-        if (window.confirm(`Are you sure you want to delete the Subscription Level?`)) {
+        if (window.confirm('Are you sure you want to delete this Subscription Level?')) {
             let updateServiceSubTypeAfterDeletedSubscr = []
             updateServiceSubTypeAfterDeletedSubscr = this.state.serviceSubTypeRowData.filter(ticketType => ticket.name !== ticketType.name)
             try {
