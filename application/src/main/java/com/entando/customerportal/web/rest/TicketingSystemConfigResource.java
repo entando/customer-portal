@@ -63,7 +63,7 @@ public class TicketingSystemConfigResource {
     public ResponseEntity<TicketingSystemConfig> updateTicketingSystemConfiguration(@RequestBody TicketingSystemConfigUpdateRequest ticketingSystemConfigReq) throws URISyntaxException {
         log.debug("REST request to update Ticketing System Configuration : {}", ticketingSystemConfigReq);
         if (ticketingSystemConfigReq.getFlag() == null) {
-            throw new BadRequestAlertException("A flag is required", ENTITY_NAME, "flag required");
+            throw new BadRequestAlertException("flag is required", ENTITY_NAME, "flag required");
         }
         TicketingSystemConfig result = configService.updateTicketingSystemConfiguration(ticketingSystemConfigReq);
         return ResponseEntity.created(new URI("/api/ticketing-system-config" + result.getId()))
