@@ -68,6 +68,10 @@ class JiraConfiguration extends Component {
     }
 
     onClickJiraConfigSave = async () => {
+        // validation before submit form
+        for (let key in this.state.jiraOnChangedValue) {
+            if (!this.state.jiraOnChangedValue[key]) return
+        }
         const jiraConfigBuilder = []
         for (let key in this.state.jiraOnChangedValue) {
             jiraConfigBuilder.push({ [key]: this.state.jiraOnChangedValue[key] })
