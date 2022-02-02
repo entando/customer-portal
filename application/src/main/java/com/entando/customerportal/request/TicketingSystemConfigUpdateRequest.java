@@ -7,7 +7,7 @@ public class TicketingSystemConfigUpdateRequest {
 
 	private TicketingSystemConfigEnum flag;
 	private Set<ConfigFields> values;
-	private JiraCustomFieldRequest jiraCustomFields;
+	private Set<JiraCustomFieldRequest> jiraCustomFields;
 
 	public TicketingSystemConfigEnum getFlag() {
 		return flag;
@@ -25,11 +25,11 @@ public class TicketingSystemConfigUpdateRequest {
 		this.values = values;
 	}
 
-	public JiraCustomFieldRequest getJiraCustomFields() {
+	public Set<JiraCustomFieldRequest> getJiraCustomFields() {
 		return jiraCustomFields;
 	}
 
-	public void setJiraCustomFields(JiraCustomFieldRequest jiraCustomFields) {
+	public void setJiraCustomFields(Set<JiraCustomFieldRequest> jiraCustomFields) {
 		this.jiraCustomFields = jiraCustomFields;
 	}
 
@@ -56,6 +56,8 @@ public class TicketingSystemConfigUpdateRequest {
 		return "TicketingSystemConfigUpdateRequest [flag=" + flag + ", values=" + values + ", jiraCustomFields="
 				+ jiraCustomFields + "]";
 	}
+
+
 
 	public enum TicketingSystemConfigEnum {
 		TICKET_TYPE, SUBSCRIPTION_LEVEL, PRODUCT_NAME, JIRA_CUSTOM_FIELD;
