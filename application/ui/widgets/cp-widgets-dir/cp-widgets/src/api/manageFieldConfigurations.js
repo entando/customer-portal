@@ -1,3 +1,4 @@
+import { TICKETING_SYSTEM_CONFIG_ENUM } from './constants';
 import { getDefaultOptions, request, getUrl } from './helpers';
 
 const resource = 'api/ticketing-system-config/';
@@ -28,9 +29,10 @@ export const apiTicketingSystemConfigResourceGet = async serviceUrl => {
  */
 export const apiTicketingSystemConfigResourcePost = async (serviceUrl, typeOfData, Data) => {
     const url = `${serviceUrl}/${resource}`
+    let keyBuilder = typeOfData === TICKETING_SYSTEM_CONFIG_ENUM.JIRA_CUSTOM_FIELD ? 'jiraCustomFields' : 'values';
     const payloadBuilder = {
         flag: typeOfData,
-        values: Data
+        [keyBuilder]: Data
     }
     const options = {
         ...getDefaultOptions(),

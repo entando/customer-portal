@@ -296,14 +296,14 @@
       "email": "Email is not valid.",
       "date": "Please enter a date in 'mm/dd/yyyy' format.",
       "number": "This field must be a number.",
-      "productNameMaxChar": "Product Name must not exceed 100 characters",
-      "productNameMinChar": "Product Name must be at least 3 characters",
-      "subscrLevelMinChar": "Subscription Level must be at least 3 characters",
-      "subscrLevelMaxChar": "Subscription Level must not exceed 100 characters",
-      "subscrDupCheck": "This Subscription Level already exist, please enter a new Level",
-      "ticketTypeMinChar": "Ticket Type must be at least 3 characters",
-      "ticketTypeMaxChar": "Ticket Type must not exceed 100 characters",
-      "ticketDupCheck": "This ticket type already exists, please enter a new ticket type"
+      "productNameMaxChar": "Product name must not exceed 100 characters",
+      "productNameMinChar": "Product name must be at least 3 characters",
+      "subscrLevelMinChar": "Subscription level must be at least 3 characters",
+      "subscrLevelMaxChar": "Subscription level must not exceed 100 characters",
+      "subscrDupCheck": "This subscription level already exist, please enter a new level",
+      "ticketTypeMinChar": "Ticket type must be at least 3 characters",
+      "ticketTypeMaxChar": "Ticket type must not exceed 100 characters",
+      "ticketDupCheck": "This ticket type already exist, please enter a new ticket type"
     }
   }
 }
