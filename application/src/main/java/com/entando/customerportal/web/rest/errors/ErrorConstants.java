@@ -20,4 +20,7 @@ public final class ErrorConstants {
 
     public static final String DUP_TICKET_SYTEM_CONFIG_TITLE_MSG = "Duplicate Ticketing System Configuration";
     public static final String DUP_TICKET_SYTEM_CONFIG_ERR_MSG = "Duplicate %s not allowed";
+    
+    public static final String INVALID_TICKET_SYTEM_CONFIG_FLAG_TITLE_MSG = "Duplicate Ticketing System Configuration flag";
+    public static final String INVALID_TICKET_SYTEM_CONFIG_FLAG_ERR_MSG = "Invalid flag provided. Flag allowed: %s";
 }

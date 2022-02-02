@@ -25,7 +25,7 @@
                 <constraints nullable="true" />
             </column>
             <column name="jira_customfield" type="varchar(600)">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here --> 
         </createTable>

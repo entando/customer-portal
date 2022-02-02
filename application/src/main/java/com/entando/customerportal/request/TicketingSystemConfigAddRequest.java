@@ -1,36 +1,36 @@
 package com.entando.customerportal.request;
 
-import java.util.Map;
+import java.util.Set;
 
 public class TicketingSystemConfigAddRequest {
 	
-	private Map<String, String> ticketTypes;
-	private Map<String, String> subscriptionLevels;
-	private Map<String, String> productNames;
-	private Map<String, String> jiraCustomFields;
+	private Set<ConfigFields> ticketTypes;
+	private Set<ConfigFields> subscriptionLevels;
+	private Set<ConfigFields> productNames;
+	private JiraCustomFieldRequest jiraCustomFields;
 	
-	public Map<String, String> getTicketTypes() {
+	public Set<ConfigFields> getTicketTypes() {
 		return ticketTypes;
 	}
-	public void setTicketTypes(Map<String, String> ticketTypes) {
+	public void setTicketTypes(Set<ConfigFields> ticketTypes) {
 		this.ticketTypes = ticketTypes;
 	}
-	public Map<String, String> getSubscriptionLevels() {
+	public Set<ConfigFields> getSubscriptionLevels() {
 		return subscriptionLevels;
 	}
-	public void setSubscriptionLevels(Map<String, String> subscriptionLevels) {
+	public void setSubscriptionLevels(Set<ConfigFields> subscriptionLevels) {
 		this.subscriptionLevels = subscriptionLevels;
 	}
-	public Map<String, String> getProductNames() {
+	public Set<ConfigFields> getProductNames() {
 		return productNames;
 	}
-	public void setProductNames(Map<String, String> productNames) {
+	public void setProductNames(Set<ConfigFields> productNames) {
 		this.productNames = productNames;
 	}
-	public Map<String, String> getJiraCustomFields() {
+	public JiraCustomFieldRequest getJiraCustomFields() {
 		return jiraCustomFields;
 	}
-	public void setJiraCustomFields(Map<String, String> jiraCustomFields) {
+	public void setJiraCustomFields(JiraCustomFieldRequest jiraCustomFields) {
 		this.jiraCustomFields = jiraCustomFields;
 	}
 	

@@ -3,13 +3,12 @@ package com.entando.customerportal.request;
 import java.util.Objects;
 import java.util.Set;
 
-import com.entando.customerportal.constant.TicketingSystemConfigEnum;
-
 public class TicketingSystemConfigUpdateRequest {
-	
+
 	private TicketingSystemConfigEnum flag;
 	private Set<ConfigFields> values;
-	
+	private JiraCustomFieldRequest jiraCustomFields;
+
 	public TicketingSystemConfigEnum getFlag() {
 		return flag;
 	}
@@ -26,9 +25,17 @@ public class TicketingSystemConfigUpdateRequest {
 		this.values = values;
 	}
 
+	public JiraCustomFieldRequest getJiraCustomFields() {
+		return jiraCustomFields;
+	}
+
+	public void setJiraCustomFields(JiraCustomFieldRequest jiraCustomFields) {
+		this.jiraCustomFields = jiraCustomFields;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(flag, values);
+		return Objects.hash(flag, jiraCustomFields, values);
 	}
 
 	@Override
@@ -40,11 +47,17 @@ public class TicketingSystemConfigUpdateRequest {
 		if (getClass() != obj.getClass())
 			return false;
 		TicketingSystemConfigUpdateRequest other = (TicketingSystemConfigUpdateRequest) obj;
-		return flag == other.flag && Objects.equals(values, other.values);
+		return flag == other.flag && Objects.equals(jiraCustomFields, other.jiraCustomFields)
+				&& Objects.equals(values, other.values);
 	}
 
 	@Override
 	public String toString() {
-		return "TicketingSystemConfigUpdateRequest [flag=" + flag + ", values=" + values + "]";
+		return "TicketingSystemConfigUpdateRequest [flag=" + flag + ", values=" + values + ", jiraCustomFields="
+				+ jiraCustomFields + "]";
+	}
+
+	public enum TicketingSystemConfigEnum {
+		TICKET_TYPE, SUBSCRIPTION_LEVEL, PRODUCT_NAME, JIRA_CUSTOM_FIELD;
 	}
 }

@@ -34,7 +34,7 @@ public class TicketingSystemConfig implements Serializable {
     @Column(name = "product_name", nullable = true)
     private String productName;
     
-    @Column(name = "jira_customfield", nullable = true)
+    @Column(name = "jira_customfield", nullable = false)
     private String jiraCustomField;
 
 	public Long getId() {
