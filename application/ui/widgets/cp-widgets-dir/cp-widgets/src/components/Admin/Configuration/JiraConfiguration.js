@@ -12,9 +12,12 @@ class JiraConfiguration extends Component {
         super();
         this.state = {
             open: false,
-            validations: [
-                { isError: false, errorMsg: '' }
-            ],
+            validations: {
+                versionIdIsValid: true,
+                organizationIdIsValid: true,
+                subscriptionLevelIdIsValid: true,
+                errMsg: ''
+            },
             changedProductName: '',
             jiraConfig: [],
             jiraOnChangedValue : {
@@ -91,12 +94,14 @@ class JiraConfiguration extends Component {
         const getEleId = e.target.id;
         const getEleValue = e.target.value;
         const updateJiraconfig = this.state.jiraOnChangedValue;
-        for (let i = 0; i < this.state.jiraConfig.length; i++) {
-            if (getEleId === Object.keys(this.state.jiraConfig[i])[0]) {
-                updateJiraconfig[`${Object.keys(this.state.jiraConfig[i])}`] = getEleValue;
-            }
-        };
-        this.setState({ jiraChangedValue: updateJiraconfig })
+        const errorUpdate = this.state.validations;
+        if (!getEleValue.length) {
+            errorUpdate[`${getEleId}IsValid`] = true
+            this.updateStateOfJiraConfig(getEleId, updateJiraconfig, getEleValue);
+        } else {
+            errorUpdate[`${getEleId}IsValid`] = false
+            this.updateStateOfJiraConfig(getEleId, updateJiraconfig, getEleValue);
+        }
     }
 
     onClickCloseModal = () => {
@@ -130,6 +135,15 @@ class JiraConfiguration extends Component {
             })
         }
         return content
+    }
+
+    updateStateOfJiraConfig(getEleId, updateJiraconfig, getEleValue) {
+        for (let i = 0; i < this.state.jiraConfig.length; i++) {
+            if (getEleId === Object.keys(this.state.jiraConfig[i])[0]) {
+                updateJiraconfig[`${Object.keys(this.state.jiraConfig[i])}`] = getEleValue;
+            }
+        };
+        this.setState({ jiraChangedValue: updateJiraconfig });
     }
 
     render() {
@@ -168,19 +182,19 @@ class JiraConfiguration extends Component {
                             <TextInput
                                 key={"versionId"} data-modal-primary-focus id={"versionId"} labelText={"Version ID*"}
                                 type="number" value={this.state.jiraOnChangedValue['versionId']}
-                                invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
+                                invalid={this.state.validations.versionIdIsValid} invalidText={i18n.t('validation.invalid.required')}
                                 onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
                             />  
                             <TextInput
                                 key={"organizationId"} data-modal-primary-focus id={"organizationId"} labelText={"Organizatoin ID*"}
                                 type="number" value={this.state.jiraOnChangedValue.organizationId}
-                                invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
+                                invalid={this.state.validations.organizationIdIsValid} invalidText={i18n.t('validation.invalid.required')}
                                 onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
                             />
                             <TextInput
                                 key={"subscriptionLevelId"} data-modal-primary-focus id={"subscriptionLevelId"} labelText={"Subscription Level ID*"}
                                 type="number" value={this.state.jiraOnChangedValue.subscriptionLevelId}
-                                invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
+                                invalid={this.state.validations.subscriptionLevelIdIsValid} invalidText={i18n.t('validation.invalid.required')}
                                 onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
                             />
                         </ModalBody>
