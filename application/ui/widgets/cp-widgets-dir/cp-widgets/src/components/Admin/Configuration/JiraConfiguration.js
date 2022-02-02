@@ -161,7 +161,7 @@ class JiraConfiguration extends Component {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <ComposedModal open={this.state.open} onClose={() => { this.setState({ open: false }) }} >
+                    <ComposedModal open={this.state.open} onClose={() => {this.onClickCloseModal(); this.setState({ open: false }) }} >
                         <ModalHeader title="Edit" />
                         <ModalBody>
                             {/* {this.getJiraConfigValues('textInput')} */}
