@@ -4,21 +4,21 @@ import java.util.Objects;
 
 public class JiraCustomFieldRequest {
 
-	private Long cversionsId;
-	private Long organizationsId;
+	private Long versionId;
+	private Long organizationId;
 	private Long subscriptionLevelId;
 
-	public Long getCversionsId() {
-		return cversionsId;
+	public Long getVersionId() {
+		return versionId;
 	}
-	public void setCversionsId(Long cversionsId) {
-		this.cversionsId = cversionsId;
+	public void setVersionId(Long versionId) {
+		this.versionId = versionId;
 	}
-	public Long getOrganizationsId() {
-		return organizationsId;
+	public Long getOrganizationId() {
+		return organizationId;
 	}
-	public void setOrganizationsId(Long organizationsId) {
-		this.organizationsId = organizationsId;
+	public void setOrganizationId(Long organizationId) {
+		this.organizationId = organizationId;
 	}
 	public Long getSubscriptionLevelId() {
 		return subscriptionLevelId;
@@ -26,9 +26,10 @@ public class JiraCustomFieldRequest {
 	public void setSubscriptionLevelId(Long subscriptionLevelId) {
 		this.subscriptionLevelId = subscriptionLevelId;
 	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(cversionsId, organizationsId, subscriptionLevelId);
+		return Objects.hash(organizationId, subscriptionLevelId, versionId);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -39,12 +40,13 @@ public class JiraCustomFieldRequest {
 		if (getClass() != obj.getClass())
 			return false;
 		JiraCustomFieldRequest other = (JiraCustomFieldRequest) obj;
-		return Objects.equals(cversionsId, other.cversionsId) && Objects.equals(organizationsId, other.organizationsId)
-				&& Objects.equals(subscriptionLevelId, other.subscriptionLevelId);
+		return Objects.equals(organizationId, other.organizationId)
+				&& Objects.equals(subscriptionLevelId, other.subscriptionLevelId)
+				&& Objects.equals(versionId, other.versionId);
 	}
 	@Override
 	public String toString() {
-		return "JiraCustomFieldRequest [cversionsId=" + cversionsId + ", organizationsId=" + organizationsId
+		return "JiraCustomFieldRequest [versionId=" + versionId + ", organizationId=" + organizationId
 				+ ", subscriptionLevelId=" + subscriptionLevelId + "]";
 	}
 }

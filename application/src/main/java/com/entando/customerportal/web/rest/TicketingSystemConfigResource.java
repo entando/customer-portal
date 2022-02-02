@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ public class TicketingSystemConfigResource {
 	
 	private final Logger log = LoggerFactory.getLogger(TicketingSystemConfigResource.class);
 
-    private static final String ENTITY_NAME = "custportAppCustomer";
+    private static final String ENTITY_NAME = "custportAppTicketingSystemConfig";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -50,7 +52,7 @@ public class TicketingSystemConfigResource {
     
     @PostMapping("")
     @PreAuthorize(AuthoritiesConstants.HAS_ADMIN)
-    public ResponseEntity<TicketingSystemConfig> createTicketingSystemConfiguration(@RequestBody TicketingSystemConfigAddRequest ticketSystemConfigAddReq) throws URISyntaxException {
+    public ResponseEntity<TicketingSystemConfig> createTicketingSystemConfiguration(@Valid @RequestBody TicketingSystemConfigAddRequest ticketSystemConfigAddReq) throws URISyntaxException {
         log.debug("REST request to save Ticketing System Configuration : {}", ticketSystemConfigAddReq);
         TicketingSystemConfig result = configService.addTicketingSystemConfiguration(ticketSystemConfigAddReq);
         return ResponseEntity.created(new URI("/api/ticketing-system-config" + result.getId()))

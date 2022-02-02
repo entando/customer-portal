@@ -1,14 +1,14 @@
 package com.entando.customerportal.service.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,21 +21,24 @@ import com.entando.customerportal.request.TicketingSystemConfigAddRequest;
 import com.entando.customerportal.request.TicketingSystemConfigUpdateRequest;
 import com.entando.customerportal.request.TicketingSystemConfigUpdateRequest.TicketingSystemConfigEnum;
 import com.entando.customerportal.service.TicketingSystemConfigService;
-import com.entando.customerportal.web.rest.errors.InvalidTicketingSystemConfigException;
 import com.entando.customerportal.web.rest.errors.ErrorConstants;
+import com.entando.customerportal.web.rest.errors.InvalidTicketingSystemConfigException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @Transactional
 public class TicketingSystemConfigServiceImpl implements TicketingSystemConfigService {
-	
+
 	@Autowired
 	private TicketingSystemConfigRepository ticketingSystemConfigRepository;
-	
-	private static final String ENTITY_NAME = "custportAppCustomer";
+
+	private static final String ENTITY_NAME = "custportAppTicketingSystemConfig";
+
+	private final Logger log = LoggerFactory.getLogger(TicketingSystemConfigServiceImpl.class);
 
 	@Override
 	public TicketingSystemConfig addTicketingSystemConfiguration(TicketingSystemConfigAddRequest ticketSystemConfigReq) {
+		checkIfRecordAlreadyExists();
 		checkIfTicketingSystemsDuplicate(ticketSystemConfigReq);
 		TicketingSystemConfig ticketingSystemConfig = new TicketingSystemConfig();
 		if(Objects.nonNull(ticketSystemConfigReq.getTicketTypes())) {
@@ -52,7 +55,7 @@ public class TicketingSystemConfigServiceImpl implements TicketingSystemConfigSe
 		}
 		return ticketingSystemConfigRepository.save(ticketingSystemConfig);
 	}
-	
+
 	@Override
 	public List<TicketingSystemConfig> getAllTicketingSystemConfiguration() {
 		return ticketingSystemConfigRepository.findAll();
@@ -83,25 +86,32 @@ public class TicketingSystemConfigServiceImpl implements TicketingSystemConfigSe
 				configDb.setJiraCustomField(jsonString);
 			} else {
 				jsonString = objectToJsonString(ticketingSystemConfigReq.getValues());
-				if(ticketingSystemConfigReq.getFlag() == TicketingSystemConfigEnum.TICKET_TYPE) {
-					configDb.setTicketType(jsonString);
-				} else if(ticketingSystemConfigReq.getFlag() == TicketingSystemConfigEnum.SUBSCRIPTION_LEVEL) {
-					configDb.setSubscriptionLevel(jsonString);
-				} else if(ticketingSystemConfigReq.getFlag() == TicketingSystemConfigEnum.PRODUCT_NAME) {
-					configDb.setProductName(jsonString);
-				} else {
-					String allowedFlags = Stream.of(TicketingSystemConfigEnum.values())
-                            .map(TicketingSystemConfigEnum::name)
-                            .collect(Collectors.joining(", "));
-					List<String> providedFlag = new ArrayList<String>();
-					providedFlag.add(ticketingSystemConfigReq.getFlag().toString());
-
-					throw new InvalidTicketingSystemConfigException(ErrorConstants.INVALID_TICKET_SYTEM_CONFIG_FLAG_TITLE_MSG, String.format(ErrorConstants.INVALID_TICKET_SYTEM_CONFIG_FLAG_ERR_MSG, allowedFlags), ENTITY_NAME, providedFlag);
+				switch (ticketingSystemConfigReq.getFlag()) {
+					case TICKET_TYPE:
+						configDb.setTicketType(jsonString);
+						break;
+					case SUBSCRIPTION_LEVEL:
+						configDb.setSubscriptionLevel(jsonString);
+						break;
+					case PRODUCT_NAME:
+						configDb.setProductName(jsonString);
+						break;
+					default:
+						break;
 				}
 			}
 			configUpdated = ticketingSystemConfigRepository.save(configDb);
 		}
 		return configUpdated;
+	}
+
+	/**
+	 * Check if one record already present in database, if Yes then throw error
+	 */
+	private void checkIfRecordAlreadyExists() {
+		if(ticketingSystemConfigRepository.count() > 0) {
+			throw new InvalidTicketingSystemConfigException(ErrorConstants.ONE_RECORED_ALREADY_EXIST_TITLE_MSG, ErrorConstants.ONE_RECORED_ALREADY_EXIST_ERR_MSG, ENTITY_NAME, null);
+		}
 	}
 
 	/**
@@ -161,7 +171,7 @@ public class TicketingSystemConfigServiceImpl implements TicketingSystemConfigSe
 		try {
 			jsonStr = objectMapper.writeValueAsString(object);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Conversion of object to json string failure {}", object, e);
 		}
 		return jsonStr;
 	}
