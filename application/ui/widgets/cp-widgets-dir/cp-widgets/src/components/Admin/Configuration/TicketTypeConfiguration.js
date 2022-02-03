@@ -108,7 +108,6 @@ class TicketTypeConfiguration extends Component {
                 await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, TICKETING_SYSTEM_CONFIG_ENUM.TICKET_TYPE, updateTicketTypeAfterDeletedTicket).then(() => {
                     this.props.getTicketAndSubLevel()
                 });
-                updateTicketTypeAfterDeletedTicket = JSON.parse(updateTicketTypeAfterDeletedTicket)
                 this.setState({ ticketTypeRowData: updateTicketTypeAfterDeletedTicket })
             } catch (error) {
                 console.error('Error handleDeleteTicketType: ', error)

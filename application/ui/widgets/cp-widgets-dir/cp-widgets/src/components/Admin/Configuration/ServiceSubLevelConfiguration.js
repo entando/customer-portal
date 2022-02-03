@@ -111,7 +111,6 @@ class ServiceSubLevelConfiguration extends Component {
                 await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, TICKETING_SYSTEM_CONFIG_ENUM.SUBSCRIPTION_LEVEL, updateServiceSubTypeAfterDeletedSubscr).then(() => {
                     this.props.getTicketAndSubLevel()
                 });
-                updateServiceSubTypeAfterDeletedSubscr = JSON.parse(updateServiceSubTypeAfterDeletedSubscr)
                 this.setState({ serviceSubTypeRowData: updateServiceSubTypeAfterDeletedSubscr })
             } catch (error) {
                 console.error('Error handleDeleteServiceSubType: ',error);
