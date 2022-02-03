@@ -21,7 +21,7 @@
             <column name="subscription_level" type="varchar(600)">
                 <constraints nullable="true" />
             </column>
-            <column name="product_name" type="varchar(255)">
+            <column name="product_name" type="varchar(600)">
                 <constraints nullable="true" />
             </column>
             <column name="jira_customfield" type="varchar(600)">
