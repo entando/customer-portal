@@ -41,7 +41,7 @@ class TicketTypeConfiguration extends Component {
         }
     }
 
-    getTicketTypes(data) {
+    getTicketTypes() {
         if (this.props.ticketType.length) {
             this.setState({ ticketTypeRowData: this.props.ticketType })
         }
@@ -60,7 +60,7 @@ class TicketTypeConfiguration extends Component {
     handleFormSubmit = async (e) => {
         e.preventDefault();
 
-        if (!this.state.ticketName.length || this.state.ticketName.length < 3) {
+        if (!this.state.ticketName.length || this.state.ticketName.length < VALIDATION_VARS.CHAR_MIN_LIMIT) {
             this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.ticketTypeMinChar') } })
             return
         }
@@ -103,7 +103,7 @@ class TicketTypeConfiguration extends Component {
     }
 
     handleDeleteTicketType = async (ticket) => {
-        if (window.confirm('Are you sure you want to delete this Ticket type?')) {
+        if (window.confirm(i18n.t('submitMessages.confirmDeleteTicketType'))) {
             let updateTicketTypeAfterDeletedTicket = []
             updateTicketTypeAfterDeletedTicket = this.state.ticketTypeRowData.filter(ticketType => ticket.name !== ticketType.name)
             try {
@@ -137,7 +137,7 @@ class TicketTypeConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
-                    <div>
+                    <div style={{ paddingLeft: "1rem" }}>
                         <h4>{i18n.t('adminConfig.manageFieldConfigurations.ticketTypeConfigurations')}</h4>
                         <TableContainer>
                             <Table>
@@ -166,7 +166,7 @@ class TicketTypeConfiguration extends Component {
                                     />
                                 </div>
                                 <div className="bx--col-lg-6">
-                                    <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ "paddingTop": "0.5rem", "alignItems": "center" }}>
+                                    <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ paddingRight: "2.5rem", "paddingTop": "0.5rem", "alignItems": "center" }}>
                                         {i18n.t('adminConfig.manageFieldConfigurations.addTicketTypeButton')}
                                     </Button>
                                 </div>

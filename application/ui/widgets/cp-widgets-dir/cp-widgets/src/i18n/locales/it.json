@@ -32,7 +32,15 @@
       "addSubscriptionLevelButton": "Aggiungi livello di abbonamento"
     },
     "productNameConfigurations": {
-      "title": "Configurazione del nome del prodotto"
+      "title": "Configurazione del nome del prodotto",
+      "table": {
+        "prodName": "nome del prodotto"
+      }
+    },
+    "jiraFieldsConfigurations": {
+      "versionIDLabel": "ID versione",
+      "organizatoinIDLabel": "ID organizzazione",
+      "SubscriptionLevelIDLabel": "ID livello di abbonamento"
     }
   },
   "adminDashboard": {
@@ -205,6 +213,8 @@
     "updated": "Aggiornata con successo",
     "added": "Aggiunta con successo",
     "confirmDelete": "Sei sicuro di voler eliminare questo articolo?",
+    "confirmDeleteTicketType": "Sei sicuro di voler eliminare questo tipo di biglietto?",
+    "confirmDeleteSubscrLevel": "Sei sicuro di voler eliminare questo livello di abbonamento?",
     "deleted": "Cancellato con successo",
     "error": "Si è verificato un errore",
     "ticketError": "Si è verificato un errore. Assicurarsi che questo progetto abbia un'organizzazione corrispondente in Jira Service Desk."

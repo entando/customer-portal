@@ -38,7 +38,6 @@ class ProductNameConfiguration extends Component {
     async getProductVersions() {
         if (isAuthenticated(this.props)) {
             const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
-
             this.setState({
                 versions: productVersions.data,
             });
@@ -54,7 +53,7 @@ class ProductNameConfiguration extends Component {
             this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.required') } })
             return
         }
-        if (this.state.changedProductName.length < 3) {
+        if (this.state.changedProductName.length < VALIDATION_VARS.CHAR_MIN_LIMIT) {
             this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.productNameMinChar') } })
             return
         }
@@ -97,7 +96,7 @@ class ProductNameConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
-                    <div>
+                    <div style={{ paddingLeft: "1rem" }}>
                         <h4>{i18n.t("adminConfig.productNameConfigurations.title")}</h4>
                         <TableContainer>
                             <Table>
@@ -159,11 +158,11 @@ class ProductNameConfiguration extends Component {
 
 const headerData = [
     {
-        header: "Product Name",
+        header: i18n.t('adminConfig.productNameConfigurations.table.prodName'),
         key: 'productName',
     },
     {
-        header: "Action",
+        header: i18n.t('customerDashboard.action'),
         key: 'action',
     },
 ];

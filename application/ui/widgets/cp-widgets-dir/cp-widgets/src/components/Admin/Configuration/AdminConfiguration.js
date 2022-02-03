@@ -30,7 +30,7 @@ class AdminConfiguration extends React.Component {
       this.setState({
         loading: false,
       });
-      this.getTicketAndSubLevel();
+      this.getTicketingSystemConfig();
     }
   }
 
@@ -47,33 +47,33 @@ class AdminConfiguration extends React.Component {
     }
   }
 
-  getTicketAndSubLevel = async () => {
+  getTicketingSystemConfig = async () => {
     try {
       const { data: ticketTypesAndSubLevelsData } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
       if (ticketTypesAndSubLevelsData.length) {
-        let refinedTicketType = [];
-        let refinedSubLevel = [];
-        let refinedJiraCustomField = [];
-        let prodName = 'Entando';
+        let parsedTicketType = [];
+        let parsedSubLevel = [];
+        let parsedJiraCustomField = [];
+        let parsedProdName = '';
         if (ticketTypesAndSubLevelsData[0].ticketType) {
-          refinedTicketType = JSON.parse(ticketTypesAndSubLevelsData[0].ticketType);
-          this.setState({ refinedTicketType: refinedTicketType })
+          parsedTicketType = JSON.parse(ticketTypesAndSubLevelsData[0].ticketType);
+          this.setState({ refinedTicketType: parsedTicketType })
         }
         if (ticketTypesAndSubLevelsData[0].subscriptionLevel) {
-          refinedSubLevel = JSON.parse(ticketTypesAndSubLevelsData[0].subscriptionLevel)
-          this.setState({ refinedSubLevel: refinedSubLevel })
+          parsedSubLevel = JSON.parse(ticketTypesAndSubLevelsData[0].subscriptionLevel)
+          this.setState({ refinedSubLevel: parsedSubLevel })
         }
         if (ticketTypesAndSubLevelsData[0].hasOwnProperty('jiraCustomField')) {
-          refinedJiraCustomField = JSON.parse(ticketTypesAndSubLevelsData[0].jiraCustomField)
+          parsedJiraCustomField = JSON.parse(ticketTypesAndSubLevelsData[0].jiraCustomField)
           let jiraCustomFieldBuilder = [];
-          for (let jiraItem in refinedJiraCustomField[0]) {
-            jiraCustomFieldBuilder.push({ [jiraItem]: refinedJiraCustomField[0][jiraItem] })
+          for (let jiraItem in parsedJiraCustomField[0]) {
+            jiraCustomFieldBuilder.push({ [jiraItem]: parsedJiraCustomField[0][jiraItem] })
           }
           this.setState({ refinedJiraCustomField: jiraCustomFieldBuilder })
         }
         if (ticketTypesAndSubLevelsData[0].hasOwnProperty('productName')) {
-          prodName = JSON.parse(ticketTypesAndSubLevelsData[0].productName)
-          this.setState({ productName: prodName[0].name })
+          parsedProdName = JSON.parse(ticketTypesAndSubLevelsData[0].productName)
+          this.setState({ productName: parsedProdName[0].name })
         }
       }
     } catch (error) {
@@ -110,9 +110,9 @@ class AdminConfiguration extends React.Component {
         ),
         content: (
           <>
-            <TicketTypeConfiguration serviceUrl={this.props.serviceUrl} ticketType={this.state.refinedTicketType} getTicketAndSubLevel={this.getTicketAndSubLevel} />
-            <ServiceSubLevelConfiguration serviceUrl={this.props.serviceUrl} subLevel={this.state.refinedSubLevel} getTicketAndSubLevel={this.getTicketAndSubLevel} />
-            <ProductNameConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName} getTicketAndSubLevel={this.getTicketAndSubLevel}/>
+            <TicketTypeConfiguration serviceUrl={this.props.serviceUrl} ticketType={this.state.refinedTicketType} getTicketAndSubLevel={this.getTicketingSystemConfig} />
+            <ServiceSubLevelConfiguration serviceUrl={this.props.serviceUrl} subLevel={this.state.refinedSubLevel} getTicketAndSubLevel={this.getTicketingSystemConfig} />
+            <ProductNameConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName} getTicketAndSubLevel={this.getTicketingSystemConfig}/>
           </>
         )
       },
@@ -125,7 +125,7 @@ class AdminConfiguration extends React.Component {
         ),
         content: (
           <>
-            <JiraConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName} jiraCustomField={this.state.refinedJiraCustomField} getTicketAndSubLevel={this.getTicketAndSubLevel}/>
+            <JiraConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName} jiraCustomField={this.state.refinedJiraCustomField} getTicketAndSubLevel={this.getTicketingSystemConfig}/>
           </>
         )
       }

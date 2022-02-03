@@ -30,7 +30,7 @@ class ServiceSubLevelConfiguration extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (prevProps.subLevel.length !== this.props.subLevel.length) {
             this.getSubscription()
         }
@@ -60,7 +60,7 @@ class ServiceSubLevelConfiguration extends Component {
     handleFormSubmit = async (e) => {
         e.preventDefault();
 
-        if (!this.state.subscriptionLevel.length || this.state.subscriptionLevel.length < 3) {
+        if (!this.state.subscriptionLevel.length || this.state.subscriptionLevel.length < VALIDATION_VARS.CHAR_MIN_LIMIT) {
             this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.subscrLevelMinChar') } })
             return
         }
@@ -104,7 +104,7 @@ class ServiceSubLevelConfiguration extends Component {
     }
 
     handleDeleteServiceSubType = async (ticket) => {
-        if (window.confirm('Are you sure you want to delete this Subscription Level?')) {
+        if (window.confirm(i18n.t('submitMessages.confirmDeleteSubscrLevel'))) {
             let updateServiceSubTypeAfterDeletedSubscr = []
             updateServiceSubTypeAfterDeletedSubscr = this.state.serviceSubTypeRowData.filter(ticketType => ticket.name !== ticketType.name)
             try {
@@ -138,7 +138,7 @@ class ServiceSubLevelConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
-                    <div>
+                    <div style={{ paddingLeft: "1rem" }}>
                         <h4>{i18n.t('adminConfig.manageFieldConfigurations.subscriptionLevelConfiguration')}</h4>
                         <TableContainer>
                             <Table>
@@ -167,7 +167,7 @@ class ServiceSubLevelConfiguration extends Component {
                                     />
                                 </div>
                                 <div className="bx--col-lg-6">
-                                    <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ "paddingTop": "0.5rem", "alignItems": "center" }}>
+                                    <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ paddingRight: "2.5rem", "paddingTop": "0.5rem", "alignItems": "center" }}>
                                         {i18n.t('adminConfig.manageFieldConfigurations.addSubscriptionLevelButton')}
                                     </Button>
                                 </div>

@@ -32,7 +32,15 @@
       "addSubscriptionLevelButton": "Add Subscription Level"
     },
     "productNameConfigurations": {
-      "title": "Product Name Configuration"
+      "title": "Product Name Configuration",
+      "table": {
+        "prodName": "Product Name"
+      }
+    },
+    "jiraFieldsConfigurations": {
+      "versionIDLabel": "Version ID",
+      "organizatoinIDLabel": "Organization ID",
+      "SubscriptionLevelIDLabel": "Subscription Level ID"
     }
   },
   "adminDashboard": {
@@ -91,7 +99,7 @@
     "addCustomer": "Add a Customer +",
     "addPartner": "Add a Partner +",
     "addProject": "Add a Project",
-    "addProductVersion": "Add product version +",
+    "addProductVersion": "Add Product Version  +",
     "addSubscription": "Add a Subscription",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -204,6 +212,8 @@
     "updated": "Successfully updated",
     "added": "Successfully added",
     "confirmDelete": "Are you sure you want to delete this item?",
+    "confirmDeleteTicketType": "Are you sure you want to delete this ticket type?",
+    "confirmDeleteSubscrLevel":"Are you sure you want to delete this subscription level?",
     "deleted": "Successfully deleted",
     "error": "An error occurred",
     "ticketError": "An error occurred. Make sure this project has a corresponding organization in Jira."

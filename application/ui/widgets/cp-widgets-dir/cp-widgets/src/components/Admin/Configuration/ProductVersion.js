@@ -87,7 +87,7 @@ class ProductVersion extends Component {
   render() {
     if (isPortalAdminOrSupport()) {
       return (
-        <div>
+        <div style={{ paddingLeft: "1rem" }}>
           <DataTable rows={rowData} headers={headerData}>
             {({rows, headers, getHeaderProps, getTableProps}) => (
               <TableContainer>

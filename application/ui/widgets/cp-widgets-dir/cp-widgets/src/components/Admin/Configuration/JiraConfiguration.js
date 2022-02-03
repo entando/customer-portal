@@ -20,18 +20,14 @@ class JiraConfiguration extends Component {
             },
             changedProductName: '',
             jiraConfig: [],
-            jiraOnChangedValue : {
-                versionId: 0,
-                organizationId: 0,
-                subscriptionLevelId: 0
-            }
+            jiraOnChangedValue : this.initializeJiraConfigObj()
         };
         this.timeoutId = null;
     }
 
     componentDidMount() {
-        this.setState({ changedProductName: this.props.productName, jiraConfig: this.props.jiraCustomField })
         if (isPortalAdminOrSupport()) {
+            this.setState({ changedProductName: this.props.productName, jiraConfig: this.props.jiraCustomField })
             this.getProductVersions();
         }
     }
@@ -39,11 +35,7 @@ class JiraConfiguration extends Component {
     componentDidUpdate(prevProps) {
         if (prevProps.jiraCustomField.length !== this.props.jiraCustomField.length) {
             this.setState({ changedProductName: this.props.productName, jiraConfig: this.props.jiraCustomField })
-            let initJira = {
-                versionId: 0,
-                organizationId: 0,
-                subscriptionLevelId: 0
-            };
+            let initJira = this.initializeJiraConfigObj();
             this.props.jiraCustomField.forEach((el) => {
                 initJira[Object.keys(el)[0]] = el[Object.keys(el)[0]]
             })
@@ -56,10 +48,17 @@ class JiraConfiguration extends Component {
         }
     }
 
+    initializeJiraConfigObj() {
+        return {
+            versionId: 0,
+            organizationId: 0,
+            subscriptionLevelId: 0
+        };
+    }
+
     async getProductVersions() {
         if (isAuthenticated(this.props)) {
             const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
-
             this.setState({
                 versions: productVersions.data,
             });
@@ -80,17 +79,19 @@ class JiraConfiguration extends Component {
             jiraConfigBuilder.push({ [key]: this.state.jiraOnChangedValue[key] })
         }
         try {
-            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl, TICKETING_SYSTEM_CONFIG_ENUM.JIRA_CUSTOM_FIELD, [this.state.jiraOnChangedValue]).then(() => {
-                this.props.getTicketAndSubLevel()
-                this.setState({ jiraConfig: jiraConfigBuilder })
-            });
+            await apiTicketingSystemConfigResourcePost(this.props.serviceUrl,
+                TICKETING_SYSTEM_CONFIG_ENUM.JIRA_CUSTOM_FIELD, [this.state.jiraOnChangedValue])
+                .then(() => {
+                    this.props.getTicketAndSubLevel()
+                    this.setState({ jiraConfig: jiraConfigBuilder })
+                });
         } catch (error) {
             console.error('Error ', error)
         }
         this.setState({ open: false })
     }
 
-    jiraConfigOnChangeHandler = (e, configKey) => {
+    jiraConfigOnChangeHandler = (e) => {
         const getEleId = e.target.id;
         const getEleValue = e.target.value;
         const updateJiraconfig = this.state.jiraOnChangedValue;
@@ -105,33 +106,18 @@ class JiraConfiguration extends Component {
     }
 
     onClickCloseModal = () => {
-        let initJira = {
-            versionId: 0,
-            organizationId: 0,
-            subscriptionLevelId: 0
-        };
+        let initJira = this.initializeJiraConfigObj();
         this.state.jiraConfig.forEach((el) => {
             initJira[Object.keys(el)[0]] = el[Object.keys(el)[0]]
         })
         this.setState({ jiraOnChangedValue: initJira })
     }
 
-    getJiraConfigValues = (eleType) => {
+    getJiraConfigValues = () => {
         let content = [];
         if (this.state.jiraConfig.length) {
             this.state.jiraConfig.forEach((config, idx) => {
-                if (eleType === 'tableCell') {
-                    content.push(<TableCell key={Object.keys(config)[0]}>{config[Object.keys(config)[0]]}</TableCell>)
-                } else if (eleType === 'textInput') {
-                    content.push(
-                        <TextInput
-                            key={Object.keys(config)[0]} data-modal-primary-focus id={Object.keys(config)[0]} labelText={`${headerData[idx].header}*`}
-                            type="number" value={config[Object.keys(config)[0]]}
-                            invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
-                            onChange={(e) => { this.jiraConfigOnChangeHandler(e, Object.keys(config)[0]) }}
-                        />
-                    )
-                }
+                content.push(<TableCell key={Object.keys(config)[0]}>{config[Object.keys(config)[0]]}</TableCell>)
             })
         }
         return content
@@ -142,7 +128,7 @@ class JiraConfiguration extends Component {
             if (getEleId === Object.keys(this.state.jiraConfig[i])[0]) {
                 updateJiraconfig[`${Object.keys(this.state.jiraConfig[i])}`] = getEleValue;
             }
-        };
+        }
         this.setState({ jiraChangedValue: updateJiraconfig });
     }
 
@@ -150,66 +136,72 @@ class JiraConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    {headerData.map((head, index) => (
-                                        <TableHeader id={index} key={head.key}> {head.header}
-                                        </TableHeader>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <TableRow key={1} id={1}>
-                                    {this.getJiraConfigValues('tableCell')}
-                                    <TableCell>
-                                        <Button
-                                            kind="ghost" onClick={this.onClickJiraConfigEdit}
-                                            style={{ display: 'flex', width: '100%', color: 'red' }}
-                                        >
-                                            {i18n.t('buttons.edit')}
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <ComposedModal open={this.state.open} onClose={() => {this.onClickCloseModal(); this.setState({ open: false }) }} >
-                        <ModalHeader title="Edit" />
-                        <ModalBody>
-                            {/* {this.getJiraConfigValues('textInput')} */}
-                            <TextInput
-                                key={"versionId"} data-modal-primary-focus id={"versionId"} labelText={"Version ID*"}
-                                type="number" value={this.state.jiraOnChangedValue['versionId']}
-                                invalid={this.state.validations.versionIdIsValid} invalidText={i18n.t('validation.invalid.required')}
-                                onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
-                            />  
-                            <TextInput
-                                key={"organizationId"} data-modal-primary-focus id={"organizationId"} labelText={"Organizatoin ID*"}
-                                type="number" value={this.state.jiraOnChangedValue.organizationId}
-                                invalid={this.state.validations.organizationIdIsValid} invalidText={i18n.t('validation.invalid.required')}
-                                onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
-                            />
-                            <TextInput
-                                key={"subscriptionLevelId"} data-modal-primary-focus id={"subscriptionLevelId"} labelText={"Subscription Level ID*"}
-                                type="number" value={this.state.jiraOnChangedValue.subscriptionLevelId}
-                                invalid={this.state.validations.subscriptionLevelIdIsValid} invalidText={i18n.t('validation.invalid.required')}
-                                onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button
-                                kind="secondary"
-                                onMouseDown={() => { this.setState({ open: false }) }}
-                                onClick={this.onClickCloseModal}>
-                                {i18n.t('buttons.cancel')}
-                            </Button>
-                            <Button kind="primary" onClick={() => { this.onClickJiraConfigSave() }}>
-                                {i18n.t('buttons.save')}
-                            </Button>
-                        </ModalFooter>
-                    </ComposedModal>
+                    <div style={{ paddingLeft: "1rem" }}>
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        {headerData.map((head, index) => (
+                                            <TableHeader id={index} key={head.key}> {head.header}
+                                            </TableHeader>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow key={1} id={1}>
+                                        {this.getJiraConfigValues()}
+                                        <TableCell>
+                                            <Button
+                                                kind="ghost" onClick={this.onClickJiraConfigEdit}
+                                                style={{ display: 'flex', width: '100%', color: 'red' }}>
+                                                {i18n.t('buttons.edit')}
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <ComposedModal open={this.state.open} onClose={() => { this.onClickCloseModal(); this.setState({ open: false }) }} >
+                            <ModalHeader title={i18n.t("buttons.edit")} />
+                            <ModalBody>
+                                <TextInput
+                                    key={"versionId"} data-modal-primary-focus id={"versionId"}
+                                    labelText={`${i18n.t('adminConfig.jiraFieldsConfigurations.versionIDLabel')}*`}
+                                    type="number" value={this.state.jiraOnChangedValue['versionId']}
+                                    invalid={this.state.validations.versionIdIsValid}
+                                    invalidText={i18n.t('validation.invalid.required')}
+                                    onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
+                                />
+                                <TextInput
+                                    key={"organizationId"} data-modal-primary-focus id={"organizationId"}
+                                    labelText={`${i18n.t('adminConfig.jiraFieldsConfigurations.organizatoinIDLabel')}*`}
+                                    type="number" value={this.state.jiraOnChangedValue.organizationId}
+                                    invalid={this.state.validations.organizationIdIsValid}
+                                    invalidText={i18n.t('validation.invalid.required')}
+                                    onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
+                                />
+                                <TextInput
+                                    key={"subscriptionLevelId"} data-modal-primary-focus id={"subscriptionLevelId"}
+                                    labelText={`${i18n.t('adminConfig.jiraFieldsConfigurations.SubscriptionLevelIDLabel')}*`}
+                                    type="number" value={this.state.jiraOnChangedValue.subscriptionLevelId}
+                                    invalid={this.state.validations.subscriptionLevelIdIsValid}
+                                    invalidText={i18n.t('validation.invalid.required')}
+                                    onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
+                                />
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button
+                                    kind="secondary"
+                                    onMouseDown={() => { this.setState({ open: false }) }}
+                                    onClick={this.onClickCloseModal}>
+                                    {i18n.t('buttons.cancel')}
+                                </Button>
+                                <Button kind="primary" onClick={() => { this.onClickJiraConfigSave() }}>
+                                    {i18n.t('buttons.save')}
+                                </Button>
+                            </ModalFooter>
+                        </ComposedModal>
+                    </div>
                 </>
             )
         } else {
@@ -220,19 +212,19 @@ class JiraConfiguration extends Component {
 
 const headerData = [
     {
-        header: "Version ID",
+        header: i18n.t('adminConfig.jiraFieldsConfigurations.versionIDLabel'),
         key: 'versionId',
     },
     {
-        header: "Organizatoin ID",
+        header: i18n.t('adminConfig.jiraFieldsConfigurations.organizatoinIDLabel'),
         key: 'orgId',
     },
     {
-        header: "Subscription Level ID",
+        header: i18n.t('adminConfig.jiraFieldsConfigurations.SubscriptionLevelIDLabel'),
         key: 'subscrId',
     },
     {
-        header: "Action",
+        header: i18n.t('customerDashboard.action'),
         key: 'actn',
     },
 ];
