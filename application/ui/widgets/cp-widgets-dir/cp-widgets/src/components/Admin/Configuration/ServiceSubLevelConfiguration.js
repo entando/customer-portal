@@ -145,7 +145,7 @@ class ServiceSubLevelConfiguration extends Component {
                                 <TableHead>
                                     <TableRow>
                                         {headerData.map((head, index) => (
-                                            <TableHeader id={index} key={head.key}> {head.header}
+                                            <TableHeader style={{width: '50%'}} id={index} key={head.key}> {head.header}
                                             </TableHeader>
                                         ))}
                                     </TableRow>

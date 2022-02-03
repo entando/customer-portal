@@ -10,6 +10,7 @@ import TicketTypeConfiguration from './TicketTypeConfiguration';
 import ServiceSubLevelConfiguration from './ServiceSubLevelConfiguration';
 import { apiTicketingSystemConfigResourceGet } from '../../../api/manageFieldConfigurations';
 import ProductNameConfiguration from './ProductNameConfiguration';
+import JiraConfiguration from './JiraConfiguration';
 
 class AdminConfiguration extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class AdminConfiguration extends React.Component {
       refinedTicketType : [],
       refinedSubLevel: [],
       adminConfig: [],
+      refinedJiraCustomField: [],
       productName: ''
     };
   }
@@ -51,6 +53,7 @@ class AdminConfiguration extends React.Component {
       if (ticketTypesAndSubLevelsData.length) {
         let refinedTicketType = [];
         let refinedSubLevel = [];
+        let refinedJiraCustomField = [];
         let prodName = 'Entando';
         if (ticketTypesAndSubLevelsData[0].ticketType) {
           refinedTicketType = JSON.parse(ticketTypesAndSubLevelsData[0].ticketType);
@@ -60,8 +63,15 @@ class AdminConfiguration extends React.Component {
           refinedSubLevel = JSON.parse(ticketTypesAndSubLevelsData[0].subscriptionLevel)
           this.setState({ refinedSubLevel: refinedSubLevel })
         }
-        if (ticketTypesAndSubLevelsData[0].hasOwnProperty('productName')
-        ) {
+        if (ticketTypesAndSubLevelsData[0].hasOwnProperty('jiraCustomField')) {
+          refinedJiraCustomField = JSON.parse(ticketTypesAndSubLevelsData[0].jiraCustomField)
+          let jiraCustomFieldBuilder = [];
+          for (let jiraItem in refinedJiraCustomField[0]) {
+            jiraCustomFieldBuilder.push({ [jiraItem]: refinedJiraCustomField[0][jiraItem] })
+          }
+          this.setState({ refinedJiraCustomField: jiraCustomFieldBuilder })
+        }
+        if (ticketTypesAndSubLevelsData[0].hasOwnProperty('productName')) {
           prodName = JSON.parse(ticketTypesAndSubLevelsData[0].productName)
           this.setState({ productName: prodName[0].name })
         }
@@ -106,6 +116,19 @@ class AdminConfiguration extends React.Component {
           </>
         )
       },
+      {
+        label: (
+          <div>
+            <p className="title">Jira Field Configuration</p>
+            <p className="desc">This allows you to manage jira custom field configuration</p>
+          </div>
+        ),
+        content: (
+          <>
+            <JiraConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName} jiraCustomField={this.state.refinedJiraCustomField} getTicketAndSubLevel={this.getTicketAndSubLevel}/>
+          </>
+        )
+      }
     ];
     this.setState({ adminConfig: setAdminConfig })
   }
