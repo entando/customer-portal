@@ -93,14 +93,14 @@ class ManageSubscriptions extends Component {
       }
 
       const data = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
-      if (data.data[0].hasOwnProperty('subscriptionLevel')) {
+      if (data && data.data && data.data.length && data.data[0].hasOwnProperty('subscriptionLevel')) {
         this.setState({ productName: JSON.parse(data.data[0].productName)[0].name })
       }
       this.setState({
         projectId: projectId,
         project: project,
         subscriptions: subscriptions,
-        productName: JSON.parse(data.data[0].productName)[0].name
+        productName: (data && data.data && data.data.length && data.data[0].productName) ? JSON.parse(data.data[0].productName)[0].name : ''
       });
     }
   }

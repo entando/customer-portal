@@ -56,7 +56,7 @@ class CustomerDataTable extends Component {
           ticketingSystem: ticketingSystem,
         });
       } catch (error) {
-        console.log(error);
+        console.error('Error fetchData: ', error);
       }
     }
     this.render();

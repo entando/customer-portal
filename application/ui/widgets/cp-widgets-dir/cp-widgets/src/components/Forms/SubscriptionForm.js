@@ -86,13 +86,15 @@ class SubscriptionForm extends Component {
   async getLevelList() {
     try {
       const data = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
-      if (data.data[0].hasOwnProperty('subscriptionLevel')) {
+      if (data && data.data && data.data.length && data.data[0].hasOwnProperty('subscriptionLevel')) {
         const subLists = JSON.parse(data.data[0].subscriptionLevel);
-        this.setState({ subsList: subLists })
-        this.setState({productName: JSON.parse(data.data[0].productName)[0].name})
+        this.setState({
+          subsList: subLists,
+          productName: (data.data[0].productName) ? JSON.parse(data.data[0].productName)[0].name : ''
+        })
       }
     } catch (error) {
-      console.error("Error: ", error)
+      console.error("Error getLevelList: ", error)
     }
   }
 

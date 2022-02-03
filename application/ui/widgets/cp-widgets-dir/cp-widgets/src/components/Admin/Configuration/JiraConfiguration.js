@@ -41,10 +41,8 @@ class JiraConfiguration extends Component {
             })
             this.setState({ jiraOnChangedValue: initJira })
         }
-        if (authenticationChanged(this.props, prevProps)) {
-            if (isPortalAdminOrSupport()) {
-                this.getProductVersions();
-            }
+        if (authenticationChanged(this.props, prevProps) && isPortalAdminOrSupport()) {
+            this.getProductVersions();
         }
     }
 
@@ -86,7 +84,7 @@ class JiraConfiguration extends Component {
                     this.setState({ jiraConfig: jiraConfigBuilder })
                 });
         } catch (error) {
-            console.error('Error ', error)
+            console.error('Error onClickJiraConfigSave: ', error)
         }
         this.setState({ open: false })
     }
@@ -136,7 +134,6 @@ class JiraConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
-                    <div style={{ paddingLeft: "1rem" }}>
                         <TableContainer>
                             <Table>
                                 <TableHead>
@@ -201,7 +198,6 @@ class JiraConfiguration extends Component {
                                 </Button>
                             </ModalFooter>
                         </ComposedModal>
-                    </div>
                 </>
             )
         } else {

@@ -51,7 +51,7 @@ class OpenTicketForm extends Component {
         this.setState({ types: ticketTypesArr })
       }
     } catch (error) {
-      console.error("Error: ", error)
+      console.error("Error getTicketingSystem:", error)
     }
   }
 

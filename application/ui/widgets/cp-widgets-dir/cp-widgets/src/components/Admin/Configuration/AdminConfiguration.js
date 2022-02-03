@@ -77,7 +77,7 @@ class AdminConfiguration extends React.Component {
         }
       }
     } catch (error) {
-      console.error('Error: ', error)
+      console.error('Error getTicketingSystemConfig: ', error)
     }
   }
 
@@ -90,7 +90,7 @@ class AdminConfiguration extends React.Component {
             <p className="desc">{i18n.t('adminConfig.integrationTicketingSystem.desc')}</p>
           </div>
         ),
-        content: <TicketingSystem serviceUrl={this.props.serviceUrl} />,
+        content: <div className="admin-config-child"><TicketingSystem serviceUrl={this.props.serviceUrl} /></div>,
       },
       {
         label: (
@@ -99,7 +99,7 @@ class AdminConfiguration extends React.Component {
             <p className="desc">{i18n.t('adminConfig.manageProductVersion.desc')}</p>
           </div>
         ),
-        content: <ProductVersion serviceUrl={this.props.serviceUrl} productName={this.state.productName}/>,
+        content: <div className="admin-config-child"><ProductVersion serviceUrl={this.props.serviceUrl} productName={this.state.productName}/></div>,
       },
       {
         label: (
@@ -110,9 +110,11 @@ class AdminConfiguration extends React.Component {
         ),
         content: (
           <>
+          <div className="admin-config-child">
             <TicketTypeConfiguration serviceUrl={this.props.serviceUrl} ticketType={this.state.refinedTicketType} getTicketAndSubLevel={this.getTicketingSystemConfig} />
             <ServiceSubLevelConfiguration serviceUrl={this.props.serviceUrl} subLevel={this.state.refinedSubLevel} getTicketAndSubLevel={this.getTicketingSystemConfig} />
             <ProductNameConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName} getTicketAndSubLevel={this.getTicketingSystemConfig}/>
+          </div>
           </>
         )
       },
@@ -125,7 +127,9 @@ class AdminConfiguration extends React.Component {
         ),
         content: (
           <>
-            <JiraConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName} jiraCustomField={this.state.refinedJiraCustomField} getTicketAndSubLevel={this.getTicketingSystemConfig}/>
+            <div className="admin-config-child">
+              <JiraConfiguration serviceUrl={this.props.serviceUrl} productName={this.state.productName} jiraCustomField={this.state.refinedJiraCustomField} getTicketAndSubLevel={this.getTicketingSystemConfig} />
+            </div>
           </>
         )
       }

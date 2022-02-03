@@ -65,7 +65,7 @@ class ProductNameConfiguration extends Component {
             });
             this.setState({ changedProductName: this.props.productName })
         } catch (error) {
-            console.error('Error ', error)
+            console.error('Error onEditProductNameSave: ', error)
         }
     }
 
@@ -96,58 +96,56 @@ class ProductNameConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
-                    <div style={{ paddingLeft: "1rem" }}>
-                        <h4>{i18n.t("adminConfig.productNameConfigurations.title")}</h4>
-                        <TableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        {headerData.map((head, index) => (
-                                            <TableHeader style={{width: '50%'}} id={index} key={head.key}> {head.header}
-                                            </TableHeader>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    <TableRow key={1} id={1}>
-                                        <TableCell>{this.props.productName}</TableCell>
-                                        <TableCell>
-                                            <Button
-                                                kind="ghost"
-                                                onClick={this.onEditProductNameHandle}
-                                                style={{ display: 'flex', width: '100%', color: 'red' }}
-                                            >
-                                                {i18n.t('buttons.edit')}
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <ComposedModal open={this.state.open} onClose={() => { this.setState({ open: false }) }} >
-                            <ModalHeader title={i18n.t('buttons.edit')} />
-                            <ModalBody>
-                                <TextInput
-                                    data-modal-primary-focus
-                                    id="text-input-1"
-                                    labelText="Product Name*"
-                                    value={this.state.changedProductName}
-                                    invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
-                                    onChange={(e) => { this.productOnChangeHandler(e) }}
-                                />
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button
-                                    kind="secondary"
-                                    onMouseDown={() => { this.setState({ open: false }) }}>
-                                    {i18n.t('buttons.cancel')}
-                                </Button>
-                                <Button kind="primary" onClick={() => { this.onEditProductNameSave() }}>
-                                    {i18n.t('buttons.save')}
-                                </Button>
-                            </ModalFooter>
-                        </ComposedModal>
-                    </div>
+                    <h4>{i18n.t("adminConfig.productNameConfigurations.title")}</h4>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    {headerData.map((head, index) => (
+                                        <TableHeader style={{ width: '50%' }} id={index} key={head.key}> {head.header}
+                                        </TableHeader>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow key={1} id={1}>
+                                    <TableCell>{this.props.productName}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            kind="ghost"
+                                            onClick={this.onEditProductNameHandle}
+                                            style={{ display: 'flex', width: '100%', color: 'red' }}
+                                        >
+                                            {i18n.t('buttons.edit')}
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <ComposedModal open={this.state.open} onClose={() => { this.setState({ open: false }) }} >
+                        <ModalHeader title={i18n.t('buttons.edit')} />
+                        <ModalBody>
+                            <TextInput
+                                data-modal-primary-focus
+                                id="text-input-1"
+                                labelText="Product Name*"
+                                value={this.state.changedProductName}
+                                invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
+                                onChange={(e) => { this.productOnChangeHandler(e) }}
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                kind="secondary"
+                                onMouseDown={() => { this.setState({ open: false }) }}>
+                                {i18n.t('buttons.cancel')}
+                            </Button>
+                            <Button kind="primary" onClick={() => { this.onEditProductNameSave() }}>
+                                {i18n.t('buttons.save')}
+                            </Button>
+                        </ModalFooter>
+                    </ComposedModal>
                 </>
             )
         } else {

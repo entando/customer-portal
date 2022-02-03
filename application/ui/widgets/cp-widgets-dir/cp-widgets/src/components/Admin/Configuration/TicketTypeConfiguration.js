@@ -34,10 +34,8 @@ class TicketTypeConfiguration extends Component {
         if (prevProps.ticketType.length !== this.props.ticketType.length) {
             this.getTicketTypes()
         }
-        if (authenticationChanged(this.props, prevProps)) {
-            if (isPortalAdminOrSupport()) {
-                this.getProductVersions();
-            }
+        if (authenticationChanged(this.props, prevProps) && isPortalAdminOrSupport()) {
+            this.getProductVersions();
         }
     }
 
@@ -76,7 +74,7 @@ class TicketTypeConfiguration extends Component {
             const updateTicketTypeRowData = ticketListBuilder
             this.setState({ ticketTypeRowData: [updateTicketTypeRowData], ticketName: '' })
         } catch (error) {
-            console.error('Error :',error)
+            console.error('Error handleFormSubmit: ',error)
         }
     }
 
@@ -113,7 +111,7 @@ class TicketTypeConfiguration extends Component {
                 updateTicketTypeAfterDeletedTicket = JSON.parse(updateTicketTypeAfterDeletedTicket)
                 this.setState({ ticketTypeRowData: updateTicketTypeAfterDeletedTicket })
             } catch (error) {
-                console.error('Error ', error)
+                console.error('Error handleDeleteTicketType: ', error)
             }
         }
     }
@@ -137,41 +135,39 @@ class TicketTypeConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
-                    <div style={{ paddingLeft: "1rem" }}>
-                        <h4>{i18n.t('adminConfig.manageFieldConfigurations.ticketTypeConfigurations')}</h4>
-                        <TableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        {headerData.map((head, index) => (
-                                            <TableHeader style={{width: '50%'}} id={index} key={head.key}> {head.header}
-                                            </TableHeader>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
+                    <h4>{i18n.t('adminConfig.manageFieldConfigurations.ticketTypeConfigurations')}</h4>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    {headerData.map((head, index) => (
+                                        <TableHeader style={{ width: '50%' }} id={index} key={head.key}> {head.header}
+                                        </TableHeader>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
 
-                                <TableBody>
-                                    {ticketTypeRecord}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <div className="bx--grid" style={{ margin: "0rem", padding: "0rem" }}>
-                            <Form className="bx--row" style={{ margin: "2rem 0rem", padding: "0rem" }} onSubmit={this.handleFormSubmit}>
-                                <div className="bx--col-lg-6" style={{ paddingLeft: "0rem" }}>
-                                    <TextInput
-                                        id="tickettype" labelText={i18n.t('adminConfig.manageFieldConfigurations.ticketType')} type="text"
-                                        value={this.state.ticketName} onChange={this.setFormData}
-                                        invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
-                                        onBlur={() => { this.setState({ ticketName: this.state.ticketName.trimEnd() }) }}
-                                    />
-                                </div>
-                                <div className="bx--col-lg-6">
-                                    <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ paddingRight: "2.5rem", "paddingTop": "0.5rem", "alignItems": "center" }}>
-                                        {i18n.t('adminConfig.manageFieldConfigurations.addTicketTypeButton')}
-                                    </Button>
-                                </div>
-                            </Form>
-                        </div>
+                            <TableBody>
+                                {ticketTypeRecord}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <div className="bx--grid" style={{ margin: "0rem", padding: "0rem" }}>
+                        <Form className="bx--row" style={{ margin: "2rem 0rem", padding: "0rem" }} onSubmit={this.handleFormSubmit}>
+                            <div className="bx--col-lg-6" style={{ paddingLeft: "0rem" }}>
+                                <TextInput
+                                    id="tickettype" labelText={i18n.t('adminConfig.manageFieldConfigurations.ticketType')} type="text"
+                                    value={this.state.ticketName} onChange={this.setFormData}
+                                    invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
+                                    onBlur={() => { this.setState({ ticketName: this.state.ticketName.trimEnd() }) }}
+                                />
+                            </div>
+                            <div className="bx--col-lg-6">
+                                <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ paddingRight: "2.5rem", "paddingTop": "0.5rem", "alignItems": "center" }}>
+                                    {i18n.t('adminConfig.manageFieldConfigurations.addTicketTypeButton')}
+                                </Button>
+                            </div>
+                        </Form>
                     </div>
                     <hr />
                 </>

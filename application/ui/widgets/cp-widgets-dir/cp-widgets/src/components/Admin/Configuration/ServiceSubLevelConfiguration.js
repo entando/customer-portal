@@ -76,7 +76,7 @@ class ServiceSubLevelConfiguration extends Component {
             const updateserviceSubTypeRowData = [...this.state.serviceSubTypeRowData, { levelName: this.state.subscriptionLevel }]
             this.setState({ serviceSubTypeRowData: updateserviceSubTypeRowData, subscriptionLevel: '' })
         } catch (error) {
-            console.error('Error ', error)
+            console.error('Error handleFormSubmit: ', error)
         }
     }
 
@@ -114,7 +114,7 @@ class ServiceSubLevelConfiguration extends Component {
                 updateServiceSubTypeAfterDeletedSubscr = JSON.parse(updateServiceSubTypeAfterDeletedSubscr)
                 this.setState({ serviceSubTypeRowData: updateServiceSubTypeAfterDeletedSubscr })
             } catch (error) {
-                console.error(error);
+                console.error('Error handleDeleteServiceSubType: ',error);
             }
         }
     }
@@ -138,41 +138,39 @@ class ServiceSubLevelConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
-                    <div style={{ paddingLeft: "1rem" }}>
-                        <h4>{i18n.t('adminConfig.manageFieldConfigurations.subscriptionLevelConfiguration')}</h4>
-                        <TableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        {headerData.map((head, index) => (
-                                            <TableHeader style={{width: '50%'}} id={index} key={head.key}> {head.header}
-                                            </TableHeader>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
+                    <h4>{i18n.t('adminConfig.manageFieldConfigurations.subscriptionLevelConfiguration')}</h4>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    {headerData.map((head, index) => (
+                                        <TableHeader style={{ width: '50%' }} id={index} key={head.key}> {head.header}
+                                        </TableHeader>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
 
-                                <TableBody>
-                                    {subLevelRecord}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <div className="bx--grid" style={{ margin: "0rem", padding: "0rem" }}>
-                            <Form className="bx--row" style={{ margin: "2rem 0rem", padding: "0rem" }} onSubmit={this.handleFormSubmit}>
-                                <div className="bx--col-lg-6" style={{ paddingLeft: "0rem" }}>
-                                    <TextInput
-                                        id="sublevel" labelText={i18n.t('adminConfig.manageFieldConfigurations.subscriptionLevel')} type="text"
-                                        value={this.state.subscriptionLevel} onChange={this.setFormData}
-                                        invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
-                                        onBlur={() => { this.setState({ subscriptionLevel: this.state.subscriptionLevel.trimEnd() }) }}
-                                    />
-                                </div>
-                                <div className="bx--col-lg-6">
-                                    <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ paddingRight: "2.5rem", "paddingTop": "0.5rem", "alignItems": "center" }}>
-                                        {i18n.t('adminConfig.manageFieldConfigurations.addSubscriptionLevelButton')}
-                                    </Button>
-                                </div>
-                            </Form>
-                        </div>
+                            <TableBody>
+                                {subLevelRecord}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <div className="bx--grid" style={{ margin: "0rem", padding: "0rem" }}>
+                        <Form className="bx--row" style={{ margin: "2rem 0rem", padding: "0rem" }} onSubmit={this.handleFormSubmit}>
+                            <div className="bx--col-lg-6" style={{ paddingLeft: "0rem" }}>
+                                <TextInput
+                                    id="sublevel" labelText={i18n.t('adminConfig.manageFieldConfigurations.subscriptionLevel')} type="text"
+                                    value={this.state.subscriptionLevel} onChange={this.setFormData}
+                                    invalid={this.state.validations.isError} invalidText={this.state.validations.errorMsg}
+                                    onBlur={() => { this.setState({ subscriptionLevel: this.state.subscriptionLevel.trimEnd() }) }}
+                                />
+                            </div>
+                            <div className="bx--col-lg-6">
+                                <Button size="lg" kind="tertiary" tabIndex={0} type="submit" renderIcon={Add16} style={{ paddingRight: "2.5rem", "paddingTop": "0.5rem", "alignItems": "center" }}>
+                                    {i18n.t('adminConfig.manageFieldConfigurations.addSubscriptionLevelButton')}
+                                </Button>
+                            </div>
+                        </Form>
                     </div>
                     <hr />
                 </>
