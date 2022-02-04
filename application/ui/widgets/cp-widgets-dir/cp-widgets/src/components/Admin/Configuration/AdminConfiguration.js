@@ -50,31 +50,19 @@ class AdminConfiguration extends React.Component {
   getTicketingSystemConfig = async () => {
     try {
       const { data: ticketTypesAndSubLevelsData } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
-      if (ticketTypesAndSubLevelsData.length) {
-        let parsedTicketType = [];
-        let parsedSubLevel = [];
-        let parsedJiraCustomField = [];
-        let parsedProdName = '';
-        if (ticketTypesAndSubLevelsData[0].ticketType) {
-          parsedTicketType = JSON.parse(ticketTypesAndSubLevelsData[0].ticketType);
-          this.setState({ refinedTicketType: parsedTicketType })
-        }
-        if (ticketTypesAndSubLevelsData[0].subscriptionLevel) {
-          parsedSubLevel = JSON.parse(ticketTypesAndSubLevelsData[0].subscriptionLevel)
-          this.setState({ refinedSubLevel: parsedSubLevel })
-        }
-        if (ticketTypesAndSubLevelsData[0].hasOwnProperty('jiraCustomField')) {
-          parsedJiraCustomField = JSON.parse(ticketTypesAndSubLevelsData[0].jiraCustomField)
+      if (ticketTypesAndSubLevelsData && ticketTypesAndSubLevelsData.length) {
+        const JIRAKEY = 'jiraCustomField', PRODUCTNAME = 'productName';
+        let actualData = ticketTypesAndSubLevelsData[0];
+        if (actualData.ticketType) this.setState({ refinedTicketType: JSON.parse(actualData.ticketType) })
+        if (actualData.subscriptionLevel) this.setState({ refinedSubLevel: JSON.parse(actualData.subscriptionLevel) })
+        if (actualData.hasOwnProperty(JIRAKEY)) {
           let jiraCustomFieldBuilder = [];
-          for (let jiraItem in parsedJiraCustomField[0]) {
-            jiraCustomFieldBuilder.push({ [jiraItem]: parsedJiraCustomField[0][jiraItem] })
+          for (let jiraItem in JSON.parse(actualData.jiraCustomField)[0]) {
+            jiraCustomFieldBuilder.push({ [jiraItem]: JSON.parse(actualData.jiraCustomField)[0][jiraItem] })
           }
           this.setState({ refinedJiraCustomField: jiraCustomFieldBuilder })
         }
-        if (ticketTypesAndSubLevelsData[0].hasOwnProperty('productName')) {
-          parsedProdName = JSON.parse(ticketTypesAndSubLevelsData[0].productName)
-          this.setState({ productName: parsedProdName[0].name })
-        }
+        if (actualData.hasOwnProperty(PRODUCTNAME)) this.setState({ productName: JSON.parse(actualData.productName)[0].name })
       }
     } catch (error) {
       console.error('Error getTicketingSystemConfig: ', error)

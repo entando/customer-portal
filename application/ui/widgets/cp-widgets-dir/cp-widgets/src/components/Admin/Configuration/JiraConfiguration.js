@@ -29,29 +29,30 @@ class JiraConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             this.setState({ changedProductName: this.props.productName, jiraConfig: this.props.jiraCustomField })
             this.getProductVersions();
+            this.getJiraConfig();
         }
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.jiraCustomField.length !== this.props.jiraCustomField.length) {
-            this.setState({ changedProductName: this.props.productName, jiraConfig: this.props.jiraCustomField })
-            let initJira = this.initializeJiraConfigObj();
-            this.props.jiraCustomField.forEach((el) => {
-                initJira[Object.keys(el)[0]] = el[Object.keys(el)[0]]
-            })
-            this.setState({ jiraOnChangedValue: initJira })
+            this.getJiraConfig();
         }
         if (authenticationChanged(this.props, prevProps) && isPortalAdminOrSupport()) {
             this.getProductVersions();
         }
     }
 
+    getJiraConfig() {
+        this.setState({ changedProductName: this.props.productName, jiraConfig: this.props.jiraCustomField });
+        let initJira = this.initializeJiraConfigObj();
+        this.props.jiraCustomField.forEach((el) => {
+            initJira[Object.keys(el)[0]] = el[Object.keys(el)[0]];
+        });
+        this.setState({ jiraOnChangedValue: initJira });
+    }
+
     initializeJiraConfigObj() {
-        return {
-            versionId: 0,
-            organizationId: 0,
-            subscriptionLevelId: 0
-        };
+        return { versionId: 0, organizationId: 0, subscriptionLevelId: 0 };
     }
 
     async getProductVersions() {
@@ -106,7 +107,7 @@ class JiraConfiguration extends Component {
     onClickCloseModal = () => {
         let initJira = this.initializeJiraConfigObj();
         this.state.jiraConfig.forEach((el) => {
-            initJira[Object.keys(el)[0]] = el[Object.keys(el)[0]]
+            initJira[Object.keys(el)[0]] = parseInt(el[Object.keys(el)[0]].toString(), 10)
         })
         this.setState({ jiraOnChangedValue: initJira })
     }
@@ -127,7 +128,7 @@ class JiraConfiguration extends Component {
                 updateJiraconfig[`${Object.keys(this.state.jiraConfig[i])}`] = getEleValue;
             }
         }
-        this.setState({ jiraChangedValue: updateJiraconfig });
+        this.setState({ jiraOnChangedValue: updateJiraconfig });
     }
 
     render() {

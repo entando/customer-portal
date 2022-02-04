@@ -5,6 +5,7 @@ import withKeycloak from '../../auth/withKeycloak';
 import { apiProductVersionPost } from '../../api/productVersion';
 import moment from 'moment';
 import {isAuthenticated} from "../../api/helpers";
+import { Add16 } from '@carbon/icons-react'
 
 class AddProductVersionModal extends Component {
   constructor(props) {
@@ -118,6 +119,7 @@ class AddProductVersionModal extends Component {
     return (
       <ModalWrapper
         buttonTriggerText={i18n.t('buttons.addProductVersion')}
+        renderTriggerButtonIcon={Add16}
         modalHeading={i18n.t('adminDashboard.addProductVersion.title')}
         buttonTriggerClassName="add-product-version bx--btn bx--btn--tertiary add-product-version-button"
         className="modal-form"
