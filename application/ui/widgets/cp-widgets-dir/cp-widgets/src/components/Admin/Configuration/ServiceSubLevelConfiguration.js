@@ -81,7 +81,7 @@ class ServiceSubLevelConfiguration extends Component {
     }
 
     setFormData = (e) => {
-        if (!e && !e.target && !e.target.value) return
+        if (!e.target.value) return
         if (e.target.value.length <= VALIDATION_VARS.CHAR_MAX_LIMIT) {
             if (e.target.value.length && e.target.value.length < VALIDATION_VARS.CHAR_MIN_LIMIT) {
                 this.setState({ validations: { isError: true, errorMsg: i18n.t('validation.invalid.subscrLevelMinChar') }, subscriptionLevel: e.target.value.trimStart() })
