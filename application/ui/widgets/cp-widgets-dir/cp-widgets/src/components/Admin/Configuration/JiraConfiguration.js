@@ -135,70 +135,70 @@ class JiraConfiguration extends Component {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
-                        <TableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        {headerData.map((head, index) => (
-                                            <TableHeader id={index} key={head.key}> {head.header}
-                                            </TableHeader>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    <TableRow key={1} id={1}>
-                                        {this.getJiraConfigValues()}
-                                        <TableCell>
-                                            <Button
-                                                kind="ghost" onClick={this.onClickJiraConfigEdit}
-                                                style={{ display: 'flex', width: '100%', color: 'red' }}>
-                                                {i18n.t('buttons.edit')}
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <ComposedModal open={this.state.open} onClose={() => { this.onClickCloseModal(); this.setState({ open: false }) }} >
-                            <ModalHeader title={i18n.t("buttons.edit")} />
-                            <ModalBody>
-                                <TextInput
-                                    key={"versionId"} data-modal-primary-focus id={"versionId"}
-                                    labelText={`${i18n.t('adminConfig.jiraFieldsConfigurations.versionIDLabel')}*`}
-                                    type="number" value={this.state.jiraOnChangedValue['versionId']}
-                                    invalid={this.state.validations.versionIdIsValid}
-                                    invalidText={i18n.t('validation.invalid.required')}
-                                    onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
-                                />
-                                <TextInput
-                                    key={"organizationId"} data-modal-primary-focus id={"organizationId"}
-                                    labelText={`${i18n.t('adminConfig.jiraFieldsConfigurations.organizatoinIDLabel')}*`}
-                                    type="number" value={this.state.jiraOnChangedValue.organizationId}
-                                    invalid={this.state.validations.organizationIdIsValid}
-                                    invalidText={i18n.t('validation.invalid.required')}
-                                    onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
-                                />
-                                <TextInput
-                                    key={"subscriptionLevelId"} data-modal-primary-focus id={"subscriptionLevelId"}
-                                    labelText={`${i18n.t('adminConfig.jiraFieldsConfigurations.SubscriptionLevelIDLabel')}*`}
-                                    type="number" value={this.state.jiraOnChangedValue.subscriptionLevelId}
-                                    invalid={this.state.validations.subscriptionLevelIdIsValid}
-                                    invalidText={i18n.t('validation.invalid.required')}
-                                    onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
-                                />
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button
-                                    kind="secondary"
-                                    onMouseDown={() => { this.setState({ open: false }) }}
-                                    onClick={this.onClickCloseModal}>
-                                    {i18n.t('buttons.cancel')}
-                                </Button>
-                                <Button kind="primary" onClick={() => { this.onClickJiraConfigSave() }}>
-                                    {i18n.t('buttons.save')}
-                                </Button>
-                            </ModalFooter>
-                        </ComposedModal>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    {headerData.map((head, index) => (
+                                        <TableHeader id={index} key={head.key}> {head.header}
+                                        </TableHeader>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow key={1} id={1}>
+                                    {this.getJiraConfigValues()}
+                                    <TableCell>
+                                        <Button
+                                            kind="ghost" onClick={this.onClickJiraConfigEdit}
+                                            style={{ display: 'flex', width: '100%', color: 'red' }}>
+                                            {i18n.t('buttons.edit')}
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <ComposedModal open={this.state.open} onClose={() => { this.onClickCloseModal(); this.setState({ open: false }) }} >
+                        <ModalHeader title={i18n.t("buttons.edit")} />
+                        <ModalBody>
+                            <TextInput
+                                key={"versionId"} data-modal-primary-focus id={"versionId"}
+                                labelText={`${i18n.t('adminConfig.jiraFieldsConfigurations.versionIDLabel')}*`}
+                                type="number" value={this.state.jiraOnChangedValue['versionId']}
+                                invalid={this.state.validations.versionIdIsValid}
+                                invalidText={i18n.t('validation.invalid.required')}
+                                onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
+                            />
+                            <TextInput
+                                key={"organizationId"} data-modal-primary-focus id={"organizationId"}
+                                labelText={`${i18n.t('adminConfig.jiraFieldsConfigurations.organizatoinIDLabel')}*`}
+                                type="number" value={this.state.jiraOnChangedValue.organizationId}
+                                invalid={this.state.validations.organizationIdIsValid}
+                                invalidText={i18n.t('validation.invalid.required')}
+                                onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
+                            />
+                            <TextInput
+                                key={"subscriptionLevelId"} data-modal-primary-focus id={"subscriptionLevelId"}
+                                labelText={`${i18n.t('adminConfig.jiraFieldsConfigurations.SubscriptionLevelIDLabel')}*`}
+                                type="number" value={this.state.jiraOnChangedValue.subscriptionLevelId}
+                                invalid={this.state.validations.subscriptionLevelIdIsValid}
+                                invalidText={i18n.t('validation.invalid.required')}
+                                onChange={(e) => { this.jiraConfigOnChangeHandler(e) }}
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                kind="secondary"
+                                onMouseDown={() => { this.setState({ open: false }) }}
+                                onClick={this.onClickCloseModal}>
+                                {i18n.t('buttons.cancel')}
+                            </Button>
+                            <Button kind="primary" onClick={() => { this.onClickJiraConfigSave() }}>
+                                {i18n.t('buttons.save')}
+                            </Button>
+                        </ModalFooter>
+                    </ComposedModal>
                 </>
             )
         } else {
