@@ -120,8 +120,8 @@ class ServiceSubLevelConfiguration extends Component {
 
     subLeveRecord() {
         let subLevelRecord = [];
-        this.state.serviceSubTypeRowData.forEach((subscr) => {
-            subLevelRecord.push(<TableRow key={subscr.name} id={subscr.name}>
+        this.state.serviceSubTypeRowData.forEach((subscr, index) => {
+            subLevelRecord.push(<TableRow key={index} id={subscr.name}>
                 <TableCell>{subscr.name}</TableCell>
                 <TableCell>
                     <Button

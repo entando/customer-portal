@@ -117,8 +117,9 @@ class TicketTypeConfiguration extends Component {
 
     ticketTypeRecord() {
         let ticketTypeRecord = [];
-        this.state.ticketTypeRowData.forEach((ticket) => {
-            ticketTypeRecord.push(<TableRow key={ticket.name} id={ticket.name}>
+        this.state.ticketTypeRowData.forEach((ticket, index) => {
+            ticketTypeRecord.push(
+            <TableRow key={index} id={ticket.name}>
                 <TableCell>{ticket.name}</TableCell>
                 <TableCell>
                     <Button
@@ -129,7 +130,8 @@ class TicketTypeConfiguration extends Component {
                         {i18n.t('buttons.delete')}
                     </Button>
                 </TableCell>
-            </TableRow>);
+            </TableRow>
+            );
         });
         return ticketTypeRecord;
     }
@@ -143,10 +145,7 @@ class TicketTypeConfiguration extends Component {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    {headerData.map((head, index) => (
-                                        <TableHeader style={{ width: '50%' }} id={index} key={head.key}> {head.header}
-                                        </TableHeader>
-                                    ))}
+                                    {headerData.map((head) => <TableHeader style={{ width: '50%' }} key={head.key}> {head.header}</TableHeader>)}
                                 </TableRow>
                             </TableHead>
 
