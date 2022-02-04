@@ -18,7 +18,8 @@ With this configuration, you can use the ent cli (https://dev.entando.org/next/d
   * Service URL, e.g. https://<YOUR_ACCOUNT>.atlassian.net/rest/api/latest/
   * Service account email and password (or preferably API token)
   * Project name key, e.g. ENT
-  * Custom field ids (version, organization, and subscription level) should be set in the application.properties. The value of the fields must match exactly (e.g. v6.3.0 vs 6.3.0 for versions, GOLD vs Gold for subscription level) or ticket creation/display may fail.
+  * Custom field ids (version, organization and subscription level) will be loaded as a default in database in `ticketing_system_configuration` table through liquibase.
+  * These configuration values can be fetched from database and this will be available on Admin UI.
   * By default the Customer Portal uses issue types Support, New Feature, and Bug during ticket creation. This list can be adjusted in the OpenTicketForm.js 
 * Keycloak
   * cp-admin
