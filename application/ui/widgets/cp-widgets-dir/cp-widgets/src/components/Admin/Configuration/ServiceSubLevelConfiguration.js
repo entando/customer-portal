@@ -118,8 +118,8 @@ class ServiceSubLevelConfiguration extends Component {
         }
     }
 
-    render() {
-        let subLevelRecord = []
+    subLeveRecord() {
+        let subLevelRecord = [];
         this.state.serviceSubTypeRowData.forEach((subscr) => {
             subLevelRecord.push(<TableRow key={subscr.name} id={subscr.name}>
                 <TableCell>{subscr.name}</TableCell>
@@ -132,8 +132,12 @@ class ServiceSubLevelConfiguration extends Component {
                         {i18n.t('buttons.delete')}
                     </Button>
                 </TableCell>
-            </TableRow>)
-        })
+            </TableRow>);
+        });
+        return subLevelRecord;
+    }
+
+    render() {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
@@ -150,7 +154,7 @@ class ServiceSubLevelConfiguration extends Component {
                             </TableHead>
 
                             <TableBody>
-                                {subLevelRecord}
+                                {this.subLeveRecord()}
                             </TableBody>
                         </Table>
                     </TableContainer>

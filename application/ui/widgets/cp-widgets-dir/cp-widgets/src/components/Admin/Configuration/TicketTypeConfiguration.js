@@ -30,7 +30,7 @@ class TicketTypeConfiguration extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (prevProps.ticketType.length !== this.props.ticketType.length) {
             this.getTicketTypes()
         }
@@ -115,8 +115,8 @@ class TicketTypeConfiguration extends Component {
         }
     }
 
-    render() {
-        let ticketTypeRecord = []
+    ticketTypeRecord() {
+        let ticketTypeRecord = [];
         this.state.ticketTypeRowData.forEach((ticket) => {
             ticketTypeRecord.push(<TableRow key={ticket.name} id={ticket.name}>
                 <TableCell>{ticket.name}</TableCell>
@@ -129,8 +129,12 @@ class TicketTypeConfiguration extends Component {
                         {i18n.t('buttons.delete')}
                     </Button>
                 </TableCell>
-            </TableRow>)
-        })
+            </TableRow>);
+        });
+        return ticketTypeRecord;
+    }
+
+    render() {
         if (isPortalAdminOrSupport()) {
             return (
                 <>
@@ -147,7 +151,7 @@ class TicketTypeConfiguration extends Component {
                             </TableHead>
 
                             <TableBody>
-                                {ticketTypeRecord}
+                                {this.ticketTypeRecord()}
                             </TableBody>
                         </Table>
                     </TableContainer>
