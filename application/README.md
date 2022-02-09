@@ -18,9 +18,8 @@ With this configuration, you can use the ent cli (https://dev.entando.org/next/d
   * Service URL, e.g. https://<YOUR_ACCOUNT>.atlassian.net/rest/api/latest/
   * Service account email and password (or preferably API token)
   * Project name key, e.g. ENT
-  * Custom field ids (version, organization and subscription level) will be loaded as a default in database in `ticketing_system_configuration` table through liquibase.
-  * These configuration values can be fetched from database and this will be available on Admin UI.
-  * By default the Customer Portal uses issue types Support, New Feature, and Bug during ticket creation. This list can be adjusted in the OpenTicketForm.js 
+  * Custom field ids (version, organization and subscription level) are pre-loaded with default values in the`ticketing_system_configuration`table. These values can be modified via the Admin UI.
+  * By default the Customer Portal uses issue types Support, New Feature, and Bug during ticket creation. 
 * Keycloak
   * cp-admin
   * cp-support
@@ -35,7 +34,7 @@ With this configuration, you can use the ent cli (https://dev.entando.org/next/d
       * cp_keycloak_silent_check_sso.page
   
 # Development tips
-* The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. As of Entando 6.3, you'll need to add a liquibase changeset by hand if you don't want to reset your database. This may change with the next version of Entando or more specifically JHipster 7 which upgrades liquibase.
+* The database model can be revised using `ent jhipster import-jdl jdl/entando-customer-portal-datamodel.jdl`. Caveat, changes will need to be reviewed and accepted individually. As of Entando 6.3, you'll need to add a liquibase changeset by hand if you don't want to reset your database. This may change with the next version of Entando or more specifically JHipster 7 which upgrades liquibase. Caveat#2, the most recent data model changes for the ticketing_system_configuration were not generated using the JDL so the code has diverged slightly.
   * For example, the UI code may be reformatted and stock unused widgets generated
   * repository/*Repository classes have some custom queries and methods
   * web/rest/*Resource classes have been heavily customized with security checks and generally should be rolled back.

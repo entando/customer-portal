@@ -6,7 +6,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    
+
     <!--
         Added the entity TicketingSystemConfiguration.
     -->
@@ -36,7 +36,7 @@
     -->
     <changeSet id="20220203115009-1-data" author="jhipster">
         <loadData
-                  file="config/liquibase/fake-data/ticketing_system_config.csv"
+                  file="config/liquibase/init-data/ticketing_system_config.csv"
                   separator=";"
                   tableName="ticketing_system_configuration">
             <column name="id" type="numeric"/>

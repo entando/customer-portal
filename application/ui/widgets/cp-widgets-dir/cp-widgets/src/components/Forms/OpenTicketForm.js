@@ -25,7 +25,6 @@ class OpenTicketForm extends Component {
       description: '',
       types: []
     };
-    // TODO: need be dynamic IMP: need to remove
     this.types = ['Support', 'New Feature', 'Bug'];
     this.priorities = ['Critical', 'High', 'Medium', 'Low'];
   }
@@ -48,6 +47,7 @@ class OpenTicketForm extends Component {
       const { data: ticketTypes } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
       if (ticketTypes && ticketTypes[0].hasOwnProperty('ticketType')) {
         const ticketTypesArr = JSON.parse(ticketTypes[0].ticketType)
+        ticketTypesArr.sort((a,b) => String(a.name).localeCompare(b.name))
         this.setState({ types: ticketTypesArr })
       }
     } catch (error) {

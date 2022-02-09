@@ -1,2 +1,0 @@
-id;ticket_type;subscription_level;product_name;jira_customfield
-1;[{\"name\":\"Support\"},{\"name\":\"New Feature\"},{\"name\":\"Bug\"}];[{\"name\":\"GOLD\"},{\"name\":\"PLATINUM\"}];[{\"name\":\"Entando\"}];[{"versionId":-1,"organizationId":10002,"subscriptionLevelId":1003}]
