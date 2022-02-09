@@ -35,10 +35,8 @@ class CustomerProjectList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (authenticationChanged(this.props, prevProps)) {
-      if (isPortalAdminOrSupport()) {
-        this.fetchData();
-      }
+    if (authenticationChanged(this.props, prevProps) && isPortalAdminOrSupport()) {
+      this.fetchData();
     }
   }
 

@@ -18,6 +18,7 @@ import {apiDeleteSubscriptionFromProject, apiGetProjectSubscriptions, apiProject
 import {formatEndDate, formatStartDate} from '../../../api/subscriptions';
 import Breadcrumbs from "../../Breadcrumbs/Breadcrumbs";
 import {Link} from 'react-router-dom';
+import { apiTicketingSystemConfigResourceGet } from '../../../api/manageFieldConfigurations';
 
 class ManageSubscriptions extends Component {
   constructor(props) {
@@ -26,6 +27,7 @@ class ManageSubscriptions extends Component {
       projectId: '',
       project: {},
       subscriptions: [],
+      productName: ''
     };
     this.headerData = [
       {
@@ -90,10 +92,15 @@ class ManageSubscriptions extends Component {
         subscriptions = (await apiGetProjectSubscriptions(this.props.serviceUrl, projectId)).data;
       }
 
+      const data = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
+      if (data && data.data && data.data.length && data.data[0].hasOwnProperty('subscriptionLevel')) {
+        this.setState({ productName: JSON.parse(data.data[0].productName)[0].name })
+      }
       this.setState({
         projectId: projectId,
         project: project,
         subscriptions: subscriptions,
+        productName: (data && data.data && data.data.length && data.data[0].productName) ? JSON.parse(data.data[0].productName)[0].name : ''
       });
     }
   }
@@ -143,7 +150,7 @@ class ManageSubscriptions extends Component {
                 <TableHead>
                   <TableRow>
                     {headers.map(header => (
-                      <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>
+                      <TableHeader {...getHeaderProps({ header })}>{header.key === 'entandoVersion' ? `${this.state.productName} Version` : header.header}</TableHeader>
                     ))}
                   </TableRow>
                 </TableHead>

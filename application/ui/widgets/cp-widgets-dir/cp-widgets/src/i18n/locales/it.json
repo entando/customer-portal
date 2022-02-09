@@ -4,7 +4,7 @@
     "formTitle": "Tutti i clienti",
     "desc": "Configura il sistema di segnalazione e le versioni di Entando qui di seguito.",
     "integrationTicketingSystem": {
-      "title": "Integrazione con il sistema di segnalazione",
+      "title": "Collegamento al sistema di biglietteria",
       "desc": "Questo ti permette di gestire il sistema di segnalazione",
       "selectBackendTicketingSystem": "Seleziona il sistema di segnalazione (Backend Ticketing System)",
       "select": "Selezionare",
@@ -15,11 +15,32 @@
     },
     "manageProductVersion": {
       "title": "Gestisci la versione del prodotto",
-      "desc": "Ciò consente di gestire le versioni del prodotto Entando",
+      "desc": "Gestisci le versioni del prodotto",
       "entandoVersion": "Versione di Entando",
       "status": "Stato *",
       "startDate": "data d'inizio",
       "supportEndDate": "Data di fine supporto"
+    },
+    "manageFieldConfigurations": {
+      "title": "Configurazione del sistema di biglietteria",
+      "manageFieldConfigurationsDesc": "Questo ti permetterà di gestire i campi a tendina utilizzati nei vari form per la creazione e la gestione dei ticket",
+      "ticketTypeConfigurations": "Configurazioni del tipo di biglietto",
+      "subscriptionLevelConfiguration": "Configurazione del livello di abbonamento",
+      "ticketType": "Tipo di biglietto",
+      "subscriptionLevel": "Livello di abbonamento",
+      "addTicketTypeButton": "Aggiungi tipo di biglietto",
+      "addSubscriptionLevelButton": "Aggiungi livello di abbonamento"
+    },
+    "productNameConfigurations": {
+      "title": "Configurazione del nome del prodotto",
+      "table": {
+        "prodName": "nome del prodotto"
+      }
+    },
+    "jiraFieldsConfigurations": {
+      "versionIDLabel": "ID versione",
+      "organizatoinIDLabel": "ID organizzazione",
+      "SubscriptionLevelIDLabel": "ID livello di abbonamento"
     }
   },
   "adminDashboard": {
@@ -79,7 +100,7 @@
     "addPartner": "Aggiungi un partner +",
     "addProject": "Aggiungi un progetto",
     "addSubscription": "Aggiungi un abbonamento",
-    "addProductVersion": "Aggiungi la versione del prodotto +",
+    "addProductVersion": "Aggiungi la versione del prodotto",
     "cancel": "Annulla",
     "delete": "Elimina",
     "edit": "Modificare",
@@ -192,6 +213,8 @@
     "updated": "Aggiornata con successo",
     "added": "Aggiunta con successo",
     "confirmDelete": "Sei sicuro di voler eliminare questo articolo?",
+    "confirmDeleteTicketType": "Sei sicuro di voler eliminare questo tipo di biglietto?",
+    "confirmDeleteSubscrLevel": "Sei sicuro di voler eliminare questo livello di abbonamento?",
     "deleted": "Cancellato con successo",
     "error": "Si è verificato un errore",
     "ticketError": "Si è verificato un errore. Assicurarsi che questo progetto abbia un'organizzazione corrispondente in Jira Service Desk."
@@ -216,7 +239,7 @@
     "adminRenewNewSuccess": "Rinnovato con successo una subscription al progetto.",
     "adminTitle": "Interfaccia Amministrativa di Entando",
     "chooseLevel": "Scegli un livello",
-    "chooseVersion": "Scegli la versione Entando",
+    "chooseVersion": "Scegli una versione",
     "contactEmail": "Contatto email *",
     "contactName": "Nome del contatto *",
     "contactNumber": "numero di contatto telefonico",
@@ -284,7 +307,15 @@
       "required": "Questo campo è obbligatorio.",
       "email": "L'email non è valida.",
       "date": "Inserisci una data nel formato 'mm / gg / aaaa'.",
-      "number": "Questo campo deve essere un numero."
+      "number": "Questo campo deve essere un numero.",
+      "productNameMaxChar": "Il nome del prodotto non deve superare i 100 caratteri",
+      "productNameMinChar": "Il nome del prodotto deve contenere almeno 3 caratteri",
+      "subscrLevelMinChar": "Il livello di abbonamento deve essere di almeno 3 caratteri",
+      "subscrLevelMaxChar": "Il livello di abbonamento non deve superare i 100 caratteri",
+      "subscrDupCheck": "Questo livello di abbonamento esiste già, inserisci un nuovo livello",
+      "ticketTypeMinChar": "Il tipo di biglietto deve contenere almeno 3 caratteri",
+      "ticketTypeMaxChar": "Il tipo di biglietto non deve superare i 100 caratteri",
+      "ticketDupCheck": "Questo tipo di biglietto esiste già, inserisci un nuovo tipo di biglietto"
     }
   }
 }

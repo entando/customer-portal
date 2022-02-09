@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <!--
+        Added the entity TicketingSystemConfiguration.
+    -->
+    <changeSet id="20220203115009-1" author="jhipster">
+        <createTable tableName="ticketing_system_configuration">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_type" type="varchar(600)">
+                <constraints nullable="true" />
+            </column>
+            <column name="subscription_level" type="varchar(600)">
+                <constraints nullable="true" />
+            </column>
+            <column name="product_name" type="varchar(600)">
+                <constraints nullable="true" />
+            </column>
+            <column name="jira_customfield" type="varchar(600)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!--
+    Load the Ticketing System Configuration initial data as a default from 'src/main/resources/config/liquibase/fake-data/ticketing_system_config.csv' file.
+    - This data can be easily edited using a CSV editor (or even MS Excel)
+    -->
+    <changeSet id="20220203115009-1-data" author="jhipster">
+        <loadData
+                  file="config/liquibase/init-data/ticketing_system_config.csv"
+                  separator=";"
+                  tableName="ticketing_system_configuration">
+            <column name="id" type="numeric"/>
+            <column name="ticket_type" type="string"/>
+            <column name="subscription_level" type="string"/>
+            <column name="product_name" type="string"/>
+            <column name="jira_customfield" type="string"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

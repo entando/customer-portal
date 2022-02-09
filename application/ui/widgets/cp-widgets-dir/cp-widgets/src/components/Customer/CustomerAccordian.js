@@ -98,6 +98,7 @@ class CustomerAccordian extends Component {
               customer={this.state.customer}
               locale={this.props.locale}
               updateCustomerList={this.props.updateCustomerList}
+              productName={(this.props.ticketSystemConfig && this.props.ticketSystemConfig.productName) ? JSON.parse(this.props.ticketSystemConfig.productName) : ''}
             />
           </AccordionItem>
         </div>

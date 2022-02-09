@@ -19,7 +19,7 @@ import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
 import ProjectActionItems from '../Admin/ProjectActionItems';
 import {formatEndDate, formatStartDate} from '../../api/subscriptions';
 import {apiProjectsGetByCustomer} from '../../api/projects';
-
+import { apiTicketingSystemConfigResourceGet } from '../../api/manageFieldConfigurations';
 class CustomerDataTable extends Component {
   constructor(props) {
     super(props);
@@ -28,7 +28,41 @@ class CustomerDataTable extends Component {
       ticketingSystem: {},
       action: 'Edit',
       showMenu: {},
+      productName: '',
     };
+    if (this.props.productName && this.props.productName[0].name) {
+      this.initializeHeaderData();
+    }
+  }
+
+  async fetchData() {
+    if (isAuthenticated(this.props)) {
+      const {customer, serviceUrl} = this.props;
+      try {
+        let projects = {};
+        let ticketingSystem = {};
+        if (customer && customer.id) {
+          projects = (await apiProjectsGetByCustomer(serviceUrl, customer.id)).data;
+          ticketingSystem = await apiCurrentTicketingSystemGet(serviceUrl);
+          await apiTicketingSystemConfigResourceGet(serviceUrl).then(({ data }) => {
+            if (!this.props.productName || this.props.productName[0].name) {
+              this.setState({ productName: JSON.parse(data[0].productName)[0].name })
+              this.initializeHeaderData()
+            }
+          })
+        }
+        this.setState({
+          projects: projects,
+          ticketingSystem: ticketingSystem,
+        });
+      } catch (error) {
+        console.error('Error fetchData: ', error);
+      }
+    }
+    this.render();
+  }
+
+  initializeHeaderData() {
     this.headerData = [
       {
         header: i18n.t('customerDashboard.projectName'),
@@ -39,7 +73,7 @@ class CustomerDataTable extends Component {
         key: 'partners',
       },
       {
-        header: i18n.t('customerDashboard.entandoVersion'),
+        header: (this.props.productName && this.props.productName[0].name) ? `${this.props.productName[0].name} Version` : `${this.state.productName} Version`,
         key: 'entandoVersion',
       },
       {
@@ -63,27 +97,6 @@ class CustomerDataTable extends Component {
         key: 'action',
       },
     ];
-  }
-
-  async fetchData() {
-    if (isAuthenticated(this.props)) {
-      const {customer, serviceUrl} = this.props;
-      try {
-        let projects = {};
-        let ticketingSystem = {};
-        if (customer && customer.id) {
-          projects = (await apiProjectsGetByCustomer(serviceUrl, customer.id)).data;
-          ticketingSystem = await apiCurrentTicketingSystemGet(serviceUrl);
-        }
-        this.setState({
-          projects: projects,
-          ticketingSystem: ticketingSystem,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    this.render();
   }
 
   componentDidMount() {

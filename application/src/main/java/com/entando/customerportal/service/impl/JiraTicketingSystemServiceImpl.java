@@ -1,21 +1,27 @@
 package com.entando.customerportal.service.impl;
 
-import com.entando.customerportal.constant.CustportAppConstant;
-import com.entando.customerportal.domain.EntandoVersion;
-import com.entando.customerportal.domain.Project;
-import com.entando.customerportal.domain.enumeration.SubscriptionLevel;
-import com.entando.customerportal.security.SpringSecurityAuditorAware;
-import com.entando.customerportal.service.JiraTicketingSystemService;
-import com.entando.customerportal.domain.TicketingSystem;
-import com.entando.customerportal.domain.Ticket;
-import com.entando.customerportal.repository.TicketingSystemRepository;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,23 +29,21 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.codec.binary.Base64;
-import org.json.JSONObject;
-
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import com.entando.customerportal.constant.CustportAppConstant;
+import com.entando.customerportal.domain.EntandoVersion;
+import com.entando.customerportal.domain.Project;
+import com.entando.customerportal.domain.Ticket;
+import com.entando.customerportal.domain.TicketingSystem;
+import com.entando.customerportal.domain.TicketingSystemConfig;
+import com.entando.customerportal.domain.enumeration.SubscriptionLevel;
+import com.entando.customerportal.repository.TicketingSystemConfigRepository;
+import com.entando.customerportal.repository.TicketingSystemRepository;
+import com.entando.customerportal.request.JiraCustomFieldRequest;
+import com.entando.customerportal.security.SpringSecurityAuditorAware;
+import com.entando.customerportal.service.JiraTicketingSystemService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Service Implementation for managing {@link TicketingSystem}.
@@ -55,13 +59,11 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
     private final TicketingSystemRepository ticketingSystemRepository;
 
-    @Value("${cp.jira.customfield.versionsId}")
+    @Autowired
+    private TicketingSystemConfigRepository ticketingSystemConfigRepository;
+
     private Integer versionsId;
-
-    @Value("${cp.jira.customfield.organizationsId}")
     private Integer organizationsId;
-
-    @Value("${cp.jira.customfield.subscriptionLevelId}")
     private Integer subscriptionLevelId;
 
     public JiraTicketingSystemServiceImpl(TicketingSystemRepository ticketingSystemRepository) {
@@ -283,8 +285,14 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             fields.put("issuetype", new JSONObject().put("name", ticket.getType()));
             fields.put("priority", new JSONObject().put("name", ticket.getPriority()));
 
-            //// Custom fields - see the application.properties to set the ids
-            //Version
+            // Jira Custom fields: fetch from db
+            JiraCustomFieldRequest customFields = getJiraCustomFields();
+            if(Objects.nonNull(customFields)) {
+            	versionsId = customFields.getVersionId() != null ? customFields.getVersionId().intValue() : null;
+                organizationsId =  customFields.getOrganizationId() != null ? customFields.getOrganizationId().intValue() : null;
+                subscriptionLevelId = customFields.getSubscriptionLevelId() != null ? customFields.getSubscriptionLevelId().intValue() : null;
+            }
+ 
             if (versionsId == -1) {
                 fields.put("versions", new JSONArray().put(new JSONObject().put("name", version.getName())));
             } else if (versionsId > 0) {
@@ -583,5 +591,36 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
         JSONObject child = jsonObject.getJSONObject(key);
         return getField(child, childKey, null, maxLength);
     }
+
+    /**
+     * Fetch Jira custom fields from DB.
+     * @return
+     */
+    private JiraCustomFieldRequest getJiraCustomFields() {
+    	List<TicketingSystemConfig> list = ticketingSystemConfigRepository.findAll();
+    	if(!CollectionUtils.isEmpty(list)) {
+    		return stringToObject(list.get(0).getJiraCustomField());
+    	}
+    	return null;
+    }
+
+    /**
+     * Convert Jira custom field json string into java object.
+     * @param jsonString
+     * @return
+     */
+    private JiraCustomFieldRequest stringToObject(String jsonString) {
+    	JiraCustomFieldRequest[] customFieldObjs = null;
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			customFieldObjs = objectMapper.readValue(jsonString, JiraCustomFieldRequest[].class);
+		} catch (IOException e) {
+			log.error("Conversion of json string to object failure {}", jsonString, e);
+		}
+		if(customFieldObjs != null && customFieldObjs.length > 0) {
+			return customFieldObjs[0];
+		}
+		return null;
+	}
 
 }

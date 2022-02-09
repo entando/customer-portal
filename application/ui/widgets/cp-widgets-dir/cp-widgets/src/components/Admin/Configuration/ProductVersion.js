@@ -33,10 +33,8 @@ class ProductVersion extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (authenticationChanged(this.props, prevProps)) {
-      if (isPortalAdminOrSupport()) {
-        this.getProductVersions();
-      }
+    if (authenticationChanged(this.props, prevProps) && isPortalAdminOrSupport()) {
+      this.getProductVersions();
     }
   }
 
@@ -87,7 +85,7 @@ class ProductVersion extends Component {
   render() {
     if (isPortalAdminOrSupport()) {
       return (
-        <div>
+        <>
           <DataTable rows={rowData} headers={headerData}>
             {({rows, headers, getHeaderProps, getTableProps}) => (
               <TableContainer>
@@ -95,7 +93,7 @@ class ProductVersion extends Component {
                   <TableHead>
                     <TableRow>
                       {headers.map(header => (
-                        <TableHeader {...getHeaderProps({header})}>{header.header}</TableHeader>
+                        <TableHeader {...getHeaderProps({ header })}>{header.key === 'entVersion' ? `${this.props.productName} Version` : header.header}</TableHeader>
                       ))}
                     </TableRow>
                   </TableHead>
@@ -142,7 +140,7 @@ class ProductVersion extends Component {
           </DataTable>
           <br />
           <AddProductVersionModal serviceUrl={this.props.serviceUrl} updateProductVersions={this.updateProductVersions} />
-        </div>
+        </>
       );
     } else {
       return <p>{i18n.t('userMessages.unauthorized')}</p>;
