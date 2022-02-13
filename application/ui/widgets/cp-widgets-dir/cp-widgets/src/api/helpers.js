@@ -1,4 +1,4 @@
-import {ADMIN, SUPPORT, CUSTOMER, PARTNER, DOMAIN} from './constants';
+import {ADMIN, SUPPORT, CUSTOMER, PARTNER} from './constants';
 
 export const getKeycloakToken = () => {
   if (window && window.entando && window.entando.keycloak && window.entando.keycloak.authenticated) {
@@ -86,8 +86,24 @@ export const getActiveSubscription = project => {
   );
 };
 
+//Expected resourceUrl - <@wp.resourceURL /> = /entando-de-app/cmsresources/ or /cmsresources/
+export const setAppContext = resourceUrl => {
+  const index = resourceUrl.indexOf('cmsresources');
+  const cp = {
+    appContext: '/'
+  }
+  if (index > 0) {
+    cp.appContext = resourceUrl.substring(0, index)
+  }
+  window.entando = {
+    ...(window.entando || {}),
+    cp,
+  };
+}
+
 export const getPageUrl = (pageCode, locale) => {
-  const url = `${DOMAIN}/${locale}/${pageCode}`;
+  var appContext = window.entando.cp.appContext;
+  const url = `${appContext}${locale}/${pageCode}`;
   return getUrl(url);
 }
 

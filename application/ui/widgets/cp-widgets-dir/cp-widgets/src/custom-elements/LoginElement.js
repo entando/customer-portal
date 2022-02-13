@@ -8,6 +8,7 @@ import {subscribeToWidgetEvent} from '../helpers/widgetEvents';
 import {KEYCLOAK_EVENT_TYPE} from './widgetEventTypes';
 import * as Locale from '../i18n';
 import Login from '../components/Login/Login';
+import {setAppContext} from '../api/helpers';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && {...window.entando.keycloak, initialized: true}) || {
@@ -47,9 +48,11 @@ class LoginElement extends HTMLElement {
   }
 
   render() {
+    const baseUrl = this.getAttribute(ATTRIBUTES.baseUrl) || '';
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
     const locale = this.getAttribute(ATTRIBUTES.locale) || '';
     Locale.setLocale(locale);
+    setAppContext(baseUrl);
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>
