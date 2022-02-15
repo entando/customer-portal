@@ -8,6 +8,7 @@ import KeycloakContext from '../auth/KeycloakContext';
 
 import { subscribeToWidgetEvent } from '../helpers/widgetEvents';
 import { KEYCLOAK_EVENT_TYPE } from './widgetEventTypes';
+import {setAppContext} from '../api/helpers';
 
 const getKeycloakInstance = () =>
   (window && window.entando && window.entando.keycloak && { ...window.entando.keycloak, initialized: true }) || {
@@ -20,6 +21,7 @@ const ATTRIBUTES = {
   paginationMode: 'pagination-mode',
   disableDefaultEventHandler: 'disable-default-event-handler', // custom element attribute names MUST be written in kebab-case
   serviceUrl: 'service-url',
+  baseUrl: 'base-url',
 };
 
 class AdminConfigurationElement extends HTMLElement {
@@ -47,9 +49,11 @@ class AdminConfigurationElement extends HTMLElement {
   }
 
   render() {
+    const baseUrl = this.getAttribute(ATTRIBUTES.baseUrl) || '';
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
     const locale = this.getAttribute(ATTRIBUTES.locale) || '';
     Locale.setLocale(locale);
+    setAppContext(baseUrl);
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>

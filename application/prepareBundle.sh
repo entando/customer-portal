@@ -91,7 +91,8 @@ function updateFTLTemplate() {
     local dockerImage="$3"
 
     widgetName=$(basename "$dir")
-    ingressPath=$(getServiceUrlFromDockerImage "$dockerImage")
+# Use the configured plugin ingressPath instead of a dynamic path determined from the docker image
+#    ingressPath=$(getServiceUrlFromDockerImage "$dockerImage")
 
     echo ""
     echo "> Updating ${widgetName} micro-frontend resources for $dir"

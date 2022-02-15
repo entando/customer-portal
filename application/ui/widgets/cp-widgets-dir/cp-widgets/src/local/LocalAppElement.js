@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../index.scss';
-// import './entando.css';
 import * as Locale from '../i18n';
+import {setAppContext} from '../api/helpers';
 
 import KeycloakContext from '../auth/KeycloakContext';
 import LocalApp from '../local/LocalApp';
@@ -51,6 +51,7 @@ class LocalAppElement extends HTMLElement {
     const serviceUrl = this.getAttribute(ATTRIBUTES.serviceUrl) || '';
     const locale = this.getAttribute(ATTRIBUTES.locale) || '';
     Locale.setLocale(locale);
+    setAppContext('/');
 
     ReactDOM.render(
       <KeycloakContext.Provider value={this.keycloak}>

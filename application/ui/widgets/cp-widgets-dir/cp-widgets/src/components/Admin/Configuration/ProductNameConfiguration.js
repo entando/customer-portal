@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { authenticationChanged, isAuthenticated, isPortalAdminOrSupport } from "../../../api/helpers";
+import { isPortalAdminOrSupport } from "../../../api/helpers";
 import withKeycloak from "../../../auth/withKeycloak";
 import i18n from "../../../i18n";
 import { Button, ComposedModal, ModalBody, ModalFooter, ModalHeader, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TextInput, } from 'carbon-components-react';
-import { apiProductVersionsGet } from "../../../api/productVersion";
 import { TICKETING_SYSTEM_CONFIG_ENUM, VALIDATION_VARS } from "../../../api/constants";
 import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
 
@@ -22,26 +21,6 @@ class ProductNameConfiguration extends Component {
 
     componentDidMount() {
         this.setState({ changedProductName: this.props.productName })
-        if (isPortalAdminOrSupport()) {
-            this.getProductVersions();
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        if (authenticationChanged(this.props, prevProps)) {
-            if (isPortalAdminOrSupport()) {
-                this.getProductVersions();
-            }
-        }
-    }
-
-    async getProductVersions() {
-        if (isAuthenticated(this.props)) {
-            const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
-            this.setState({
-                versions: productVersions.data,
-            });
-        }
     }
 
     onEditProductNameHandle = () => {
