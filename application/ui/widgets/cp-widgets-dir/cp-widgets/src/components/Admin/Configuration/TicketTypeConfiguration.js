@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { authenticationChanged, isAuthenticated, isPortalAdminOrSupport } from "../../../api/helpers";
+import { isPortalAdminOrSupport } from "../../../api/helpers";
 import withKeycloak from "../../../auth/withKeycloak";
 import i18n from "../../../i18n";
 import { Button, Form, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TextInput } from 'carbon-components-react';
-import { apiProductVersionsGet } from "../../../api/productVersion";
 import { Add16 } from '@carbon/icons-react'
 import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
 import { TICKETING_SYSTEM_CONFIG_ENUM, VALIDATION_VARS } from "../../../api/constants";
@@ -23,9 +22,6 @@ class TicketTypeConfiguration extends Component {
 
     componentDidMount() {
         if (isPortalAdminOrSupport()) {
-            this.getProductVersions();
-        }
-        if (this.props.ticketType.length) {
             this.getTicketTypes()
         }
     }
@@ -34,24 +30,11 @@ class TicketTypeConfiguration extends Component {
         if (prevProps.ticketType.length !== this.props.ticketType.length) {
             this.getTicketTypes()
         }
-        if (authenticationChanged(this.props, prevProps) && isPortalAdminOrSupport()) {
-            this.getProductVersions();
-        }
     }
 
     getTicketTypes() {
         if (this.props.ticketType.length) {
             this.setState({ ticketTypeRowData: this.props.ticketType })
-        }
-    }
-
-    async getProductVersions() {
-        if (isAuthenticated(this.props)) {
-            const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
-
-            this.setState({
-                versions: productVersions.data,
-            });
         }
     }
 

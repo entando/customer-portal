@@ -39,6 +39,7 @@ class AdminConfiguration extends React.Component {
       this.setState({
         loading: false,
       });
+      this.getTicketingSystemConfig();
     }
     if (prevState.refinedTicketType.length !== this.state.refinedTicketType.length ||
       prevState.refinedSubLevel.length !== this.state.refinedSubLevel.length ||
@@ -53,14 +54,20 @@ class AdminConfiguration extends React.Component {
       if (ticketTypesAndSubLevelsData && ticketTypesAndSubLevelsData.length) {
         const JIRAKEY = 'jiraCustomField', PRODUCTNAME = 'productName';
         let actualData = ticketTypesAndSubLevelsData[0];
-        if (actualData.ticketType) this.setState({ refinedTicketType: JSON.parse(actualData.ticketType) })
-        if (actualData.subscriptionLevel) this.setState({ refinedSubLevel: JSON.parse(actualData.subscriptionLevel) })
+        if (actualData.ticketType) {
+          this.setState({ refinedTicketType: JSON.parse(actualData.ticketType) })
+        }
+        if (actualData.subscriptionLevel) {
+          this.setState({ refinedSubLevel: JSON.parse(actualData.subscriptionLevel) })
+        }
         if (actualData.hasOwnProperty(JIRAKEY)) {
           let jiraCustomFieldBuilder = [];
           for (let jiraItem in JSON.parse(actualData.jiraCustomField)[0]) {
             jiraCustomFieldBuilder.push({ [jiraItem]: JSON.parse(actualData.jiraCustomField)[0][jiraItem] })
           }
-          this.setState({ refinedJiraCustomField: jiraCustomFieldBuilder })
+          this.setState({
+            refinedJiraCustomField: jiraCustomFieldBuilder }
+          )
         }
         if (actualData.hasOwnProperty(PRODUCTNAME)) this.setState({ productName: JSON.parse(actualData.productName)[0].name })
       }

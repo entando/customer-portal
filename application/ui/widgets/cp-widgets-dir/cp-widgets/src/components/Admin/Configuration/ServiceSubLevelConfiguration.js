@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { authenticationChanged, isAuthenticated, isPortalAdminOrSupport } from "../../../api/helpers";
+import { isPortalAdminOrSupport } from "../../../api/helpers";
 import withKeycloak from "../../../auth/withKeycloak";
 import i18n from "../../../i18n";
 import { Button, Form, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TextInput } from 'carbon-components-react';
-import { apiProductVersionsGet } from "../../../api/productVersion";
 import { Add16 } from '@carbon/icons-react'
 import { apiTicketingSystemConfigResourcePost } from "../../../api/manageFieldConfigurations";
 import { TICKETING_SYSTEM_CONFIG_ENUM, VALIDATION_VARS } from "../../../api/constants";
@@ -23,9 +22,6 @@ class ServiceSubLevelConfiguration extends Component {
 
     componentDidMount() {
         if (isPortalAdminOrSupport()) {
-            this.getProductVersions();
-        }
-        if (this.props.subLevel.length) {
             this.getSubscription()
         }
     }
@@ -34,26 +30,11 @@ class ServiceSubLevelConfiguration extends Component {
         if (prevProps.subLevel.length !== this.props.subLevel.length) {
             this.getSubscription()
         }
-        if (authenticationChanged(this.props, prevProps)) {
-            if (isPortalAdminOrSupport()) {
-                this.getProductVersions();
-            }
-        }
     }
 
     getSubscription() {
         if (this.props.subLevel.length) {
             this.setState({ serviceSubTypeRowData: this.props.subLevel })
-        }
-    }
-
-    async getProductVersions() {
-        if (isAuthenticated(this.props)) {
-            const productVersions = await apiProductVersionsGet(this.props.serviceUrl);
-
-            this.setState({
-                versions: productVersions.data,
-            });
         }
     }
 
@@ -179,7 +160,7 @@ class ServiceSubLevelConfiguration extends Component {
                 </>
             );
         } else {
-            return <p>{i18n.t('userMessages.unauthorized')}</p>; 
+            return <p>{i18n.t('userMessages.unauthorized')}</p>;
         }
     }
 }
