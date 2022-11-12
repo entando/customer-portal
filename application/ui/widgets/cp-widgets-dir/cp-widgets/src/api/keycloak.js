@@ -1,7 +1,10 @@
 import { getDefaultKeycloakOptions, request, getUrl } from './helpers';
 
+//TODO: replace with paginated user list eventually
+const maxUsersCount = 1000;
+
 export const apiKeycloakUserGet = async (serviceUrl, realm) => {
-  const usersResource = `admin/realms/${realm}/users`;
+  const usersResource = `admin/realms/${realm}/users?enabled=true&max=`+maxUsersCount;
   const url = `${serviceUrl}/${usersResource}`;
   const options = {
     ...getDefaultKeycloakOptions(),
