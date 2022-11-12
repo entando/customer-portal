@@ -4,7 +4,7 @@ import { getDefaultKeycloakOptions, request, getUrl } from './helpers';
 const maxUsersCount = 1000;
 
 export const apiKeycloakUserGet = async (serviceUrl, realm) => {
-  const usersResource = `admin/realms/${realm}/users?max=`+maxUsersCount;
+  const usersResource = `admin/realms/${realm}/users?enabled=true&max=`+maxUsersCount;
   const url = `${serviceUrl}/${usersResource}`;
   const options = {
     ...getDefaultKeycloakOptions(),
