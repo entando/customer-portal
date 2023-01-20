@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -292,7 +295,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
                 organizationsId =  customFields.getOrganizationId() != null ? customFields.getOrganizationId().intValue() : null;
                 subscriptionLevelId = customFields.getSubscriptionLevelId() != null ? customFields.getSubscriptionLevelId().intValue() : null;
             }
- 
+
             if (versionsId == -1) {
                 fields.put("versions", new JSONArray().put(new JSONObject().put("name", version.getName())));
             } else if (versionsId > 0) {
@@ -366,7 +369,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
         try {
             URL url = new URL(baseUrl + "issue/" + systemId);
-            System.out.println(url.toString());
+            log.debug(url.toString());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("PUT");
 
@@ -459,10 +462,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
      * @param baseUrl the baseUrl of the project
      */
     public String getJiraAccountIdOfSignedInUser(String baseUrl, String serviceAccount, String serviceAccountSecret) {
-        String user = serviceAccount;
-        String password = serviceAccountSecret;
         String signedInUser;
-
         if (getCurrentUserEmail().isPresent()) {
             signedInUser = getCurrentUserEmail().get();
         }
@@ -470,38 +470,31 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             return null;
         }
 
+        String result = null;
         try {
-            URL url = new URL(baseUrl + "user/search?query=" + signedInUser);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
+            log.debug("Looking up user accountId by email {}", signedInUser);
 
-            String auth = user + ":" + password;
-            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
-            String authHeaderValue = "Basic " + new String(encodedAuth);
-            con.setRequestProperty("Authorization", authHeaderValue);
-            con.setRequestProperty("Content-Type", "application/json; charset=utf8");
+            HttpResponse<JsonNode> response = Unirest.get(baseUrl + "user/search")
+                .basicAuth(serviceAccount, serviceAccountSecret)
+                .header("Accept", "application/json")
+                .queryString("query", signedInUser)
+                .asJson();
 
-            int status = con.getResponseCode();
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer content = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
+            JSONArray responseObject = response.getBody().getArray();
+
+            if (responseObject.length() == 1) {
+                result = responseObject.getJSONObject(0).getString("accountId");
+            } else if (responseObject.length() > 1) {
+                log.warn("Too many accounts found for user {}", signedInUser);
+            } else {
+                log.debug("No account found in response");
             }
-            in.close();
-            con.disconnect();
-            JSONArray responseObject = new JSONArray(content.toString());
-
-            if (responseObject.length() == 0) {
-                return null;
-            }
-
-            return responseObject.getJSONObject(0).getString("accountId");
         }
         catch(Exception e) {
             log.error("Account lookup failure {}", signedInUser, e);
         }
-        return null;
+        log.debug("accountId: {}", result);
+        return result;
     }
 
     // get signed in user's email address
