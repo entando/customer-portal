@@ -12,6 +12,7 @@ class OpenTicketForm extends Component {
     super();
     this.state = {
       loading: true,
+      disabled: false,
       project: {},
       role: '',
       invalid: {},
@@ -119,36 +120,37 @@ class OpenTicketForm extends Component {
     const formIsValid = this.handleValidation();
 
     if (formIsValid) {
+      //Disable the form after submission
+      this.setState({
+        disabled: true
+      });
+
       const subscription = getActiveSubscription(this.state.project);
       if (subscription) {
         this.createTicket()
           .then(() => {
-            this.setState({
-              submitMsg: i18n.t('submitMessages.created'),
-              submitColour: '#24a148',
-            });
+            this.setSubmitMessage('submitMessages.created', true);
           })
           .catch(() => {
-            this.setState({
-              submitMsg: i18n.t('submitMessages.ticketError'),
-              submitColour: '#da1e28',
-            });
+            this.setSubmitMessage('submitMessages.ticketError', false);
           });
       }
       // if no subscriptions, don't create ticket
       else {
-        this.setState({
-          submitMsg: i18n.t('submitMessages.subscriptionRequired'),
-          submitColour: '#da1e28',
-        });
+        this.setSubmitMessage('submitMessages.subscriptionRequired', false);
       }
     } else {
-      this.setState({
-        submitMsg: i18n.t('submitMessages.error'),
-        submitColour: '#da1e28',
-      });
+      this.setSubmitMessage('submitMessages.error', false);
     }
   };
+
+  setSubmitMessage = (message, success) => {
+    this.setState({
+      submitMsg: i18n.t(message),
+      submitColour: success ? '#24a148' : '#da1e28',
+      disabled: success
+    });
+  }
 
   async createTicket() {
     if (isPortalUser()) {
@@ -174,7 +176,6 @@ class OpenTicketForm extends Component {
           <div id="entando-customer-portal">
             <Breadcrumbs project={this.state.project} locale={this.props.locale}/>
             <div className="form-container">
-              <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
               <Form onSubmit={this.handleFormSubmit}>
                 <div className="bx--grid">
                   <div className="bx--row" style={{padding: '1em 0'}}>
@@ -247,10 +248,11 @@ class OpenTicketForm extends Component {
                         invalidText={i18n.t('validation.invalid.required')}
                         invalid={this.state.invalid['description']}
                       />
-                      <Button kind="primary" tabIndex={0} type="submit">
+                      <Button kind="primary" tabIndex={0} type="submit" disabled={this.state.disabled}>
                         {' '}
                         {i18n.t('buttons.submit')}{' '}
                       </Button>
+                      <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
                     </div>
                   </div>
                 </div>
