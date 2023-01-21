@@ -7,6 +7,7 @@ import {apiJiraTicketPost} from '../../api/tickets';
 import {authenticationChanged, getActiveSubscription, isAuthenticated, isPortalUser} from '../../api/helpers';
 import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 import { apiTicketingSystemConfigResourceGet } from '../../api/manageFieldConfigurations';
+import {apiCurrentTicketingSystemGet, getTicketUrl} from '../../api/ticketingsystem';
 class OpenTicketForm extends Component {
   constructor() {
     super();
@@ -24,7 +25,9 @@ class OpenTicketForm extends Component {
       status: 'To Do',
       summary: '',
       description: '',
-      types: []
+      types: [],
+      ticketId: null,
+      ticketingSystem: null
     };
     this.types = ['Support', 'New Feature', 'Bug'];
     this.priorities = ['Critical', 'High', 'Medium', 'Low'];
@@ -45,6 +48,9 @@ class OpenTicketForm extends Component {
 
   async getTicketingSystem() {
     try {
+      const ticketingSystem = await apiCurrentTicketingSystemGet(this.props.serviceUrl);
+      this.setState({ ticketingSystem: ticketingSystem})
+
       const { data: ticketTypes } = await apiTicketingSystemConfigResourceGet(this.props.serviceUrl);
       if (ticketTypes && ticketTypes[0].hasOwnProperty('ticketType')) {
         const ticketTypesArr = JSON.parse(ticketTypes[0].ticketType)
@@ -128,8 +134,11 @@ class OpenTicketForm extends Component {
       const subscription = getActiveSubscription(this.state.project);
       if (subscription) {
         this.createTicket()
-          .then(() => {
+          .then((response) => {
             this.setSubmitMessage('submitMessages.created', true);
+            this.setState ({
+              ticketId: response.data.systemId
+            });
           })
           .catch(() => {
             this.setSubmitMessage('submitMessages.ticketError', false);
@@ -172,6 +181,15 @@ class OpenTicketForm extends Component {
   render() {
     if (!this.state.loading) {
       if (isPortalUser()) {
+        const viewTicket = this.state.ticketId && (
+          <div>
+            <strong>{i18n.t('ticketDetails.viewTicket')}: </strong>
+            <a href={getTicketUrl(this.state.ticketingSystem, this.state.ticketId)} target="_blank" rel="noreferrer">
+              {this.state.ticketId}
+            </a>
+          </div>
+        );
+
         return (
           <div id="entando-customer-portal">
             <Breadcrumbs project={this.state.project} locale={this.props.locale}/>
@@ -253,6 +271,7 @@ class OpenTicketForm extends Component {
                         {i18n.t('buttons.submit')}{' '}
                       </Button>
                       <p style={{color: this.state.submitColour}}>{this.state.submitMsg}</p>
+                      {viewTicket}
                     </div>
                   </div>
                 </div>

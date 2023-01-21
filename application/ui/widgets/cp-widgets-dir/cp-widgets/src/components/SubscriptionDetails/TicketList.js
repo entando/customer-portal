@@ -12,7 +12,7 @@ import {
   PaginationNav,
 } from 'carbon-components-react';
 import {apiJiraTicketsGet} from '../../api/tickets';
-import {apiCurrentTicketingSystemGet} from '../../api/ticketingsystem';
+import {apiCurrentTicketingSystemGet, getAllTicketsUrl, getTicketUrl} from '../../api/ticketingsystem';
 import withKeycloak from '../../auth/withKeycloak';
 import {apiProjectGet} from '../../api/projects';
 import {authenticationChanged, isAuthenticated, isPortalUser} from '../../api/helpers';
@@ -110,8 +110,6 @@ class TicketList extends Component {
       itemsShown: Number(1),
       onChange: event => this.setState({currentPage: event}),
     });
-    const ticketSystemUrl = this.state.ticketingSystem.url;
-    const ticketingSystemBaseUrl = ticketSystemUrl != null ? ticketSystemUrl.substr(0, ticketSystemUrl.indexOf('/rest')) : null;
     const ticketCount = Object.keys(this.state.tickets).length;
 
     return (
@@ -120,7 +118,7 @@ class TicketList extends Component {
           <div>
             {/*View All Ticket*/}
             <a
-              href={ticketingSystemBaseUrl + '/issues/?jql=Organizations=' + this.state.project.systemId}
+              href={getAllTicketsUrl(this.state.ticketingSystem, this.state.project.systemId)}
               style={{textDecoration: 'none'}}
               target="_blank"
               rel="noreferrer"
@@ -152,7 +150,7 @@ class TicketList extends Component {
                         this.state.tickets.data.map((ticket, index) => {
                           const indexOfLastItem = (this.state.currentPage + 1) * 10 - 1;
                           const firstIndexOfCurrentPage = this.state.currentPage * 10;
-                          const ticketUrl = ticketingSystemBaseUrl + '/browse/' + ticket.systemId;
+                          const ticketUrl = getTicketUrl(this.state.ticketingSystem, ticket.systemId);
 
                           if (index >= firstIndexOfCurrentPage && index <= indexOfLastItem) {
                             return (
