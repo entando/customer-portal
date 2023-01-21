@@ -6,6 +6,7 @@ import EditProjectModal from '../Admin/EditProjectModal';
 import ManagePartnersModal from '../Admin/ManagePartnersModal';
 import {isPortalAdmin} from '../../api/helpers';
 import {withRouter} from 'react-router';
+import {getAllTicketsUrl} from '../../api/ticketingsystem';
 
 class ProjectActionItems extends Component {
   constructor() {
@@ -89,8 +90,7 @@ class ProjectActionItems extends Component {
     let viewAllTickets = (<></>);
     const ticketingSystem = this.props.ticketingSystem;
     if (this.props.subscription && ticketingSystem && ticketingSystem.url) {
-      const ticketsUrl = ticketingSystem.url.substr(0, ticketingSystem.url.indexOf('/rest')) +
-        '/issues/?jql=Organizations=' + this.props.project.systemId;
+      const ticketsUrl = getAllTicketsUrl(ticketingSystem, this.props.project.systemId);
       viewAllTickets = (
         <OverflowMenuItem itemText={i18n.t('buttons.viewAllTickets')}
                           onClick={() => window.open(ticketsUrl)}/>

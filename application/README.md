@@ -49,9 +49,16 @@ With this configuration, you can use the ent cli (https://dev.entando.org/next/d
 
 e.g. `cp ui/widgets/cp-widgets-dir/cp-widgets/.env.local.template ui/widgets/cp-widgets-dir/cp-widgets/.env.local`
 
----
-Standard Blueprint documentation follows...
+# Local testing
+* (First time) Make sure `.env.local` is in place as noted above
+* Start keycloak and postgresql: `docker-compose -f src/main/docker/local_app.yml up`. Keycloak will be available on `http://localhost:9080/auth/`
+* Start the microservice:  `ent prj be-test-run`. Available on `http://localhost:8081/services/custportApp/swagger-ui.html?urls.primaryName=entando`
+* Start the MFE: `ent prj fe-test-run` and select the cp-widgets. Available on `http://localhost:3000`
 
+---
+------
+The default Blueprint documentation follows...
+------
 ---
 
 # Spring Boot/microservice application - custportApp

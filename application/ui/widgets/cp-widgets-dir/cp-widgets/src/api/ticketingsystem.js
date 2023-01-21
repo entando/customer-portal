@@ -1,4 +1,4 @@
-import {getDefaultOptions, request} from './helpers';
+import {getDefaultOptions, request, isPortalAdminOrSupport} from './helpers';
 
 const resource = 'api/ticketing-systems';
 
@@ -60,3 +60,29 @@ export const apiTicketingSystemPut = async (serviceUrl, ticketingSystem, secret)
   };
   return request(url, options);
 };
+
+const getTicketSystemBaseUrl = (ticketingSystem) => {
+  const url = ticketingSystem.url;
+  return (url != null) ? url.substr(0, url.indexOf('/rest')) : '';
+}
+
+export const getAllTicketsUrl = (ticketingSystem, organizationId) => {
+  let result = getTicketSystemBaseUrl(ticketingSystem);
+  if (isPortalAdminOrSupport()) {
+      result += '/issues/?jql=Organizations=' + organizationId;
+  } else {
+      result += '/servicedesk/customer/user/requests?page=1&reporter=org-' + organizationId;
+  }
+  return result;
+}
+
+export const getTicketUrl = (ticketingSystem, ticketId) => {
+  let result = getTicketSystemBaseUrl(ticketingSystem);
+  if (isPortalAdminOrSupport()) {
+    result += '/browse/' + ticketId;
+  } else {
+    result += '/servicedesk/customer/portal/1/' + ticketId;
+  }
+  return result;
+}
+

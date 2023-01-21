@@ -1,0 +1,11 @@
+version: '3'
+services:
+  custportapp-postgresql:
+    extends:
+      file: postgresql.yml
+      service: custportapp-postgresql
+  custportapp-keycloak:
+    extends:
+      file: keycloak.yml
+      service: keycloak
+
