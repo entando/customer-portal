@@ -1,4 +1,4 @@
-image: entandodemo/customerportal:0.0.8
+image: entandodemo/customerportal:0.0.9
 dbms: postgresql
 ingressPath: "/entando-cp-api"
 healthCheckPath: "/management/health"
