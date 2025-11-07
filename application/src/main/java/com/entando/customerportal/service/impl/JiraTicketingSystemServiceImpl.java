@@ -149,6 +149,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
         try {
             URL url = new URL(baseUrl + searchQuery + systemId + "&fields=*all");
+            log.debug("fetchJiraTicketsBySystemId : {}", baseUrl + searchQuery + systemId + "&fields=*all");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
@@ -185,6 +186,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
         try {
             URL url = new URL(baseUrl + searchQuery);
+            log.debug("fetchJiraTicketsBySystemIdAndOrganization : {}", baseUrl + searchQuery);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
@@ -201,6 +203,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
+            log.debug("fetchJiraTicketsBySystemIdAndOrganization : content {}", content);
             in.close();
             con.disconnect();
             JSONObject responseObject = new JSONObject(content.toString());
@@ -229,6 +232,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
         try {
             URL url = new URL(baseUrl + "issue/" + systemId);
+            log.debug("fetchSingleJiraTicketBySystemId : {}", baseUrl + "issue/" + systemId);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
@@ -266,6 +270,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
         HttpURLConnection con = null;
         try {
             URL url = new URL(baseUrl + "issue");
+            log.debug("createJiraTicketInOrg : {}", baseUrl + "issue");
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
 
@@ -369,6 +374,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
         try {
             URL url = new URL(baseUrl + "issue/" + systemId);
+            log.debug("updateJiraTicket : {}", baseUrl + "issue/" + systemId);
             log.debug(url.toString());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("PUT");
@@ -427,6 +433,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
         try {
             URL url = new URL(baseUrl + "issue/" + systemId);
+            log.debug("deleteJiraTicket : {}", baseUrl + "issue/" + systemId);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("DELETE");
 
@@ -474,6 +481,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
         try {
             log.debug("Looking up user accountId by email {}", signedInUser);
 
+            log.debug("getJiraAccountIdOfSignedInUser : {}", baseUrl + "user/search");
             HttpResponse<JsonNode> response = Unirest.get(baseUrl + "user/search")
                 .basicAuth(serviceAccount, serviceAccountSecret)
                 .header("Accept", "application/json")
