@@ -143,12 +143,12 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
      */
     @Override
     public String fetchJiraTicketsBySystemId(String systemId, String baseUrl, String serviceAccount, String serviceAccountSecret) {
-        String searchQuery = "search?jql=project=";
+        String searchQuery = "search/jql?jql=project=";
         String user = serviceAccount;
         String password = serviceAccountSecret;
 
         try {
-            URL url = new URL(baseUrl + searchQuery + systemId);
+            URL url = new URL(baseUrl + searchQuery + systemId + "&fields=*all");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
@@ -179,7 +179,7 @@ public class JiraTicketingSystemServiceImpl implements JiraTicketingSystemServic
 
     @Override
     public String fetchJiraTicketsBySystemIdAndOrganization(String project, String organization, String baseUrl, String serviceAccount, String serviceAccountSecret) {
-        String searchQuery = "search?jql=Organizations=" + organization + "%20AND%20project=" + project;
+        String searchQuery = "search/jql?jql=Organizations=" + organization + "%20AND%20project=" + project + "&fields=*all";
         String user = serviceAccount;
         String password = serviceAccountSecret;
 
