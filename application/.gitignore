@@ -159,3 +159,6 @@ Desktop.ini
 
 .ent/ent-state
 /src/main/docker/docker.yml
+
+####
+/bundle/resources/
